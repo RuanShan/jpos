@@ -4,7 +4,6 @@
  *  modify this file, but it can be used to extend your development
  *  environment.
  */
-
 /* eslint-disable */
 
 // Set environment for development
@@ -14,14 +13,18 @@ process.env.NODE_ENV = 'development'
 require('electron-debug')({ showDevTools: true })
 
 // Install `vue-devtools`
-require('electron').app.on('ready', () => {
-  let installExtension = require('electron-devtools-installer')
-  installExtension.default(installExtension.VUEJS_DEVTOOLS)
-    .then(() => {})
-    .catch(err => {
-      console.log('Unable to install `vue-devtools`: \n', err)
-    })
-})
+//require('electron').app.on('ready', () => {
+//  let installExtension = require('electron-devtools-installer')
+//  installExtension.default(installExtension.VUEJS_DEVTOOLS)
+//    .then(() => {})
+//    .catch(err => {
+//      console.log('Unable to install `vue-devtools`: \n', err)
+//    })
+//})
+
+if (process.env.NODE_ENV === 'development') {
+  //  BrowserWindow.addDevToolsExtension("/Users/zhang/Library/Application Support/Google/Chrome/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/3.1.2_0");
+}
 
 // Require `main` process to boot app
 require('./index')
