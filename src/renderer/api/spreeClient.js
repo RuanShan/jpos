@@ -1,8 +1,8 @@
 import UrlAssembler from 'url-assembler'
-import camelize from 'camelize'
+// import camelize from 'camelize';
 import axios from 'axios'
 
-class SpreeApiClient extends UrlAssembler {
+class SpreeClient extends UrlAssembler {
   constructor (baseUrlOrUrlAssembler) {
     super(baseUrlOrUrlAssembler)
 
@@ -10,16 +10,15 @@ class SpreeApiClient extends UrlAssembler {
       this._token = baseUrlOrUrlAssembler._token
     }
 
-    SpreeApiClient.endpoints().forEach(function (endpoint) {
-      this[camelize(endpoint)] = function (id) {
-        if (typeof id !== 'undefined') {
-          return this.segment(`/${endpoint}/:id`).param({ id: id })
-        } else {
-          return this.segment(`/${endpoint}`)
-        }
-      }
-    }
-    )
+    // SpreeApiClient.endpoints().forEach((endpoint) =>
+    //  this[camelize(endpoint)] = function(id){
+    //    if (typeof id != "undefined") {
+    //      return this.segment(`/${endpoint}/:id`).param({ id: id })
+    //    } else {
+    //      return this.segment(`/${endpoint}`)
+    //    }
+    //  }
+    // );
   }
 
   spreeToken (token) {
@@ -28,23 +27,23 @@ class SpreeApiClient extends UrlAssembler {
     return chainable
   }
 
-  get () {
-    return axios.get(this.toString(), this.headers())
+  get (path) {
+    return axios.get(this.toString() + path, this.headers())
   }
 
-  head () {
-    return axios.head(this.toString(), this.headers())
+  head (path) {
+    return axios.head(this.toString() + path, this.headers())
   }
 
-  delete () {
-    return axios.delete(this.toString(), this.headers())
+  delete (path) {
+    return axios.delete(this.toString() + path, this.headers())
   }
 
-  post (data) {
+  post (path, data) {
     return axios.post(this.toString(), data, this.headers())
   }
 
-  put (data) {
+  put (path, data) {
     return axios.put(this.toString(), data, this.headers())
   }
 
@@ -54,7 +53,7 @@ class SpreeApiClient extends UrlAssembler {
 
   headers () {
     if (this._token) {
-      return { headers: { 'X-Spree-Token': this._token } }
+      return {headers: { 'X-Spree-Token': this._token }}
     } else {
       return {}
     }
@@ -68,4 +67,4 @@ class SpreeApiClient extends UrlAssembler {
   }
 }
 
-export default SpreeApiClient
+export default SpreeClient

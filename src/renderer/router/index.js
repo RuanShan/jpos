@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // 引入组件
+import vDashboard from '../components/vDashboard'
 import vGoodsList from '../components/vGoodsList'
 import vShoppingCart from '../components/vShoppingCart'
 import vGoodsStorage from '../components/vGoodsStorage'
@@ -12,13 +13,20 @@ import vMessageList from '../components/vMessageList'
 import vDataStatistics from '../components/vDataStatistics'
 import vPersonList from '../components/vPersonList'
 import vTodoList from '../components/vTodoList.vue'
+import v404 from '../components/404.vue'
+import vSignUp from '../components/Register.vue'
+import vSignIn from '../components/Login.vue'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
+      component: vDashboard
+    },
+    {
+      path: '/goodsList',
       component: vGoodsList
     },
     {
@@ -56,6 +64,42 @@ export default new Router({
     {
       path: '/todoList',
       component: vTodoList
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: vSignIn
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: vSignUp
+    },
+    // 简单设置404页面
+    {
+      path: '*',
+      name: '404',
+      component: v404,
+      hidden: true
     }
   ]
 })
+
+// 验证 token，存在才跳转
+router.beforeEach((to, from, next) => {
+  let token = localStorage.getItem('token')
+  if (to.meta.requireAuth) {
+    if (token) {
+      next()
+    } else {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    }
+  } else {
+    next()
+  }
+})
+
+export default router
