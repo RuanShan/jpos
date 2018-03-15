@@ -4,7 +4,6 @@
       <div class="main">
         <v-aside></v-aside>
         <div class="mian-right">
-          <router-view></router-view>
         </div>
       </div>
       <v-footer></v-footer>
