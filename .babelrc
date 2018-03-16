@@ -4,7 +4,7 @@
     "test": {
       "presets": [
         ["env", {
-          "targets": { "node": 7 }
+          "targets": { "node": 8 }
         }],
         "stage-0"
       ],
@@ -13,7 +13,7 @@
     "main": {
       "presets": [
         ["env", {
-          "targets": { "node": 7 }
+          "targets": { "node": 8 }
         }],
         "stage-0"
       ]
@@ -21,16 +21,15 @@
     "renderer": {
       "presets": [
         ["env", {
+          "browsers": ["chrome >= 63","firefox >= 58"],
           "modules": false
         }],
-        "stage-0"
+        "stage-0",
       ]
     },
     "web": {
       "presets": [
-        ["env", {
-          "modules": false
-        }],
+        ["es2015"],
         "stage-0"
       ]
     }

@@ -1,6 +1,6 @@
 <template>
-    <div id="app" class="fillcontain">
-		    <router-view></router-view>
+    <div class="fillcontain">
+        sendMessage
     </div>
 </template>
 
@@ -11,5 +11,5 @@
 </script>
 
 <style lang="less">
-	@import './style/common';
+	@import '../style/mixin';
 </style>
