@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import headTop from '../components/headTop'
+  import headTop from '@/components/headTop'
 export default {
     components: {
       headTop

@@ -1,5 +1,7 @@
 import { baseUrl } from './env'
 
+var Promise = require('es6-promise').Promise;
+
 export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
   type = type.toUpperCase()
   url = baseUrl + url
@@ -43,12 +45,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
     }
   } else {
     return new Promise((resolve, reject) => {
-      let requestObj
-      if (window.XMLHttpRequest) {
-        requestObj = new XMLHttpRequest()
-      } else {
-        requestObj = new ActiveXObject()
-      }
+      let requestObj = new XMLHttpRequest()
 
       let sendData = ''
       if (type == 'POST') {

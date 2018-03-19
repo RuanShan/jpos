@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import headTop from '../components/headTop'
+  import headTop from '@/components/headTop'
 import visitorPie from '@/components/visitorPie'
   import {getUserCity} from '@/api/getData'
 export default {

@@ -21,10 +21,12 @@
 </template>
 
 <script>
-  import headTop from '../components/headTop'
-  import tendency from '../components/tendency'
+  import headTop from '@/components/headTop'
+  import tendency from '@/components/tendency'
   import dtime from 'time-formater'
   import {userCount, orderCount, getUserCount, getOrderCount, adminDayCount, adminCount} from '@/api/getData'
+  var Promise = require('es6-promise').Promise
+
 export default {
     data () {
       return {

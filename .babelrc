@@ -4,7 +4,7 @@
     "test": {
       "presets": [
         ["env", {
-          "targets": { "node": 8 }
+          "targets": { "node": 6 }
         }],
         "stage-0"
       ],
@@ -13,7 +13,7 @@
     "main": {
       "presets": [
         ["env", {
-          "targets": { "node": 8 }
+          "targets": { "node": 6 }
         }],
         "stage-0"
       ]
@@ -21,7 +21,7 @@
     "renderer": {
       "presets": [
         ["env", {
-          "browsers": ["chrome >= 63","firefox >= 58"],
+          "targets": { "browsers": ["Chrome>=60"]  },
           "modules": false
         }],
         "stage-0",
@@ -29,10 +29,13 @@
     },
     "web": {
       "presets": [
-        ["es2015"],
+        ["env", {
+          "targets": { "browsers": ["Chrome>=60"]  },
+          "modules": false
+        }],
         "stage-0"
       ]
     }
   },
-  "plugins": ["transform-runtime"]
+  "plugins": ["transform-runtime","transform-object-rest-spread"]
 }

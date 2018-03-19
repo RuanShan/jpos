@@ -72,8 +72,8 @@ export const loadMore = (element, callback) => {
 
   // 运动结束时判断是否有惯性运动，惯性运动结束判断是非到达底部
   element.addEventListener('touchend', () => {
-       	oldScrollTop = document.body.scrollTop
-       	moveEnd()
+         oldScrollTop = document.body.scrollTop
+         moveEnd()
   }, {passive: true})
 
   const moveEnd = () => {
@@ -83,9 +83,9 @@ export const loadMore = (element, callback) => {
         loadMore()
         moveEnd()
       } else {
-            	cancelAnimationFrame(requestFram)
-            	// 为了防止鼠标抬起时已经渲染好数据从而导致重获取数据，应该重新获取dom高度
-            	height = element.offsetHeight
+              cancelAnimationFrame(requestFram)
+              // 为了防止鼠标抬起时已经渲染好数据从而导致重获取数据，应该重新获取dom高度
+              height = element.offsetHeight
         loadMore()
       }
     })
@@ -185,8 +185,8 @@ export const animate = (element, target, duration = 400, mode = 'ease-out', call
 
   // 获取目标属性单位和初始样式值
   Object.keys(target).forEach(attr => {
-    if (/[^\d^\.]+/gi.test(target[attr])) {
-      unit[attr] = target[attr].match(/[^\d^\.]+/gi)[0] || 'px'
+    if (/[^\d.]+/gi.test(target[attr])) {
+      unit[attr] = target[attr].match(/[^\d.]+/gi)[0] || 'px'
     } else {
       unit[attr] = 'px'
     }
@@ -220,11 +220,12 @@ export const animate = (element, target, duration = 400, mode = 'ease-out', call
           speedBase = initState[attr]
           intervalTime = duration * 20 / 400
           break
-        case 'ease-in':
+        case 'ease-in': {
           let oldspeed = remberSpeed[attr] || 0
           iSpeed = oldspeed + (target[attr] - initState[attr]) / duration
           remberSpeed[attr] = iSpeed
           break
+        }
         default:
           speedBase = iCurrent
           intervalTime = duration * 5 / 400

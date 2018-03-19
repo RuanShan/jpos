@@ -16,7 +16,7 @@
 </template>
 
 <script>
-    import headTop from '../components/headTop'
+    import headTop from '@/components/headTop'
     import { quillEditor } from 'vue-quill-editor'
 
     export default {
