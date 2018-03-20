@@ -1,6 +1,5 @@
 <template>
   <div id="app" class="clearfix">
-    <leftNav></leftNav>
     <div class="main">
       <router-view></router-view>
     </div>
@@ -8,11 +7,9 @@
 </template>
 
 <script>
-import leftNav from '@/components/LeftNav/LeftNav.vue';
 export default {
   name: 'app',
   components: {
-    leftNav
   }
 };
 </script>

@@ -1,10 +1,14 @@
 <template>
+<el-container>
+  <headTop></headTop>
+  <leftNav></leftNav>
+
   <div class="pos">
     <div class="loading" v-if="false">
       <i class="fa fa-spinner fa-pulse fa-1x"></i>
       <span class="sr-only">Loading...</span>
     </div>
-    <el-row>
+    <el-row class="pos-content">
       <el-col :span="7" class="pos-order" id="orderList">
         <el-tabs>
           <el-tab-pane label="点餐">
@@ -19,17 +23,19 @@
                 </template>
               </el-table-column>
             </el-table>
-            <div class="order-sum">
-              <i>数量：</i>
-              <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
-              <i>金额：</i>
-              <span>{{totalMoney}}</span>&nbsp;
-              <i>元</i>
-            </div>
-            <div class="btn-group">
-              <el-button type="success" size="mini" @click="checkout">结账</el-button>
-              <el-button type="warning" size="mini">挂单</el-button>
-              <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
+            <div class="order-final">
+              <div class="order-sum">
+                <i>数量：</i>
+                <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
+                <i>金额：</i>
+                <span>{{totalMoney}}</span>&nbsp;
+                <i>元</i>
+              </div>
+              <div class="btn-group">
+                <el-button type="success" size="mini" @click="checkout">结账</el-button>
+                <el-button type="warning" size="mini">挂单</el-button>
+                <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
+              </div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="挂单">挂单</el-tab-pane>
@@ -127,9 +133,12 @@
       </el-col>
     </el-row>
   </div>
+</el-container>
 </template>
 
 <script>
+import leftNav from '@/components/LeftNav/LeftNav.vue';
+import headTop from '@/components/header.vue';
 import axios from 'axios';
 export default {
   name: 'pos',
@@ -145,7 +154,10 @@ export default {
       totalCount: 0
     };
   },
-
+  components: {
+     leftNav,
+     headTop
+  },
   beforeCreate: function () {
     axios.get('http://jspang.com/DemoApi/oftenGoods.php').then(res => {
       // console.log(res.data);
@@ -252,8 +264,38 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.pos {}
+<style lang="scss" >
+.pos {
+  position:absolute;
+  top: 50px;
+  left: 50px;
+  right: 0;
+  bottom: 50px;
+  .pos-content{
+    height: 100%;
+    .pos-order{
+      height: 100%;
+      .el-tabs{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      .el-tabs__content{
+        flex-grow: 1;
+        .el-tab-panel{
+          height: 100%;
+        }
+      }
+
+    }
+    .order-final{
+      position: absolute;
+      bottom: 0;
+      left:0;
+      right:0;
+    }
+  }
+}
 
 .pos-order {
   background-color: #f9fafc;

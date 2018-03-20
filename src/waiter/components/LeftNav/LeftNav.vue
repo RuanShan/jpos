@@ -45,6 +45,7 @@ export default {
   height: 100%;
   color: #fff;
   background-color: #1d8ce0;
+  top: 50px;
 }
 
 .nav {
@@ -66,4 +67,3 @@ export default {
   }
 }
 </style>
-
