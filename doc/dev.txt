@@ -1,0 +1,16 @@
+1. Start db service
+sudo service mongod start
+
+
+2. cd node-elm
+
+npm run dev
+
+3. cd jpos
+
+yarn run dev:waiter
+
+
+4. cd adminMongo
+
+npm start
