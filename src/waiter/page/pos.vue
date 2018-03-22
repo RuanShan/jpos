@@ -59,75 +59,26 @@
           </div>
         </div>
         <div class="goods-type">
-          <el-tabs>
-            <el-tab-pane label="汉堡">
+          <el-tabs >
+
+            <el-tab-pane v-for="menu in menuList" v-bind:label="menu.name">
               <div>
                 <el-row class="cook-list">
-                  <el-col class="cook-item" :span="4" v-for="goods in hamburgers" :key="goods.goodsId" @click.native="addOrderList(goods)">
+                  <el-col class="cook-item" :span="4" v-for="goods in menu.foods" :key="goods.id" @click.native="addOrderList(goods)">
                     <div class="food-wrapper">
                       <div class="food-img">
-                        <img :src="goods.goodsImg" width="100%" />
+                        <img :src="imgBaseUrl + goods.image_path" width="100%" />
                       </div>
                       <div class="good-info">
-                        <span class="food-name">{{goods.goodsName}}</span>
-                        <span class="food-price">￥&nbsp;{{goods.price}}&nbsp;元</span>
+                        <span class="food-name">{{goods.name}}</span>
+                        <span class="food-price">￥&nbsp;{{goods.specfoods[0].price}}&nbsp;元</span>
                       </div>
                     </div>
                   </el-col>
                 </el-row>
               </div>
             </el-tab-pane>
-            <el-tab-pane label="小吃">
-              <div>
-                <el-row class="cook-list">
-                  <el-col class="cook-item" :span="4" v-for="goods in snack" :key="goods.goodsId" @click.native="addOrderList(goods)">
-                    <div class="food-wrapper">
-                      <div class="food-img">
-                        <img :src="goods.goodsImg" width="100%" />
-                      </div>
-                      <div class="good-info">
-                        <span class="food-name">{{goods.goodsName}}</span>
-                        <span class="food-price">￥&nbsp;{{goods.price}}&nbsp;元</span>
-                      </div>
-                    </div>
-                  </el-col>
-                </el-row>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="饮料">
-              <div>
-                <el-row class="cook-list">
-                  <el-col class="cook-item" :span="4" v-for="goods in drinks" :key="goods.goodsId" @click.native="addOrderList(goods)">
-                    <div class="food-wrapper">
-                      <div class="food-img">
-                        <img :src="goods.goodsImg" width="100%" />
-                      </div>
-                      <div class="good-info">
-                        <span class="food-name">{{goods.goodsName}}</span>
-                        <span class="food-price">￥&nbsp;{{goods.price}}&nbsp;元</span>
-                      </div>
-                    </div>
-                  </el-col>
-                </el-row>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="套餐">
-              <div>
-                <el-row class="cook-list">
-                  <el-col class="cook-item" :span="4" v-for="goods in packages" :key="goods.goodsId" @click.native="addOrderList(goods)">
-                    <div class="food-wrapper">
-                      <div class="food-img">
-                        <img :src="goods.goodsImg" width="100%" />
-                      </div>
-                      <div class="good-info">
-                        <span class="food-name">{{goods.goodsName}}</span>
-                        <span class="food-price">￥&nbsp;{{goods.price}}&nbsp;元</span>
-                      </div>
-                    </div>
-                  </el-col>
-                </el-row>
-              </div>
-            </el-tab-pane>
+
           </el-tabs>
         </div>
       </el-col>
@@ -139,11 +90,26 @@
 <script>
 import leftNav from '@/components/LeftNav/LeftNav.vue';
 import headTop from '@/components/header.vue';
+import {mapState, mapMutations} from 'vuex'
+import { shopDetails, foodMenu } from '@/api/getData'
+import loading from '@/components/common/loading'
+import {imgBaseUrl} from '@/config/env'
+
+// import buyCart from '@/components/common/buyCart'
+
 import axios from 'axios';
 export default {
   name: 'pos',
   data() {
     return {
+      geohash: '', //geohash位置信息
+      shopId: null, //商店id值
+      showLoading: true, //显示加载动画
+      shopDetailData: null, //商铺详情
+      menuList: [], //食品列表
+      menuIndex: 0, //已选菜单索引值，默认为0
+      imgBaseUrl,
+
       tableData: [],
       hotGoods: [],
       hamburgers: [],
@@ -155,10 +121,21 @@ export default {
     };
   },
   components: {
-     leftNav,
-     headTop
+    loading,
+    leftNav,
+    headTop
   },
-  beforeCreate: function () {
+  computed: {
+    ...mapState([
+        'latitude','longitude','cartList'
+    ]),
+  },
+  created(){
+    this.shopId = 4
+    this.initData()
+
+  },
+  beforeCreatex: function () {
     axios.get('http://jspang.com/DemoApi/oftenGoods.php').then(res => {
       // console.log(res.data);
       this.hotGoods = res.data;
@@ -183,6 +160,16 @@ export default {
     document.getElementById('orderList').style.minHeight = orderListHeight + 'px';
   },
   methods: {
+    ...mapMutations([
+        'RECORD_ADDRESS','ADD_CART','REDUCE_CART','INIT_BUYCART','CLEAR_CART','RECORD_SHOPDETAIL'
+    ]),
+    async initData(){
+      //获取商铺信息
+      this.shopDetailData = await shopDetails(this.shopId, this.latitude, this.longitude);
+      //获取商铺食品列表
+      this.menuList = await foodMenu(this.shopId);
+
+    },
     addOrderList(goods) { // 增加商品
       this.totalMoney = 0;
       this.totalCount = 0;

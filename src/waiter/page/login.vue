@@ -98,7 +98,7 @@
   }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
   @import '../style/mixin';
   .login_page{
     background-color: #324057;
@@ -114,8 +114,8 @@
     }
   }
   .form_contianer{
-    .wh(320px, 210px);
-    .ctp(320px, 210px);
+    @include wh(320px, 210px);
+    @include ctp(320px, 210px);
     padding: 25px;
     border-radius: 5px;
     text-align: center;
