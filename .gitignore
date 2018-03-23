@@ -60,8 +60,9 @@ typings/
 .DS_Store
 dist/electron/*
 dist/web/*
-build/*
-!build/icons
+#build/*
+#!build/*.js
+#!build/icons
 coverage
 node_modules/
 npm-debug.log
