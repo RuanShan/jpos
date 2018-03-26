@@ -112,7 +112,7 @@
             <el-button type="primary" @click="addFood('foodForm')">确认添加食品</el-button>
           </el-form-item>
           </el-form>
-          <el-dialog title="添加规格" v-model="dialogFormVisible">
+          <el-dialog title="添加规格" :visible.sync="dialogFormVisible">
             <el-form :rules="specsFormrules" :model="specsForm">
               <el-form-item label="规格" label-width="100px" prop="specs">
                  <el-input v-model="specsForm.specs" auto-complete="off"></el-input>

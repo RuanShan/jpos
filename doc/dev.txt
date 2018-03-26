@@ -10,7 +10,14 @@ npm run dev
 
 yarn run dev:waiter
 
+yarn run dev:manage
 
 4. cd adminMongo
 
 npm start
+
+
+
+
+================================================================================
+http://jpos_api.firecart.cn/v2/index_entry

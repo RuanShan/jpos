@@ -67,7 +67,7 @@
                   <el-col class="cook-item" :span="4" v-for="goods in menu.foods" :key="goods.id" @click.native="addOrderList(goods)">
                     <div class="food-wrapper">
                       <div class="food-img">
-                        <img :src="imgBaseUrl + goods.image_path" width="100%" />
+                        <img :src="baseImgUrl + goods.image_path" width="100%" />
                       </div>
                       <div class="good-info">
                         <span class="food-name">{{goods.name}}</span>
@@ -93,7 +93,7 @@ import headTop from '@/components/header.vue';
 import {mapState, mapMutations} from 'vuex'
 import { shopDetails, foodMenu } from '@/api/getData'
 import loading from '@/components/common/loading'
-import {imgBaseUrl} from '@/config/env'
+import {baseImgUrl} from '@/config/env'
 
 // import buyCart from '@/components/common/buyCart'
 
@@ -108,7 +108,7 @@ export default {
       shopDetailData: null, //商铺详情
       menuList: [], //食品列表
       menuIndex: 0, //已选菜单索引值，默认为0
-      imgBaseUrl,
+      baseImgUrl,
 
       tableData: [],
       hotGoods: [],

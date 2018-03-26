@@ -73,7 +73,7 @@
                   :total="count">
                 </el-pagination>
             </div>
-            <el-dialog title="修改店铺信息" v-model="dialogFormVisible">
+            <el-dialog title="修改店铺信息" :visible.sync="dialogFormVisible">
                 <el-form :model="selectTable">
                     <el-form-item label="店铺名称" label-width="100px">
                         <el-input v-model="selectTable.name" auto-complete="off"></el-input>

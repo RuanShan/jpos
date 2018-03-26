@@ -1,139 +1,244 @@
-import fetch from '../config/fetch'
-import {getStore} from '../config/mUtils'
+import fetch from '@/config/fetch'
 
 /**
- * 获取首页默认地址
+ * 登陆
+ */
+
+export const login = data => fetch('/admin/login', data, 'POST');
+
+/**
+ * 退出
+ */
+
+export const signout = () => fetch('/admin/singout');
+
+/**
+ * 获取用户信息
+ */
+
+export const getAdminInfo = () => fetch('/admin/info');
+
+/**
+ * api请求量
+ */
+
+export const apiCount = date => fetch('/statis/api/' + date + '/count');
+
+/**
+ * 所有api请求量
+ */
+
+export const apiAllCount = () => fetch('/statis/api/count');
+
+
+/**
+ * 所有api请求信息
+ */
+
+export const apiAllRecord = () => fetch('/statis/api/all');
+
+/**
+ * 用户注册量
+ */
+
+export const userCount = date => fetch('/statis/user/' + date + '/count');
+
+/**
+ * 某一天订单数量
+ */
+
+export const orderCount = date => fetch('/statis/order/' + date + '/count');
+
+
+/**
+ * 某一天管理员注册量
+ */
+
+export const adminDayCount = date => fetch('/statis/admin/' + date + '/count');
+
+/**
+ * 管理员列表
+ */
+
+export const adminList = data => fetch('/admin/all', data);
+
+/**
+ * 管理员数量
+ */
+
+export const adminCount = () => fetch('/admin/count');
+
+/**
+ * 获取定位城市
  */
 
 export const cityGuess = () => fetch('/v1/cities', {
-  type: 'guess'
+	type: 'guess'
 });
 
-
 /**
- * 获取首页热门城市
+ * 添加商铺
  */
 
-export const hotcity = () => fetch('/v1/cities', {
-  type: 'hot'
-});
-
-
-/**
- * 获取首页所有城市
- */
-
-export const groupcity = () => fetch('/v1/cities', {
-  type: 'group'
-});
-
-
-/**
- * 获取当前所在城市
- */
-
-export const currentcity = number => fetch('/v1/cities/' + number);
-
+export const addShop = data => fetch('/shopping/addShop', data, 'POST');
 
 /**
  * 获取搜索地址
  */
 
 export const searchplace = (cityid, value) => fetch('/v1/pois', {
-  type: 'search',
-  city_id: cityid,
-  keyword: value
+	type: 'search',
+	city_id: cityid,
+	keyword: value
 });
 
-
 /**
- * 获取msite页面地址信息
+ * 获取当前店铺食品种类
  */
 
-export const msiteAddress = geohash => fetch('/v2/pois/' + geohash);
+export const getCategory = restaurant_id => fetch('/shopping/getcategory/' + restaurant_id);
+
+/**
+ * 添加食品种类
+ */
+
+export const addCategory = data => fetch('/shopping/addcategory', data, 'POST');
 
 
 /**
- * 获取msite页面食品分类列表
+ * 添加食品
  */
 
-export const msiteFoodTypes = geohash => fetch('/v2/index_entry', {
-  geohash,
-  group_type: '1',
-  'flags[]': 'F'
+export const addFood = data => fetch('/shopping/addfood', data, 'POST');
+
+
+/**
+ * category 种类列表
+ */
+
+export const foodCategory = (latitude, longitude) => fetch('/shopping/v2/restaurant/category');
+
+/**
+ * 获取餐馆列表
+ */
+
+export const getResturants = data => fetch('/shopping/restaurants', data);
+
+/**
+ * 获取餐馆详细信息
+ */
+
+export const getResturantDetail = restaurant_id => fetch('/shopping/restaurant/' + restaurant_id);
+
+/**
+ * 获取餐馆数量
+ */
+
+export const getResturantsCount = () => fetch('/shopping/restaurants/count');
+
+/**
+ * 更新餐馆信息
+ */
+
+export const updateResturant = data => fetch('/shopping/updateshop', data, 'POST');
+
+/**
+ * 删除餐馆
+ */
+
+export const deleteResturant = restaurant_id => fetch('/shopping/restaurant/' + restaurant_id, {}, 'DELETE');
+
+/**
+ * 获取食品列表
+ */
+
+export const getFoods = data => fetch('/shopping/v2/foods', data);
+
+/**
+ * 获取食品数量
+ */
+
+export const getFoodsCount = data => fetch('/shopping/v2/foods/count', data);
+
+
+/**
+ * 获取menu列表
+ */
+
+export const getMenu = data => fetch('/shopping/v2/menu', data);
+
+/**
+ * 获取menu详情
+ */
+
+export const getMenuById = category_id => fetch('/shopping/v2/menu/' + category_id);
+
+/**
+ * 更新食品信息
+ */
+
+export const updateFood = data => fetch('/shopping/v2/updatefood', data, 'POST');
+
+/**
+ * 删除食品
+ */
+
+export const deleteFood = food_id => fetch('/shopping/v2/food/' + food_id, {}, 'DELETE');
+
+/**
+ * 获取用户列表
+ */
+
+export const getUserList = data => fetch('/v1/users/list', data);
+
+/**
+ * 获取用户数量
+ */
+
+export const getUserCount = data => fetch('/v1/users/count', data);
+
+/**
+ * 获取订单列表
+ */
+
+export const getOrderList = data => fetch('/bos/orders', data);
+
+/**
+ * 获取订单数量
+ */
+
+export const getOrderCount = data => fetch('/bos/orders/count', data);
+
+/**
+ * 获取用户信息
+ */
+
+export const getUserInfo = user_id => fetch('/v1/user/' + user_id);
+
+/**
+ * 获取地址信息
+ */
+
+export const getAddressById = address_id => fetch('/v1/addresse/' + address_id);
+
+/**
+ * 获取用户分布信息
+ */
+
+export const getUserCity = () => fetch('/v1/user/city/count');
+
+
+
+/********************************************************************************
+ from vue2-elm
+********************************************************************************/
+/**
+ * 获取shop页面菜单列表
+ */
+
+export const foodMenu = restaurant_id => fetch('/shopping/v2/menu', {
+  restaurant_id
 });
-
-
-/**
- * 获取msite商铺列表
- */
-
-export const shopList = (latitude, longitude, offset, restaurant_category_id = '', restaurant_category_ids = '', order_by = '', delivery_mode = '', support_ids = []) => {
-  let supportStr = '';
-  support_ids.forEach(item => {
-    if (item.status) {
-      supportStr += '&support_ids[]=' + item.id;
-    }
-  });
-  let data = {
-    latitude,
-    longitude,
-    offset,
-    limit: '20',
-    'extras[]': 'activities',
-    keyword: '',
-    restaurant_category_id,
-    'restaurant_category_ids[]': restaurant_category_ids,
-    order_by,
-    'delivery_mode[]': delivery_mode + supportStr
-  };
-  return fetch('/shopping/restaurants', data);
-};
-
-
-/**
- * 获取search页面搜索结果
- */
-
-export const searchRestaurant = (geohash, keyword) => fetch('/v4/restaurants', {
-  'extras[]': 'restaurant_activity',
-  geohash,
-  keyword,
-  type: 'search'
-});
-
-
-/**
- * 获取food页面的 category 种类列表
- */
-
-export const foodCategory = (latitude, longitude) => fetch('/shopping/v2/restaurant/category', {
-  latitude,
-  longitude
-});
-
-
-/**
- * 获取food页面的配送方式
- */
-
-export const foodDelivery = (latitude, longitude) => fetch('/shopping/v1/restaurants/delivery_modes', {
-  latitude,
-  longitude,
-  kw: ''
-});
-
-
-/**
- * 获取food页面的商家属性活动列表
- */
-
-export const foodActivity = (latitude, longitude) => fetch('/shopping/v1/restaurants/activity_attributes', {
-  latitude,
-  longitude,
-  kw: ''
-});
-
 
 /**
  * 获取shop页面商铺详情
@@ -143,329 +248,3 @@ export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/res
   latitude,
   longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
 });
-
-
-
-/**
- * 获取shop页面菜单列表
- */
-
-export const foodMenu = restaurant_id => fetch('/shopping/v2/menu', {
-  restaurant_id
-});
-
-
-/**
- * 获取商铺评价列表
- */
-
-export const getRatingList = (shopid, offset, tag_name = '') => fetch('/ugc/v2/restaurants/' + shopid + '/ratings', {
-  has_content: true,
-  offset,
-  limit: 10,
-  tag_name
-});
-
-
-/**
- * 获取商铺评价分数
- */
-
-export const ratingScores = shopid => fetch('/ugc/v2/restaurants/' + shopid + '/ratings/scores');
-
-
-/**
- * 获取商铺评价分类
- */
-
-export const ratingTags = shopid => fetch('/ugc/v2/restaurants/' + shopid + '/ratings/tags');
-
-
-/**
- * 获取短信验证码
- */
-
-export const mobileCode = phone => fetch('/v4/mobile/verify_code/send', {
-  mobile: phone,
-  scene: 'login',
-  type: 'sms'
-}, 'POST');
-
-
-/**
- * 获取图片验证码
- */
-
-export const getcaptchas = () => fetch('/v1/captchas', {},'POST');
-
-
-/**
- * 检测帐号是否存在
- */
-
-export const checkExsis = (checkNumber, type) => fetch('/v1/users/exists', {
-  [type]: checkNumber,
-  type
-});
-
-
-/**
- * 发送帐号
- */
-
-export const sendMobile = (sendData, captcha_code, type, password) => fetch('/v1/mobile/verify_code/send', {
-  action: "send",
-  captcha_code,
-  [type]: sendData,
-  type: "sms",
-  way: type,
-  password,
-}, 'POST');
-
-
-/**
- * 确认订单
- */
-
-export const checkout = (geohash, entities, shopid) => fetch('/v1/carts/checkout', {
-  come_from: "web",
-  geohash,
-  entities,
-  restaurant_id: shopid,
-}, 'POST');
-
-
-/**
- * 获取快速备注列表
- */
-
-export const getRemark = (id, sig) => fetch('/v1/carts/' + id + '/remarks', {
-  sig
-});
-
-
-/**
- * 获取地址列表
- */
-
-export const getAddress = (id, sig) => fetch('/v1/carts/' + id + '/addresses', {
-  sig
-});
-
-
-/**
- * 搜索地址
- */
-
-export const searchNearby = keyword => fetch('/v1/pois', {
-  type: 'nearby',
-  keyword
-});
-
-
-/**
- * 添加地址
- */
-
-export const postAddAddress = (userId, address, address_detail, geohash, name, phone, phone_bk, poi_type, sex, tag, tag_type) => fetch('/v1/users/' + userId + '/addresses', {
-  address,
-  address_detail,
-  geohash,
-  name,
-  phone,
-  phone_bk,
-  poi_type,
-  sex,
-  tag,
-  tag_type,
-}, 'POST');
-
-
-/**
- * 下订单
- */
-
-export const placeOrders = (user_id, cart_id, address_id, description, entities, geohash, sig) => fetch('/v1/users/' + user_id + '/carts/' + cart_id + '/orders', {
-  address_id,
-  come_from: "mobile_web",
-  deliver_time: "",
-  description,
-  entities,
-  geohash,
-  paymethod_id: 1,
-  sig,
-}, 'POST');
-
-
-/**
- * 重新发送订单验证码
- */
-
-export const rePostVerify = (cart_id, sig, type) => fetch('/v1/carts/' + cart_id + '/verify_code', {
-  sig,
-  type,
-}, 'POST');
-
-
-
-/**
- * 下订单
- */
-
-export const validateOrders = ({
-  user_id,
-  cart_id,
-  address_id,
-  description,
-  entities,
-  geohash,
-  sig,
-  validation_code,
-  validation_token
-}) => fetch('/v1/users/' + user_id + '/carts/' + cart_id + '/orders', {
-  address_id,
-  come_from: "mobile_web",
-  deliver_time: "",
-  description,
-  entities,
-  geohash,
-  paymethod_id: 1,
-  sig,
-  validation_code,
-  validation_token,
-}, 'POST');
-
-
-/**
- * 重新发送订单验证码
- */
-
-export const payRequest = (merchantOrderNo, userId) => fetch('/payapi/payment/queryOrder', {
-  merchantId: 5,
-  merchantOrderNo,
-  source: 'MOBILE_WAP',
-  userId,
-  version: '1.0.0',
-});
-
-
-
-/**
- * 获取服务中心信息
- */
-
-export const getService = () => fetch('/v3/profile/explain');
-
-
-
-/**
-*兑换会员卡
-*/
-
-export const vipCart = (id, number, password) => fetch('/member/v1/users/' + id + '/delivery_card/physical_card/bind',{
-  number,
-  password
-}, 'POST')
-
-
-
-/**
- * 获取红包
-*/
-
-export const getHongbaoNum = id => fetch('/promotion/v2/users/' + id + '/hongbaos?limit=20&offset=0');
-
-
-
-/**
- * 获取过期红包
-*/
-
-
-export const getExpired = id => fetch('/promotion/v2/users/' + id + '/expired_hongbaos?limit=20&offset=0');
-
-
-/**
- * 兑换红包
-*/
-
-export const exChangeHongbao = (id, exchange_code, captcha_code) => fetch('/v1/users/' + id + '/hongbao/exchange',{
-  exchange_code,
-  captcha_code,
-}, 'POST');
-
-
-/**
- * 获取用户信息
- */
-
-export const getUser = () => fetch('/v1/user', {user_id: getStore('user_id')});
-
-
-/**
- * 手机号登录
- */
-
-//var sendLogin = (code, mobile, validate_token) => fetch('/v1/login/app_mobile', {
-//  code,
-//  mobile,
-//  validate_token
-//}, 'POST');
-
-
-/**
- * 获取订单列表
- */
-
-export const getOrderList = (user_id, offset) => fetch('/bos/v2/users/' + user_id + '/orders', {
-  limit: 10,
-  offset,
-});
-
-
-/**
- * 获取订单详情
- */
-
-export const getOrderDetail = (user_id, orderid) => fetch('/bos/v1/users/' + user_id + '/orders/' + orderid + '/snapshot');
-
-
-/**
-*个人中心里编辑地址
-*/
-
-export const getAddressList = (user_id) => fetch('/v1/users/'+user_id+'/addresses')
-
-/**
-*个人中心里搜索地址
-*/
-
-export const getSearchAddress = (keyword) => fetch('v1/pois',{
-  keyword:keyword,
-  type:'nearby'
-})
-
-/**
-* 删除地址
-*/
-
-export const deleteAddress = (userid, addressid) => fetch( '/v1/users/' + userid + '/addresses/' + addressid, {}, 'DELETE')
-
-
-
-/**
- * 账号密码登录
- */
-export const accountLogin = (username, password, captcha_code) => fetch('/v2/login', {username, password, captcha_code}, 'POST');
-
-
-/**
- * 退出登录
- */
-export const signout = () => fetch('/v2/signout');
-
-
-/**
- * 改密码
- */
-export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code) => fetch('/v2/changepassword', {username, oldpassWord, newpassword, confirmpassword, captcha_code}, 'POST');
