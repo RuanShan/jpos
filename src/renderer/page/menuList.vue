@@ -83,17 +83,6 @@
                 <el-form-item label="分类介绍" label-width="100px">
                     <el-input v-model="selectTable.description"></el-input>
                 </el-form-item>
-                <el-form-item label="分类图片" label-width="100px">
-                    <el-upload
-                      class="avatar-uploader"
-                      :action="baseUrl + '/v1/addimg/food'"
-                      :show-file-list="false"
-                      :on-success="handleServiceAvatarScucess"
-                      :before-upload="beforeAvatarUpload">
-                      <img v-if="selectTable.image_path" :src="baseImgPath + selectTable.image_path" class="avatar">
-                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                </el-form-item>
             </el-form>
 
               <div slot="footer" class="dialog-footer">
