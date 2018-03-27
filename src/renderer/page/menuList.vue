@@ -75,25 +75,15 @@
                   :total="count">
                 </el-pagination>
             </div>
-            <el-dialog title="修改食品信息" :visible.sync="dialogFormVisible">
+            <el-dialog title="修改分类信息" :visible.sync="dialogFormVisible">
             <el-form ref="selectTable" :model="selectTable">
-                <el-form-item label="食品名称" label-width="100px">
+                <el-form-item label="分类名称" label-width="100px">
                     <el-input v-model="selectTable.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="食品介绍" label-width="100px">
+                <el-form-item label="分类介绍" label-width="100px">
                     <el-input v-model="selectTable.description"></el-input>
                 </el-form-item>
-                <el-form-item label="食品分类" label-width="100px">
-                  <el-select v-model="selectIndex" :placeholder="selectMenu.label" @change="handleSelect">
-                    <el-option
-                      v-for="item in menuOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.index">
-                    </el-option>
-                </el-select>
-                </el-form-item>
-                <el-form-item label="食品图片" label-width="100px">
+                <el-form-item label="分类图片" label-width="100px">
                     <el-upload
                       class="avatar-uploader"
                       :action="baseUrl + '/v1/addimg/food'"
@@ -325,7 +315,7 @@ console.log('getSelectItemData'+this.selectTable)
             if (res.status == 1) {
               this.$message({
                 type: 'success',
-                message: '删除食品成功'
+                message: '删除分类成功'
               })
               this.tableData.splice(index, 1)
             } else {
@@ -336,7 +326,7 @@ console.log('getSelectItemData'+this.selectTable)
               type: 'error',
               message: err.message
             })
-            console.log('删除食品失败')
+            console.log('删除分类失败')
           }
         },
         handleServiceAvatarScucess (res, file) {
@@ -367,7 +357,7 @@ console.log('getSelectItemData'+this.selectTable)
             if (res.status == 1) {
               this.$message({
                 type: 'success',
-                message: '更新食品信息成功'
+                message: '更新分类信息成功'
               })
               this.getFoods()
             } else {
