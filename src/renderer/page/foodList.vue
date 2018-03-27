@@ -305,7 +305,6 @@
           const restaurant = await getResturantDetail(row.restaurant_id)
           const category = await getMenuById(row.category_id)
           this.selectTable = {...row, ...{restaurant_name: restaurant.name, restaurant_address: restaurant.address, category_name: category.name}}
-console.log('getSelectItemData'+this.selectTable)
           this.selectMenu = {label: category.name, value: row.category_id}
           this.tableData.splice(row.index, 1, {...this.selectTable})
           this.$nextTick(() => {
