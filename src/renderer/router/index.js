@@ -10,6 +10,7 @@ const addShop = r => require.ensure([], () => r(require('@/page/addShop')), 'add
 const addGoods = r => require.ensure([], () => r(require('@/page/addGoods')), 'addGoods')
 const userList = r => require.ensure([], () => r(require('@/page/userList')), 'userList')
 const shopList = r => require.ensure([], () => r(require('@/page/shopList')), 'shopList')
+const menuList = r => require.ensure([], () => r(require('@/page/menuList')), 'menuList')
 const foodList = r => require.ensure([], () => r(require('@/page/foodList')), 'foodList')
 const orderList = r => require.ensure([], () => r(require('@/page/orderList')), 'orderList')
 const adminList = r => require.ensure([], () => r(require('@/page/adminList')), 'adminList')
@@ -52,7 +53,7 @@ const routes = [
       meta: ['数据管理', '商家列表']
     }, {
       path: '/menuList',
-      component: foodList,
+      component: menuList,
       meta: ['数据管理', '菜单列表']
     }, {
       path: '/foodList',

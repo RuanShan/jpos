@@ -21,3 +21,6 @@ npm start
 
 ================================================================================
 http://jpos_api.firecart.cn/v2/index_entry
+
+
+http://127.0.0.1:8001/shopping/v2/menu/count

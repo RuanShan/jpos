@@ -163,6 +163,12 @@ export const getFoodsCount = data => fetch('/shopping/v2/foods/count', data)
 export const getMenu = data => fetch('/shopping/v2/menu', data)
 
 /**
+ * 获取menu数量
+ */
+
+export const getMenusCount = data => fetch('/shopping/v2/menus/count', data)
+
+/**
  * 获取menu详情
  */
 

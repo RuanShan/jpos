@@ -76,7 +76,7 @@
                 </el-pagination>
             </div>
             <el-dialog title="修改分类信息" :visible.sync="dialogFormVisible">
-            <el-form ref="selectTable" :model="selectTable">
+            <el-form :model="selectTable">
                 <el-form-item label="分类名称" label-width="100px">
                     <el-input v-model="selectTable.name" auto-complete="off"></el-input>
                 </el-form-item>
@@ -95,31 +95,7 @@
                     </el-upload>
                 </el-form-item>
             </el-form>
-            <el-row style="overflow: auto; text-align: center;">
-              <el-table :data="specs" style="margin-bottom: 20px;" :row-class-name="tableRowClassName">
-                <el-table-column
-                  prop="specs"
-                  label="规格">
-                </el-table-column>
-                <el-table-column
-                  prop="packing_fee"
-                  label="包装费">
-                </el-table-column>
-                <el-table-column
-                  prop="price"
-                  label="价格">
-                </el-table-column>
-                <el-table-column label="操作" >
-                  <template slot-scope="scope">
-                      <el-button
-                        size="small"
-                        type="danger"
-                        @click="deleteSpecs(scope.$index)">删除</el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <el-button type="primary" @click="specsFormVisible = true" style="margin-bottom: 10px;">添加规格</el-button>
-            </el-row>
+
               <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="updateFood">确 定</el-button>
@@ -151,7 +127,8 @@
 <script>
     import headTop from '@/components/headTop'
     import {baseUrl, baseImgPath} from '@/config/env'
-    import {getFoods, getFoodsCount, getMenu, updateFood, deleteFood, getResturantDetail, getMenuById} from '@/api/getData'
+    import {mapState} from 'vuex'
+    import {getFoods, getMenu, getMenusCount, updateFood, deleteFood, getResturantDetail, getMenuById} from '@/api/getData'
     export default {
       data () {
         return {
@@ -184,10 +161,12 @@
         }
       },
       created () {
-        this.restaurant_id = this.$route.query.restaurant_id
+        console.log(this.adminInfo)
+        this.restaurant_id = this.adminInfo.shop_id
         this.initData()
-    },
+      },
       computed: {
+        ...mapState(['adminInfo']),
         specs: function () {
           let specs = []
           if (this.selectTable.specfoods) {
@@ -208,13 +187,13 @@
       methods: {
         async initData () {
           try {
-            const countData = await getFoodsCount({restaurant_id: this.restaurant_id})
+            const countData = await getMenusCount({restaurant_id: this.restaurant_id})
             if (countData.status == 1) {
               this.count = countData.count
             } else {
               throw new Error('获取数据失败')
             }
-            this.getFoods()
+            this.getMenu()
           } catch (err) {
             console.log('获取数据失败', err)
           }
@@ -222,13 +201,24 @@
         async getMenu () {
           this.menuOptions = []
           try {
-            const menu = await getMenu({restaurant_id: this.selectTable.restaurant_id, allMenu: true})
+            const menu = await getMenu({restaurant_id: this.restaurant_id, allMenu: true})
+            this.tableData = []
             menu.forEach((item, index) => {
               this.menuOptions.push({
                 label: item.name,
                 value: item.id,
                 index
               })
+
+              const tableData = {}
+              tableData.name = item.name
+              tableData.description = item.description
+
+              tableData.icon_url = item.icon_url
+              tableData.foods = item.foods
+              tableData.index = index
+              this.tableData.push(tableData)
+
             })
           } catch (err) {
             console.log('获取食品种类失败', err)
@@ -294,13 +284,8 @@
         async getSelectItemData (row, type) {
           const restaurant = await getResturantDetail(row.restaurant_id)
           const category = await getMenuById(row.category_id)
-          this.selectTable = {...row, ...{restaurant_name: restaurant.name, restaurant_address: restaurant.address, category_name: category.name}}
-console.log('getSelectItemData'+this.selectTable)
-          this.selectMenu = {label: category.name, value: row.category_id}
-          this.tableData.splice(row.index, 1, {...this.selectTable})
-          this.$nextTick(() => {
-            this.expendRow.push(row.index)
-          })
+          this.selectTable = {...row }
+
           if (type == 'edit' && this.restaurant_id != row.restaurant_id) {
             this.getMenu()
           }
