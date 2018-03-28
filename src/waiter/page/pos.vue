@@ -46,7 +46,7 @@
       </el-col>
       <el-col :span="17">
         <div class="hot-goods">
-          <div class="title">热销商品</div>
+          <div class="title">热销商品 </div>
           <div>
             <el-row class="hot-list">
               <el-col class="hot-item" :span="4" v-for="goods in hotGoods" :key="goods.goodsId" @click.native="addOrderList(goods)">
@@ -67,7 +67,7 @@
                   <el-col class="cook-item" :span="4" v-for="goods in menu.foods" :key="goods.id" @click.native="addOrderList(goods)">
                     <div class="food-wrapper">
                       <div class="food-img">
-                        <img :src="baseImgUrl + goods.image_path" width="100%" />
+                        <img :src="baseImgPath + goods.image_path" width="100%" />
                       </div>
                       <div class="good-info">
                         <span class="food-name">{{goods.name}}</span>
@@ -89,11 +89,11 @@
 
 <script>
 import leftNav from '@/components/LeftNav/LeftNav.vue';
-import headTop from '@/components/header.vue';
+import headTop from '@/components/headTop.vue';
 import {mapState, mapMutations} from 'vuex'
 import { shopDetails, foodMenu } from '@/api/getData'
 import loading from '@/components/common/loading'
-import {baseImgUrl} from '@/config/env'
+import {baseImgPath} from '@/config/env'
 
 // import buyCart from '@/components/common/buyCart'
 
@@ -108,7 +108,7 @@ export default {
       shopDetailData: null, //商铺详情
       menuList: [], //食品列表
       menuIndex: 0, //已选菜单索引值，默认为0
-      baseImgUrl,
+      baseImgPath,
 
       tableData: [],
       hotGoods: [],
@@ -127,13 +127,17 @@ export default {
   },
   computed: {
     ...mapState([
-        'latitude','longitude','cartList'
+      'adminInfo','latitude','longitude','cartList'
     ]),
   },
   created(){
-    this.shopId = 4
+    this.shopId = 0
+  },
+  beforeMount(){
     this.initData()
-
+    // adminInfo is initialized in event created
+    console.log( this.adminInfo )
+    this.shopId = this.adminInfo.shop_id
   },
   beforeCreatex: function () {
     axios.get('http://jspang.com/DemoApi/oftenGoods.php').then(res => {

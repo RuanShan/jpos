@@ -87,7 +87,7 @@
 
               <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="updateFood">确 定</el-button>
+                <el-button type="primary" @click="updateMenu">确 定</el-button>
               </div>
             </el-dialog>
 
@@ -117,7 +117,7 @@
     import headTop from '@/components/headTop'
     import {baseUrl, baseImgPath} from '@/config/env'
     import {mapState} from 'vuex'
-    import {getFoods, getMenu, getMenusCount, updateFood, deleteFood, getResturantDetail, getMenuById} from '@/api/getData'
+    import {getFoods, getMenu, getMenusCount, updateMenu,  deleteFood} from '@/api/getData'
     export default {
       data () {
         return {
@@ -132,7 +132,6 @@
           currentPage: 1,
           selectTable: {},
           dialogFormVisible: false,
-          menuOptions: [],
           selectMenu: {},
           selectIndex: null,
           specsForm: {
@@ -188,18 +187,13 @@
           }
         },
         async getMenu () {
-          this.menuOptions = []
           try {
             const menu = await getMenu({restaurant_id: this.restaurant_id, allMenu: true})
             this.tableData = []
             menu.forEach((item, index) => {
-              this.menuOptions.push({
-                label: item.name,
-                value: item.id,
-                index
-              })
 
               const tableData = {}
+              tableData.id = item.id
               tableData.name = item.name
               tableData.description = item.description
 
@@ -271,8 +265,8 @@
           this.dialogFormVisible = true
         },
         async getSelectItemData (row, type) {
-          const restaurant = await getResturantDetail(row.restaurant_id)
-          const category = await getMenuById(row.category_id)
+          //const restaurant = await getResturantDetail(row.restaurant_id)
+          //const category = await getMenuById(row.category_id)
           this.selectTable = {...row }
 
           if (type == 'edit' && this.restaurant_id != row.restaurant_id) {
@@ -281,7 +275,6 @@
         },
         handleSelect (index) {
           this.selectIndex = index
-          this.selectMenu = this.menuOptions[index]
         },
         async handleDelete (index, row) {
           try {
@@ -322,18 +315,20 @@
           }
           return isRightType && isLt2M
         },
-        async updateFood () {
+        async updateMenu () {
           this.dialogFormVisible = false
           try {
             const subData = {new_category_id: this.selectMenu.value, specs: this.specs}
             const postData = {...this.selectTable, ...subData}
-            const res = await updateFood(postData)
+            const id = postData.id
+            console.log(this.selectTable )
+            const res = await updateMenu(id, postData)
             if (res.status == 1) {
               this.$message({
                 type: 'success',
                 message: '更新分类信息成功'
               })
-              this.getFoods()
+              this.getMenu()
             } else {
               this.$message({
                 type: 'error',

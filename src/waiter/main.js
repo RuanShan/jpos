@@ -3,7 +3,7 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router';
-import store from './store/'
+import store from './store'
 
 // import '@/common/less/index.less';
 import ElementUI from 'element-ui';

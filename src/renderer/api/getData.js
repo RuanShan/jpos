@@ -175,6 +175,12 @@ export const getMenusCount = data => fetch('/shopping/v2/menus/count', data)
 export const getMenuById = category_id => fetch('/shopping/v2/menu/' + category_id)
 
 /**
+ * 更新menu信息
+ */
+
+export const updateMenu = (category_id, data) => fetch('/shopping/v2/menu/' + category_id, data, 'POST')
+
+/**
  * 更新食品信息
  */
 

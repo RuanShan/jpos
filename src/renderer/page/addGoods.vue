@@ -99,7 +99,7 @@
                   label="价格">
                 </el-table-column>
                 <el-table-column label="操作" >
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button
                       size="small"
                       type="danger"
@@ -223,6 +223,11 @@ export default {
        selectValue: function () {
          return this.categoryForm.categoryList[this.categoryForm.categorySelect] || {}
        }
+     },
+     beforeRouteUpdate (to, from, next) {
+      // react to route changes...
+      console.log('yes, fefore route udpate')
+      next()
      },
      methods: {
        async initData () {

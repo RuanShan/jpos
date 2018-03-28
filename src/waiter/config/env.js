@@ -3,25 +3,25 @@
  *
  * baseUrl: 域名地址
  * routerMode: 路由模式
- * baseImgUrl: 图片存放地址
+ * baseImgPath: 图片存放地址
  *
  */
 let baseUrl = ''
 let routerMode = 'history'
-let baseImgUrl
+let baseImgPath = ''
 
 if (process.env.NODE_ENV == 'development') {
   baseUrl = 'http://localhost:8001'
-  baseImgUrl = 'http://localhost:8001/img/'
+  baseImgPath = 'http://localhost:8001/img/'
 //  baseUrl = 'http://jpos_api.firecart.cn'
-//  baseImgUrl = 'http://jpos_api.firecart.cn/img/'
+//  baseImgPath = 'http://jpos_api.firecart.cn/img/'
 } else {
   baseUrl = 'http://cangdu.org:8001'
-  baseImgUrl = 'http://cangdu.org:8001/img/'
+  baseImgPath = 'http://cangdu.org:8001/img/'
 }
 
 export {
   baseUrl,
   routerMode,
-  baseImgUrl
+  baseImgPath
 }
