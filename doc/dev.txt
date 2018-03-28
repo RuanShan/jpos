@@ -2,7 +2,7 @@
 sudo service mongod start
 
 
-2. cd node-elm
+2. cd jpos_api
 
 npm run dev
 
