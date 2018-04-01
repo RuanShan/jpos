@@ -1,10 +1,13 @@
 import fetch from '@/config/fetch'
-
-/**
- * 登陆
- */
-
-export const login = data => fetch('/admin/login', data, 'POST');
+/**************************************************************************
+ * jpos spree api
+ **************************************************************************/
+ /**
+  * 登陆
+	*
+  */
+export const login = data => fetch('/users/sign_in', data, 'POST');
+//export const login = data => fetch('/admin/login', data, 'POST');
 
 /**
  * 退出
@@ -16,7 +19,8 @@ export const signout = () => fetch('/admin/singout');
  * 获取用户信息
  */
 
-export const getAdminInfo = () => fetch('/admin/info');
+export const getAdminInfo = () => fetch('/users/info', {}, 'GET');
+//export const getAdminInfo = () => fetch('/admin/info');
 
 /**
  * api请求量
@@ -243,8 +247,8 @@ export const foodMenu = restaurant_id => fetch('/shopping/v2/menu', {
 /**
  * 获取shop页面商铺详情
  */
-
-export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/restaurant/' + shopid, {
-  latitude,
-  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
-});
+export const shopDetails = (shopid, latitude, longitude) => fetch('/api/v1/stores/' + shopid)
+//export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/restaurant/' + shopid, {
+//  latitude,
+//  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
+//});

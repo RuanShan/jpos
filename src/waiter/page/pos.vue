@@ -1,7 +1,7 @@
 <template>
 <el-container>
   <headTop></headTop>
-  <leftNav></leftNav>
+  <leftNav :store-name="storeName"></leftNav>
 
   <div class="pos">
     <div class="loading" v-if="false">
@@ -17,7 +17,7 @@
               <el-table-column prop="count" label="数量" width="70"></el-table-column>
               <el-table-column prop="price" label="金额" width="70"></el-table-column>
               <el-table-column label="操作" width="100" fixed="right">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <el-button type="text" size="mini" @click="delSingleGoods(scope.row)">删除</el-button>
                   <el-button type="text" size="mini" @click="addOrderList(scope.row)">增加</el-button>
                 </template>
@@ -61,7 +61,7 @@
         <div class="goods-type">
           <el-tabs >
 
-            <el-tab-pane v-for="menu in menuList" v-bind:label="menu.name">
+            <el-tab-pane v-for="menu in menuList" :key="menu.id" v-bind:label="menu.name">
               <div>
                 <el-row class="cook-list">
                   <el-col class="cook-item" :span="4" v-for="goods in menu.foods" :key="goods.id" @click.native="addOrderList(goods)">
@@ -91,10 +91,10 @@
 import leftNav from '@/components/LeftNav/LeftNav.vue';
 import headTop from '@/components/headTop.vue';
 import {mapState, mapMutations} from 'vuex'
-import { shopDetails, foodMenu } from '@/api/getData'
+import { shopDetails } from '@/api/getData' //foodMenu
 import loading from '@/components/common/loading'
 import {baseImgPath} from '@/config/env'
-
+import {myMixin} from '@/components/user'
 // import buyCart from '@/components/common/buyCart'
 
 import axios from 'axios';
@@ -120,6 +120,7 @@ export default {
       totalCount: 0
     };
   },
+  mixins: [myMixin],
   components: {
     loading,
     leftNav,
@@ -129,6 +130,9 @@ export default {
     ...mapState([
       'adminInfo','latitude','longitude','cartList'
     ]),
+    storeName: function(){
+      this.shopDetailData ? this.shopDetailData.name : 'loading'
+    }
   },
   created(){
     this.shopId = 0
@@ -136,6 +140,7 @@ export default {
   beforeMount(){
     this.initData()
     // adminInfo is initialized in event created
+    console.log('beforeMount')
     console.log( this.adminInfo )
     this.shopId = this.adminInfo.shop_id
   },
@@ -168,10 +173,12 @@ export default {
         'RECORD_ADDRESS','ADD_CART','REDUCE_CART','INIT_BUYCART','CLEAR_CART','RECORD_SHOPDETAIL'
     ]),
     async initData(){
+      this.shopId = 1
       //获取商铺信息
       this.shopDetailData = await shopDetails(this.shopId, this.latitude, this.longitude);
+      console.log( this.shopDetailData )
       //获取商铺食品列表
-      this.menuList = await foodMenu(this.shopId);
+      //this.menuList = await foodMenu(this.shopId);
 
     },
     addOrderList(goods) { // 增加商品
@@ -256,6 +263,7 @@ export default {
 </script>
 
 <style lang="scss" >
+
 .pos {
   position:absolute;
   top: 50px;

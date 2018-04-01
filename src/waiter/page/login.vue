@@ -60,8 +60,8 @@
       async submitForm (formName) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            const res = await login({user_name: this.loginForm.username, password: this.loginForm.password, admin:'waiter'})
-            if (res.status === 1) {
+            const res = await login({ user: { username: this.loginForm.username, password: this.loginForm.password}, admin:'waiter'})
+            if (res.id) {
               this.$message({
                 type: 'success',
                 message: '登录成功'
@@ -70,7 +70,7 @@
             } else {
               this.$message({
                 type: 'error',
-                message: res.message
+                message: res.error
               })
             }
           } else {

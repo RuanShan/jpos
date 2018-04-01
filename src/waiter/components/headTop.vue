@@ -1,7 +1,7 @@
 <template>
     <div class="header_container">
-    {{adminInfo.user_name}}
-    <el-dropdown @command="handleCommand" menu-align='start'>
+    {{storeName}}-{{adminInfo.user_name}} 
+    <el-dropdown @command="handleCommand" position='start'>
       <img :src="baseImgPath + adminInfo.avatar" class="avator">
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="home">首页</el-dropdown-item>
@@ -22,6 +22,8 @@ export default {
       baseImgPath
     }
   },
+  props: ['storeName'],
+
   created () {
     if (!this.adminInfo.id) {
       this.getAdminData()

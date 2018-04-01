@@ -24,7 +24,8 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       method: type,
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Spree-Token': '5b86b9a2d52e8365ff10a1a672bdb00464e70caa392e63e9'
       },
       mode: 'cors',
       cache: 'force-cache'
