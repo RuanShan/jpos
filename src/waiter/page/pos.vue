@@ -13,7 +13,7 @@
         <el-tabs>
           <el-tab-pane label="点餐">
             <el-table :data="tableData" style="width:100%;">
-              <el-table-column prop="goodsName" label="商品名"></el-table-column>
+              <el-table-column prop="name" label="商品名"></el-table-column>
               <el-table-column prop="count" label="数量" width="70"></el-table-column>
               <el-table-column prop="price" label="金额" width="70"></el-table-column>
               <el-table-column label="操作" width="100" fixed="right">
@@ -49,9 +49,9 @@
           <div class="title">热销商品 </div>
           <div>
             <el-row class="hot-list">
-              <el-col class="hot-item" :span="4" v-for="goods in hotGoods" :key="goods.goodsId" @click.native="addOrderList(goods)">
+              <el-col class="hot-item" :span="4" v-for="goods in hotGoods" :key="goods.id" @click.native="addOrderList(goods)">
                 <div class="grid-content bg-purple">
-                  <span>{{goods.goodsName}}</span>
+                  <span>{{goods.name}}</span>
                   <span class="price">￥{{goods.price}}元</span>
                 </div>
               </el-col>
@@ -202,40 +202,26 @@ export default {
       })
     },
     getProductImageUrl: function( product ){
-    console.log( 'product.master.images', product.master.images )
       let image = product.master.images[0]
       return (image? baseImgPath+image.product_url : baseImgPath+'/img/noimage/product.jpg' )
     },
     addOrderList(goods) { // 增加商品
       this.totalMoney = 0;
       this.totalCount = 0;
-      // 商品是否已经存在于订单列表中
-      let isExist = false;
-      this.tableData.forEach((el, i) => {
-        if (el.goodsId === goods.goodsId) {
-          isExist = true;
-          return;
-        }
-      })
-
       // 根据判断的值编写业务逻辑
-      if (isExist) {  // 如果存在，改变列表中的数量
-        let arr = this.tableData.filter((o) => o.goodsId === goods.goodsId);
-        arr[0].count++;
-      } else {
-        let newGoods = { goodsId: goods.goodsId, goodsName: goods.goodsName, price: goods.price, count: 1 };
-        this.tableData.push(newGoods);
-      }
+
+      let newGoods = { id: goods.id, product_id: goods.id, variant_id: goods.master.id, name: goods.name, price: goods.price, count: 1 };
+      this.tableData.push(newGoods);
 
       this.getSum();
     },
     delSingleGoods(goods) { // 删除当个商品
       this.tableData = this.tableData.filter(o => {
-        return o.goodsId !== goods.goodsId
+        return o.id !== goods.id
       });
       this.getSum();
       this.$message({
-        message: goods.goodsName + ' > 删除成功',
+        message: goods.name + ' > 删除成功',
         type: 'success'
       });
     },

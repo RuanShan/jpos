@@ -252,3 +252,9 @@ export const shopDetails = (store_id, latitude, longitude) => fetch('/api/v1/sto
 //  latitude,
 //  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
 //});
+
+/**
+ * 确认订单
+ */
+
+export const checkout = ( entities) => fetch('/api/v1/orders', entities, 'POST');
