@@ -21,14 +21,14 @@ const actions = {
     try {
 
       const res = await getAdminInfo()
-      console.log(res)
+      console.log('res:', res)
+
       if (res.id) {
         commit('saveAdminInfo', res)
       } else {
         throw new Error(res)
       }
     } catch (err) {
-      console.log( err )
       console.log('您尚未登陆或者session失效')
     }
   }

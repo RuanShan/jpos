@@ -1,6 +1,6 @@
 <template>
     <div class="header_container">
-    {{storeName}}-{{adminInfo.user_name}} 
+    {{storeName}}-{{adminInfo.username}}
     <el-dropdown @command="handleCommand" position='start'>
       <img :src="baseImgPath + adminInfo.avatar" class="avator">
       <el-dropdown-menu slot="dropdown">
@@ -14,7 +14,7 @@
 <script>
 import {signout} from '@/api/getData'
 import {baseImgPath} from '@/config/env'
-import {mapActions, mapState} from 'vuex'
+import {mapState} from 'vuex'
 
 export default {
   data () {
@@ -25,15 +25,12 @@ export default {
   props: ['storeName'],
 
   created () {
-    if (!this.adminInfo.id) {
-      this.getAdminData()
-    }
+
   },
   computed: {
     ...mapState(['adminInfo'])
   },
   methods: {
-    ...mapActions(['getAdminData']),
     async handleCommand (command) {
       if (command == 'home') {
         this.$router.push('/manage')

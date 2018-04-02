@@ -1,7 +1,7 @@
 <template>
 <el-container>
-  <headTop></headTop>
-  <leftNav :store-name="storeName"></leftNav>
+  <headTop :store-name="storeName"></headTop>
+  <leftNav ></leftNav>
 
   <div class="pos">
     <div class="loading" v-if="false">
@@ -90,11 +90,11 @@
 <script>
 import leftNav from '@/components/LeftNav/LeftNav.vue';
 import headTop from '@/components/headTop.vue';
-import {mapState, mapMutations} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 import { shopDetails } from '@/api/getData' //foodMenu
 import loading from '@/components/common/loading'
 import {baseImgPath} from '@/config/env'
-import {myMixin} from '@/components/user'
+import {myMixin} from '@/components/userData'
 // import buyCart from '@/components/common/buyCart'
 
 import axios from 'axios';
@@ -104,6 +104,7 @@ export default {
     return {
       geohash: '', //geohash位置信息
       shopId: null, //商店id值
+      storeName: '',
       showLoading: true, //显示加载动画
       shopDetailData: null, //商铺详情
       menuList: [], //食品列表
@@ -130,19 +131,18 @@ export default {
     ...mapState([
       'adminInfo','latitude','longitude','cartList'
     ]),
-    storeName: function(){
-      this.shopDetailData ? this.shopDetailData.name : 'loading'
-    }
   },
   created(){
-    this.shopId = 0
-  },
-  beforeMount(){
-    this.initData()
-    // adminInfo is initialized in event created
-    console.log('beforeMount')
-    console.log( this.adminInfo )
-    this.shopId = this.adminInfo.shop_id
+    this.getAdminData().then(res=>{
+      console.log('created')
+      console.log( this )
+      if (this.adminInfo.id) {
+        this.shopId = this.adminInfo.store_id
+        this.initData()
+      }else{
+        this.$router.push('/')
+      }
+    })
   },
   beforeCreatex: function () {
     axios.get('http://jspang.com/DemoApi/oftenGoods.php').then(res => {
@@ -169,13 +169,11 @@ export default {
     document.getElementById('orderList').style.minHeight = orderListHeight + 'px';
   },
   methods: {
-    ...mapMutations([
-        'RECORD_ADDRESS','ADD_CART','REDUCE_CART','INIT_BUYCART','CLEAR_CART','RECORD_SHOPDETAIL'
-    ]),
+    ...mapActions(['getAdminData']),
     async initData(){
-      this.shopId = 1
       //获取商铺信息
-      this.shopDetailData = await shopDetails(this.shopId, this.latitude, this.longitude);
+      this.shopDetailData = await shopDetails(this.shopId, this.latitude, this.longitude)
+      this.storeName = this.shopDetailData.name
       console.log( this.shopDetailData )
       //获取商铺食品列表
       //this.menuList = await foodMenu(this.shopId);
@@ -258,7 +256,19 @@ export default {
         });
       }
     }
+  },
+  watch: {
+    adminInfo: function (newValue) {
+      if (!newValue.id) {
+        this.$message({
+          type: 'error',
+          message: '检测到您 session expired, please login again'
+        })
+        this.$router.push('login')
+      }
+    }
   }
+
 };
 </script>
 
