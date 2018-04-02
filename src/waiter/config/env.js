@@ -12,7 +12,7 @@ let baseImgPath = ''
 
 if (process.env.NODE_ENV == 'development') {
   baseUrl = 'http://localhost:3001'
-  baseImgPath = 'http://localhost:3001/img/'
+  baseImgPath = 'http://localhost:3001/'
 //  baseUrl = 'http://jpos_api.firecart.cn'
 //  baseImgPath = 'http://jpos_api.firecart.cn/img/'
 } else {

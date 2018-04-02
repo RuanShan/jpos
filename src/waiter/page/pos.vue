@@ -64,14 +64,14 @@
             <el-tab-pane v-for="menu in menuList" :key="menu.id" v-bind:label="menu.name">
               <div>
                 <el-row class="cook-list">
-                  <el-col class="cook-item" :span="4" v-for="goods in menu.foods" :key="goods.id" @click.native="addOrderList(goods)">
+                  <el-col class="cook-item" :span="4" v-for="goods in getTaxonProducts(menu.id)" :key="goods.id" @click.native="addOrderList(goods)">
                     <div class="food-wrapper">
                       <div class="food-img">
-                        <img :src="baseImgPath + goods.image_path" width="100%" />
+                        <img :src="getProductImageUrl(goods)" width="100%" />
                       </div>
                       <div class="good-info">
                         <span class="food-name">{{goods.name}}</span>
-                        <span class="food-price">￥&nbsp;{{goods.specfoods[0].price}}&nbsp;元</span>
+                        <span class="food-price">￥&nbsp;{{goods.price}}&nbsp;元</span>
                       </div>
                     </div>
                   </el-col>
@@ -91,7 +91,7 @@
 import leftNav from '@/components/LeftNav/LeftNav.vue';
 import headTop from '@/components/headTop.vue';
 import {mapState, mapActions} from 'vuex'
-import { shopDetails } from '@/api/getData' //foodMenu
+import { shopDetails, foodMenu, getProducts } from '@/api/getData'
 import loading from '@/components/common/loading'
 import {baseImgPath} from '@/config/env'
 import {myMixin} from '@/components/userData'
@@ -109,6 +109,8 @@ export default {
       shopDetailData: null, //商铺详情
       menuList: [], //食品列表
       menuIndex: 0, //已选菜单索引值，默认为0
+      selectedTaxonId: 0,
+      productList: [],
       baseImgPath,
 
       tableData: [],
@@ -131,11 +133,16 @@ export default {
     ...mapState([
       'adminInfo','latitude','longitude','cartList'
     ]),
+    selectedTaxonProducts: function () {
+      return this.productList.filter(function (product) {
+        //return product.taxon_ids.includes( 0 )
+        return false
+      })
+    }
   },
   created(){
     this.getAdminData().then(res=>{
       console.log('created')
-      console.log( this )
       if (this.adminInfo.id) {
         this.shopId = this.adminInfo.store_id
         this.initData()
@@ -173,11 +180,31 @@ export default {
     async initData(){
       //获取商铺信息
       this.shopDetailData = await shopDetails(this.shopId, this.latitude, this.longitude)
-      this.storeName = this.shopDetailData.name
-      console.log( this.shopDetailData )
       //获取商铺食品列表
-      //this.menuList = await foodMenu(this.shopId);
+      let taxonsData = await foodMenu( 1 )
 
+      if( taxonsData ){
+        this.menuList = taxonsData.taxons
+      }
+
+      let productsData = await getProducts(  )
+      console.log( this.shopDetailData, taxonsData, productsData )
+
+      if( productsData ){
+        this.productList = productsData.products
+      }
+
+      this.storeName = this.shopDetailData.name
+    },
+    getTaxonProducts: function ( taxonId ) {
+      return this.productList.filter(function (product) {
+        return product.taxon_ids.includes( taxonId )
+      })
+    },
+    getProductImageUrl: function( product ){
+    console.log( 'product.master.images', product.master.images )
+      let image = product.master.images[0]
+      return (image? baseImgPath+image.product_url : baseImgPath+'/img/noimage/product.jpg' )
     },
     addOrderList(goods) { // 增加商品
       this.totalMoney = 0;

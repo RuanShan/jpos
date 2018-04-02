@@ -155,8 +155,8 @@ export const deleteResturant = restaurant_id => fetch('/shopping/restaurant/' + 
 /**
  * 获取食品列表
  */
-
-export const getFoods = data => fetch('/shopping/v2/foods', data);
+export const getProducts = data => fetch('/api/v1/products', data);
+//export const getFoods = data => fetch('/shopping/v2/foods', data);
 
 /**
  * 获取食品数量
@@ -239,15 +239,15 @@ export const getUserCity = () => fetch('/v1/user/city/count');
 /**
  * 获取shop页面菜单列表
  */
-
-export const foodMenu = restaurant_id => fetch('/shopping/v2/menu', {
-  restaurant_id
-});
+ export const foodMenu = taxonomy_id => fetch('/api/v1/taxonomies/'+taxonomy_id+'/taxons');
+//export const foodMenu = restaurant_id => fetch('/shopping/v2/menu', {
+//  restaurant_id
+//});
 
 /**
  * 获取shop页面商铺详情
  */
-export const shopDetails = (shopid, latitude, longitude) => fetch('/api/v1/stores/' + shopid)
+export const shopDetails = (store_id, latitude, longitude) => fetch('/api/v1/stores/' + store_id)
 //export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/restaurant/' + shopid, {
 //  latitude,
 //  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'

@@ -2,7 +2,7 @@
     <div class="header_container">
     {{storeName}}-{{adminInfo.username}}
     <el-dropdown @command="handleCommand" position='start'>
-      <img :src="baseImgPath + adminInfo.avatar" class="avator">
+      <img :src="userAvatarUrl" class="avator">
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="home">首页</el-dropdown-item>
         <el-dropdown-item command="singout">退出</el-dropdown-item>
@@ -28,7 +28,11 @@ export default {
 
   },
   computed: {
-    ...mapState(['adminInfo'])
+    ...mapState(['adminInfo']),
+    userAvatarUrl:function(){
+
+      return baseImgPath + '/img/' + this.adminInfo.avatar
+    }
   },
   methods: {
     async handleCommand (command) {
