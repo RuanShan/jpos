@@ -40,7 +40,7 @@ export default {
         this.$router.push('/manage')
       } else if (command == 'singout') {
         const res = await signout()
-        if (res.status == 1) {
+        if (res.id == null) {
           this.$message({
             type: 'success',
             message: '退出成功'

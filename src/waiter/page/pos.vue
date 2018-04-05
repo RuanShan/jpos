@@ -36,6 +36,9 @@
                 <el-button type="warning" size="mini">挂单</el-button>
                 <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
               </div>
+              <customerButton>  </customerButton>
+              <checkoutButton>  </checkoutButton>
+
             </div>
           </el-tab-pane>
           <el-tab-pane label="挂单">挂单</el-tab-pane>
@@ -88,13 +91,15 @@
 </template>
 
 <script>
-import leftNav from '@/components/LeftNav/LeftNav.vue';
-import headTop from '@/components/headTop.vue';
+import leftNav from '@/components/LeftNav/LeftNav.vue'
+import headTop from '@/components/headTop.vue'
+import customerButton from '@/components/customerButton.vue'
+import checkoutButton from '@/components/checkoutButton.vue'
+
 import {mapState, mapActions} from 'vuex'
 import { shopDetails, foodMenu, getProducts } from '@/api/getData'
 import loading from '@/components/common/loading'
 import {baseImgPath} from '@/config/env'
-import {myMixin} from '@/components/userData'
 // import buyCart from '@/components/common/buyCart'
 
 import axios from 'axios';
@@ -112,6 +117,7 @@ export default {
       selectedTaxonId: 0,
       productList: [],
       baseImgPath,
+      customerData: { },
 
       tableData: [],
       hotGoods: [],
@@ -123,11 +129,12 @@ export default {
       totalCount: 0
     };
   },
-  mixins: [myMixin],
   components: {
     loading,
     leftNav,
-    headTop
+    headTop,
+    checkoutButton,
+    customerButton
   },
   computed: {
     ...mapState([

@@ -11,7 +11,7 @@ let routerMode = 'history'
 let baseImgPath = ''
 
 if (process.env.NODE_ENV == 'development') {
-  baseUrl = 'http://localhost:3001'
+  baseUrl = 'http://192.168.1.119:3001'
   baseImgPath = 'http://localhost:3001/'
 //  baseUrl = 'http://jpos_api.firecart.cn'
 //  baseImgPath = 'http://jpos_api.firecart.cn/img/'

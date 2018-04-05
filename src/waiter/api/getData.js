@@ -12,8 +12,8 @@ export const login = data => fetch('/users/sign_in', data, 'POST');
 /**
  * 退出
  */
-
-export const signout = () => fetch('/admin/singout');
+export const signout = () => fetch('/users/sign_out', {}, 'DELETE');
+//export const signout = () => fetch('/admin/singout');
 
 /**
  * 获取用户信息
@@ -252,6 +252,12 @@ export const shopDetails = (store_id, latitude, longitude) => fetch('/api/v1/sto
 //  latitude,
 //  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
 //});
+
+/**
+ * create customer
+ */
+
+export const createCustomer = ( data ) => fetch('/api/v1/users', data, 'POST');
 
 /**
  * 确认订单

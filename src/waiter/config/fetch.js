@@ -1,5 +1,5 @@
 import { baseUrl } from './env'
-import store from '@/store'
+//import store from '@/store'
 
 var Promise = require('es6-promise').Promise;
 
@@ -26,7 +26,8 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-Spree-Token': store.state.adminInfo.api_key //'5b86b9a2d52e8365ff10a1a672bdb00464e70caa392e63e9'
+        'X-Spree-Token': '5b86b9a2d52e8365ff10a1a672bdb00464e70caa392e63e9'
+        //'X-Spree-Token': store.state.adminInfo.api_key //'5b86b9a2d52e8365ff10a1a672bdb00464e70caa392e63e9'
       },
       mode: 'cors',
       cache: 'force-cache'
