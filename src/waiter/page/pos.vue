@@ -12,7 +12,7 @@
       <el-col :span="7" class="pos-order" id="orderList">
         <el-tabs>
           <el-tab-pane label="点餐">
-            <el-table :data="tableData" style="width:100%;">
+            <el-table :data="orderList" style="width:100%;">
               <el-table-column prop="name" label="商品名"></el-table-column>
               <el-table-column prop="count" label="数量" width="70"></el-table-column>
               <el-table-column prop="price" label="金额" width="70"></el-table-column>
@@ -37,7 +37,7 @@
                 <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
               </div>
               <customerButton>  </customerButton>
-              <checkoutButton>  </checkoutButton>
+              <checkoutButton :order-list="orderList">  </checkoutButton>
 
             </div>
           </el-tab-pane>
@@ -101,8 +101,6 @@ import { shopDetails, foodMenu, getProducts } from '@/api/getData'
 import loading from '@/components/common/loading'
 import {baseImgPath} from '@/config/env'
 // import buyCart from '@/components/common/buyCart'
-
-import axios from 'axios';
 export default {
   name: 'pos',
   data() {
@@ -118,8 +116,7 @@ export default {
       productList: [],
       baseImgPath,
       customerData: { },
-
-      tableData: [],
+      orderList: [], //订单 {variant_id, price, quantity}
       hotGoods: [],
       hamburgers: [],
       snack: [],
@@ -157,26 +154,6 @@ export default {
         this.$router.push('/')
       }
     })
-  },
-  beforeCreatex: function () {
-    axios.get('http://jspang.com/DemoApi/oftenGoods.php').then(res => {
-      // console.log(res.data);
-      this.hotGoods = res.data;
-    }).catch(err => {
-      console.log(err);
-      alert('网络错误，不能访问');
-    });
-
-    axios.get('http://jspang.com/DemoApi/typeGoods.php').then(res => {
-      // console.log(res.data);
-      this.hamburgers = res.data[0];
-      this.snack = res.data[1];
-      this.drinks = res.data[2];
-      this.packages = res.data[3];
-    }).catch(err => {
-      console.log(err);
-      alert('网络错误，不能访问');
-    });
   },
   mounted: function () {
     let orderListHeight = document.body.clientHeight;
@@ -217,13 +194,13 @@ export default {
       this.totalCount = 0;
       // 根据判断的值编写业务逻辑
 
-      let newGoods = { id: goods.id, product_id: goods.id, variant_id: goods.master.id, name: goods.name, price: goods.price, count: 1 };
-      this.tableData.push(newGoods);
+      let newGoods = { id: goods.id, product_id: goods.id, variant_id: goods.master.id, name: goods.name, price: Number(goods.price), count: 1 };
+      this.orderList.push(newGoods);
 
       this.getSum();
     },
     delSingleGoods(goods) { // 删除当个商品
-      this.tableData = this.tableData.filter(o => {
+      this.orderList = this.orderList.filter(o => {
         return o.id !== goods.id
       });
       this.getSum();
@@ -240,7 +217,7 @@ export default {
         });
         return;
       }
-      this.tableData = [];
+      this.orderList = [];
       this.totalCount = 0;
       this.totalMoney = 0;
       this.getSum();
@@ -261,7 +238,7 @@ export default {
         message: '结账成功，已到账￥' + this.totalMoney + '，感谢使用',
         type: 'success'
       });
-      this.tableData = [];
+      this.orderList = [];
       this.totalCount = 0;
       this.totalMoney = 0;
 
@@ -269,8 +246,8 @@ export default {
     getSum() { // 汇总数量和金额
       this.totalCount = 0;
       this.totalMoney = 0;
-      if (this.tableData) {
-        this.tableData.forEach((el, i) => {
+      if (this.orderList) {
+        this.orderList.forEach((el, i) => {
           this.totalCount += el.count;
           this.totalMoney += el.count * el.price;
         });
