@@ -156,8 +156,8 @@ export default {
     })
   },
   mounted: function () {
-    let orderListHeight = document.body.clientHeight;
-    document.getElementById('orderList').style.minHeight = orderListHeight + 'px';
+    //let orderListHeight = document.body.clientHeight;
+    //document.getElementById('orderList').style.minHeight = orderListHeight + 'px';
   },
   methods: {
     ...mapActions(['getAdminData']),
@@ -331,7 +331,6 @@ export default {
   .title {
     padding: 10px;
     line-height: 20px;
-    height: 20px;
     border-bottom: 1px solid #d3dce6;
     background-color: #f9fafc;
     font-size: 14px;
