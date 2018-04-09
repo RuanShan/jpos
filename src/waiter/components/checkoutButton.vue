@@ -159,80 +159,82 @@ export default {
 
 }
 
-.el-dialog__header{
-  position:absolute;
-  top:0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  padding: 0;
-}
-.el-dialog__body {
-  position:absolute;
-  padding: 0;
-  top:80px;
-  bottom: 80px;
-  left: 0;
-  right: 0;
-  .main-part{
+.checkout-container
+{
+   .el-dialog__header{
     position:absolute;
     top:0;
     left: 0;
-    right: 0;    height: 60%;
-    overflow-x:hidden;
-    .input-with-select .el-input--suffix{
-      width: 100px;
-    }
-    .money > .el-input__inner{
-      text-align: right;
-    }
+    right: 0;
+    height: 80px;
+    padding: 0;
   }
-  .num{
-    width:20%;
-    float: left;
-    div{
-      padding:5px;
-    }
-    button{
-      width: 100%;
-      line-height: 1;
-      white-space: nowrap;
-      cursor: pointer;
-      background: #fff;
-      border: 1px solid #dcdfe6;
-      border-color: #dcdfe6;
-      color: #606266;
-      text-align: center;
-      box-sizing: border-box;
-      outline: none;
-      margin: 0;
-      transition: .1s;
-      font-weight: 500;
-      padding: 12px 0;
-      font-size: 14px;
-      border-radius: 4px;
-      &.place-order{
-        line-height: 8;
+  .el-dialog__body {
+    position:absolute;
+    padding: 0;
+    top:80px;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    .main-part{
+      position:absolute;
+      top:0;
+      left: 0;
+      right: 0;    height: 60%;
+      overflow-x:hidden;
+      .input-with-select .el-input--suffix{
+        width: 100px;
+      }
+      .money > .el-input__inner{
+        text-align: right;
       }
     }
+    .num{
+      width:20%;
+      float: left;
+      div{
+        padding:5px;
+      }
+      button{
+        width: 100%;
+        line-height: 1;
+        white-space: nowrap;
+        cursor: pointer;
+        background: #fff;
+        border: 1px solid #dcdfe6;
+        border-color: #dcdfe6;
+        color: #606266;
+        text-align: center;
+        box-sizing: border-box;
+        outline: none;
+        margin: 0;
+        transition: .1s;
+        font-weight: 500;
+        padding: 12px 0;
+        font-size: 14px;
+        border-radius: 4px;
+        &.place-order{
+          line-height: 8;
+        }
+      }
 
+    }
+    .keynum-part{
+      position:absolute;
+      bottom:0;
+      left: 0;
+      right: 0;    height: 40%;
+      overflow-x:hidden;
+
+    }
   }
-  .keynum-part{
+  .el-dialog__footer{
     position:absolute;
+    padding: 0;
     bottom:0;
+    height: 80px;
     left: 0;
-    right: 0;    height: 40%;
-    overflow-x:hidden;
-
+    right: 0;
   }
 }
-.el-dialog__footer{
-  position:absolute;
-  padding: 0;
-  bottom:0;
-  height: 80px;
-  left: 0;
-  right: 0;
-}
-
 </style>

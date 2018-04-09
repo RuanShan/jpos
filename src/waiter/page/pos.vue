@@ -49,7 +49,12 @@
       </el-col>
       <el-col :span="17">
         <div class="hot-goods">
-          <div class="title">热销商品 </div>
+          <div class="title">
+            热销商品
+            <div>
+              <MemberKeyWord></MemberKeyWord>
+            </div> 
+          </div>
           <div>
             <el-row class="hot-list">
               <el-col class="hot-item" :span="4" v-for="goods in hotGoods" :key="goods.id" @click.native="addOrderList(goods)">
@@ -95,6 +100,7 @@ import leftNav from '@/components/LeftNav/LeftNav.vue'
 import headTop from '@/components/headTop.vue'
 import customerButton from '@/components/customerButton.vue'
 import checkoutButton from '@/components/checkoutButton.vue'
+import MemberKeyWord from '@/components/MemberKeyWord.vue'
 
 import {mapState, mapActions} from 'vuex'
 import { shopDetails, foodMenu, getProducts } from '@/api/getData'
@@ -131,7 +137,8 @@ export default {
     leftNav,
     headTop,
     checkoutButton,
-    customerButton
+    customerButton,
+    MemberKeyWord
   },
   computed: {
     ...mapState([
