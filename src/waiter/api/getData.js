@@ -16,11 +16,11 @@ export const signout = () => fetch('/users/sign_out', {}, 'DELETE');
 //export const signout = () => fetch('/admin/singout');
 
 /**
- * 获取用户信息
+ * 获取用户信息 by cookies
  */
 
-export const getAdminInfo = () => fetch('/users/info', {}, 'GET');
-//export const getAdminInfo = () => fetch('/admin/info');
+export const getUserInfo = () => fetch('/users/info', {}, 'GET');
+//export const getUserInfo = () => fetch('/admin/info');
 
 /**
  * api请求量
@@ -204,8 +204,8 @@ export const getUserCount = data => fetch('/v1/users/count', data);
 /**
  * 获取订单列表
  */
-
-export const getOrderList = data => fetch('/bos/orders', data);
+export const getOrderList = data => fetch('/api/v1/orders', data);
+//export const getOrderList = data => fetch('/bos/orders', data);
 
 /**
  * 获取订单数量
@@ -217,7 +217,7 @@ export const getOrderCount = data => fetch('/bos/orders/count', data);
  * 获取用户信息
  */
 
-export const getUserInfo = user_id => fetch('/v1/user/' + user_id);
+//export const getUserInfo = user_id => fetch('/v1/user/' + user_id);
 
 /**
  * 获取地址信息

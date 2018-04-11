@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {getAdminInfo} from '@/api/getData'
+import {getUserInfo} from '@/api/getData'
 
 Vue.use(Vuex)
 
 const state = {
   userInfo: {
+    store_id: 0,
     avatar: 'default.jpg',
     api_key: ''
   }
@@ -21,7 +22,7 @@ const actions = {
   async getAdminData ({commit}) {
     try {
 
-      const res = await getAdminInfo()
+      const res = await getUserInfo()
       console.log('res:', res)
 
       if (res.id) {
