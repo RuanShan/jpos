@@ -3,7 +3,7 @@
     <ul class="nav">
       <li>
         <i class="fa fa-cny"></i>
-        <div class="text-sm">收银</div>
+        <div class="text-sm"><router-link to="/waiter/" > 收银  </router-link></div>
       </li>
       <li>
         <i class="fa fa-bars"></i>
