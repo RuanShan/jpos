@@ -149,12 +149,12 @@
         }
       },
       created () {
-        console.log(this.adminInfo)
-        this.restaurant_id = this.adminInfo.shop_id
+        console.log(this.userInfo)
+        this.restaurant_id = this.userInfo.shop_id
         this.initData()
       },
       computed: {
-        ...mapState(['adminInfo']),
+        ...mapState(['userInfo']),
         specs: function () {
           let specs = []
           if (this.selectTable.specfoods) {

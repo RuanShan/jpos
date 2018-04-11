@@ -5,15 +5,15 @@ import {getAdminInfo} from '@/api/getData'
 Vue.use(Vuex)
 
 const state = {
-  adminInfo: {
+  userInfo: {
     avatar: 'default.jpg',
     shop_id: 0
   }
 }
 
 const mutations = {
-  saveAdminInfo (state, adminInfo) {
-    state.adminInfo = adminInfo
+  saveAdminInfo (state, userInfo) {
+    state.userInfo = userInfo
   }
 }
 

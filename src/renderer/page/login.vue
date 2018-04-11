@@ -48,12 +48,12 @@
     },
     mounted () {
       this.showLogin = true
-      if (!this.adminInfo.id) {
+      if (!this.userInfo.id) {
         this.getAdminData()
       }
     },
     computed: {
-      ...mapState(['adminInfo'])
+      ...mapState(['userInfo'])
     },
     methods: {
       ...mapActions(['getAdminData']),
@@ -85,7 +85,7 @@
       }
     },
     watch: {
-      adminInfo: function (newValue) {
+      userInfo: function (newValue) {
         if (newValue.id) {
           this.$message({
             type: 'success',

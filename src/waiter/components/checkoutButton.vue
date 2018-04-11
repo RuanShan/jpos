@@ -98,7 +98,7 @@ export default {
   props: ['storeName', 'orderList'],
   computed: {
     ...mapState([
-      'adminInfo','latitude','longitude','cartList'
+      'userInfo','latitude','longitude','cartList'
     ]),
     // 订单总价
     totalPrice: function(){

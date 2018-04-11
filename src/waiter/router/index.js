@@ -3,25 +3,31 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
-const pos = r => require.ensure([], () => r(require('@/page/pos')), 'pos')
-const login = r => require.ensure([], () => r(require('@/page/login')), 'login')
+const loginPage = r => require.ensure([], () => r(require('@/page/login')), 'login')
+const homePage = r => require.ensure([], () => r(require('@/page/home')), 'home')
+const posPage = r => require.ensure([], () => r(require('@/page/pos')), 'pos')
+const ordersPage = r => require.ensure([], () => r(require('@/page/orders')), 'orders')
 
 
 const routes = [
   {
     path: '/',
     name: 'login',
-    component: login
+    component: loginPage
   },
   {
     path: '/waiter',
-    component: pos,
+    component: homePage,
     name: '',
     children: [{
       path: '',
-      component: pos,
+      component: posPage,
       meta: []
-    }]
+    },{
+			path: 'orders',
+			component: ordersPage,
+			meta: [],
+		}]
   }
 ]
 

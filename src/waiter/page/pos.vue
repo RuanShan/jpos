@@ -53,7 +53,7 @@
             热销商品
             <div>
               <MemberKeyWord ></MemberKeyWord>
-            </div> 
+            </div>
           </div>
           <div>
             <el-row class="hot-list">
@@ -103,6 +103,7 @@ import checkoutButton from '@/components/checkoutButton.vue'
 import MemberKeyWord from '@/components/MemberKeyWord.vue'
 
 import {mapState, mapActions} from 'vuex'
+import {userDataMixin} from '@/components/userDataMixin'
 import { shopDetails, foodMenu, getProducts } from '@/api/getData'
 import loading from '@/components/common/loading'
 import {baseImgPath} from '@/config/env'
@@ -140,9 +141,10 @@ export default {
     customerButton,
     MemberKeyWord
   },
+  mixins: [userDataMixin],
   computed: {
     ...mapState([
-      'adminInfo','latitude','longitude','cartList'
+      'userInfo','latitude','longitude','cartList'
     ]),
     selectedTaxonProducts: function () {
       return this.productList.filter(function (product) {
@@ -154,8 +156,8 @@ export default {
   created(){
     this.getAdminData().then(res=>{
       console.log('created')
-      if (this.adminInfo.id) {
-        this.shopId = this.adminInfo.store_id
+      if (this.userInfo.id) {
+        this.shopId = this.userInfo.store_id
         this.initData()
       }else{
         this.$router.push('/')
@@ -262,7 +264,7 @@ export default {
     }
   },
   watch: {
-    adminInfo: function (newValue) {
+    userInfo: function (newValue) {
       if (!newValue.id) {
         this.$message({
           type: 'error',

@@ -7,6 +7,10 @@
       </li>
       <li>
         <i class="fa fa-bars"></i>
+        <div class="text-sm"><router-link to="/waiter/orders" > 订单 </router-link></div>
+      </li>
+      <li>
+        <i class="fa fa-bars"></i>
         <div class="text-sm">店铺</div>
       </li>
       <li>

@@ -26,7 +26,7 @@ export default {
   props: ['storeName'],
   computed: {
     ...mapState([
-      'adminInfo','latitude','longitude','cartList'
+      'userInfo','latitude','longitude','cartList'
     ]),
   },
   methods:{

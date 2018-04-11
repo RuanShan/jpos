@@ -5,26 +5,26 @@
         <div class="admin_set">
             <ul>
                 <li>
-                    <span>姓名：</span><span>{{adminInfo.user_name}}</span>
+                    <span>姓名：</span><span>{{userInfo.user_name}}</span>
                 </li>
                 <li>
-                    <span>注册时间：</span><span>{{adminInfo.create_time}}</span>
+                    <span>注册时间：</span><span>{{userInfo.create_time}}</span>
                 </li>
                 <li>
-                    <span>管理员权限：</span><span>{{adminInfo.admin}}</span>
+                    <span>管理员权限：</span><span>{{userInfo.admin}}</span>
                 </li>
                 <li>
-                    <span>管理员 ID：</span><span>{{adminInfo.id}}</span>
+                    <span>管理员 ID：</span><span>{{userInfo.id}}</span>
                 </li>
                 <li>
                     <span>更换头像：</span>
                     <el-upload
                       class="avatar-uploader"
-                      :action="baseUrl + '/admin/update/avatar/' + adminInfo.id"
+                      :action="baseUrl + '/admin/update/avatar/' + userInfo.id"
                       :show-file-list="false"
                       :on-success="uploadImg"
                       :before-upload="beforeImgUpload">
-                      <img v-if="adminInfo.avatar" :src="baseImgPath + adminInfo.avatar" class="avatar">
+                      <img v-if="userInfo.avatar" :src="baseImgPath + userInfo.avatar" class="avatar">
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </li>
@@ -49,12 +49,12 @@ export default {
       headTop
     },
   computed: {
-      ...mapState(['adminInfo'])
+      ...mapState(['userInfo'])
   },
   methods: {
       uploadImg (res, file) {
         if (res.status == 1) {
-          this.adminInfo.avatar = res.image_path
+          this.userInfo.avatar = res.image_path
         } else {
           this.$message.error('上传图片失败！')
         }

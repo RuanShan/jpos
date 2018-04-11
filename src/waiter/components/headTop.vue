@@ -1,6 +1,6 @@
 <template>
     <div class="header_container">
-    {{storeName}}-{{adminInfo.username}}
+    {{storeName}}-{{userInfo.username}}
     <el-dropdown @command="handleCommand" position='start'>
       <img :src="userAvatarUrl" class="avator">
       <el-dropdown-menu slot="dropdown">
@@ -28,10 +28,10 @@ export default {
 
   },
   computed: {
-    ...mapState(['adminInfo']),
+    ...mapState(['userInfo']),
     userAvatarUrl:function(){
 
-      return baseImgPath + '/img/' + this.adminInfo.avatar
+      return baseImgPath + '/img/' + this.userInfo.avatar
     }
   },
   methods: {
