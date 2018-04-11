@@ -52,7 +52,7 @@
           <div class="title">
             热销商品
             <div>
-              <MemberKeyWord></MemberKeyWord>
+              <MemberKeyWord ></MemberKeyWord>
             </div> 
           </div>
           <div>
@@ -129,7 +129,7 @@ export default {
       drinks: [],
       packages: [],
       totalMoney: 0,
-      totalCount: 0
+      totalCount: 0,
     };
   },
   components: {

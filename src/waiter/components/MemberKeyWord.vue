@@ -1,5 +1,6 @@
 <template>
  <div>
+   <h1>{{testProps}}</h1>
    <el-button type="text" @click="dialogVisible = true">添加会员</el-button>
   <!-- 会员关键字窗口 -> START -->
   <el-dialog  title="会员关键字"  :visible.sync="dialogVisible"  width="30%"  :before-close="handleClose">
@@ -17,6 +18,12 @@
 
 <script>
 export default {
+  // props: {
+  //     testProps: {
+  //       type: String,
+  //       required: true
+  //     },
+  //   },
     data() {
       return {
         dialogVisible: false, //是否显示窗口标志位
