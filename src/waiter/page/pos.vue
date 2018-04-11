@@ -36,7 +36,8 @@
                 <el-button type="warning" size="mini">挂单</el-button>
                 <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
               </div>
-              <customerButton>  </customerButton>
+              <!-- <customerButton>  </customerButton> -->
+              <MemberKeyWord ></MemberKeyWord>
               <checkoutButton :order-list="orderList">  </checkoutButton>
 
             </div>
@@ -51,9 +52,6 @@
         <div class="hot-goods">
           <div class="title">
             热销商品
-            <div>
-              <MemberKeyWord ></MemberKeyWord>
-            </div>
           </div>
           <div>
             <el-row class="hot-list">
