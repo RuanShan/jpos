@@ -37,8 +37,7 @@
         <!-- filters start -->
         <div class="filters">
             <div class="filter">
-                <el-input placeholder="请输入number or username" v-model="filters.number_or_user_username_cont"></el-input>
-
+                <el-input placeholder="请输入number or username" v-model="filters.keyword"></el-input>
             </div>
             <div class="filter">
                 起止时间：
@@ -51,7 +50,7 @@
 
         <el-table :data="tableData" @expand-change='expand' :expand-row-keys='expendRow' :row-key="row => row.index" style="width: 100%">
             <el-table-column type="expand">
-                <template scope="props">
+                <template slot-scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
                         <el-form-item label="用户名">
                             <span>{{ props.row.user_name }}</span>
@@ -71,11 +70,19 @@
                     </el-form>
                 </template>
             </el-table-column>
+            <el-table-column type="selection" width="55" :reserve-selection="reserveSelection"></el-table-column>
+
             <el-table-column label="订单 ID" prop="id">
             </el-table-column>
             <el-table-column label="总价格" prop="total_amount">
             </el-table-column>
             <el-table-column label="订单状态" prop="status">
+            </el-table-column>
+            <el-table-column :context="_self" width="150" inline-template label="操作">
+              <div>
+                <el-button size="small" @click="handleEdit($index, row)">编辑</el-button>
+                <el-button size="small" type="danger" @click="handleDelete($index, row)">删除</el-button>
+              </div>
             </el-table-column>
         </el-table>
         <div class="Pagination" style="text-align: left;margin-top: 10px;">
@@ -110,8 +117,9 @@ export default {
                 count: 4,
                 currentPage: 1,
                 store_id: null,
+                reserveSelection: false,
                 expendRow: [],
-                filters: {}
+                filters: { keyword: '', startEndTime: null }
             }
         },
     components: {
@@ -134,66 +142,118 @@ export default {
     },
     methods: {
         async initData() {
-                try {
+            try {
 
-                    this.getOrders();
-                } catch (err) {
-                    console.log('获取数据失败', err);
-                }
-            },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                this.currentPage = val;
-                this.getOrders()
-            },
-            handleSearch() {
-                this.initData();
-            },
-            async getOrders() {
-                const ordersResult = await getOrderList({
-                    page: this.currentPage,
-                    per_page: this.per_page,
-                    "q[store_id_eq]": this.store_id
+                this.getOrders();
+            } catch (err) {
+                console.log('获取数据失败', err);
+            }
+        },
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            this.getOrders()
+        },
+        handleSearch() {
+            this.initData();
+        },
+        async getOrders() {
+          let queryParams = {
+              page: this.currentPage,
+              per_page: this.per_page,
+              "q[store_id_eq]": this.store_id
+          }
+          if ( this.filters.keyword.length>0){
+            // order.number ||  || order.users.username
+            queryParams["q[user_username_cont]"] = this.filters.keyword
+          }
+          console.log( this.filters )
+            const ordersResult = await getOrderList(queryParams);
+            console.log(ordersResult)
+            this.count = ordersResult.total_count
+            this.tableData = [];
+            ordersResult.orders.forEach((item, index) => {
+                const tableData = {};
+                tableData.id = item.id;
+                tableData.number = item.number
+                tableData.total_amount = item.display_total;
+                tableData.status = item.state;
+                tableData.user_id = item.user_id;
+                tableData.store_id = item.store_id;
+                tableData.address_id = item.address_id;
+                tableData.index = index;
+                this.tableData.push(tableData);
+            })
+        },
+        async expand(row, status) {
+            if (status) {
+                const restaurant = await getResturantDetail(row.store_id);
+                const userInfo = await getUserInfo(row.user_id);
+                const addressInfo = await getAddressById(row.address_id);
+
+                this.tableData.splice(row.index, 1, {...row, ... {
+                        restaurant_name: restaurant.name,
+                        restaurant_address: restaurant.address,
+                        address: addressInfo.address,
+                        user_name: userInfo.username
+                    }
                 });
-                console.log(ordersResult)
-                this.count = ordersResult.total_count
-                this.tableData = [];
-                ordersResult.orders.forEach((item, index) => {
-                    const tableData = {};
-                    tableData.id = item.id;
-                    tableData.number = item.number
-                    tableData.total_amount = item.display_total;
-                    tableData.status = item.state;
-                    tableData.user_id = item.user_id;
-                    tableData.store_id = item.store_id;
-                    tableData.address_id = item.address_id;
-                    tableData.index = index;
-                    this.tableData.push(tableData);
+                this.$nextTick(() => {
+                    this.expendRow.push(row.index);
                 })
-            },
-            async expand(row, status) {
-                if (status) {
-                    const restaurant = await getResturantDetail(row.store_id);
-                    const userInfo = await getUserInfo(row.user_id);
-                    const addressInfo = await getAddressById(row.address_id);
-
-                    this.tableData.splice(row.index, 1, {...row, ... {
-                            restaurant_name: restaurant.name,
-                            restaurant_address: restaurant.address,
-                            address: addressInfo.address,
-                            user_name: userInfo.username
-                        }
-                    });
-                    this.$nextTick(() => {
-                        this.expendRow.push(row.index);
-                    })
-                } else {
-                    const index = this.expendRow.indexOf(row.index);
-                    this.expendRow.splice(index, 1)
-                }
-            },
+            } else {
+                const index = this.expendRow.indexOf(row.index);
+                this.expendRow.splice(index, 1)
+            }
+        },
+        handleEditSave() {
+        /*  editUser(this.editForm).then(() => {
+            this.fetchData();
+            this.editDialog = false;
+            this.$message({
+              message: '编辑成功',
+              type: 'success'
+            });
+          });
+          */
+        },
+        handleSave() {
+        /*
+          addUser(this.createForm).then(() => {
+            this.fetchData();
+            this.createDialog = false;
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            });
+          });
+          */
+        },
+        handleEdit($index, row) {
+          this.editForm.id = row.id;
+          this.editDialog = true;
+        },
+        handleDelete($index, row) {
+          this.$confirm('是否删除此条信息?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+          /*
+            removeUser({
+              id: row.id
+            }).then(() => {
+              this.fetchData();
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              });
+            });
+            */
+          });
+        },
     },
 }
 
