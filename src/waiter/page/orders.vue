@@ -21,8 +21,12 @@
         }
     }
     .pagination-wrapper {
-        text-align: center;
+        float:right;
         padding: 30px;
+    }
+    .collection-options{
+       padding: 30px;
+       float:left;
     }
 }
 
@@ -36,19 +40,22 @@
         <h3> order list </h3>
         <!-- filters start -->
         <div class="filters">
+
             <div class="filter">
                 <el-input placeholder="请输入number or username" v-model="filters.keyword"></el-input>
+            </div>
+            <div class="filter">
+                <el-input placeholder="请输入shipment_state" v-model="filters.shipment_state"></el-input>
             </div>
             <div class="filter">
                 起止时间：
                 <el-date-picker type="datetimerange" placeholder="选择时间范围" style="width:350px" v-model="filters.startEndTime"></el-date-picker>
             </div>
             <el-button type="primary" @click="handleSearch()">搜索</el-button>
-            <el-button type="primary" @click="createDialog = true">创建</el-button>
         </div>
         <!-- filters end -->
 
-        <el-table :data="tableData" @expand-change='expand' :expand-row-keys='expendRow' :row-key="row => row.index" style="width: 100%">
+        <el-table :data="tableData" @selection-change="handleSelectionChange" @expand-change='expand' :expand-row-keys='expendRow' :row-key="row => row.index" style="width: 100%">
             <el-table-column type="expand">
                 <template slot-scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
@@ -76,16 +83,24 @@
             </el-table-column>
             <el-table-column label="总价格" prop="total_amount">
             </el-table-column>
-            <el-table-column label="订单状态" prop="status">
+            <el-table-column label="shipment状态" prop="shipment_state">
             </el-table-column>
-            <el-table-column :context="_self" width="150" inline-template label="操作">
-              <div>
+            <el-table-column label="payment状态" prop="payment_state">
+            </el-table-column>
+            <el-table-column  width="150" label="操作">
+              <template slot-scope="scope">
                 <el-button size="small" @click="handleEdit($index, row)">编辑</el-button>
                 <el-button size="small" type="danger" @click="handleDelete($index, row)">删除</el-button>
-              </div>
+              </template>
             </el-table-column>
         </el-table>
-        <div class="Pagination" style="text-align: left;margin-top: 10px;">
+
+        <div class="collection-options">
+          <el-button @click="changeOrderCollectionState">Next Step</el-button>
+          <el-button >print</el-button>
+
+        </div>
+        <div class="pagination-wrapper" >
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="per_page" layout="total, prev, pager, next" :total="count">
             </el-pagination>
         </div>
@@ -119,7 +134,9 @@ export default {
                 store_id: null,
                 reserveSelection: false,
                 expendRow: [],
-                filters: { keyword: '', startEndTime: null }
+                filters: { keyword: '', startEndTime: null },
+                multipleSelection: []
+
             }
         },
     components: {
@@ -134,8 +151,8 @@ export default {
         })
     },
     created() {
-        this.store_id = this.userInfo.store_id;
-        this.initData();
+        this.store_id = this.userInfo.store_id
+        this.initData()
     },
     mounted() {
 
@@ -144,20 +161,20 @@ export default {
         async initData() {
             try {
 
-                this.getOrders();
+                this.getOrders()
             } catch (err) {
-                console.log('获取数据失败', err);
+                console.log('获取数据失败', err)
             }
         },
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
+            console.log(`每页 ${val} 条`)
         },
         handleCurrentChange(val) {
-            this.currentPage = val;
+            this.currentPage = val
             this.getOrders()
         },
         handleSearch() {
-            this.initData();
+            this.initData()
         },
         async getOrders() {
           let queryParams = {
@@ -170,28 +187,30 @@ export default {
             queryParams["q[user_username_cont]"] = this.filters.keyword
           }
           console.log( this.filters )
-            const ordersResult = await getOrderList(queryParams);
+            const ordersResult = await getOrderList(queryParams)
             console.log(ordersResult)
             this.count = ordersResult.total_count
-            this.tableData = [];
+            this.tableData = []
             ordersResult.orders.forEach((item, index) => {
-                const tableData = {};
-                tableData.id = item.id;
+                const tableData = {}
+                tableData.id = item.id
                 tableData.number = item.number
-                tableData.total_amount = item.display_total;
-                tableData.status = item.state;
-                tableData.user_id = item.user_id;
-                tableData.store_id = item.store_id;
-                tableData.address_id = item.address_id;
-                tableData.index = index;
-                this.tableData.push(tableData);
+                tableData.total_amount = item.display_total
+                tableData.status = item.state
+                tableData.user_id = item.user_id
+                tableData.store_id = item.store_id
+                tableData.address_id = item.address_id
+                tableData.index = index
+                tableData.shipment_state = item.shipment_state
+                tableData.payment_state = item.payment_state
+                this.tableData.push(tableData)
             })
         },
         async expand(row, status) {
             if (status) {
-                const restaurant = await getResturantDetail(row.store_id);
-                const userInfo = await getUserInfo(row.user_id);
-                const addressInfo = await getAddressById(row.address_id);
+                const restaurant = await getResturantDetail(row.store_id)
+                const userInfo = await getUserInfo(row.user_id)
+                const addressInfo = await getAddressById(row.address_id)
 
                 this.tableData.splice(row.index, 1, {...row, ... {
                         restaurant_name: restaurant.name,
@@ -199,41 +218,41 @@ export default {
                         address: addressInfo.address,
                         user_name: userInfo.username
                     }
-                });
+                })
                 this.$nextTick(() => {
-                    this.expendRow.push(row.index);
+                    this.expendRow.push(row.index)
                 })
             } else {
-                const index = this.expendRow.indexOf(row.index);
+                const index = this.expendRow.indexOf(row.index)
                 this.expendRow.splice(index, 1)
             }
         },
         handleEditSave() {
         /*  editUser(this.editForm).then(() => {
-            this.fetchData();
-            this.editDialog = false;
+            this.fetchData()
+            this.editDialog = false
             this.$message({
               message: '编辑成功',
               type: 'success'
-            });
-          });
+            })
+          })
           */
         },
         handleSave() {
         /*
           addUser(this.createForm).then(() => {
-            this.fetchData();
-            this.createDialog = false;
+            this.fetchData()
+            this.createDialog = false
             this.$message({
               message: '保存成功',
               type: 'success'
-            });
-          });
+            })
+          })
           */
         },
         handleEdit($index, row) {
-          this.editForm.id = row.id;
-          this.editDialog = true;
+          this.editForm.id = row.id
+          this.editDialog = true
         },
         handleDelete($index, row) {
           this.$confirm('是否删除此条信息?', '提示', {
@@ -245,15 +264,21 @@ export default {
             removeUser({
               id: row.id
             }).then(() => {
-              this.fetchData();
+              this.fetchData()
               this.$message({
                 message: '删除成功',
                 type: 'success'
-              });
-            });
+              })
+            })
             */
-          });
+          })
         },
+        changeOrderCollectionState(){
+          console.log( this.multipleSelection)
+        },
+        handleSelectionChange(val) {
+          this.multipleSelection = val
+        }
     },
 }
 
