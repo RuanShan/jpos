@@ -314,7 +314,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
 	@import '../style/mixin';
     .demo-table-expand {
         font-size: 0;

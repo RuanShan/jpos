@@ -42,10 +42,18 @@
         <div class="filters">
 
             <div class="filter">
-                <el-input placeholder="请输入number or username" v-model="filters.keyword"></el-input>
+                Keyword: <el-input label="Keyword" placeholder="请输入number or username" v-model="filters.keyword"></el-input>
             </div>
             <div class="filter">
-                <el-input placeholder="请输入shipment_state" v-model="filters.shipment_state"></el-input>
+                OrderState: <el-select v-model="filters.shipment_state" placeholder="All">
+                            <el-option
+                              v-for="item in orderStateOptions"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                          </el-select>
+
             </div>
             <div class="filter">
                 起止时间：
@@ -79,7 +87,7 @@
             </el-table-column>
             <el-table-column type="selection" width="55" :reserve-selection="reserveSelection"></el-table-column>
 
-            <el-table-column label="订单 ID" prop="id">
+            <el-table-column label="订单 ID" prop="number">
             </el-table-column>
             <el-table-column label="总价格" prop="total_amount">
             </el-table-column>
@@ -96,7 +104,8 @@
         </el-table>
 
         <div class="collection-options">
-          <el-button @click="changeOrderCollectionState">Next Step</el-button>
+          <el-button @click="ChangeOrderStates">Next Step</el-button>
+          <el-button @click="ChangeOrderStates(false)">Draw Back</el-button>
           <el-button >print</el-button>
 
         </div>
@@ -115,7 +124,7 @@
 import leftNav from '@/components/LeftNav/LeftNav.vue'
 import headTop from '../components/headTop'
 import {
-    getOrderList, getResturantDetail, getUserInfo, getAddressById
+    getOrderList, stepPosOrders, getResturantDetail, getUserInfo, getAddressById
 }
 from '@/api/getData'
 import {
@@ -134,8 +143,13 @@ export default {
                 store_id: null,
                 reserveSelection: false,
                 expendRow: [],
-                filters: { keyword: '', startEndTime: null },
-                multipleSelection: []
+                filters: { keyword: '', startEndTime: null, shipment_state: 'all' },
+                multipleSelection: [],
+                orderStateOptions: [{ value: 'all', label: 'all' },
+                  { value: 'pending', label: 'pending' },
+                  { value: 'partial', label: 'partial' },
+                  { value: 'ready_for_factory', label: 'ready_for_factory' },
+                  { value: 'ready', label: 'ready' }]
 
             }
         },
@@ -186,6 +200,11 @@ export default {
             // order.number ||  || order.users.username
             queryParams["q[user_username_cont]"] = this.filters.keyword
           }
+          if ( this.filters.shipment_state.length>0 && this.filters.shipment_state != 'all' ){
+            // order.number ||  || order.users.username
+            queryParams["q[shipment_state_eq]"] = this.filters.shipment_state
+          }
+
           console.log( this.filters )
             const ordersResult = await getOrderList(queryParams)
             console.log(ordersResult)
@@ -273,11 +292,26 @@ export default {
             */
           })
         },
-        changeOrderCollectionState(){
-          console.log( this.multipleSelection)
-        },
+
         handleSelectionChange(val) {
           this.multipleSelection = val
+        },
+        async ChangeOrderStates(forward = true){
+          let orderNumbers = this.multipleSelection.map((order)=> order.number)
+          if( orderNumbers.length == 0){
+            this.$message({
+              message: '警告哦，Please select a order at least',
+              type: 'warning'
+            });
+            return;
+          }
+
+          const posOrdersReturn = await stepPosOrders( { order_numbers: orderNumbers, forward } )
+          if( posOrdersReturn.count>0 ){
+            this.getOrders()
+          }
+
+          console.log( 'ChangeOrderStates', orderNumbers)
         }
     },
 }

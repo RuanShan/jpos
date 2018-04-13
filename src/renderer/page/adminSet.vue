@@ -75,7 +75,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
   .explain_text{
     margin-top: 20px;
@@ -98,7 +98,7 @@ export default {
     }
     .admin_title{
         margin-top: 20px;
-        .sc(24px, #666);
+        @include sc(24px, #666);
         text-align: center;
     }
     .avatar-uploader .el-upload {

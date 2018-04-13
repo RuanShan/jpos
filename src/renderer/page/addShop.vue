@@ -445,7 +445,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
   .button_submit{
     text-align: center;

@@ -370,7 +370,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
   .form{
     min-width: 400px;
@@ -425,7 +425,7 @@ export default {
       }
     }
     span{
-      .sc(14px, #999);
+      @include sc(14px, #999);
       transition: all 400ms;
     }
     .edit_icon{

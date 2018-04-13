@@ -61,7 +61,7 @@
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
             const res = await login({user_name: this.loginForm.username, password: this.loginForm.password})
-            if (res.status === 1) {
+            if (res.id >0) {
               this.$message({
                 type: 'success',
                 message: '登录成功'
@@ -98,7 +98,7 @@
   }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
   @import '../style/mixin';
   .login_page{
     background-color: #324057;
@@ -114,8 +114,8 @@
     }
   }
   .form_contianer{
-    .wh(320px, 210px);
-    .ctp(320px, 210px);
+    @include wh(320px, 210px);
+    @include ctp(320px, 210px);
     padding: 25px;
     border-radius: 5px;
     text-align: center;

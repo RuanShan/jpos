@@ -49,7 +49,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
   .edit_container{
     padding: 40px;

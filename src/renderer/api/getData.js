@@ -4,7 +4,7 @@ import fetch from '@/config/fetch'
  * 登陆
  */
 
-export const login = data => fetch('/admin/login', data, 'POST')
+export const login = data => fetch('/users/sign_in', data, 'POST');
 
 /**
  * 退出
@@ -16,7 +16,7 @@ export const signout = () => fetch('/admin/singout')
  * 获取用户信息
  */
 
-export const getUserInfo = () => fetch('/admin/info')
+export const getUserInfo = () => fetch('/users/info', {}, 'GET');
 
 /**
  * api请求量
@@ -220,7 +220,7 @@ export const getOrderCount = data => fetch('/bos/orders/count', data)
  * 获取用户信息
  */
 
-export const getUserInfo = user_id => fetch('/v1/user/' + user_id)
+export const getCustomerInfo = user_id => fetch('/v1/user/' + user_id)
 
 /**
  * 获取地址信息

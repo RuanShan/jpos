@@ -1,10 +1,24 @@
 <template>
-    <div class="header_container">
+    <header class="header">
 
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/manage' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item v-for="(item, index) in $route.meta" :key="index">{{item}}</el-breadcrumb-item>
-    </el-breadcrumb>
+    <!-- header start  -->
+      <router-link class="logo" :to="{path: '/manage'}">Element Dashboard</router-link>
+        <div class="user-info" >
+          <span v-text="userInfo.username"></span>
+          <el-dropdown trigger="click">
+            <span class="el-dropdown-link">
+              <img :src="userInfo.avatar">
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>个人信息</el-dropdown-item>
+              <el-dropdown-item>设置</el-dropdown-item>
+              <el-dropdown-item @click.native="logout">注销</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      <!-- header end  -->
+
+
     <el-dropdown @command="handleCommand" menu-align='start'>
       <img :src="baseImgPath + userInfo.avatar" class="avator">
       <el-dropdown-menu slot="dropdown">
@@ -12,7 +26,7 @@
         <el-dropdown-item command="singout">退出</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-    </div>
+    </header>
 </template>
 
 <script>
@@ -59,18 +73,27 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
-  .header_container{
-    background-color: #EFF2F7;
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 20px;
+  .header{
+      position: relative;
+      box-sizing: border-box;
+      width: 100%;
+      height: 70px;
+      font-size: 22px;
+      line-height: 70px;
+      color: #fff;
+  }
+  .header {
+    background-color: #242f42;
+    .logo {
+        float: left;
+        width: 250px;
+        text-align: center;
+    }
   }
   .avator{
-    .wh(36px, 36px);
+    @include wh(36px, 36px);
     border-radius: 50%;
     margin-right: 37px;
   }

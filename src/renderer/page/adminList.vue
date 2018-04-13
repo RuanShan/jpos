@@ -106,7 +106,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
     .table_container{
         padding: 20px;

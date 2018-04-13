@@ -11,10 +11,10 @@ let routerMode = 'history'
 let baseImgPath
 
 if (process.env.NODE_ENV == 'development') {
-    baseUrl = 'http://localhost:8001'
-  baseImgPath = 'http://localhost:8001/img/'
+  baseUrl = 'http://localhost:3001'
+  baseImgPath = 'http://localhost:3001/img/'
 } else {
-    baseUrl = 'http://cangdu.org:8001'
+  baseUrl = 'http://cangdu.org:8001'
   baseImgPath = 'http://cangdu.org:8001/img/'
 }
 

@@ -94,7 +94,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
   .data_section{
     padding: 20px;
@@ -131,6 +131,6 @@ export default {
         }
   }
     .wan{
-        .sc(16px, #333)
+        @include sc(16px, #333)
     }
 </style>
