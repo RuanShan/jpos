@@ -1,6 +1,5 @@
 <template>
     <div>
-        <head-top></head-top>
         <visitor-pie :pieData="pieData"></visitor-pie>
     </div>
 </template>

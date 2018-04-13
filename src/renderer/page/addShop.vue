@@ -1,6 +1,5 @@
 <template>
   <div>
-      <head-top></head-top>
       <el-row style="margin-top: 20px;">
       <el-col :span="12" :offset="4">
           <el-form :model="formData" :rules="rules" ref="formData" label-width="110px" class="demo-formData">

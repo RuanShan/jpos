@@ -1,6 +1,5 @@
 <template>
     <div class="fillcontain">
-        <head-top></head-top>
         <div class="table_container">
             <el-table
           :data="tableData"

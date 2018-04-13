@@ -1,6 +1,5 @@
 <template>
     <div>
-       <head-top></head-top>
         <el-row style="margin-top: 20px;">
         <el-col :span="14" :offset="4">
           <header class="form_header">选择食品种类</header>

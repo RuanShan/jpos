@@ -39,7 +39,7 @@
 </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scope>
 .sidebar {
     display: block;
     position: absolute;
@@ -49,4 +49,16 @@
     bottom: 0;
     background: #2e363f;
 }
-<style>
+</style>
+
+<script>
+
+export default {
+    data () {
+      return {
+        defaultActive: 'manage'
+      }
+    }
+}
+
+</script>
