@@ -270,6 +270,7 @@ export const checkout = ( entities) => fetch('/api/v1/orders', entities, 'POST')
  * forward: false， 可选参数，如果表示订单转向上一步
  */
 
+export const stepPosOrder = ( order_id, data) => fetch('/api/v1/pos_orders/'+order_id+'/one_step', data, 'PUT');
 
 /**
  * 所有POS订单下一步
