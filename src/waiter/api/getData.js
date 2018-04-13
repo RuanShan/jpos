@@ -264,3 +264,25 @@ export const createCustomer = ( data ) => fetch('/api/v1/users', data, 'POST');
  */
 
 export const checkout = ( entities) => fetch('/api/v1/orders', entities, 'POST');
+
+/**
+ * POS订单下一步
+ * forward: false， 可选参数，如果表示订单转向上一步
+ */
+
+
+/**
+ * 所有POS订单下一步
+ * entities: order_numbers，
+ *           forward: false， 可选参数，如果表示订单转向上一步
+ *
+ */
+
+export const stepPosOrders = ( data ) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
+
+/**
+ * POS订单下一步
+ * forward: false， 可选参数，如果表示订单转向上一步
+ */
+
+export const stepPosShipment = ( shipment_id, data) => fetch('/api/v1/pos_shipments/'+shipment_id+'/one_step', data, 'PUT');
