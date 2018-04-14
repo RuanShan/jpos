@@ -1,9 +1,8 @@
 <template>
-    <div class="fillcontain">
+    <div class="order-container fillcontain">
       <div class="table_container">
         <!-- filters start -->
         <div class="filters">
-
             <div class="filter">
                 Keyword: <el-input label="Keyword" placeholder="请输入number or username" v-model="filters.keyword"></el-input>
             </div>
@@ -26,31 +25,30 @@
         </div>
         <!-- filters end -->
 
-
-            <el-table
+        <el-table
           :data="tableData"
-          @expand='expand'
+          @expand-change='expandChange'
                 :expand-row-keys='expendRow'
                 :row-key="row => row.index"
           style="width: 100%">
           <el-table-column type="expand">
-            <template scope="props">
+            <template slot-scope="props">
+
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item label="用户名" >
-                  <span>{{ props.row.user_name }}</span>
+                  <span>{{ props.row.username }}</span>
                 </el-form-item>
                 <el-form-item label="店铺名称">
-                  <span>{{ props.row.restaurant_name }}</span>
+                  <span>{{ props.row.storeName }}</span>
                 </el-form-item>
-                <el-form-item label="收货地址">
-                  <span>{{ props.row.address }}</span>
-                </el-form-item>
-                <el-form-item label="店铺 ID">
-                  <span>{{ props.row.store_id }}</span>
-                </el-form-item>
-                <el-form-item label="店铺地址">
-                  <span>{{ props.row.restaurant_address }}</span>
-                </el-form-item>
+                <div v-for="lineItem in props.row.lineItems" >
+                  <el-form-item label="name">
+                    <span>{{ lineItem.name }}</span>
+                  </el-form-item>
+                  <el-form-item label="price">
+                    <span>{{ lineItem.price }}</span>
+                  </el-form-item>
+                </div>
               </el-form>
             </template>
           </el-table-column>
@@ -71,8 +69,8 @@
                 <el-pagination
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-size="20"
+                  :current-page.sync="currentPage"
+                  :page-size="perPage"
                   layout="total, prev, pager, next"
                   :total="count">
                 </el-pagination>
@@ -83,14 +81,16 @@
 
 <script>
     import headTop from '@/components/headTop'
-    import {getOrderList, getResturantDetail, getUserInfo, getAddressById} from '@/api/getData'
+    import {getOrderList, getStore, getUserInfo, getOrder} from '@/api/getData'
+    import {userDataMixin} from '@/components/userDataMixin'
+
     export default {
       data () {
         return {
           tableData: [],
           currentRow: null,
-          per_page: 2,
-          count: 4,
+          perPage: 2,
+          count: 0,
           currentPage: 1,
           store_id: null,
           expendRow: [],
@@ -107,20 +107,23 @@
       components: {
         headTop
       },
-      created () {
-        this.store_id = this.$route.query.store_id
-        this.initData()
-    },
+      mixins: [userDataMixin],
+      created(){
+        this.getAdminData().then(res=>{
+          if (this.userInfo.id) {
+            this.storeId = this.userInfo.store_id
+            this.initData()
+          }else{
+            this.$router.push('/')
+          }
+        })
+      },
       mounted () {
 
       },
       methods: {
         async initData () {
-          try {
-            this.getOrders()
-          } catch (err) {
-            console.log('获取数据失败', err)
-          }
+          this.getOrders()
         },
         handleSizeChange (val) {
           console.log(`每页 ${val} 条`)
@@ -133,7 +136,7 @@
         async getOrders () {
           let queryParams = {
               page: this.currentPage,
-              per_page: this.per_page,
+              per_page: this.perPage,
           }
           if ( this.filters.store_id>0){
             queryParams["q[store_id_eq]"] = this.filters.store_id
@@ -151,29 +154,39 @@
 
           const ordersResult = await getOrderList(queryParams)
           this.count = ordersResult.total_count
+          console.log( "total_count", this.count)
           this.tableData = []
           ordersResult.orders.forEach((item, index) => {
-              const tableData = {}
-              tableData.id = item.id
-              tableData.number = item.number
-              tableData.total_amount = item.display_total
-              tableData.status = item.state
-              tableData.user_id = item.user_id
-              tableData.store_id = item.store_id
-              tableData.address_id = item.address_id
-              tableData.index = index
-              tableData.shipment_state = item.shipment_state
-              tableData.payment_state = item.payment_state
-              this.tableData.push(tableData)
+              const rowData = {}
+              rowData.id = item.id
+              rowData.number = item.number
+              rowData.total_amount = item.display_total
+              rowData.status = item.state
+              rowData.user_id = item.user_id
+              rowData.store_id = item.store_id
+              rowData.index = index
+              rowData.shipment_state = item.shipment_state
+              rowData.payment_state = item.payment_state
+              this.tableData.push(rowData)
           })
         },
-        async expand (row, status) {
-          if (status) {
-            const restaurant = await getResturantDetail(row.store_id)
+        async expandChange (row, expandedRows) {
+        console.log('expandChange', expandedRows, row)
+          if (expandedRows.indexOf(row)>=0) {
+            const storeInfo = await getStore(row.store_id)
             const userInfo = await getUserInfo(row.user_id)
-            const addressInfo = await getAddressById(row.address_id)
+            const orderInfo = await getOrder(row.number)
+            const lineItems = []
+            orderInfo.line_items.forEach((item,index)=>{
+              const rowData = {}
+              rowData.name = item.variant.name
+              rowData.options_text = item.variant.options_text
+              rowData.price = item.price
+              lineItems.push( rowData )
+            })
+            console.log("orderInfo.line_items", lineItems)
 
-            this.tableData.splice(row.index, 1, {...row, ...{restaurant_name: restaurant.name, restaurant_address: restaurant.address, address: addressInfo.address, user_name: userInfo.username}})
+            this.tableData.splice(row.index, 1, {...row, ...{storeName: storeInfo.name, username: userInfo.username, createdAt: orderInfo.created_at, lineItems: lineItems }})
             this.$nextTick(() => {
               this.expendRow.push(row.index)
             })
@@ -189,7 +202,7 @@
 <style lang="scss">
   @import '../style/mixin';
     .table_container{
-        padding: 20px;
+        padding: 20px 0;
     }
     .demo-table-expand {
       font-size: 0;

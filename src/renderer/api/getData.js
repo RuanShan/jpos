@@ -94,7 +94,7 @@ export const searchplace = (cityid, value) => fetch('/v1/pois', {
  * 获取当前店铺食品种类
  */
 
-export const getCategory = restaurantID => fetch('/shopping/getcategory/' + restaurantID)
+export const getCategory = storeID => fetch('/shopping/getcategory/' + storeID)
 
 /**
  * 添加食品种类
@@ -124,7 +124,8 @@ export const getResturants = data => fetch('/shopping/restaurants', data)
  * 获取餐馆详细信息
  */
 
-export const getResturantDetail = restaurantID => fetch('/shopping/restaurant/' + restaurantID)
+export const getStore = storeID => fetch('/api/v1/stores/' + storeID)
+//export const getStore = storeID => fetch('/shopping/restaurant/' + storeID)
 
 /**
  * 获取餐馆数量
@@ -142,7 +143,7 @@ export const updateResturant = data => fetch('/shopping/updateshop', data, 'POST
  * 删除餐馆
  */
 
-export const deleteResturant = restaurantID => fetch('/shopping/restaurant/' + restaurantID, {}, 'DELETE')
+export const deleteResturant = storeID => fetch('/shopping/restaurant/' + storeID, {}, 'DELETE')
 
 /**
  * 获取食品列表
@@ -216,6 +217,12 @@ export const getOrderList = data => fetch('/api/v1/pos_orders', data);
  */
 
 export const getOrderCount = data => fetch('/bos/orders/count', data)
+
+/**
+ * 获取订单Detail
+ */
+
+export const getOrder = orderNumber => fetch('/api/v1/orders/'+orderNumber)
 
 /**
  * 获取用户信息

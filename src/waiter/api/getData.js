@@ -132,7 +132,7 @@ export const getResturants = data => fetch('/shopping/restaurants', data);
  * 获取餐馆详细信息
  */
 
-export const getResturantDetail = restaurant_id => fetch('/shopping/restaurant/' + restaurant_id);
+export const getStore = restaurant_id => fetch('/shopping/restaurant/' + restaurant_id);
 
 /**
  * 获取餐馆数量

@@ -39,7 +39,7 @@ export default {
 
   }
   .content {
-    background: none repeat scroll 0 0 #fff;
+    background: none repeat scroll 0 0 #f0f0f0;
     position: absolute;
     left: 250px;
     right: 0;

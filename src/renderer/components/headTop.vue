@@ -33,8 +33,8 @@ export default {
   },
   created(){
     this.getAdminData().then(res=>{
-      console.log('created')
-      if (!this.userInfo.id) {      
+      console.log('created',this.userInfo)
+      if (!this.userInfo.id) {
         this.$router.push('/')
       }
     })

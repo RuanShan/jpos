@@ -110,7 +110,7 @@
 
         </div>
         <div class="pagination-wrapper" >
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="per_page" layout="total, prev, pager, next" :total="count">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="perPage" layout="total, prev, pager, next" :total="count">
             </el-pagination>
         </div>
     </div>
@@ -124,7 +124,7 @@
 import leftNav from '@/components/LeftNav/LeftNav.vue'
 import headTop from '../components/headTop'
 import {
-    getOrderList, stepPosOrders, getResturantDetail, getUserInfo, getAddressById
+    getOrderList, stepPosOrders, getStore, getUserInfo, getAddressById
 }
 from '@/api/getData'
 import {
@@ -137,7 +137,7 @@ export default {
             return {
                 tableData: [],
                 currentRow: null,
-                per_page: 2,
+                perPage: 2,
                 count: 4,
                 currentPage: 1,
                 store_id: null,
@@ -193,7 +193,7 @@ export default {
         async getOrders() {
           let queryParams = {
               page: this.currentPage,
-              per_page: this.per_page,
+              per_page: this.perPage,
               "q[store_id_eq]": this.store_id
           }
           if ( this.filters.keyword.length>0){
@@ -225,7 +225,7 @@ export default {
         },
         async expand(row, status) {
             if (status) {
-                const restaurant = await getResturantDetail(row.store_id)
+                const restaurant = await getStore(row.store_id)
                 const userInfo = await getUserInfo(row.user_id)
                 const addressInfo = await getAddressById(row.address_id)
 

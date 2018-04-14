@@ -264,7 +264,7 @@
           this.dialogFormVisible = true
         },
         async getSelectItemData (row, type) {
-          //const restaurant = await getResturantDetail(row.restaurant_id)
+          //const restaurant = await getStore(row.restaurant_id)
           //const category = await getMenuById(row.category_id)
           this.selectTable = {...row }
 
