@@ -2,7 +2,7 @@
     <header class="header">
 
     <!-- header start  -->
-      <router-link class="logo" :to="{path: '/manage'}">Element Dashboard</router-link>
+      <router-link class="logo" :to="{path: '/manage'}">JPOS Dashboard</router-link>
         <div class="user-info" >
           <span v-text="userInfo.username">&nbsp;</span>
           <el-dropdown trigger="click">
@@ -31,11 +31,15 @@ export default {
       baseImgPath
     }
   },
-  created () {
-    if (!this.userInfo.id) {
-      this.getAdminData()
-    }
+  created(){
+    this.getAdminData().then(res=>{
+      console.log('created')
+      if (!this.userInfo.id) {      
+        this.$router.push('/')
+      }
+    })
   },
+
   computed: {
     ...mapState(['userInfo'])
   },

@@ -111,7 +111,7 @@ export default {
   data() {
     return {
       geohash: '', //geohash位置信息
-      shopId: null, //商店id值
+      storeId: null, //商店id值
       storeName: '',
       showLoading: true, //显示加载动画
       shopDetailData: null, //商铺详情
@@ -155,7 +155,7 @@ export default {
     this.getAdminData().then(res=>{
       console.log('created')
       if (this.userInfo.id) {
-        this.shopId = this.userInfo.store_id
+        this.storeId = this.userInfo.store_id
         this.initData()
       }else{
         this.$router.push('/')
@@ -170,7 +170,7 @@ export default {
     ...mapActions(['getAdminData']),
     async initData(){
       //获取商铺信息
-      this.shopDetailData = await shopDetails(this.shopId, this.latitude, this.longitude)
+      this.shopDetailData = await shopDetails(this.storeId, this.latitude, this.longitude)
       //获取商铺食品列表
       let taxonsData = await foodMenu( 1 )
 
