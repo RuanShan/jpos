@@ -1,18 +1,23 @@
 <template>
-    <div class="header_container">
+    <header class="header">
 
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/manage' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item v-for="(item, index) in $route.meta" :key="index">{{item}}</el-breadcrumb-item>
-    </el-breadcrumb>
-    <el-dropdown @command="handleCommand" menu-align='start'>
-      <img :src="baseImgPath + userInfo.avatar" class="avator">
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="home">首页</el-dropdown-item>
-        <el-dropdown-item command="singout">退出</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-    </div>
+    <!-- header start  -->
+      <router-link class="logo" :to="{path: '/manage'}">JPOS Dashboard</router-link>
+        <div class="user-info" >
+          <span v-text="userInfo.username">&nbsp;</span>
+          <el-dropdown trigger="click">
+            <span class="el-dropdown-link">
+              <img :src="baseImgPath + userInfo.avatar" class="user-logo">
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>个人信息</el-dropdown-item>
+              <el-dropdown-item>设置</el-dropdown-item>
+              <el-dropdown-item command="singout">注销</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      <!-- header end  -->
+    </header>
 </template>
 
 <script>
@@ -26,11 +31,15 @@ export default {
       baseImgPath
     }
   },
-  created () {
-    if (!this.userInfo.id) {
-      this.getAdminData()
-    }
+  created(){
+    this.getAdminData().then(res=>{
+      console.log('created',this.userInfo)
+      if (!this.userInfo.id) {
+        this.$router.push('/')
+      }
+    })
   },
+
   computed: {
     ...mapState(['userInfo'])
   },
@@ -59,21 +68,41 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
-  .header_container{
-    background-color: #EFF2F7;
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 20px;
+  .header {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 70px;
+    font-size: 22px;
+    line-height: 70px;
+    color: #fffff;
+    background-color: #242f42;
+    .logo {
+        float: left;
+        width: 250px;
+        text-align: center;
+        color: #fff;
+    }
   }
-  .avator{
-    .wh(36px, 36px);
-    border-radius: 50%;
-    margin-right: 37px;
+  .user-info{
+    float: right;
+    padding-right: 50px;
+    font-size: 16px;
+    color: #fff;
+   .el-dropdown-link {
+       color: #fff;
+      .user-logo{
+        width: 25px;
+        height: 25px;
+        vertical-align: -7px;
+        margin: 0 0 0 10px;
+        cursor: pointer;
+      }
+    }
   }
+
   .el-dropdown-menu__item{
         text-align: center;
     }

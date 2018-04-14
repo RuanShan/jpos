@@ -1,6 +1,5 @@
 <template>
     <div>
-        <head-top></head-top>
         <visitor-pie :pieData="pieData"></visitor-pie>
     </div>
 </template>
@@ -39,7 +38,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
 
 </style>

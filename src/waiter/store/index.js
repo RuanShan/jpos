@@ -21,9 +21,7 @@ const mutations = {
 const actions = {
   async getAdminData ({commit}) {
     try {
-
       const res = await getUserInfo()
-      console.log('res:', res)
 
       if (res.id) {
         commit('saveAdminInfo', res)

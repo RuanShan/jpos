@@ -1,6 +1,5 @@
 <template>
   <div>
-      <head-top></head-top>
       <el-row style="margin-top: 20px;">
       <el-col :span="12" :offset="4">
           <el-form :model="formData" :rules="rules" ref="formData" label-width="110px" class="demo-formData">
@@ -145,7 +144,7 @@
             <el-table-column
               label="操作"
               width="120">
-            <template scope="scope">
+            <template slot-scope="scope">
                 <el-button
                   size="small"
                   type="danger"
@@ -445,7 +444,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
   .button_submit{
     text-align: center;

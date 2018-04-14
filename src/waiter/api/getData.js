@@ -2,10 +2,10 @@ import fetch from '@/config/fetch'
 /**************************************************************************
  * jpos spree api
  **************************************************************************/
- /**
-  * 登陆
-	*
-  */
+/**
+ * 登陆
+ *
+ */
 export const login = data => fetch('/users/sign_in', data, 'POST');
 //export const login = data => fetch('/admin/login', data, 'POST');
 
@@ -77,7 +77,7 @@ export const adminCount = () => fetch('/admin/count');
  */
 
 export const cityGuess = () => fetch('/v1/cities', {
-	type: 'guess'
+    type: 'guess'
 });
 
 /**
@@ -91,9 +91,9 @@ export const addShop = data => fetch('/shopping/addShop', data, 'POST');
  */
 
 export const searchplace = (cityid, value) => fetch('/v1/pois', {
-	type: 'search',
-	city_id: cityid,
-	keyword: value
+    type: 'search',
+    city_id: cityid,
+    keyword: value
 });
 
 /**
@@ -132,7 +132,7 @@ export const getResturants = data => fetch('/shopping/restaurants', data);
  * 获取餐馆详细信息
  */
 
-export const getResturantDetail = restaurant_id => fetch('/shopping/restaurant/' + restaurant_id);
+export const getStore = restaurant_id => fetch('/shopping/restaurant/' + restaurant_id);
 
 /**
  * 获取餐馆数量
@@ -239,7 +239,7 @@ export const getUserCity = () => fetch('/v1/user/city/count');
 /**
  * 获取shop页面菜单列表
  */
- export const foodMenu = taxonomy_id => fetch('/api/v1/taxonomies/'+taxonomy_id+'/taxons');
+export const foodMenu = taxonomy_id => fetch('/api/v1/taxonomies/' + taxonomy_id + '/taxons');
 //export const foodMenu = restaurant_id => fetch('/shopping/v2/menu', {
 //  restaurant_id
 //});
@@ -248,19 +248,19 @@ export const getUserCity = () => fetch('/v1/user/city/count');
  * 获取shop页面商铺详情
  */
 export const shopDetails = (store_id, latitude, longitude) => fetch('/api/v1/stores/' + store_id)
-//export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/restaurant/' + shopid, {
-//  latitude,
-//  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
-//});
+    //export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/restaurant/' + shopid, {
+    //  latitude,
+    //  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
+    //});
 
 /**
- * create customer
+ * create customer  创建顾客
  */
 
-export const createCustomer = ( data ) => fetch('/api/v1/users', data, 'POST');
+export const createCustomer = (data) => fetch('/api/v1/users', data, 'POST');
 
 /**
  * 确认订单
  */
 
-export const checkout = ( entities) => fetch('/api/v1/orders', entities, 'POST');
+export const checkout = (entities) => fetch('/api/v1/orders', entities, 'POST');

@@ -1,6 +1,5 @@
 <template>
     <div>
-        <head-top></head-top>
     <section class="data_section">
       <header class="section_title">数据统计</header>
       <el-row :gutter="20" style="margin-bottom: 10px;">
@@ -94,7 +93,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
   .data_section{
     padding: 20px;
@@ -131,6 +130,6 @@ export default {
         }
   }
     .wan{
-        .sc(16px, #333)
+        @include sc(16px, #333)
     }
 </style>

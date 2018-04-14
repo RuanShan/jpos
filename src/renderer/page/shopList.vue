@@ -1,12 +1,11 @@
 <template>
     <div class="fillcontain">
-        <head-top></head-top>
         <div class="table_container">
             <el-table
                 :data="tableData"
                 style="width: 100%">
                 <el-table-column type="expand">
-                  <template scope="props">
+                  <template slot-scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
                       <el-form-item label="店铺名称">
                         <span>{{ props.row.name }}</span>
@@ -48,7 +47,7 @@
                   prop="description">
                 </el-table-column>
                 <el-table-column label="操作" width="200">
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     <el-button
                       size="mini"
                       @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -314,7 +313,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
 	@import '../style/mixin';
     .demo-table-expand {
         font-size: 0;

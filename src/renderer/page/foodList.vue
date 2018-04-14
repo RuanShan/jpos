@@ -1,6 +1,5 @@
 <template>
     <div class="fillcontain">
-        <head-top></head-top>
         <div class="table_container">
             <el-table
                 :data="tableData"
@@ -161,7 +160,7 @@
 <script>
     import headTop from '@/components/headTop'
     import {baseUrl, baseImgPath} from '@/config/env'
-    import {getFoods, getFoodsCount, getMenu, updateFood, deleteFood, getResturantDetail, getMenuById} from '@/api/getData'
+    import {getFoods, getFoodsCount, getMenu, updateFood, deleteFood, getStore, getMenuById} from '@/api/getData'
     export default {
       data () {
         return {
@@ -302,7 +301,7 @@
           this.dialogFormVisible = true
         },
         async getSelectItemData (row, type) {
-          const restaurant = await getResturantDetail(row.restaurant_id)
+          const restaurant = await getStore(row.restaurant_id)
           const category = await getMenuById(row.category_id)
           this.selectTable = {...row, ...{restaurant_name: restaurant.name, restaurant_address: restaurant.address, category_name: category.name}}
           this.selectMenu = {label: category.name, value: row.category_id}
@@ -383,7 +382,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
     .demo-table-expand {
         font-size: 0;

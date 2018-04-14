@@ -1,34 +1,36 @@
 <template>
  <div class="customer_container">
   <!-- 会员添加窗口 -> START -->
-    <el-dialog  title="会员添加"  :visible.sync="dialogVisible" :close-on-press-escape="false" width="70%"  >
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="会员卡号" prop="name">
-          <el-input v-model="ruleForm.memberCardNum" ></el-input>
+    <el-dialog  title="会员添加"  :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true"  >
+     <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" status-icon label-width="100px" class="demo-ruleForm">
+        
+        <el-form-item label="会员编号" prop="memberNum">
+          <el-input v-model="ruleForm.memberNum" ></el-input>
         </el-form-item>
-        <el-form-item label="会员密码" prop="name">
-          <el-input v-model="ruleForm.passWord_1"></el-input>
+       <el-form-item label="会员密码" prop="passWord">
+          <el-input v-model="ruleForm.passWord"></el-input>
         </el-form-item>
-        <el-form-item label="密码确认" prop="name">
-          <el-input v-model="ruleForm.passWord_2"></el-input>
+        <el-form-item label="密码确认" prop="passWord_confirm">
+          <el-input v-model="ruleForm.passWord_confirm"></el-input>
         </el-form-item>
-        <el-form-item label="会员姓名" prop="name">
+         <el-form-item label="会员姓名" prop="memberName">
           <el-input v-model="ruleForm.memberName"></el-input>
         </el-form-item>
-        <el-form-item label="会员电话" prop="name">
-          <el-input v-model="ruleForm.menberPhone"></el-input>
+        <el-form-item label="会员电话" prop="memberPhone">
+          <el-input v-model="ruleForm.memberPhone"></el-input>
         </el-form-item>
         <el-form-item label="过期时间" required>
             <el-form-item prop="outTime">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.outTime" style="width: 100%;"></el-date-picker>
             </el-form-item>
         </el-form-item>
         <el-form-item label="会员生日" required>
             <el-form-item prop="birthday">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.birthday" format="MM 月 dd 日"  value-format="MM-dd" style="width: 100%;"></el-date-picker>
             </el-form-item>
         </el-form-item>
-        <el-form-item label="联系地址" prop="name">
+        <el-form-item label="联系地址" prop="address">
           <el-input v-model="ruleForm.address"></el-input>
         </el-form-item>
         <el-form-item label="输入备注" prop="desc">
@@ -44,32 +46,112 @@
 </template>
 
 
-
 <script>
+// ***接口***
+// props: ["inputNumber"]
+// this.$emit("AddMemberReturnData", this.returnData.Id);
+// **********
+
+import { createCustomer } from "@/api/getData";
+
 export default {
-  props:['inputNumber'],
+  props: ["inputNumber"],
   data() {
+    //验证卡号--1.不能空;2.必须是数字;3.四至十一个字符
+    var checkmemberNum = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("不能为空"));
+      }
+      if (!isvalidNumber(value)) {
+        callback(new Error("请输入数字值"));
+      } else {
+        callback();
+      }
+    };
+    //验证规则---两次密码是否一致
+    var validatePassConfirm = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.ruleForm.passWord) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+    //验证规则---电话号码
+    var validPhone = (rule, value, callback) => {
+      if (!isvalidPhone(value)) {
+        // console.log(value);
+        callback(new Error("请输入正确的11位手机号码"));
+      } else {
+        callback();
+      }
+    };
+    function isvalidNumber(str) {
+      var regNumber = /^[0-9]*$/;
+      return regNumber.test(str);
+    }
+    function isvalidPhone(str) {
+      var reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+      return reg.test(str);
+    }
     return {
       dialogVisible: true, //窗口显示标志位
       ruleForm: {
-        memberCardNum: "",
-        passWord_1:"",
-        passWord_2:"",
+        memberNum: "",
+        passWord: "",
+        passWord_confirm: "",
         memberName: "",
-        menberPhone:"",
-        // region: "",
+        memberPhone: "",
         outTime: "",
         birthday: "",
         address: "",
-        // delivery: false,
         type: [],
-        resource: "",
         desc: ""
       },
+      returnData: {},
       rules: {
-        memberCardNum: [
-          { required: true, message: "请输入会员卡号", trigger: "blur" },
-          { min: 3, max: 11, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        memberNum: [
+          // { required: true, message: "请输入会员卡号", trigger: "blur" },
+          {
+            required: true,
+            min: 4,
+            max: 11,
+            message: "长度在 4 到 11 个数字",
+            trigger: "blur"
+          },
+          { required: true, validator: checkmemberNum, trigger: "blur" }
+        ],
+        passWord: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            required: true,
+            min: 6,
+            max: 11,
+            message: "长度在 6 到 8 个字符",
+            trigger: "blur"
+          }
+        ],
+        passWord_confirm: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            required: true,
+            min: 6,
+            max: 11,
+            message: "长度在 6 到 8 个字符",
+            trigger: "blur"
+          },
+          { validator: validatePassConfirm, trigger: "blur" }
+        ],
+        memberPhone: [
+          { required: true, message: "请输入电话号码", trigger: "blur" },
+          {
+            min: 4,
+            max: 11,
+            message: "长度在 8 到 12 个字符",
+            trigger: "blur"
+          },
+          { required: true, validator: validPhone, trigger: "blur" }
         ],
         outTime: [
           {
@@ -78,36 +160,65 @@ export default {
             message: "请选择日期",
             trigger: "change"
           }
-        ],
-        birthday: [
-          {
-            type: "date",
-            required: true,
-            message: "请选择日期",
-            trigger: "change"
-          }
-        ],
-        desc: [{ required: true, message: "请填写活动形式", trigger: "blur" }]
+        ]
+        // birthday: [
+        //   {
+        //     type: "date",
+        //     required: true,
+        //     message: "请选择日期",
+        //     trigger: "change"
+        //   }
+        // ],
+        // desc: [{ required: true, message: "请填写备注内容", trigger: "blur" }]
       }
     };
   },
-  mounted:function(){
-    this.ruleForm.memberCardNum = this.inputNumber;
+  mounted: function() {
+    this.ruleForm.memberNum = this.inputNumber;
     this.ruleForm.memberName = this.inputNumber;
-    // console.log(this.inputNumber);
-    
   },
   methods: {
+    // test() {
+    //   this.addCustomer().then(() => {
+    //     console.log(this.returnData);
+    //     console.log(this.returnData.Id);
+    //   });
+    // },
+
+    //添加会员方法
+    async addCustomer() {
+      this.returnData = await createCustomer(
+        this.memberNum,
+        this.passWord,
+        this.memberPhone
+      );
+    },
+
+    //提交
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          this.addCustomer().then(() => {
+            //判断不为空且不等于undefined时,提交Id数据给父组件
+            if (
+              this.returnData.Id != "" &&
+              typeof this.returnData.Id != "undefined"
+            ) {
+              this.$emit("AddMemberReturnData", this.returnData);
+              // console.log(this.returnData.Id);
+            }
+          });
+          // alert("submit!");
         } else {
-          console.log("error submit!!");
+          this.$alert("请仔细检测表格", "错误提示", {
+            confirmButtonText: "确定"
+          });
           return false;
         }
       });
     },
+
+    //重置
     resetForm(formName) {
       this.$refs[formName].resetFields();
     }

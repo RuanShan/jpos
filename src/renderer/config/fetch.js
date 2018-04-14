@@ -1,4 +1,5 @@
 import { baseUrl } from './env'
+import store from '@/store'
 
 var Promise = require('es6-promise').Promise;
 
@@ -24,7 +25,8 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       method: type,
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Spree-Token': store.state.userInfo.api_key
       },
       mode: 'cors',
       cache: 'force-cache'
@@ -41,6 +43,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       const responseJson = await response.json()
       return responseJson
     } catch (error) {
+      console.log(error)
       throw new Error(error)
     }
   } else {

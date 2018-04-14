@@ -1,6 +1,5 @@
 <template>
     <div>
-        <head-top></head-top>
         <div class="edit_container">
           <quill-editor v-model="content"
                 ref="myQuillEditor"
@@ -49,7 +48,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
   .edit_container{
     padding: 40px;

@@ -1,6 +1,5 @@
 <template>
     <div class="fillcontain">
-        <head-top></head-top>
         <div class="table_container">
             <el-table
                 :data="tableData"
@@ -265,7 +264,7 @@
           this.dialogFormVisible = true
         },
         async getSelectItemData (row, type) {
-          //const restaurant = await getResturantDetail(row.restaurant_id)
+          //const restaurant = await getStore(row.restaurant_id)
           //const category = await getMenuById(row.category_id)
           this.selectTable = {...row }
 
@@ -343,7 +342,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
   @import '../style/mixin';
     .demo-table-expand {
         font-size: 0;
