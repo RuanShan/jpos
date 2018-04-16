@@ -3,8 +3,10 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
+const Abstract = r => require.ensure([], () => r(require('@/page/abstract')), 'abstract')
+const NotFound = r => require.ensure([], () => r(require('@/page/404')), '404')
 const login = r => require.ensure([], () => r(require('@/page/login')), 'login')
-const manage = r => require.ensure([], () => r(require('@/page/manage')), 'manage')
+const root = r => require.ensure([], () => r(require('@/page/manage')), 'manage')
 const home = r => require.ensure([], () => r(require('@/page/home')), 'home')
 const addShop = r => require.ensure([], () => r(require('@/page/addShop')), 'addShop')
 const addGoods = r => require.ensure([], () => r(require('@/page/addGoods')), 'addGoods')
@@ -22,82 +24,216 @@ const adminSet = r => require.ensure([], () => r(require('@/page/adminSet')), 'a
 const sendMessage = r => require.ensure([], () => r(require('@/page/sendMessage')), 'sendMessage')
 const explain = r => require.ensure([], () => r(require('@/page/explain')), 'explain')
 
-const routes = [
+// const routesX = [
+//   {
+//     path: '/',
+//     component: login
+//   },
+//   {
+//     path: '/manage',
+//     component: manage,
+//     name: '',
+//     children: [{
+//       path: '',
+//       component: home,
+//       meta: []
+//     }, {
+//       path: '/addShop',
+//       component: addShop,
+//       meta: ['添加数据', '添加商铺']
+//     }, {
+//       path: '/addGoods',
+//       component: addGoods,
+//       meta: ['添加数据', '添加商品']
+//     }, {
+//       path: '/userList',
+//       component: userList,
+//       meta: ['数据管理', '用户列表']
+//     }, {
+//       path: '/shopList',
+//       component: shopList,
+//       meta: ['数据管理', '商家列表']
+//     }, {
+//       path: '/menuList',
+//       component: menuList,
+//       meta: ['数据管理', '菜单列表']
+//     }, {
+//       path: '/foodList',
+//       component: foodList,
+//       meta: ['数据管理', '食品列表']
+//     }, {
+//       path: '/orderList',
+//       component: orderList,
+//       meta: ['数据管理', '订单列表']
+//     }, {
+//       path: '/adminList',
+//       component: adminList,
+//       meta: ['数据管理', '管理员列表']
+//     }, {
+//       path: '/visitor',
+//       component: visitor,
+//       meta: ['图表', '用户分布']
+//     }, {
+//       path: '/newMember',
+//       component: newMember,
+//       meta: ['图表', '用户数据']
+//     }, {
+//       path: '/uploadImg',
+//       component: uploadImg,
+//       meta: ['文本编辑', 'MarkDown']
+//     }, {
+//       path: '/vueEdit',
+//       component: vueEdit,
+//       meta: ['编辑', '文本编辑']
+//     }, {
+//       path: '/adminSet',
+//       component: adminSet,
+//       meta: ['设置', '管理员设置']
+//     }, {
+//       path: '/sendMessage',
+//       component: sendMessage,
+//       meta: ['设置', '发送通知']
+//     }, {
+//       path: '/explain',
+//       component: explain,
+//       meta: ['说明', '说明']
+//     }]
+//   }
+// ]
+
+let routes = [
   {
-    path: '/',
-    component: login
+    path: '/login',
+    component: login,
+    name: 'login',
+    meta: {
+      hidden: true
+    }
   },
   {
-    path: '/manage',
-    component: manage,
-    name: '',
-    children: [{
-      path: '',
-      component: home,
-      meta: []
-    }, {
-      path: '/addShop',
-      component: addShop,
-      meta: ['添加数据', '添加商铺']
-    }, {
-      path: '/addGoods',
-      component: addGoods,
-      meta: ['添加数据', '添加商品']
-    }, {
-      path: '/userList',
-      component: userList,
-      meta: ['数据管理', '用户列表']
-    }, {
-      path: '/shopList',
-      component: shopList,
-      meta: ['数据管理', '商家列表']
-    }, {
-      path: '/menuList',
-      component: menuList,
-      meta: ['数据管理', '菜单列表']
-    }, {
-      path: '/foodList',
-      component: foodList,
-      meta: ['数据管理', '食品列表']
-    }, {
-      path: '/orderList',
-      component: orderList,
-      meta: ['数据管理', '订单列表']
-    }, {
-      path: '/adminList',
-      component: adminList,
-      meta: ['数据管理', '管理员列表']
-    }, {
-      path: '/visitor',
-      component: visitor,
-      meta: ['图表', '用户分布']
-    }, {
-      path: '/newMember',
-      component: newMember,
-      meta: ['图表', '用户数据']
-    }, {
-      path: '/uploadImg',
-      component: uploadImg,
-      meta: ['文本编辑', 'MarkDown']
-    }, {
-      path: '/vueEdit',
-      component: vueEdit,
-      meta: ['编辑', '文本编辑']
-    }, {
-      path: '/adminSet',
-      component: adminSet,
-      meta: ['设置', '管理员设置']
-    }, {
-      path: '/sendMessage',
-      component: sendMessage,
-      meta: ['设置', '发送通知']
-    }, {
-      path: '/explain',
-      component: explain,
-      meta: ['说明', '说明']
-    }]
+    path: '/404',
+    component: NotFound,
+    name: '404',
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/',
+    component: root,
+    meta: {
+      requiresAuth: true
+    },
+    children:[ {
+        path: '',
+        component: home,
+        name: 'Dashboard',
+      }, {
+        path: '/base',
+        component: Abstract,
+        name: '数据管理',
+        meta: ['添加数据', '添加商铺'],
+        children:[{
+            path: 'userList',
+            component: userList,
+            name: '用户列表',
+            meta: ['数据管理', '用户列表']
+          }, {
+            path: 'shopList',
+            component: shopList,
+            name: '商家列表',
+            meta: ['数据管理', '商家列表']
+          }, {
+            path: 'menuList',
+            component: menuList,
+            name: '菜单列表',
+            meta: ['数据管理', '菜单列表']
+          }, {
+            path: '/foodList',
+            component: foodList,
+            name: '食品列表',
+            meta: ['数据管理', '食品列表']
+          }, {
+            path: '/orderList',
+            component: orderList,
+            name: '订单列表',
+            meta: ['数据管理', '订单列表']
+          }, {
+            path: '/adminList',
+            component: adminList,
+            name: '管理员列表',
+            meta: ['数据管理', '管理员列表']
+          }
+        ]
+      }, {
+        path: '/edit',
+        component: Abstract,
+        name: '添加数据',
+        meta: ['添加数据', '添加商铺'],
+        children: [
+          {
+           path: '/addGoods',
+           component: addGoods,
+           name: '添加商品',
+           meta: ['添加数据', '添加商品']
+         }, {
+           path: '/addShop',
+           component: addShop,
+           name: '添加商铺',
+           meta: ['添加数据', '添加商铺']
+         }
+        ]
+      }, {
+        path: '/visitor',
+        component: visitor,
+        name: '用户分布',
+        meta: ['图表', '用户分布']
+      }, {
+        path: '/newMember',
+        component: newMember,
+        name: '用户数据',
+        meta: ['图表', '用户数据']
+      }, {
+        path: '/uploadImg',
+        component: uploadImg,
+        name: 'MarkDown',
+        meta: ['文本编辑', 'MarkDown']
+      }, {
+        path: '/vueEdit',
+        component: vueEdit,
+        name: '文本编辑',
+        meta: ['编辑', '文本编辑']
+      }, {
+        path: '/adminSet',
+        component: adminSet,
+        name: '管理员设置',
+        meta: ['设置', '管理员设置']
+      }, {
+        path: '/sendMessage',
+        component: sendMessage,
+        name: '发送通知',
+        meta: ['设置', '发送通知']
+      }, {
+        path: '/explain',
+        component: explain,
+        name: '说明',
+        meta: ['说明', '说明']
+      }
+    ]
+  },
+  {
+    path: '*',
+    redirect: {path: '/404'}
   }
 ]
+
+let menuCount = routes.length;
+routes[menuCount - 2].children.forEach(route => {
+  if (route.children) {
+    if (!route.meta) route.meta = {};
+    route.meta.children = route.children;
+  }
+});
 
 export default new Router({
   routes,

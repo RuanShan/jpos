@@ -328,7 +328,7 @@
         width: 50%;
     }
     .table_container{
-        padding: 20px;
+    padding: 20px 0;
     }
     .Pagination{
         display: flex;

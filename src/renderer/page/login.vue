@@ -133,7 +133,7 @@ export default {
                                     type: 'success',
                                     message: '登录成功'
                                 })
-                                this.$router.push('manage')
+                                this.$router.push('/')
                             } else {
                                 this.$message({
                                     type: 'error',

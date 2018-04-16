@@ -108,6 +108,6 @@
 <style lang="scss">
   @import '../style/mixin';
     .table_container{
-        padding: 20px;
+    padding: 20px 0;
     }
 </style>

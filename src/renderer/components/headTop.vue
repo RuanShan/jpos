@@ -2,7 +2,7 @@
     <header class="header">
 
     <!-- header start  -->
-      <router-link class="logo" :to="{path: '/manage'}">JPOS Dashboard</router-link>
+      <router-link class="logo" :to="{path: '/manage'}">JPOS Admin</router-link>
         <div class="user-info" >
           <span v-text="userInfo.username">&nbsp;</span>
           <el-dropdown trigger="click">
