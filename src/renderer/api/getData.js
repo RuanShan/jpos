@@ -43,10 +43,11 @@ export const apiAllRecord = () => fetch('/statis/api/all')
 export const userCount = date => fetch('/statis/user/' + date + '/count')
 
 /**
- * 某一天订单数量
+ * 订单数量
  */
-
 export const orderCount = date => fetch('/statis/order/' + date + '/count')
+
+export const posOrderCount = () => fetch('/api/v1/pos_order/count')
 
 /**
  * 某一天管理员注册量

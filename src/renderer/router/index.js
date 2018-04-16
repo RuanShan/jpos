@@ -14,7 +14,6 @@ const userList = r => require.ensure([], () => r(require('@/page/userList')), 'u
 const shopList = r => require.ensure([], () => r(require('@/page/shopList')), 'shopList')
 const menuList = r => require.ensure([], () => r(require('@/page/menuList')), 'menuList')
 const foodList = r => require.ensure([], () => r(require('@/page/foodList')), 'foodList')
-const orderList = r => require.ensure([], () => r(require('@/page/orderList')), 'orderList')
 const adminList = r => require.ensure([], () => r(require('@/page/adminList')), 'adminList')
 const visitor = r => require.ensure([], () => r(require('@/page/visitor')), 'visitor')
 const newMember = r => require.ensure([], () => r(require('@/page/newMember')), 'newMember')
@@ -23,6 +22,9 @@ const vueEdit = r => require.ensure([], () => r(require('@/page/vueEdit')), 'vue
 const adminSet = r => require.ensure([], () => r(require('@/page/adminSet')), 'adminSet')
 const sendMessage = r => require.ensure([], () => r(require('@/page/sendMessage')), 'sendMessage')
 const explain = r => require.ensure([], () => r(require('@/page/explain')), 'explain')
+
+const orderList = r => require.ensure([], () => r(require('@/page/orderList')), 'orderList')
+const orderProcess = r => require.ensure([], () => r(require('@/page/orderProcess')), 'orderProcess')
 
 // const routesX = [
 //   {
@@ -128,96 +130,110 @@ let routes = [
         path: '',
         component: home,
         name: 'Dashboard',
+        meta: {  iconClass: 'el-icon-news' },
       }, {
         path: '/base',
         component: Abstract,
         name: '数据管理',
-        meta: ['添加数据', '添加商铺'],
+        meta: {  iconClass: 'el-icon-tickets' },
         children:[{
             path: 'userList',
             component: userList,
             name: '用户列表',
-            meta: ['数据管理', '用户列表']
+            meta: { breadcrumbs: ['数据管理', '用户列表'] }
           }, {
             path: 'shopList',
             component: shopList,
             name: '商家列表',
-            meta: ['数据管理', '商家列表']
+            meta: { breadcrumbs: ['数据管理', '商家列表'] }
           }, {
             path: 'menuList',
             component: menuList,
             name: '菜单列表',
-            meta: ['数据管理', '菜单列表']
+            meta: { breadcrumbs: ['数据管理', '菜单列表'] }
           }, {
             path: '/foodList',
             component: foodList,
             name: '食品列表',
-            meta: ['数据管理', '食品列表']
-          }, {
-            path: '/orderList',
-            component: orderList,
-            name: '订单列表',
-            meta: ['数据管理', '订单列表']
+            meta: { breadcrumbs: ['数据管理', '食品列表'] }
           }, {
             path: '/adminList',
             component: adminList,
             name: '管理员列表',
-            meta: ['数据管理', '管理员列表']
+            meta: { breadcrumbs: ['数据管理', '管理员列表'] }
           }
+        ]
+      }, {
+        path: '/orders',
+        component: Abstract,
+        name: '订单',
+        meta: {  iconClass: 'el-icon-goods' },
+        children: [
+          {
+           path: 'orderList',
+           component: orderList,
+           name: '订单列表',
+           meta: { breadcrumbs: ['订单', '订单列表'] }
+         }, {
+           path: 'orderProcess',
+           component: orderProcess,
+           name: '订单Process',
+           meta: { breadcrumbs: ['订单', '订单Process'] }
+         }
         ]
       }, {
         path: '/edit',
         component: Abstract,
         name: '添加数据',
-        meta: ['添加数据', '添加商铺'],
+        meta: {  iconClass: 'el-icon-edit-outline' },
         children: [
           {
            path: '/addGoods',
            component: addGoods,
            name: '添加商品',
-           meta: ['添加数据', '添加商品']
+           meta: { breadcrumbs: ['添加数据', '添加商品'] }
          }, {
            path: '/addShop',
            component: addShop,
            name: '添加商铺',
-           meta: ['添加数据', '添加商铺']
+           meta: { breadcrumbs: ['添加数据', '添加商铺'] }
          }
         ]
       }, {
         path: '/visitor',
         component: visitor,
         name: '用户分布',
-        meta: ['图表', '用户分布']
+        meta: { breadcrumbs: ['图表', '用户分布'] }
       }, {
         path: '/newMember',
         component: newMember,
         name: '用户数据',
-        meta: ['图表', '用户数据']
+        meta: { breadcrumbs: ['图表', '用户数据'] }
       }, {
         path: '/uploadImg',
         component: uploadImg,
         name: 'MarkDown',
-        meta: ['文本编辑', 'MarkDown']
+        meta: { breadcrumbs: ['文本编辑', 'MarkDown'] }
       }, {
         path: '/vueEdit',
         component: vueEdit,
         name: '文本编辑',
-        meta: ['编辑', '文本编辑']
+        meta: { breadcrumbs: ['编辑', '文本编辑'] }
       }, {
         path: '/adminSet',
         component: adminSet,
         name: '管理员设置',
-        meta: ['设置', '管理员设置']
+        meta: { breadcrumbs: ['设置', '管理员设置'] }
       }, {
         path: '/sendMessage',
         component: sendMessage,
         name: '发送通知',
-        meta: ['设置', '发送通知']
+        meta: { breadcrumbs: ['设置', '发送通知'] }
       }, {
         path: '/explain',
         component: explain,
         name: '说明',
-        meta: ['说明', '说明']
+        meta: { breadcrumbs: ['说明', '说明'] }
       }
     ]
   },

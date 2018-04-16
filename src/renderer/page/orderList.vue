@@ -114,7 +114,7 @@
             this.storeId = this.userInfo.store_id
             this.initData()
           }else{
-            this.$router.push('/')
+            this.$router.push('/login')
           }
         })
       },

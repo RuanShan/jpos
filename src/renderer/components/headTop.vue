@@ -47,7 +47,7 @@ export default {
     ...mapActions(['getAdminData']),
     async handleCommand (command) {
       if (command == 'home') {
-        this.$router.push('/manage')
+        this.$router.push('/home')
       } else if (command == 'singout') {
         const res = await signout()
         if (res.status == 1) {
