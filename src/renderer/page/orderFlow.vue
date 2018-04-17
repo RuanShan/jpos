@@ -1,7 +1,11 @@
 <style lang="scss" >
 
 @import '../style/mixin';
-.process-container{
+.order-flow-container{
+  .el-dialog__body{
+    /*fullscreen process dialog*/
+    height: 90%;
+  }
   .step{
     position:relative;
     float:left;
@@ -96,13 +100,17 @@
 # ready: 可以交给客户了
 # shipped: 已交付客户
 -->
-<div class="process-container fillcontain">
+<div class="order-flow-container fillcontain">
+  <process-order :dialog-visible.sync="processOrderDialogVisible"> </process-order>
+
   <div class="table_container ">
     <div class="steps clear">
       <div class="step">
         <div class="linex offset-l50" style=""> </div>
-        <div class="title"> new orders  <div  class="badge"> <sup> {{orderCount.pending}} </sup> </div> </div>
-        <div> <el-button @click="processOrders">处理</el-button> </div>
+        <div class="title"> new orders  <div  class="badge"> <sup> {{orderCount.pending}} </sup> </div>
+          <div> <el-button @click="processOrders">处理</el-button> </div>
+        </div>
+
 
       </div>
       <div class="step">
@@ -141,6 +149,7 @@
 <script>
 
 import headTop from '@/components/headTop'
+import processOrder from '@/components/processOrder'
 import {
     getOrderList, getPosOrderCounts
 }
@@ -153,6 +162,7 @@ from '@/components/userDataMixin'
 export default {
     data() {
             return {
+                processOrderDialogVisible: false,
                 tableData: [],
                 currentRow: null,
                 perPage: 2,
@@ -194,7 +204,8 @@ export default {
             }
         },
         components: {
-            headTop
+            headTop,
+            processOrder
         },
         mixins: [userDataMixin],
         created() {
@@ -206,12 +217,10 @@ export default {
                 }
             })
         },
+
         methods: {
             async initData() {
-                //this.getOrderCounts()
-                //this.getOrders()
                 const orderCounstResult  = await getPosOrderCounts( )
-console.log("orderCountResult",orderCounstResult )
                 Object.assign( this.orderCount, orderCounstResult )
             },
             handleSizeChange(val) {
@@ -223,6 +232,7 @@ console.log("orderCountResult",orderCounstResult )
                 this.getOrders()
             },
             processOrders() {
+                this.processOrderDialogVisible=true;
                 console.log('processOrders')
             },
 

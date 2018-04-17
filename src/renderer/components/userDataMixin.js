@@ -8,5 +8,6 @@ export var userDataMixin = {
   },
   methods: {
     ...mapActions(['getAdminData']),
+
   }
 }
