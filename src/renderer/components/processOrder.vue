@@ -5,7 +5,7 @@
     position: relative;
     .order-list {
         position: absolute;
-        top: 0;
+        top: 80px;
         bottom: 0;
         left: 0;
         width: 30%;
@@ -15,7 +15,7 @@
     .order-detail {
         position: absolute;
         width: 70%;
-        top: 0;
+        top: 80px;
         bottom: 0;
         right: 0;
         padding: 16px;
@@ -65,24 +65,25 @@
 <el-dialog title="提示" :visible="computedVisible" fullscreen :before-close="handleClose">
 
     <div class="order-process-container fillcontain clear">
-        <div class="order-list">
-            <!-- filters start -->
-            <div class="filters">
-                <div class="filter">
-                    Keyword:
-                    <el-input label="Keyword" placeholder="请输入number or username" v-model="filters.keyword"></el-input>
-                </div>
-                <div class="filter">
-                    OrderState:
-                    <el-select v-model="filters.shipment_state" placeholder="All">
-                        <el-option v-for="item in orderStateOptions" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
-
-                </div>
-                <el-button type="primary" @click="handleSearch()">搜索</el-button>
+        <!-- filters start -->
+        <div class="filters">
+            <div class="filter">
+                关键字:
+                <el-input label="Keyword" placeholder="请输入订单号或用户名" v-model="filters.keyword"  size="medium"></el-input>
             </div>
-            <!-- filters end -->
+            <div class="filter">
+                状态:
+                <el-select v-model="filters.shipment_state" placeholder="All"  size="medium">
+                    <el-option v-for="item in orderStateOptions" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
+            <el-button type="primary" @click="handleSearch()">搜索</el-button>
+        </div>
+        <!-- filters end -->
+
+        <div class="order-list">
+
 
             <el-table :data="orderList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
 
@@ -101,18 +102,19 @@
 
         <div class="order-detail">
 
-            <div class="shipments-container" v-if="currentRow">
+            <div class="shipments-container" v-if="currentOrder">
                 <table style="width: 100%">
                     <tr>
                         <td> 用户名 </td>
-                        <td> <span>{{ currentRow.userName }}</span></td>
+                        <td> <span>{{ currentOrder.userName }}</span></td>
                     </tr>
                     <tr>
                         <td> 店铺名称 </td>
-                        <td> <span>{{ currentRow.storeName }}</span></td>
+                        <td> <span>{{ currentOrder.storeName }}</span></td>
                     </tr>
                 </table>
-                <table v-for="shipment in currentRow.shipments">
+                <template  v-for="shipment in currentOrder.shipments">
+                <table>
                     <tr>
                         <td>ShippmentNumber</td>
                         <td> {{shipment.number}} </td>
@@ -120,7 +122,7 @@
                     <tr>
                         <td> Services </td>
                         <td>
-                            <div v-for="lineItem in currentRow.lineItems">
+                            <div v-for="lineItem in shipment.lineItems">
                                 <el-form-item label="name">
                                     <span>{{ lineItem.name }}</span>
                                 </el-form-item>
@@ -134,9 +136,8 @@
                         <td>Images</td>
                         <td> {{shipment.number}} </td>
                     </tr>
-
                 </table>
-
+                </template>
 
             </div>
         </div>
@@ -148,7 +149,7 @@
 <script>
 
 import {
-    getOrderList, getStore, getUserInfo, getOrder
+    getOrderList, getOrder
 }
 from '@/api/getData'
 import {
@@ -165,8 +166,8 @@ export default {
     data() {
             return {
                 orderList: [],
-                currentRow: null,
-                expandedRows: [],
+                currentOrder: null,
+                orderDetailList: [],
                 perPage: 2,
                 count: 0,
                 currentPage: 1,
@@ -180,16 +181,16 @@ export default {
                 multipleSelection: [],
                 orderStateOptions: [{
                     value: 'pending',
-                    label: 'pending'
+                    label: '新订单'
                 }, {
                     value: 'partial',
                     label: 'partial'
                 }, {
                     value: 'ready_for_factory',
-                    label: 'ready_for_factory'
+                    label: '准备发工厂'
                 }, {
                     value: 'ready',
-                    label: 'ready'
+                    label: '待交付'
                 }]
 
             }
@@ -197,6 +198,7 @@ export default {
         mixins: [userDataMixin, apiResultMixin],
         props: ['dialogVisible'],
         created() {
+        console.log('processOrder created')
             if (this.userInfo.id) {
                 this.storeId = this.userInfo.store_id
                 this.initData()
@@ -249,37 +251,23 @@ export default {
                     this.orderList = this.buildOrdersFromApiResult(  ordersResult )
                 },
                 async handleCurrentRowChange(row) {
-                    console.log('handleCurrentRowChange', row)
-                    this.currentRow = row;
-
-                    if (this.expandedRows.indexOf(row) < 0) {
+                    const detailIndex = this.orderDetailList.findIndex(function(currentValue){
+                      return currentValue.number == row.number
+                    })
+                    if( detailIndex < 0) {
                         //const storeInfo = await getStore(row.store_id)
                         //const userInfo = await getUserInfo(row.user_id)
-                        const orderInfo = await getOrder(row.number)
-                        const lineItems = []
-                        orderInfo.line_items.forEach((item, index) => {
-                            const rowData = {}
-                            rowData.name = item.variant.name
-                            rowData.options_text = item.variant.options_text
-                            rowData.price = item.price
-                            lineItems.push(rowData)
-                        })
-                        console.log("orderInfo.line_items", lineItems)
-
-                        this.orderList.splice(row.index, 1, {...row, ... {
-                                storeName: orderInfo.store_name,
-                                userName: orderInfo.user_name,
-                                createdAt: orderInfo.created_at,
-                                lineItems: lineItems
-                            }
-                        })
+                        const orderResult = await getOrder(row.number)
+                        const orderDetail = this.buildOrderFromApiResult( orderResult )
+                        console.log("orderDetail", orderDetail)
+                        this.currentOrder = orderDetail
                         this.$nextTick(() => {
-                            this.expendRow.push(row.index)
+                            this.orderDetailList.push(orderDetail)
                         })
                     } else {
-                        const index = this.expendRow.indexOf(row.index)
-                        this.expendRow.splice(index, 1)
+                        this.currentOrder = this.orderDetailList[detailIndex];
                     }
+                    console.log('handleCurrentRowChange', row, this.currentOrder)
                 }
         }
 }

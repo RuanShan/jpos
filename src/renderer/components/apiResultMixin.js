@@ -16,17 +16,24 @@ export var apiResultMixin = {
     //    }
     // }
     buildOrderFromApiResult: function( orderResult ){
-      let order = { total: orderResult.total,
-        user_id: orderResult.user_id,
-        shipment_state: orderResult.shipment_state,
-        payment_state: orderResult.payment_state,
-        payments: orderResult.payments
+      let order = { number: orderResult.number,
+        total: orderResult.total,
+        userName: orderResult.user_name,
+        storeName: orderResult.store_name,
+        userId: orderResult.user_id,
+        shipmentState: orderResult.shipment_state,
+        paymentState: orderResult.payment_state,
+        payments: orderResult.payments,
+        shipments: []
       }
 
-      order.payments.forEach(function(shipment, i){
+      orderResult.shipments.forEach(function(shipmentResult, i){
+        let shipment = {groupNumber: shipmentResult.group_number, number: shipmentResult.number}
+        order.shipments.push( shipment )
         let shipmentOrderItems = []
-        orderResult.line_items.forEach(function(orderItem ){
-          if( shipment.group_number == orderItem.group_number ){
+        orderResult.line_items.forEach(function(lineItemResult ){
+          const orderItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.variant.name, price: lineItemResult.price }
+          if( shipmentResult.group_number == lineItemResult.group_number ){
             shipmentOrderItems.push( orderItem )
           }
         })
