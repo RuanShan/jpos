@@ -24,7 +24,7 @@ const sendMessage = r => require.ensure([], () => r(require('@/page/sendMessage'
 const explain = r => require.ensure([], () => r(require('@/page/explain')), 'explain')
 
 const orderList = r => require.ensure([], () => r(require('@/page/orderList')), 'orderList')
-const orderProcess = r => require.ensure([], () => r(require('@/page/orderProcess')), 'orderProcess')
+const orderFlow = r => require.ensure([], () => r(require('@/page/orderFlow')), 'orderFlow')
 
 // const routesX = [
 //   {
@@ -175,10 +175,10 @@ let routes = [
            name: '订单列表',
            meta: { breadcrumbs: ['订单', '订单列表'] }
          }, {
-           path: 'orderProcess',
-           component: orderProcess,
-           name: '订单Process',
-           meta: { breadcrumbs: ['订单', '订单Process'] }
+           path: 'orderFlow',
+           component: orderFlow,
+           name: '订单处理',
+           meta: { breadcrumbs: ['订单', '订单处理'] }
          }
         ]
       }, {

@@ -43,11 +43,9 @@ export const apiAllRecord = () => fetch('/statis/api/all')
 export const userCount = date => fetch('/statis/user/' + date + '/count')
 
 /**
- * 订单数量
+ * 某天订单数量
  */
 export const orderCount = date => fetch('/statis/order/' + date + '/count')
-
-export const posOrderCount = () => fetch('/api/v1/pos_order/count')
 
 /**
  * 某一天管理员注册量
@@ -210,8 +208,13 @@ export const getUserCount = data => fetch('/v1/users/count', data)
  * 获取订单列表
  */
 
-export const getOrderList = data => fetch('/api/v1/pos_orders', data);
+export const getOrderList = data => fetch('/api/v1/pos_orders', data)
 //export const getOrderList = data => fetch('/bos/orders', data)
+
+/**
+ * 根据订单状态统计数量
+ */
+export const getPosOrderCounts = () => fetch('/api/v1/pos_orders/count')
 
 /**
  * 获取订单数量

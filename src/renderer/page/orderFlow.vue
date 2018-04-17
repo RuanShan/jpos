@@ -43,7 +43,23 @@
         transform: translate(-50%,-100%);
       }
     }
-
+    .badge{
+      position: relative;
+      vertical-align: middle;
+      display: inline-block;
+      sup{
+        background-color: #f56c6c;
+        border-radius: 10px;
+        color: #fff;
+        display: inline-block;
+        font-size: 12px;
+        height: 18px;
+        line-height: 18px;
+        padding: 0 6px;
+        text-align: center;
+        border: 1px solid #fff;
+      }
+    }
 
   }
 }
@@ -85,29 +101,32 @@
     <div class="steps clear">
       <div class="step">
         <div class="linex offset-l50" style=""> </div>
-        <div class="title"> new orders  <el-badge class="mark" :value="orderCount.pending" /> </div>
+        <div class="title"> new orders  <div  class="badge"> <sup> {{orderCount.pending}} </sup> </div> </div>
+        <div> <el-button @click="processOrders">处理</el-button> </div>
+
       </div>
       <div class="step">
         <div class="linex "> </div>
-        <div class="title"> ready for factory <el-badge class="mark" :value="orderCount.ready_for_factory" /></div>
+        <div class="title"> ready for factory  <div  class="badge"> <sup> {{orderCount.ready_for_factory}} </sup> </div> </div>
       </div>
       <div class="step">
         <div class="linex"> </div>
-        <div class="title"> processing <el-badge class="mark" :value="orderCount.processing" /></div>
+        <div class="title"> processing  <div  class="badge"> <sup> {{orderCount.processing}} </sup> </div> </div>
       </div>
       <div class="step">
         <div class="linex offset-r50"> </div>
         <div class="liney offset-t50" > </div>
-        <div class="title"> ready_for_store <el-badge class="mark" :value="orderCount.ready_for_store" /></div>
+        <div class="title"> ready_for_store  <div  class="badge"> <sup> {{orderCount.ready_for_store}} </sup> </div> </div>
       </div>
       <div class="step" style="float:right;">
         <div class="linex offset-r50" style=""> </div>
         <div class="liney offset-b50" style=""> </div>
-        <div class="title"> ready <el-badge class="mark" :value="orderCount.ready" /></div>
+        <div class="title"> ready  <div  class="badge"> <sup> {{orderCount.ready}} </sup> </div> </div>
+        <div> <el-button>处理</el-button> </div>
       </div>
       <div class="step" style="float:right;">
         <div class="linex"> </div>
-        <div class="title"> shipped <el-badge class="mark" :value="orderCount.pending" /></div>
+        <div class="title"> shipped  <div  class="badge"> <sup> {{orderCount.shipped}} </sup> </div></div>
       </div>
       <div class="step">
       </div>
@@ -123,7 +142,7 @@
 
 import headTop from '@/components/headTop'
 import {
-    getOrderList, posOrderCount
+    getOrderList, getPosOrderCounts
 }
 from '@/api/getData'
 import {
@@ -145,7 +164,8 @@ export default {
                     ready_for_factory: 0,
                     processing: 0,
                     ready_for_store: 0,
-                    ready: 0
+                    ready: 0,
+                    shipped: 0
                 },
                 filters: {
                     keyword: '',
@@ -186,65 +206,63 @@ export default {
                 }
             })
         },
-        mounted() {
-
-        },
         methods: {
             async initData() {
-                    this.getOrderCounts()
-                    this.getOrders()
-                },
-                handleSizeChange(val) {
-                    console.log(`每页 ${val} 条`)
-                },
-                handleCurrentChange(val) {
-                    this.currentPage = val
-                    this.offset = (val - 1) * this.limit
-                    this.getOrders()
-                },
-                async getOrders() {
-                    let queryParams = {
-                        page: this.currentPage,
-                        per_page: this.perPage,
-                    }
-                    if (this.filters.store_id > 0) {
-                        queryParams["q[store_id_eq]"] = this.filters.store_id
+                //this.getOrderCounts()
+                //this.getOrders()
+                const orderCounstResult  = await getPosOrderCounts( )
+console.log("orderCountResult",orderCounstResult )
+                Object.assign( this.orderCount, orderCounstResult )
+            },
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`)
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val
+                this.offset = (val - 1) * this.limit
+                this.getOrders()
+            },
+            processOrders() {
+                console.log('processOrders')
+            },
 
-                    }
-
-                    if (this.filters.keyword.length > 0) {
-                        // order.number ||  || order.users.username
-                        queryParams["q[user_username_cont]"] = this.filters.keyword
-                    }
-                    if (this.filters.shipment_state.length > 0 && this.filters.shipment_state != 'all') {
-                        // order.number ||  || order.users.username
-                        queryParams["q[shipment_state_eq]"] = this.filters.shipment_state
-                    }
-
-                    const ordersResult = await getOrderList(queryParams)
-                    this.count = ordersResult.total_count
-                    console.log("total_count", this.count)
-                    this.tableData = []
-                    ordersResult.orders.forEach((item, index) => {
-                        const rowData = {}
-                        rowData.id = item.id
-                        rowData.number = item.number
-                        rowData.total_amount = item.display_total
-                        rowData.status = item.state
-                        rowData.user_id = item.user_id
-                        rowData.store_id = item.store_id
-                        rowData.index = index
-                        rowData.shipment_state = item.shipment_state
-                        rowData.payment_state = item.payment_state
-                        this.tableData.push(rowData)
-                    })
-                },
-                async getOrderCounts(){
-                    //[ 'pending', 'ready_for_factory', 'processing', 'ready_for_store', 'ready' ]
-                    const orderCountResult = await posOrderCount( )
-
-                    Object.assign( this.orderCount, orderCountResult )
+            async getOrders() {
+                let queryParams = {
+                    page: this.currentPage,
+                    per_page: this.perPage,
                 }
+                if (this.filters.store_id > 0) {
+                    queryParams["q[store_id_eq]"] = this.filters.store_id
+
+                }
+
+                if (this.filters.keyword.length > 0) {
+                    // order.number ||  || order.users.username
+                    queryParams["q[user_username_cont]"] = this.filters.keyword
+                }
+                if (this.filters.shipment_state.length > 0 && this.filters.shipment_state != 'all') {
+                    // order.number ||  || order.users.username
+                    queryParams["q[shipment_state_eq]"] = this.filters.shipment_state
+                }
+
+                const ordersResult = await getOrderList(queryParams)
+                this.count = ordersResult.total_count
+                console.log("total_count", this.count)
+                this.tableData = []
+                ordersResult.orders.forEach((item, index) => {
+                    const rowData = {}
+                    rowData.id = item.id
+                    rowData.number = item.number
+                    rowData.total_amount = item.display_total
+                    rowData.status = item.state
+                    rowData.user_id = item.user_id
+                    rowData.store_id = item.store_id
+                    rowData.index = index
+                    rowData.shipment_state = item.shipment_state
+                    rowData.payment_state = item.payment_state
+                    this.tableData.push(rowData)
+                })
+            },
         }
 }
 

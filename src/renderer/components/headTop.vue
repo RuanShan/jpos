@@ -2,7 +2,7 @@
     <header class="header">
 
     <!-- header start  -->
-      <router-link class="logo" :to="{path: '/manage'}">JPOS Admin</router-link>
+      <router-link class="logo" :to="{path: '/'}">JPOS Admin</router-link>
         <div class="user-info" >
           <span v-text="userInfo.username">&nbsp;</span>
           <el-dropdown trigger="click">
@@ -32,12 +32,12 @@ export default {
     }
   },
   created(){
-    this.getAdminData().then(res=>{
-      console.log('created',this.userInfo)
-      if (!this.userInfo.id) {
-        this.$router.push('/')
-      }
-    })
+    //this.getAdminData().then(res=>{
+    //  console.log('created',this.userInfo)
+    //  if (!this.userInfo.id) {
+    //    this.$router.push('/')
+    //  }
+    //})
   },
 
   computed: {
