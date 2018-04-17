@@ -48,8 +48,8 @@
 
 <script>
 // ***接口***
-// props: ["inputNumber"]
-// this.$emit("AddMemberReturnData", this.returnData.Id);
+// 入口:props: ["inputNumber"]
+// 出口:this.$emit("AddMemberReturnData", this.returnData.Id);
 // **********
 
 import { createCustomer } from "@/api/getData";
@@ -185,7 +185,7 @@ export default {
     //   });
     // },
 
-    //添加会员方法
+    //添加会员方法,异步,请求服务器,调用getData.js中createCustomer
     async addCustomer() {
       this.returnData = await createCustomer(
         this.memberNum,
