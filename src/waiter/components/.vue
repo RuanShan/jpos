@@ -86,26 +86,20 @@
   </el-row>
   <!-- 会员中心窗口 -> START -->
 
-  <member-edit v-if="memberEditWindows" :memberCenterData="memberCenterData"></member-edit>
-
  </div>
 </template>
 
 
 
 <script>
-import MemberEdit from "@/components/MemberEdit.vue";
+// import MemberEdit from "@/components/MemberEdit.vue";
 
 export default {
   props: ["memberData"],
-  components: {
-    "member-edit": MemberEdit
-  },
   data() {
     return {
       dialogVisible: true, //窗口显示标志位
-      memberEditWindows: false,
-      memberCenterData: {}, //会员中心的会员数据
+      memberCenterData: {},
       tableData: [
         {
           nameA: "会员等级",
@@ -143,7 +137,6 @@ export default {
       this.$emit("SelectMemberButton", this.memberCenterData);
     },
     editMember() {
-      this.memberEditWindows = true;
       console.log("编辑按钮被按下了!!!");
     }
   }
