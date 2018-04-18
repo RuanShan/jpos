@@ -247,7 +247,7 @@ export const getUserCity = () => fetch('/v1/user/city/count');
 /**
  * 获取shop页面商铺详情
  */
-export const shopDetails = (store_id, latitude, longitude) => fetch('/api/v1/stores/' + store_id)
+export const shopDetails = (storeId, latitude, longitude) => fetch('/api/v1/stores/' + storeId)
 //export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/restaurant/' + shopid, {
 //  latitude,
 //  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
@@ -270,7 +270,7 @@ export const checkout = (entities) => fetch('/api/v1/orders', entities, 'POST');
  * forward: false， 可选参数，如果表示订单转向上一步
  */
 
-export const stepPosOrder = (order_id, data) => fetch('/api/v1/pos_orders/'+order_id+'/one_step', data, 'PUT');
+export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/'+order_id+'/one_step', data, 'PUT');
 
 /**
  * 所有POS订单下一步
@@ -279,11 +279,11 @@ export const stepPosOrder = (order_id, data) => fetch('/api/v1/pos_orders/'+orde
  *
  */
 
-export const stepPosOrders = ( data ) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
+export const evolvePosOrders = ( data ) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
 
 /**
  * POS订单下一步
  * forward: false， 可选参数，如果表示订单转向上一步
  */
 
-export const stepPosShipment = (shipment_id, data) => fetch('/api/v1/pos_shipments/'+shipment_id+'/one_step', data, 'PUT');
+export const evolvePosShipment = (shipment_id, data) => fetch('/api/v1/pos_shipments/'+shipment_id+'/one_step', data, 'PUT');

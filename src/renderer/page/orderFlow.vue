@@ -101,40 +101,43 @@
 # shipped: 已交付客户
 -->
 <div class="order-flow-container fillcontain">
-  <process-order :dialog-visible.sync="processOrderDialogVisible"> </process-order>
+  <process-order :order-state="currentOrderState" :dialog-visible.sync="processOrderDialogVisible" @order-state-changed="orderStateChanged"> </process-order>
 
   <div class="table_container ">
     <div class="steps clear">
       <div class="step">
         <div class="linex offset-l50" style=""> </div>
         <div class="title"> new orders  <div  class="badge"> <sup> {{orderCount.pending}} </sup> </div>
-          <div> <el-button @click="processOrders">处理</el-button> </div>
+          <div> <el-button @click="processOrders('pending')">处理</el-button> </div>
         </div>
 
 
       </div>
       <div class="step">
         <div class="linex "> </div>
-        <div class="title"> ready for factory  <div  class="badge"> <sup> {{orderCount.ready_for_factory}} </sup> </div> </div>
+        <div class="title"> ready for factory  <div  class="badge"> <sup> {{orderCount.ready_for_factory}} </sup> </div>
+          <div> <el-button @click="processOrders('ready_for_factory')">处理</el-button> </div>
+        </div>
       </div>
       <div class="step">
         <div class="linex"> </div>
-        <div class="title"> processing  <div  class="badge"> <sup> {{orderCount.processing}} </sup> </div> </div>
+        <div class="title"> processing  <div  class="badge"> <sup> {{orderCount.processing}} </sup> </div>
+          <div> <el-button @click="processOrders('processing')">处理</el-button> </div>
+        </div>
       </div>
       <div class="step">
         <div class="linex offset-r50"> </div>
         <div class="liney offset-t50" > </div>
-        <div class="title"> ready_for_store  <div  class="badge"> <sup> {{orderCount.ready_for_store}} </sup> </div> </div>
+        <div class="title"> ready_for_store  <div  class="badge"> <sup> {{orderCount.ready_for_store}} </sup> </div>
+          <div> <el-button @click="processOrders('ready_for_store')">处理</el-button> </div>
+        </div>
       </div>
       <div class="step" style="float:right;">
         <div class="linex offset-r50" style=""> </div>
         <div class="liney offset-b50" style=""> </div>
-        <div class="title"> ready  <div  class="badge"> <sup> {{orderCount.ready}} </sup> </div> </div>
-        <div> <el-button>处理</el-button> </div>
-      </div>
-      <div class="step" style="float:right;">
-        <div class="linex"> </div>
-        <div class="title"> shipped  <div  class="badge"> <sup> {{orderCount.shipped}} </sup> </div></div>
+        <div class="title"> ready  <div  class="badge"> <sup> {{orderCount.ready}} </sup> </div>
+          <div> <el-button @click="processOrders('ready')">处理</el-button> </div>
+        </div>
       </div>
       <div class="step">
       </div>
@@ -165,10 +168,11 @@ export default {
                 processOrderDialogVisible: false,
                 tableData: [],
                 currentRow: null,
+                currentOrderState: null,
                 perPage: 2,
                 count: 0,
                 currentPage: 1,
-                store_id: null,
+                storeId: null,
                 orderCount:{
                     pending: 0,
                     ready_for_factory: 0,
@@ -181,7 +185,7 @@ export default {
                     keyword: '',
                     startEndTime: null,
                     shipment_state: 'all',
-                    store_id: 0
+                    storeId: 0
                 },
                 multipleSelection: [],
                 orderStateOptions: [{
@@ -231,9 +235,13 @@ export default {
                 this.offset = (val - 1) * this.limit
                 this.getOrders()
             },
-            processOrders() {
-                this.processOrderDialogVisible=true;
+            processOrders( orderState ) {
+                this.processOrderDialogVisible=true
+                this.currentOrderState = orderState
                 console.log('processOrders')
+            },
+            orderStateChanged( ){
+                this.initData()
             },
 
             async getOrders() {
@@ -241,8 +249,8 @@ export default {
                     page: this.currentPage,
                     per_page: this.perPage,
                 }
-                if (this.filters.store_id > 0) {
-                    queryParams["q[store_id_eq]"] = this.filters.store_id
+                if (this.filters.storeId > 0) {
+                    queryParams["q[store_id_eq]"] = this.filters.storeId
 
                 }
 

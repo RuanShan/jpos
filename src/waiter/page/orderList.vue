@@ -124,7 +124,7 @@
 import leftNav from '@/components/LeftNav/LeftNav.vue'
 import headTop from '../components/headTop'
 import {
-    getOrderList, stepPosOrders, getStore, getUserInfo, getAddressById
+    getOrderList, evolvePosOrders, getStore, getUserInfo, getAddressById
 }
 from '@/api/getData'
 import {
@@ -140,7 +140,7 @@ export default {
                 perPage: 2,
                 count: 4,
                 currentPage: 1,
-                store_id: null,
+                storeId: null,
                 reserveSelection: false,
                 expendRow: [],
                 filters: { keyword: '', startEndTime: null, shipment_state: 'all' },
@@ -165,7 +165,7 @@ export default {
         })
     },
     created() {
-        this.store_id = this.userInfo.store_id
+        this.storeId = this.userInfo.storeId
         this.initData()
     },
     mounted() {
@@ -194,7 +194,7 @@ export default {
           let queryParams = {
               page: this.currentPage,
               per_page: this.perPage,
-              "q[store_id_eq]": this.store_id
+              "q[store_id_eq]": this.storeId
           }
           if ( this.filters.keyword.length>0){
             // order.number ||  || order.users.username
@@ -304,7 +304,7 @@ export default {
             return;
           }
 
-          const posOrdersReturn = await stepPosOrders( { order_numbers: orderNumbers, forward } )
+          const posOrdersReturn = await evolvePosOrders( { order_numbers: orderNumbers, forward } )
           if( posOrdersReturn.count>0 ){
             this.getOrders()
           }

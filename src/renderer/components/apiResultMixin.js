@@ -28,16 +28,16 @@ export var apiResultMixin = {
       }
 
       orderResult.shipments.forEach(function(shipmentResult, i){
-        let shipment = {groupNumber: shipmentResult.group_number, number: shipmentResult.number}
+        let shipment = {groupNumber: shipmentResult.group_number, number: shipmentResult.number, state: shipmentResult.state}
         order.shipments.push( shipment )
-        let shipmentOrderItems = []
+        let shipmentlineItems = []
         orderResult.line_items.forEach(function(lineItemResult ){
-          const orderItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.variant.name, price: lineItemResult.price }
+          const lineItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.variant.name, price: lineItemResult.price }
           if( shipmentResult.group_number == lineItemResult.group_number ){
-            shipmentOrderItems.push( orderItem )
+            shipmentlineItems.push( lineItem )
           }
         })
-        shipment.orderItems = shipmentOrderItems
+        shipment.lineItems = shipmentlineItems
       })
 
       return order
@@ -49,19 +49,27 @@ export var apiResultMixin = {
         const order = {}
         order.id = item.id
         order.number = item.number
-        order.total_amount = item.display_total
+        order.totalAmount = item.display_total
         order.status = item.state
-        order.user_id = item.user_id
-        order.store_id = item.store_id
-        order.user_name = item.user_name
-        order.store_name = item.store_name
+        order.userID = item.user_id
+        order.storeId = item.store_id
+        order.userName = item.user_name
+        order.storeName = item.store_name
         order.index = i
-        order.shipment_state = item.shipment_state
-        order.payment_state = item.payment_state
+        order.shipmentState = item.shipment_state
+        order.paymentState = item.payment_state
 
         orders.push(order)
       })
       return orders
+    },
+    buildUser: function( userResult ){
+      const user = { storeId: 0, avatar: 'default.jpg',  apiKey: '' }
+      user.storeId = userResult.store_id
+      user.avatar = userResult.avatar
+      user.apiKey = userResult.api_key
+      return user
     }
+
   }
 }

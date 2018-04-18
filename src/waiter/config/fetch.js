@@ -27,7 +27,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         //'X-Spree-Token': '5b86b9a2d52e8365ff10a1a672bdb00464e70caa392e63e9'
-        'X-Spree-Token': store.state.userInfo.api_key
+        'X-Spree-Token': store.state.userInfo.apiKey
       },
       mode: 'cors',
       cache: 'force-cache'

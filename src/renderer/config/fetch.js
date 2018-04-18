@@ -26,13 +26,13 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-Spree-Token': store.state.userInfo.api_key
+        'X-Spree-Token': store.state.userInfo.apiKey
       },
       mode: 'cors',
       cache: 'force-cache'
     }
 
-    if (type == 'POST') {
+    if (type == 'POST' || type == 'PUT') {
       Object.defineProperty(requestConfig, 'body', {
         value: JSON.stringify(data)
       })

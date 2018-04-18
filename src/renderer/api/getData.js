@@ -93,7 +93,7 @@ export const searchplace = (cityid, value) => fetch('/v1/pois', {
  * 获取当前店铺食品种类
  */
 
-export const getCategory = storeID => fetch('/shopping/getcategory/' + storeID)
+export const getCategory = storeId => fetch('/shopping/getcategory/' + storeId)
 
 /**
  * 添加食品种类
@@ -123,8 +123,8 @@ export const getResturants = data => fetch('/shopping/restaurants', data)
  * 获取餐馆详细信息
  */
 
-export const getStore = storeID => fetch('/api/v1/stores/' + storeID)
-//export const getStore = storeID => fetch('/shopping/restaurant/' + storeID)
+export const getStore = storeId => fetch('/api/v1/stores/' + storeId)
+//export const getStore = storeId => fetch('/shopping/restaurant/' + storeId)
 
 /**
  * 获取餐馆数量
@@ -142,7 +142,7 @@ export const updateResturant = data => fetch('/shopping/updateshop', data, 'POST
  * 删除餐馆
  */
 
-export const deleteResturant = storeID => fetch('/shopping/restaurant/' + storeID, {}, 'DELETE')
+export const deleteResturant = storeId => fetch('/shopping/restaurant/' + storeId, {}, 'DELETE')
 
 /**
  * 获取食品列表
@@ -245,3 +245,26 @@ export const getAddressById = address_id => fetch('/v1/addresse/' + address_id)
  */
 
 export const getUserCity = () => fetch('/v1/user/city/count')
+
+/**
+ * POS订单下一步
+ * forward: false， 可选参数，如果表示订单转向上一步
+ */
+
+export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/'+order_id+'/one_step', data, 'PUT');
+
+/**
+ * 所有POS订单下一步
+ * entities: order_numbers，
+ *           forward: false， 可选参数，如果表示订单转向上一步
+ *
+ */
+
+export const evolvePosOrders = ( data ) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
+
+/**
+ * POS订单下一步
+ * forward: false， 可选参数，如果表示订单转向上一步
+ */
+
+export const evolvePosShipment = (shipment_id, data) => fetch('/api/v1/pos_shipments/'+shipment_id+'/one_step', data, 'PUT');

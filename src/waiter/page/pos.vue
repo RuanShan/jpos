@@ -155,7 +155,7 @@ export default {
     this.getAdminData().then(res=>{
       console.log('created')
       if (this.userInfo.id) {
-        this.storeId = this.userInfo.store_id
+        this.storeId = this.userInfo.storeId
         this.initData()
       }else{
         this.$router.push('/')

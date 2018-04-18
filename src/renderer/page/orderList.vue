@@ -92,9 +92,9 @@
           perPage: 2,
           count: 0,
           currentPage: 1,
-          store_id: null,
+          storeId: null,
           expendRow: [],
-          filters: { keyword: '', startEndTime: null, shipment_state: 'all', store_id: 0 },
+          filters: { keyword: '', startEndTime: null, shipment_state: 'all', storeId: 0 },
           multipleSelection: [],
           orderStateOptions: [{ value: 'all', label: 'all' },
             { value: 'pending', label: 'pending' },
@@ -111,7 +111,7 @@
       created(){
         this.getAdminData().then(res=>{
           if (this.userInfo.id) {
-            this.storeId = this.userInfo.store_id
+            this.storeId = this.userInfo.storeId
             this.initData()
           }else{
             this.$router.push('/login')
@@ -138,8 +138,8 @@
               page: this.currentPage,
               per_page: this.perPage,
           }
-          if ( this.filters.store_id>0){
-            queryParams["q[store_id_eq]"] = this.filters.store_id
+          if ( this.filters.storeId>0){
+            queryParams["q[store_id_eq]"] = this.filters.storeId
 
           }
 

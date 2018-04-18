@@ -6,9 +6,9 @@ Vue.use(Vuex)
 
 const state = {
   userInfo: {
-    store_id: 0,
+    storeId: 0,
     avatar: 'default.jpg',
-    api_key: ''
+    apiKey: ''
   }
 }
 
@@ -21,17 +21,25 @@ const mutations = {
 const actions = {
   async getAdminData ({commit}) {
     try {
-      const res = await getUserInfo()
+      const userResult = await getUserInfo()
 
-      if (res.id) {
-        commit('saveAdminInfo', res)
+      if (userResult.id) {
+
+        const user = { storeId: 0, avatar: 'default.jpg',  apiKey: '' }
+        user.id = userResult.id
+        user.storeId = userResult.store_id
+        user.avatar = userResult.avatar
+        user.apiKey = userResult.api_key
+
+        commit('saveAdminInfo', user)
       } else {
-        throw new Error(res)
+        throw new Error(userResult)
       }
     } catch (err) {
       console.log('您尚未登陆或者session失效')
     }
   }
+
 }
 
 export default new Vuex.Store({
