@@ -1,7 +1,7 @@
 <template>
  <div class="customer_container">
    <el-row>
-      <div class="grid-content bg-purple-light">
+      <div class="grid-content bg-purple-light">  <!-- 会员中心窗口 -> START -->
         <el-dialog  title="会员中心"  :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true" center style="color: #1533db;">
         <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
           <el-form  status-icon label-width="100px" class="MCenter-el-form">
@@ -22,7 +22,7 @@
                         ¥ {{memberData.memberCardRemaining}} 
                       </div>
                       <div>
-                        <el-button type="warning" plain size="mini">充值</el-button>
+                        <el-button type="warning" plain size="mini" @click="rechargeButton">充值</el-button>
                       </div>
                     </div>
                   </el-col>
@@ -84,10 +84,19 @@
         </el-dialog> <!-- 会员中心窗口 -> END -->
       </div>
   </el-row>
-  <!-- 会员中心窗口 -> START -->
 
-  <member-edit v-if="memberEditWindows" :memberCenterData="memberCenterData"></member-edit>
+<!-- 编辑会员窗口 -> Start -->
+  <member-edit v-if="memberEditWindows" v-bind:memberCenterData="memberCenterData" 
+               v-on:saveEditDataButton="saveEditDataButton($event)">
+  </member-edit>
+<!-- 编辑会员窗口 -> END -->
 
+<!-- 充值中心窗口 -> Start -->
+  <member-recharge v-if="memberRechargeWindow" :memberCenterData="memberCenterData" 
+                   v-on:saveRechargeButton="saveRechargeButton($event)">
+  </member-recharge>
+<!-- 充值中心窗口 -> END -->
+  
  </div>
 </template>
 
@@ -95,16 +104,19 @@
 
 <script>
 import MemberEdit from "@/components/MemberEdit.vue";
+import MemberRecharge from "@/components/MemberRecharge.vue";
 
 export default {
   props: ["memberData"],
   components: {
-    "member-edit": MemberEdit
+    "member-edit": MemberEdit,
+    "member-recharge": MemberRecharge
   },
   data() {
     return {
       dialogVisible: true, //窗口显示标志位
-      memberEditWindows: false,
+      memberEditWindows: false, //会员编辑窗口显示标志位
+      memberRechargeWindow: false, //充值中心窗口显示标志位
       memberCenterData: {}, //会员中心的会员数据
       tableData: [
         {
@@ -131,7 +143,7 @@ export default {
           nameB: "到期时间",
           dataB: ""
         }
-      ],
+      ]
     };
   },
   mounted() {
@@ -139,12 +151,28 @@ export default {
     this.tableData[3].dataA = this.memberCenterData.openCardDate;
   },
   methods: {
+    //单击选中会员按钮后向父窗口"MemberKeyWord"发送本窗口的会员数据
     selectMember() {
       this.$emit("SelectMemberButton", this.memberCenterData);
     },
+    //单击编辑按钮是执行
     editMember() {
-      this.memberEditWindows = true;
+      this.memberEditWindows = true; //打开编辑会员窗口
       console.log("编辑按钮被按下了!!!");
+    },
+    //接收到编辑会员窗口的数据后执行
+    saveEditDataButton(memberEditData) {
+      this.memberCenterData = memberEditData; //把编辑会员窗口的会员数据发给本窗口的会员数据
+    },
+    //充值按钮点击事件
+    rechargeButton() {
+      console.log("充值开始了");
+      this.memberRechargeWindow = true;
+    },
+    //接收到充值页面来的数据
+    saveRechargeButton(memberRechargeData) {
+      this.dialogVisible = true;
+      this.memberCenterData = memberRechargeData;
     }
   }
 };
@@ -157,12 +185,6 @@ export default {
 .el-form.MCenter-el-form {
   padding: 0 10%;
 }
-/* el-table.warning-row {
-    background-color: oldlace  !important;
-  }
-el-table-column .warning-row {
-    background-color: oldlace  !important;
-  } */
 el-table__row {
   background-color: oldlace !important;
 }

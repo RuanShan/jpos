@@ -28,7 +28,7 @@
   <!-- 添加会员组件 END-->
     
   <!-- 会员中心组件 Start-->
-  <member-center v-if="memberCenterWindowVisible" :memberData="memberData" v-on:SelectMemberButton="SelectMemberButton"></member-center>
+  <member-center v-if="memberCenterWindowVisible" :memberData="memberData" v-on:SelectMemberButton="SelectMemberButton($event)"></member-center>
   <!-- 会员中心组件 END-->
  </div>
 </template>
@@ -49,10 +49,10 @@ export default {
       memberCenterWindowVisible: false, //会员中心窗口显示标志位
       inputNumber: "", //输入框
       memberData: "", //用户数据
-      buttonName: "来宾",//按钮姓名显示
+      buttonName: "来宾", //按钮姓名显示
       buttonRemaining: "", //按钮余额显示
-      buttonNum: "",  //按钮编号显示
-      NoVisible: false,  //按钮中"No"显示标志位
+      buttonNum: "", //按钮编号显示
+      NoVisible: false //按钮中"No"显示标志位
     };
   },
   methods: {
@@ -72,18 +72,18 @@ export default {
       this.memberCenterWindowVisible = true;
       this.memberData = returnData;
     },
-    SelectMemberButton(memberCenterData){
+    //接收到会员中心窗口的数据后执行
+    SelectMemberButton(memberCenterData) {
       this.dialogVisible = false; //关闭查询会员窗口
-      this.memberCenterWindowVisible = false;  //关闭会议中心窗口
+      this.memberCenterWindowVisible = false; //关闭会议中心窗口
       this.memberData = memberCenterData; //会员中心的修改数据给memberData
       this.buttonName = this.memberData.memberName; //改变会员按钮上的"来宾"名称,显示会员姓名
       this.buttonRemaining = this.memberData.memberCardRemaining; //改变会员按钮上的"余额"信息,显示会员余额
-      this.NoVisible = true;
+      this.NoVisible = true; //按钮上的"No"显示开关
       this.buttonNum = this.memberData.memberNum; //按钮上显示会员编号
-      this.inputNumber = "";
+      this.inputNumber = ""; //清空KeyWord输入框
       console.log("选好了***");
-      
-    },
+    }
   }
 };
 </script>

@@ -49,7 +49,7 @@
 <script>
 // ***接口***
 // 入口:props: ["inputNumber"]
-// 出口:this.$emit("AddMemberReturnData", this.returnData.Id);
+// 出口:this.$emit("AddMemberReturnData", this.returnData);
 // **********
 
 import { createCustomer } from "@/api/getData";
@@ -112,7 +112,6 @@ export default {
       returnData: {},
       rules: {
         memberNum: [
-          // { required: true, message: "请输入会员卡号", trigger: "blur" },
           {
             required: true,
             min: 4,

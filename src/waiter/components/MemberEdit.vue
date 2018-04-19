@@ -9,9 +9,26 @@
             <el-row>
               <el-col :span="12"> <!-- 上部信息左侧 -->
                 <div class="grid-content bg-purple-light">
-                  <!-- <div><h2>卡号:&nbsp;&nbsp;&nbsp;{{memberData.memberNum}}</h2></div>
-                  <div><h2>姓名:&nbsp;&nbsp;&nbsp;{{memberData.memberName}}</h2></div>
-                  <div><h2>电话:&nbsp;&nbsp;&nbsp;{{memberData.memberPhone}}</h2></div> -->
+                  <div><h2>卡号:&nbsp;&nbsp;&nbsp;{{memberEditData.memberNum}}</h2></div>
+                  <div><h2>姓名:&nbsp;&nbsp;&nbsp;
+                          <span>
+                            <el-input style="width:auto" v-model="memberEditData.memberName"  clearable>
+                            </el-input>
+                          </span>
+                      </h2>
+                  </div>
+                  <div>
+                    <!-- <h2>电话:&nbsp;&nbsp;&nbsp; -->
+                          <!-- <span> -->
+                        <el-form :model="memberEditData" :rules="rules" ref="memberEditData" >
+                            <el-form-item label="会员电话" prop="memberPhone">
+                              <el-input v-model="memberEditData.memberPhone"></el-input>
+                            </el-form-item>
+                        </el-form>
+                            <!-- <el-input style="width:auto" v-model="memberEditData.memberPhone" clearable> </el-input> -->
+                          <!-- </span> -->
+                      <!-- </h2> -->
+                  </div> 
                 </div>
               </el-col>
             </el-row>
@@ -58,10 +75,22 @@
 
 
 <script>
-
 export default {
   props: ["memberCenterData"],
   data() {
+    //验证规则---电话号码
+    var validPhone = (rule, value, callback) => {
+      if (!isvalidPhone(value)) {
+        // console.log(value);
+        callback(new Error("请输入正确的11位手机号码"));
+      } else {
+        callback();
+      }
+    };
+    function isvalidPhone(str) {
+      var reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+      return reg.test(str);
+    }
     return {
       dialogVisible: true, //窗口显示标志位
       memberEditData: {}, //编辑会员窗口的会员数据
@@ -91,21 +120,36 @@ export default {
           dataB: ""
         }
       ],
+      rules: {
+        memberPhone: [
+          { required: true, message: "请输入电话号码", trigger: "blur" },
+          {
+            min: 4,
+            max: 11,
+            message: "长度在 8 到 12 个字符",
+            trigger: "blur"
+          },
+          { required: true, validator: validPhone, trigger: "blur" }
+        ]
+      }
     };
   },
   mounted() {
     this.memberEditData = this.memberCenterData;
-    // this.tableData[3].dataA = this.memberCenterData.openCardDate;
+    this.tableData[3].dataA = this.memberEditData.openCardDate; //给表格赋值
+    this.tableData[2].dataA = this.memberEditData.memberBirthday; //给表格赋值
   },
   methods: {
-      cancel(){
-          console.log("cancel");
-      },
-      save(){
-          console.log("Save");
-          this.dialogVisible = false;
-      }
-
+    cancel() {
+      console.log("cancel");
+      this.dialogVisible = false; //关闭当前窗口
+    },
+    save() {
+      console.log("Save");
+      this.dialogVisible = false; //关闭当前窗口
+      this.$emit("saveEditDataButton", this.memberEditData);
+      console.log(this.memberEditData);
+    }
 
     // selectMember() {
     //   this.$emit("SelectMemberButton", this.memberCenterData);
