@@ -1,25 +1,34 @@
 <template>
- <div class="customer_container">
-   <el-row>
-      <div class="grid-content bg-purple-light">  <!-- 会员中心窗口 -> START -->
-        <el-dialog  title="会员中心"  :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true" center style="color: #1533db;">
-        <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
-          <el-form  status-icon label-width="100px" class="MCenter-el-form">
+  <div class="customer_container">
+    <el-row>
+      <div class="grid-content bg-purple-light">
+        <!-- 会员中心窗口 -> START -->
+        <el-dialog title="会员中心" :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true" center style="color: #1533db;">
+          <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
+          <el-form status-icon label-width="100px" class="MCenter-el-form">
             <el-row>
-              <el-col :span="12"> <!-- 上部信息左侧 -->
+              <el-col :span="12">
+                <!-- 上部信息左侧 -->
                 <div class="grid-content bg-purple-light">
-                  <div><h2>卡号:&nbsp;&nbsp;&nbsp;{{memberData.memberNum}}</h2></div>
-                  <div><h2>姓名:&nbsp;&nbsp;&nbsp;{{memberData.memberName}}</h2></div>
-                  <div><h2>电话:&nbsp;&nbsp;&nbsp;{{memberData.memberPhone}}</h2></div>
+                  <div>
+                    <h2>卡号:&nbsp;&nbsp;&nbsp;{{memberData.memberNum}}</h2>
+                  </div>
+                  <div>
+                    <h2>姓名:&nbsp;&nbsp;&nbsp;{{memberData.memberName}}</h2>
+                  </div>
+                  <div>
+                    <h2>电话:&nbsp;&nbsp;&nbsp;{{memberData.memberPhone}}</h2>
+                  </div>
                 </div>
               </el-col>
-              <el-col :span="12"><!-- 上部信息右侧 -->
+              <el-col :span="12">
+                <!-- 上部信息右侧 -->
                 <div class="grid-content bg-purple-light">
                   <el-col :span="8" class="center">
                     <div class="grid-content bg-purple">
                       <h3>余额</h3>
                       <div>
-                        ¥ {{memberData.memberCardRemaining}} 
+                        ¥ {{memberData.memberCardRemaining}}
                       </div>
                       <div>
                         <el-button type="warning" plain size="mini" @click="rechargeButton">充值</el-button>
@@ -49,55 +58,64 @@
                     </div>
                   </el-col>
                 </div>
-                </el-col>
+              </el-col>
             </el-row>
 
             <el-table :data="tableData" :show-header="false" border style="width: 100%; background-color:#ffcbb3">
-              <el-table-column prop="nameA" >
+              <el-table-column prop="nameA">
               </el-table-column>
-              <el-table-column  prop="dataA"   >
+              <el-table-column prop="dataA">
               </el-table-column>
-              <el-table-column prop="nameB" >
+              <el-table-column prop="nameB">
               </el-table-column>
-              <el-table-column  prop="dataB" >
+              <el-table-column prop="dataB">
               </el-table-column>
             </el-table>
 
-              <el-row style="margin-top:50px">
-                <!-- <el-col :span="4"><div class="grid-content bg-purple">123123</div></el-col> -->
-                <el-col :span="4">
-                  <div class="grid-content bg-purple-light">
-                    <el-button type="info" @click="editMember()" style="width:100%">编辑</el-button>
-                  </div>
-                </el-col>
-                <el-col :span="4"><div class="grid-content bg-purple-light"></div></el-col>
-                <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                <el-col :span="4"><div class="grid-content bg-purple-light"></div></el-col>
-                <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
-                <el-col :span="4">
-                  <div class="grid-content bg-purple-light">
-                    <el-button type="danger" @click="selectMember()" style="width:100%;height:80px"><h2>选中会员</h2></el-button>
-                  </div>
-                </el-col>
-              </el-row>
+            <el-row style="margin-top:50px">
+              <!-- <el-col :span="4"><div class="grid-content bg-purple">123123</div></el-col> -->
+              <el-col :span="4">
+                <div class="grid-content bg-purple-light">
+                  <el-button type="info" @click="editMember()" style="width:100%">编辑</el-button>
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="grid-content bg-purple-light"></div>
+              </el-col>
+              <el-col :span="4">
+                <div class="grid-content bg-purple"></div>
+              </el-col>
+              <el-col :span="4">
+                <div class="grid-content bg-purple-light"></div>
+              </el-col>
+              <el-col :span="4">
+                <div class="grid-content bg-purple"></div>
+              </el-col>
+              <el-col :span="4">
+                <div class="grid-content bg-purple-light">
+                  <el-button type="danger" @click="selectMember()" style="width:100%;height:80px">
+                    <h2>选中会员</h2>
+                  </el-button>
+                </div>
+              </el-col>
+            </el-row>
           </el-form>
-        </el-dialog> <!-- 会员中心窗口 -> END -->
+        </el-dialog>
+        <!-- 会员中心窗口 -> END -->
       </div>
-  </el-row>
+    </el-row>
 
-<!-- 编辑会员窗口 -> Start -->
-  <member-edit v-if="memberEditWindows" v-bind:memberCenterData="memberCenterData" 
-               v-on:saveEditDataButton="saveEditDataButton($event)">
-  </member-edit>
-<!-- 编辑会员窗口 -> END -->
+    <!-- 编辑会员窗口 -> Start -->
+    <member-edit v-if="memberEditWindows" v-bind:memberCenterData="memberCenterData" v-on:saveEditDataButton="saveEditDataButton($event)">
+    </member-edit>
+    <!-- 编辑会员窗口 -> END -->
 
-<!-- 充值中心窗口 -> Start -->
-  <member-recharge v-if="memberRechargeWindow" :memberCenterData="memberCenterData" 
-                   v-on:saveRechargeButton="saveRechargeButton($event)">
-  </member-recharge>
-<!-- 充值中心窗口 -> END -->
-  
- </div>
+    <!-- 充值中心窗口 -> Start -->
+    <member-recharge v-if="memberRechargeWindow" :memberCenterData="memberCenterData" v-on:saveRechargeButton="saveRechargeButton($event)">
+    </member-recharge>
+    <!-- 充值中心窗口 -> END -->
+
+  </div>
 </template>
 
 
@@ -162,6 +180,7 @@ export default {
     },
     //接收到编辑会员窗口的数据后执行
     saveEditDataButton(memberEditData) {
+      this.memberEditWindows = false; //关闭编辑会员窗口
       this.memberCenterData = memberEditData; //把编辑会员窗口的会员数据发给本窗口的会员数据
     },
     //充值按钮点击事件
@@ -173,6 +192,8 @@ export default {
     saveRechargeButton(memberRechargeData) {
       this.dialogVisible = true;
       this.memberCenterData = memberRechargeData;
+      this.memberRechargeWindow = false;
+      this.tableData[0].dataA = this.memberCenterData.memberCardGrade;
     }
   }
 };
