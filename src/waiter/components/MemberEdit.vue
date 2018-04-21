@@ -145,18 +145,10 @@ export default {
       this.dialogVisible = false; //关闭当前窗口
     },
     save() {
-      console.log("Save");
+      // console.log("Save");
       this.dialogVisible = false; //关闭当前窗口
       this.$emit("saveEditDataButton", this.memberEditData);
-      console.log(this.memberEditData);
     }
-
-    // selectMember() {
-    //   this.$emit("SelectMemberButton", this.memberCenterData);
-    // },
-    // editMember() {
-    //   console.log("编辑按钮被按下了!!!");
-    // }
   }
 };
 </script>
