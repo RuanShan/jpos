@@ -266,10 +266,17 @@ export const shopDetails = (storeId, latitude, longitude) => fetch('/api/v1/stor
 export const createCustomer = ( data ) => fetch('/api/v1/users', data, 'POST');
 
 /**
- * 确认订单
+ * zhifu订单
  */
 
 export const checkout = (entities) => fetch('/api/v1/orders', entities, 'POST');
+
+/**
+ * chong zhi
+ */
+
+export const recharge = (entities) => fetch('/api/v1/orders', entities, 'POST');
+
 
 /**
  * POS订单下一步
