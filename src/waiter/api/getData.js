@@ -214,10 +214,16 @@ export const getOrderList = data => fetch('/api/v1/pos_orders', data);
 export const getOrderCount = data => fetch('/bos/orders/count', data);
 
 /**
- * 获取用户信息
+ * 获取Customer信息
  */
 
-//export const getUserInfo = user_id => fetch('/v1/user/' + user_id);
+export const getCustomer = user_id => fetch('/api/v1/users/' + user_id);
+
+/**
+ * Update Customer 信息
+ */
+
+export const updateCustomer = (user_id, data) => fetch('/api/v1/users/' + user_id, data, "PUT");
 
 /**
  * 获取地址信息

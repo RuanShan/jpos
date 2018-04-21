@@ -6,11 +6,23 @@
     /*fullscreen process dialog*/
     height: 90%;
   }
+  .location{
+    float: left;
+    padding: 6px;
+    border: 2px dashed #c5c5c5;
+    width: 40%;
+    &.ship{
+      width: 20%;
+      border-color: transparent;
+      background-color: gray;
+      text-align: center;
+    }
+  }
   .step{
     position:relative;
     float:left;
     padding: 20px;
-    width: 25%;
+    width: 50%;
     height: 140px;
     .title{
       @include center
@@ -101,48 +113,60 @@
 # shipped: 已交付客户
 -->
 <div class="order-flow-container fillcontain">
+  <scan-shipment :order-state="currentOrderState" :dialog-visible.sync="scanShipmentDialogVisible" @order-state-changed="orderStateChanged"> </scan-shipment>
   <process-order :order-state="currentOrderState" :dialog-visible.sync="processOrderDialogVisible" @order-state-changed="orderStateChanged"> </process-order>
 
   <div class="table_container ">
     <div class="steps clear">
-      <div class="step">
-        <div class="linex offset-l50" style=""> </div>
-        <div class="title"> new orders  <div  class="badge"> <sup> {{orderCount.pending}} </sup> </div>
-          <div> <el-button @click="processOrders('pending')">处理</el-button> </div>
-        </div>
+
+      <div class="location clear">
+        <div class="step">
+          <div class="linex offset-l50" style=""> </div>
+          <div class="title"> new orders  <div  class="badge"> <sup> {{orderCount.pending}} </sup> </div>
+            <div> <el-button @click="processOrders('pending')">处理</el-button> </div>
+          </div>
 
 
-      </div>
-      <div class="step">
-        <div class="linex "> </div>
-        <div class="title"> ready for factory  <div  class="badge"> <sup> {{orderCount.ready_for_factory}} </sup> </div>
-          <div> <el-button @click="processOrders('ready_for_factory')">处理</el-button> </div>
+        </div>
+        <div class="step">
+          <div class="linex "> </div>
+          <div class="title"> ready for factory  <div  class="badge"> <sup> {{orderCount.ready_for_factory}} </sup> </div>
+            <div> <el-button @click="processOrders('ready_for_factory')">处理</el-button> </div>
+          </div>
+        </div>
+        <div class="step" style="float:right;">
+          <div class="linex offset-l50" style=""> </div>
+          <div class="title"> ready  <div  class="badge"> <sup> {{orderCount.ready}} </sup> </div>
+            <div> <el-button @click="processOrders('ready')">处理</el-button>
+              <el-button @click="handleScanOrders('ready')">Scan</el-button>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="step">
-        <div class="linex"> </div>
-        <div class="title"> processing  <div  class="badge"> <sup> {{orderCount.processing}} </sup> </div>
-          <div> <el-button @click="processOrders('processing')">处理</el-button> </div>
+
+      <div class="location ship">
+        <div class="step" style="width:100%;">  <div class="title"> car </div> </div>
+        <div class="step" style="width:100%;">  <div class="title"> car </div>  </div>
+       </div>
+
+      <div class="location clear">
+        <div class="step" style="width:100%;">
+          <div class="linex offset-r50"> </div>
+          <div class="liney offset-t50" > </div>
+          <div class="title"> processing  <div  class="badge"> <sup> {{orderCount.processing}} </sup> </div>
+            <div> <el-button @click="processOrders('processing')">处理</el-button> </div>
+          </div>
         </div>
-      </div>
-      <div class="step">
-        <div class="linex offset-r50"> </div>
-        <div class="liney offset-t50" > </div>
-        <div class="title"> ready_for_store  <div  class="badge"> <sup> {{orderCount.ready_for_store}} </sup> </div>
-          <div> <el-button @click="processOrders('ready_for_store')">处理</el-button> </div>
+        <div class="step" style="width:100%;">
+          <div class="linex offset-r50"> </div>
+          <div class="title"> ready_for_store  <div  class="badge"> <sup> {{orderCount.ready_for_store}} </sup> </div>
+            <div> <el-button @click="processOrders('ready_for_store')">处理</el-button> </div>
+          </div>
         </div>
+
       </div>
-      <div class="step" style="float:right;">
-        <div class="linex offset-r50" style=""> </div>
-        <div class="liney offset-b50" style=""> </div>
-        <div class="title"> ready  <div  class="badge"> <sup> {{orderCount.ready}} </sup> </div>
-          <div> <el-button @click="processOrders('ready')">处理</el-button> </div>
-        </div>
-      </div>
-      <div class="step">
-      </div>
-      <div class="step">
-      </div>
+
+
     </div>
   </div>
 </div>
@@ -153,6 +177,7 @@
 
 import headTop from '@/components/headTop'
 import processOrder from '@/components/processOrder'
+import scanShipment from '@/components/scanShipment'
 import {
     getOrderList, getPosOrderCounts
 }
@@ -166,6 +191,7 @@ export default {
     data() {
             return {
                 processOrderDialogVisible: false,
+                scanShipmentDialogVisible: false,
                 tableData: [],
                 currentRow: null,
                 currentOrderState: null,
@@ -209,7 +235,8 @@ export default {
         },
         components: {
             headTop,
-            processOrder
+            processOrder,
+            scanShipment
         },
         mixins: [userDataMixin],
         created() {
@@ -239,6 +266,11 @@ export default {
                 this.processOrderDialogVisible=true
                 this.currentOrderState = orderState
                 console.log('processOrders')
+            },
+            handleScanOrders( orderState ) {
+                this.scanShipmentDialogVisible=true
+                this.currentOrderState = orderState
+                console.log('handleScanOrders')
             },
             orderStateChanged( ){
                 this.initData()
