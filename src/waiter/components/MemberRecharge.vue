@@ -15,6 +15,8 @@
                   <el-option v-for="item in memberCardGrade" :key="item.key" :value="item.value">
                   </el-option>
                 </el-select>
+                <el-button type="primary" @click="test">主要按钮</el-button>
+
               </div>
             </el-col>
           </el-row>
@@ -56,7 +58,7 @@ export default {
     return {
       dialogVisible: true, //窗口显示标志位
       memberRechargeData: {}, //充值中心的会员数据
-      rechargemoney: "", //充值金额
+      rechargeMoney: "", //充值金额
       temp: 0, //临时变量,保存原有会员余额和来自数字键盘数据之和
       memberCardGrade: [
         {
@@ -89,6 +91,7 @@ export default {
   methods: {
     //接收到数字键盘输入的数字
     rechargeSum(money) {
+      this.rechargeMoney = money;
       this.temp = Number(money);
       this.temp += Number(this.memberRechargeData.memberCardRemaining);
       // console.log("temp = " + this.temp);
@@ -98,9 +101,16 @@ export default {
     },
     //保存按钮事件处理
     save() {
-      this.dialogVisible = false;
-      this.memberRechargeData.memberCardRemaining = this.temp.toString(); //来自数字键盘组件的充值数据加上会员原有的余额数据,再付给会员余额
-      this.$emit("saveRechargeButton", this.memberRechargeData); //本窗口的会员数据出给父组件接口
+      if (this.payMode == "" || this.cardGradeResult == "" || this.rechargeMoney == "") {
+        this.$alert("请选择支付方式和会员卡种类和充值金额!!!", "错误提示", {
+          confirmButtonText: "确定"
+        });
+        return false;
+      } else {
+        this.dialogVisible = false;
+        this.memberRechargeData.memberCardRemaining = this.temp.toString(); //来自数字键盘组件的充值数据加上会员原有的余额数据,再付给会员余额
+        this.$emit("saveRechargeButton", this.memberRechargeData); //本窗口的会员数据出给父组件接口
+      }
     },
     //选中会员卡等级后处理方法
     selectCardGrede() {
@@ -113,8 +123,10 @@ export default {
     },
     closeWindow() {
       console.log("我关闭了!!!");
-      this.$parent.memberRechargeWindow = false;//调用父组件的数据
-      
+      this.$parent.memberRechargeWindow = false; //调用父组件的数据
+    },
+    test() {
+      console.log(this.$parent.$parent.memberData);
     }
   }
 };
