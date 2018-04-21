@@ -198,7 +198,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.addCustomer().then(() => {
-            //判断不为空且不等于undefined时,提交Id数据给父组件
+            //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
             if (
               this.returnData.Id != "" &&
               typeof this.returnData.Id != "undefined"

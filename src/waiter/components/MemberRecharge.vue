@@ -15,7 +15,7 @@
                   <el-option v-for="item in memberCardGrade" :key="item.key" :value="item.value">
                   </el-option>
                 </el-select>
-                <el-button type="primary" @click="test">主要按钮</el-button>
+                <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
 
               </div>
             </el-col>
@@ -48,6 +48,7 @@
 
 <script>
 import NumbersKeyborad from "@/components/NumbersKeyborad.vue";
+import { recharge } from "@/api/getData";
 
 export default {
   props: ["memberCenterData"], //来自会员中心的会员数据
@@ -79,7 +80,8 @@ export default {
         }
       ],
       cardGradeResult: "", //选中的是什么会员卡的结果
-      payMode: "" //支付方式的选择值
+      payMode: "", //支付方式的选择值
+      serverReturnData: {} //提交充值数据后,服务器返回的数据
     };
   },
   mounted() {
@@ -101,15 +103,36 @@ export default {
     },
     //保存按钮事件处理
     save() {
-      if (this.payMode == "" || this.cardGradeResult == "" || this.rechargeMoney == "") {
+      //如果选项不全,弹提示窗
+      if (
+        this.payMode == "" ||
+        this.cardGradeResult == "" ||
+        this.rechargeMoney == ""
+      ) {
         this.$alert("请选择支付方式和会员卡种类和充值金额!!!", "错误提示", {
           confirmButtonText: "确定"
         });
         return false;
       } else {
-        this.dialogVisible = false;
+        //主要是提交服务器
+        this.dialogVisible = false; //关闭当前窗口
         this.memberRechargeData.memberCardRemaining = this.temp.toString(); //来自数字键盘组件的充值数据加上会员原有的余额数据,再付给会员余额
-        this.$emit("saveRechargeButton", this.memberRechargeData); //本窗口的会员数据出给父组件接口
+        //提交服务器后,处理
+        this.customerRecharge().then(() => {
+          //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
+          if (
+            this.serverReturnData.Id != "" &&
+            typeof this.serverReturnData.Id != "undefined"
+          ) {
+            this.$emit("saveRechargeButton", this.memberRechargeData); //本窗口的会员数据出给父组件接口
+            console.log("充值返回的会员ID = " + this.serverReturnData.Id);
+          } else {  //弹出提示
+            this.$alert("提交服务器失败,请联系管理员!!!", "错误提示", {
+              confirmButtonText: "确定"
+            });
+            return false;
+          }
+        });
       }
     },
     //选中会员卡等级后处理方法
@@ -121,12 +144,14 @@ export default {
     selectPayMode() {
       console.log(this.payMode);
     },
+    //点击关闭按钮时事件处理方法
     closeWindow() {
       console.log("我关闭了!!!");
       this.$parent.memberRechargeWindow = false; //调用父组件的数据
     },
-    test() {
-      console.log(this.$parent.$parent.memberData);
+    //提交服务器执行的异步操作
+    async customerRecharge() {
+      this.serverReturnData = await recharge(this.memberRechargeData);
     }
   }
 };

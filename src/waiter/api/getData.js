@@ -2,10 +2,10 @@ import fetch from '@/config/fetch'
 /**************************************************************************
  * jpos spree api
  **************************************************************************/
- /**
-  * 登陆
-	*
-  */
+/**
+ * 登陆
+ *
+ */
 export const login = data => fetch('/users/sign_in', data, 'POST');
 //export const login = data => fetch('/admin/login', data, 'POST');
 
@@ -77,7 +77,7 @@ export const adminCount = () => fetch('/admin/count');
  */
 
 export const cityGuess = () => fetch('/v1/cities', {
-	type: 'guess'
+    type: 'guess'
 });
 
 /**
@@ -91,9 +91,9 @@ export const addShop = data => fetch('/shopping/addShop', data, 'POST');
  */
 
 export const searchplace = (cityid, value) => fetch('/v1/pois', {
-	type: 'search',
-	city_id: cityid,
-	keyword: value
+    type: 'search',
+    city_id: cityid,
+    keyword: value
 });
 
 /**
@@ -245,7 +245,7 @@ export const getUserCity = () => fetch('/v1/user/city/count');
 /**
  * 获取shop页面菜单列表
  */
- export const foodMenu = taxonomy_id => fetch('/api/v1/taxonomies/'+taxonomy_id+'/taxons');
+export const foodMenu = taxonomy_id => fetch('/api/v1/taxonomies/' + taxonomy_id + '/taxons');
 //export const foodMenu = restaurant_id => fetch('/shopping/v2/menu', {
 //  restaurant_id
 //});
@@ -254,25 +254,25 @@ export const getUserCity = () => fetch('/v1/user/city/count');
  * 获取shop页面商铺详情
  */
 export const shopDetails = (storeId, latitude, longitude) => fetch('/api/v1/stores/' + storeId)
-//export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/restaurant/' + shopid, {
-//  latitude,
-//  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
-//});
+    //export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/restaurant/' + shopid, {
+    //  latitude,
+    //  longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
+    //});
 
 /**
  * create customer
  */
 
-export const createCustomer = ( data ) => fetch('/api/v1/users', data, 'POST');
+export const createCustomer = (data) => fetch('/api/v1/users', data, 'POST');
 
 /**
- * zhifu订单
+ * 支付订单
  */
 
 export const checkout = (entities) => fetch('/api/v1/orders', entities, 'POST');
 
 /**
- * chong zhi
+ * 会员充值
  */
 
 export const recharge = (entities) => fetch('/api/v1/orders', entities, 'POST');
@@ -283,7 +283,7 @@ export const recharge = (entities) => fetch('/api/v1/orders', entities, 'POST');
  * forward: false， 可选参数，如果表示订单转向上一步
  */
 
-export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/'+order_id+'/one_step', data, 'PUT');
+export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/' + order_id + '/one_step', data, 'PUT');
 
 /**
  * 所有POS订单下一步
@@ -292,11 +292,11 @@ export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/'+or
  *
  */
 
-export const evolvePosOrders = ( data ) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
+export const evolvePosOrders = (data) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
 
 /**
  * POS订单下一步
  * forward: false， 可选参数，如果表示订单转向上一步
  */
 
-export const evolvePosShipment = (shipment_id, data) => fetch('/api/v1/pos_shipments/'+shipment_id+'/one_step', data, 'PUT');
+export const evolvePosShipment = (shipment_id, data) => fetch('/api/v1/pos_shipments/' + shipment_id + '/one_step', data, 'PUT');
