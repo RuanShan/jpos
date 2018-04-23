@@ -22,22 +22,23 @@ export var apiResultMixin = {
         storeName: orderResult.store_name,
         userId: orderResult.user_id,
         shipmentState: orderResult.shipment_state,
+        groupState: orderResult.group_state,
         paymentState: orderResult.payment_state,
         payments: orderResult.payments,
-        shipments: []
+        line_item_groups: []
       }
 
-      orderResult.shipments.forEach(function(shipmentResult, i){
-        let shipment = {groupNumber: shipmentResult.group_number, number: shipmentResult.number, state: shipmentResult.state}
-        order.shipments.push( shipment )
-        let shipmentlineItems = []
+      orderResult.line_item_groups.forEach(function(groupResult, i){
+        let group = { number: groupResult.number, state: groupResult.state, lineItems:[]}
+        order.line_item_groups.push( group )
+        let groupedlineItems = []
         orderResult.line_items.forEach(function(lineItemResult ){
           const lineItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.variant.name, price: lineItemResult.price }
-          if( shipmentResult.group_number == lineItemResult.group_number ){
-            shipmentlineItems.push( lineItem )
+          if( groupResult.number == lineItemResult.group_number ){
+            groupedlineItems.push( lineItem )
           }
         })
-        shipment.lineItems = shipmentlineItems
+        group.lineItems = groupedlineItems
       })
 
       return order
@@ -58,6 +59,7 @@ export var apiResultMixin = {
         order.index = i
         order.shipmentState = item.shipment_state
         order.paymentState = item.payment_state
+        order.groupState = item.groupState
 
         orders.push(order)
       })

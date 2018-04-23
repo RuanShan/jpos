@@ -113,8 +113,8 @@
 # shipped: 已交付客户
 -->
 <div class="order-flow-container fillcontain">
-  <scan-shipment :order-state="currentOrderState" :dialog-visible.sync="scanShipmentDialogVisible" @order-state-changed="orderStateChanged"> </scan-shipment>
-  <process-order :order-state="currentOrderState" :dialog-visible.sync="processOrderDialogVisible" @order-state-changed="orderStateChanged"> </process-order>
+  <scan-product :order-state="currentOrderState" :dialog-visible.sync="scanShipmentDialogVisible" @order-state-changed="orderStateChanged"> </scan-product>
+  <process-order :order-state="currentOrderState" :dialog-visible.sync="processOrderDialogVisible" @order-state-changed="orderStateChanged" @myLog="myLog"> </process-order>
 
   <div class="table_container ">
     <div class="steps clear">
@@ -154,7 +154,9 @@
           <div class="linex offset-r50"> </div>
           <div class="liney offset-t50" > </div>
           <div class="title"> processing  <div  class="badge"> <sup> {{orderCount.processing}} </sup> </div>
-            <div> <el-button @click="processOrders('processing')">处理</el-button> </div>
+            <div> <el-button @click="processOrders('processing')">处理</el-button>
+              <el-button @click="handleScanOrders('processing')">Scan</el-button>
+            </div>
           </div>
         </div>
         <div class="step" style="width:100%;">
@@ -177,7 +179,7 @@
 
 import headTop from '@/components/headTop'
 import processOrder from '@/components/processOrder'
-import scanShipment from '@/components/scanShipment'
+import scanProduct from '@/components/scanProduct'
 import {
     getOrderList, getPosOrderCounts
 }
@@ -236,7 +238,7 @@ export default {
         components: {
             headTop,
             processOrder,
-            scanShipment
+            scanProduct
         },
         mixins: [userDataMixin],
         created() {
@@ -253,6 +255,9 @@ export default {
             async initData() {
                 const orderCounstResult  = await getPosOrderCounts( )
                 Object.assign( this.orderCount, orderCounstResult )
+            },
+            myLog( msg ){
+                alert("yes, got myLog"+msg)
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`)
@@ -292,7 +297,7 @@ export default {
                 }
                 if (this.filters.shipment_state.length > 0 && this.filters.shipment_state != 'all') {
                     // order.number ||  || order.users.username
-                    queryParams["q[shipment_state_eq]"] = this.filters.shipment_state
+                    queryParams["q[group_state_eq]"] = this.filters.shipment_state
                 }
 
                 const ordersResult = await getOrderList(queryParams)

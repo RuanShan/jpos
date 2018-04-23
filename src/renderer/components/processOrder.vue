@@ -20,6 +20,9 @@
         right: 0;
         padding: 16px;
         border: 1px #efefef solid;
+        .group-container{
+          border-bottom: 1px solid #ebeef5;
+        }
         .actions {
             position: absolute;
             bottom: 16px;
@@ -28,10 +31,14 @@
             text-align: right;
         }
     }
-    table {
+    table.bordered {
         width: 100%;
         td {
             vertical-align: top;
+            border-bottom: 1px solid #ebeef5;
+        }
+        tr:hover{
+          background-color: #f5f7fa;
         }
     }
     .pagination {
@@ -91,7 +98,7 @@
             </div>
             <div class="filter">
                 状态:
-                <el-select v-model="filters.shipmentState" placeholder="All">
+                <el-select v-model="filters.groupState" placeholder="All">
                     <el-option v-for="item in orderStateOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -101,14 +108,12 @@
         <!-- filters end -->
 
         <div class="order-list">
-
             <el-table :data="orderList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
-
                 <el-table-column label="订单 ID" prop="id">
                 </el-table-column>
                 <el-table-column label="总价格" prop="totalAmount">
                 </el-table-column>
-                <el-table-column label="订单状态" prop="shipmentState">
+                <el-table-column label="订单状态" prop="groupState">
                 </el-table-column>
             </el-table>
             <div class="pagination" style="text-align: left;margin-top: 10px;">
@@ -118,8 +123,8 @@
         </div>
 
         <div class="order-detail">
-            <div class="shipments-container" v-if="currentOrder">
-                <table style="width: 100%">
+            <div class="line-item-groups-container" v-if="currentOrder">
+                <table class="bordered" style="width: 100%">
                     <tr>
                         <td> 用户名 </td>
                         <td> <span>{{ currentOrder.userName }}</span></td>
@@ -129,18 +134,18 @@
                         <td> <span>{{ currentOrder.storeName }}</span></td>
                     </tr>
                 </table>
-                <template v-for="shipment in currentOrder.shipments">
+                  <div v-for="line_item_group in currentOrder.line_item_groups" class="group-container">
                     <table style="width: 100%">
                         <tr>
-                            <td>ShippmentNumber</td>
-                            <td> {{shipment.number}} </td>
+                            <td>GroupNumber</td>
+                            <td> {{line_item_group.number}} </td>
                             <td>State</td>
-                            <td> {{shipment.state}} </td>
+                            <td> {{line_item_group.state}} </td>
                         </tr>
                         <tr>
                             <td> Services </td>
                             <td>
-                                <div v-for="lineItem in shipment.lineItems">
+                                <div v-for="lineItem in line_item_group.lineItems">
                                     <span>{{ lineItem.name }}</span>
                                     <span>{{ lineItem.price }}</span>
                                 </div>
@@ -148,10 +153,10 @@
                         </tr>
                         <tr>
                             <td>Images</td>
-                            <td> {{shipment.number}} </td>
+                            <td> line item group images </td>
                         </tr>
                     </table>
-                </template>
+                </div>
 
                 <div class="actions">
                     <el-button @click="ChangeCurrentOrderState(false)">DrawBack</el-button>
@@ -194,7 +199,7 @@ export default {
                 filters: {
                     keyword: '',
                     startEndTime: null,
-                    shipmentState: '',
+                    groupState: '',
                     storeId: 0
                 },
                 multipleSelection: [],
@@ -221,6 +226,7 @@ export default {
         props: ['dialogVisible', 'orderState', 'orderCounts'],
         created() {
             console.log('processOrder created')
+
         },
         computed: {
             computedVisible: function() {
@@ -279,7 +285,8 @@ export default {
 
             },
             handleDialogOpen(){
-              this.filters.shipmentState = this.orderState
+              this.orderDetailList = []
+              this.filters.groupState = this.orderState
               this.initData()
               console.log('handleDialogOpen yeah')
             },
@@ -302,15 +309,17 @@ export default {
                     // order.number || order.users.username
                     queryParams["q[user_username_cont]"] = this.filters.keyword
                 }
-                if (this.filters.shipmentState.length > 0 ) {
+                if (this.filters.groupState.length > 0 ) {
 
-                    queryParams["q[shipment_state_eq]"] = this.filters.shipmentState
+                    queryParams["q[group_state_eq]"] = this.filters.groupState
                 }
 
                 console.log("queryParams", queryParams)
                 const ordersResult = await getOrderList(queryParams)
                 this.count = ordersResult.total_count
                 this.orderList.splice( 0, this.orderList.length, ...this.buildOrdersFromApiResult(ordersResult))
+                this.$emit('myLog','async init')
+
             },
             async handleCurrentRowChange(row) {
                 if( row ){
@@ -322,7 +331,6 @@ export default {
                       //const userInfo = await getUserInfo(row.user_id)
                       const orderResult = await getOrder(row.number)
                       const orderDetail = this.buildOrderFromApiResult(orderResult)
-                      console.log("orderDetail", orderDetail)
                       this.currentOrder = orderDetail
                       this.$nextTick(() => {
                           this.orderDetailList.push(orderDetail)

@@ -202,7 +202,7 @@ export default {
           }
           if ( this.filters.shipment_state.length>0 && this.filters.shipment_state != 'all' ){
             // order.number ||  || order.users.username
-            queryParams["q[shipment_state_eq]"] = this.filters.shipment_state
+            queryParams["q[group_state_eq]"] = this.filters.shipment_state
           }
 
             const ordersResult = await getOrderList(queryParams)

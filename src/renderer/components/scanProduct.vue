@@ -1,7 +1,7 @@
 <style lang="scss">
 
 @import '../style/mixin';
-.order-process-container {
+.scan-product-container {
     position: relative;
     .order-list {
         position: absolute;
@@ -82,7 +82,7 @@
 
 <el-dialog title="提示" :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen">
 
-    <div class="order-process-container fillcontain clear">
+    <div class="scan-product-container fillcontain clear">
         <!-- filters start -->
         <div class="filters">
             <div class="filter">
@@ -102,9 +102,9 @@
 
         <div class="order-list">
 
-            <el-table :data="shipmentList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.number" style="width: 100%">
+            <el-table :data="lineItemGroupList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.number" style="width: 100%">
 
-                <el-table-column label="ShipmentNumber" prop="id">
+                <el-table-column label="GroupNumber" prop="id">
                 </el-table-column>
                 <el-table-column label="service" prop="totalAmount">
                 </el-table-column>
@@ -178,7 +178,7 @@
 <script>
 
 import {
-    getOrder, evolvePosOrders
+    evolvePosOrders, findOrderByGroupNumber
 }
 from '@/api/getData'
 import {
@@ -194,12 +194,10 @@ from '@/components/apiResultMixin'
 export default {
     data() {
             return {
-                shipmentList: [],
                 currentOrder: null,
+                currentGroup: null,// a order may have several line_item_groups
                 orderDetailList: [],
-                perPage: 2,
-                count: 0,
-                currentPage: 1,
+                lineItemGroupList: [],
                 storeId: null,
                 filters: {
                     keyword: '',
@@ -230,7 +228,7 @@ export default {
         mixins: [userDataMixin, apiResultMixin],
         props: ['dialogVisible', 'orderState', 'orderCounts'],
         created() {
-            console.log('processOrder created')
+            console.log('scanProduct created')
         },
         computed: {
             computedVisible: function() {
@@ -253,14 +251,14 @@ export default {
                 this.MoveOrderToNextState( orderNumbers,forward )
             },
             ChangeCurrentOrderState(forward = true) {
-                if (this.currentOrder == null) {
+                if (this.currentGroup == null) {
                     this.$message({
                         message: '警告哦，Please select a order at least',
                         type: 'warning'
                     });
                     return;
                 }
-                let orderNumbers = [ this.currentOrder.number ]
+                let orderNumbers = [ this.currentGroup.number ]
 
                 this.MoveOrderToNextState( orderNumbers,forward )
             },
@@ -293,35 +291,29 @@ export default {
               console.log('handleDialogOpen yeah')
             },
             handleKeywordChange(value){
-              //const pattern = /[\d]{14}/
-              //if(pattern.test(value)){
-
-              //}
+              const pattern = /[\d]{14}/
+              if(pattern.test(value)){
+                this.findOrderByGroupNumber( value )
+              }
             },
             async handleCurrentRowChange(row) {
                 if( row ){
-                  const detailIndex = this.orderDetailList.findIndex(function(currentValue) {
-                      return currentValue.number == row.number
-                  })
-                  if (detailIndex < 0) {
-                      //const storeInfo = await getStore(row.store_id)
-                      //const userInfo = await getUserInfo(row.user_id)
-                      const orderResult = await getOrder(row.number)
-                      const orderDetail = this.buildOrderFromApiResult(orderResult)
-                      console.log("orderDetail", orderDetail)
-                      this.currentOrder = orderDetail
-                      this.$nextTick(() => {
-                          this.orderDetailList.push(orderDetail)
-                      })
-                  } else {
-                      this.currentOrder = this.orderDetailList[detailIndex];
-                  }
-                  console.log('handleCurrentRowChange', row, this.currentOrder)
-
+                  this.currentGroup = row;
+                  console.log('handleCurrentRowChange', row, this.currentGroup)
                 }else{
                   this.currentOrder = null
                 }
+            },
+            async findOrderByGroupNumber(number) {
+              const orderResult = await findOrderByGroupNumber(number)
+              const orderDetail = this.buildOrderFromApiResult(orderResult)
+              this.currentOrder = orderDetail
+              //this.orderDetail.find
+              this.$nextTick(() => {
+                  this.orderDetailList.push(orderDetail)
+              })
             }
+
         }
 }
 
