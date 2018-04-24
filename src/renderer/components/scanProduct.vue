@@ -11,6 +11,13 @@
         width: 30%;
         padding: 16px;
         border: 1px #efefef solid;
+        .actions {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            text-align: right;
+        }
     }
     .order-detail {
         position: absolute;
@@ -105,20 +112,21 @@
 
         <div class="order-list">
 
-            <el-table :data="lineItemGroupList" highlight-current-row @current-change="handleCurrentRowChange" @selection-change="handleSelectionChange" :row-key="row => row.number" style="width: 100%">
+            <el-table ref="lineItemGroupTable" :data="lineItemGroupList" highlight-current-row @current-change="handleCurrentRowChange" @selection-change="handleSelectionChange" :row-key="row => row.number" style="width: 100%">
                <el-table-column  type="selection"  width="55"> </el-table-column>
 
                 <el-table-column label="GroupNumber" prop="number">
                 </el-table-column>
                 <el-table-column label="订单状态" prop="state">
                 </el-table-column>
-                <el-table-column label="操作">
-                  <template slot-scope="scope">
-                    <el-button type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)" size="mini" circle ></el-button>                    
-                  </template>
-                </el-table-column>
-            </el-table>
 
+            </el-table>
+            <div class="actions" style="margin-top: 20px">
+              <el-button type="danger" @click="handleDiscardSelection()">remove</el-button>
+              <el-button @click="ChangeGroupStates(false)">DrawBack</el-button>
+
+              <el-button type="primary" @click="ChangeGroupStates()">NextStep</el-button>
+            </div>
         </div>
 
         <div class="order-detail">
@@ -158,8 +166,8 @@
                 </div>
 
                 <div class="actions">
-                    <el-button @click="ChangeCurrentOrderState(false)">DrawBack</el-button>
-                    <el-button @click="ChangeCurrentOrderState(true)" type="primary">NextStep</el-button>
+                    <el-button @click="ChangeCurrentGroupState(false)">DrawBack</el-button>
+                    <el-button @click="ChangeCurrentGroupState(true)" type="primary">NextStep</el-button>
                 </div>
             </div>
 
@@ -172,7 +180,7 @@
 <script>
 
 import {
-    evolvePosOrders, findOrderByGroupNumber
+    findOrderByGroupNumber, evolveLineItemGroups
 }
 from '@/api/getData'
 import {
@@ -184,6 +192,7 @@ import {
 }
 from '@/components/apiResultMixin'
 
+import _ from 'lodash'
 
 export default {
     data() {
@@ -226,14 +235,14 @@ export default {
         computed: {
             computedVisible: function() {
                 return this.dialogVisible
-            },
+            }
         },
         methods: {
             async initData() {
             },
-            ChangeOrderStates(forward = true) {
-                let orderNumbers = this.multipleSelection.map((order) => order.number)
-                if (orderNumbers.length == 0) {
+            ChangeGroupStates(forward = true) {
+                let groupNumbers = this.multipleSelection.map((order) => order.number)
+                if (groupNumbers.length == 0) {
                     this.$message({
                         message: '警告哦，Please select a order at least',
                         type: 'warning'
@@ -241,9 +250,9 @@ export default {
                     return;
                 }
 
-                this.MoveOrderToNextState( orderNumbers,forward )
+                this.MoveGroupToNextState( groupNumbers,forward )
             },
-            ChangeCurrentOrderState(forward = true) {
+            ChangeCurrentGroupState(forward = true) {
                 if (this.currentGroup == null) {
                     this.$message({
                         message: '警告哦，Please select a order at least',
@@ -251,27 +260,24 @@ export default {
                     });
                     return;
                 }
-                let orderNumbers = [ this.currentGroup.number ]
+                let groupNumbers = [ this.currentGroup.number ]
 
-                this.MoveOrderToNextState( orderNumbers,forward )
+                this.MoveGroupToNextState( groupNumbers,forward )
             },
 
-            async MoveOrderToNextState( orderNumbers = [], forward = true) {
+            async MoveGroupToNextState( groupNumbers = [], forward = true) {
                 let queryParams = {
-                    order_numbers: orderNumbers,
+                    numbers: groupNumbers,
                     forward
                 }
-                console.log('ChangeOrderStates', queryParams)
-                const posOrdersReturn = await evolvePosOrders(queryParams)
-                if (posOrdersReturn.count > 0) {
-
-                    this.$emit('order-state-changed')
+                console.log('ChangeGroupStates', queryParams)
+                const groupsReturn = await evolveLineItemGroups(queryParams)
+                if (groupsReturn.count > 0) {
+                  this.handleDiscardSelection(  )
+                  this.$emit('order-state-changed')
                 }
             },
 
-            handleSelectionChange(val) {
-                this.multipleSelection = val
-            },
             handleDialogClose(done) {
 
                 this.$emit('update:dialogVisible', false)
@@ -290,6 +296,19 @@ export default {
                 this.findOrderByGroupNumber( value )
               }
             },
+            handleSelectionChange(val) {
+                this.multipleSelection = val
+                console.log("handleSelectionChange=", this.multipleSelection)
+            },
+            handleDiscardSelection(  ){
+              console.log("1handleDiscardSelection=", this.multipleSelection)
+              _.remove( this.lineItemGroupList, (group)=>{
+                return this.multipleSelection.includes(group)
+              })
+              this.$refs.lineItemGroupTable.clearSelection();
+              this.$refs.lineItemGroupTable.setCurrentRow();
+              console.log("2handleDiscardSelection=", this.multipleSelection)
+            },
             async handleCurrentRowChange(row) {
                 if( row ){
                   this.currentGroup = row;
@@ -298,12 +317,14 @@ export default {
                   console.log('handleCurrentRowChange', this.currentOrder, this.currentGroup)
                 }else{
                   this.currentGroup = null
+                  this.currentOrder = null
                 }
             },
             async findOrderByGroupNumber(number) {
               // find in orderDetailList
               this.currentOrder = this.orderDetailList.find((order)=>{
                 let found = order.lineItemGroups.find((group) => {
+console.log( "group.number",group.number, "number",number)
                   return group.number == number
                 })
                 return found != null
@@ -313,6 +334,11 @@ export default {
                 this.currentGroup = this.currentOrder.lineItemGroups.find( (group)=>{
                   return group.number == number
                 })
+                // not find in this.lineItemGroupList, add it
+                if( !this.lineItemGroupList.includes(this.currentGroup)){
+                  this.lineItemGroupList.push(this.currentGroup)
+                }
+console.log( "this.currentOrder", this.currentOrder, "this.currentGroup ", this.currentGroup,  "number=",number)
               }else{
                 // find by network
                 const orderResult = await findOrderByGroupNumber(number)

@@ -123,9 +123,7 @@
         <div class="step">
           <div class="linex offset-l50" style=""> </div>
           <div class="title"> new orders  <div  class="badge"> <sup> {{orderCount.pending}} </sup> </div>
-            <div> <el-button @click="processOrders('pending')">处理</el-button>
-              <el-button @click="handleScanOrders('pending')">Scan</el-button>
-            </div>
+            <div> <el-button @click="processOrders('pending')">处理</el-button> </div>
           </div>
 
 
@@ -133,9 +131,7 @@
         <div class="step">
           <div class="linex "> </div>
           <div class="title"> ready for factory  <div  class="badge"> <sup> {{orderCount.ready_for_factory}} </sup> </div>
-            <div> <el-button @click="processOrders('ready_for_factory')">处理</el-button>
-              <el-button @click="handleScanOrders('ready_for_factory')">Scan</el-button>
-            </div>
+            <div> <el-button @click="processOrders('ready_for_factory')">处理</el-button> </div>
           </div>
         </div>
         <div class="step" style="float:right;">

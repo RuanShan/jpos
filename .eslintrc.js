@@ -2,11 +2,13 @@ module.exports = {
     root: true,
     parser: 'babel-eslint',
     parserOptions: {
-        sourceType: 'module'
+      ecmaVersion: 6,
+      sourceType: 'module'
     },
     env: {
-        browser: true,
-        node: true
+      es6: true,
+      browser: true,
+      node: true
     },
     extends: 'eslint:recommended',
     // required to lint *.vue files

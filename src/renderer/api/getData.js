@@ -276,6 +276,15 @@ export const evolvePosOrders = ( data ) => fetch('/api/v1/pos_orders/all_step', 
 export const evolveLineItemGroup = (shipment_id, data) => fetch('/api/v1/line_item_groups/'+shipment_id+'/one_step', data, 'PUT');
 
 /**
+ * 所有 line_item_group 下一步
+ * entities: numbers，
+ *           forward: false， 可选参数，如果表示订单转向上一步
+ *
+ */
+
+export const evolveLineItemGroups = ( data ) => fetch('/api/v1/line_item_groups/all_step', data, 'PUT');
+
+/**
  * 获取 LineItemGroup Detail
  */
 
