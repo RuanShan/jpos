@@ -232,7 +232,7 @@ export const getOrder = orderNumber => fetch('/api/v1/orders/'+orderNumber)
  * 获取订单Detail
  */
 
-export const findOrderByGroupNumber = groupNumber => fetch('/api/v1/orders/find_by_group_number/'+groupNumber)
+export const findOrderByGroupNumber = groupNumber => fetch('/api/v1/pos_orders/find_by_group_number/'+groupNumber)
 
 /**
  * 获取用户信息

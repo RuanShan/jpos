@@ -20,6 +20,9 @@
         right: 0;
         padding: 16px;
         border: 1px #efefef solid;
+        .group-container{
+          border-bottom: 1px solid #ebeef5;
+        }
         .actions {
             position: absolute;
             bottom: 16px;
@@ -91,7 +94,7 @@
             </div>
             <div class="filter">
                 状态:
-                <el-select v-model="filters.shipmentState" placeholder="All">
+                <el-select v-model="filters.lineItemGroupState" placeholder="All">
                     <el-option v-for="item in orderStateOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -102,25 +105,16 @@
 
         <div class="order-list">
 
-            <el-table :data="lineItemGroupList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.number" style="width: 100%">
+            <el-table :data="lineItemGroupList" highlight-current-row @current-change="handleCurrentRowChange" @selection-change="handleSelectionChange" :row-key="row => row.number" style="width: 100%">
+               <el-table-column  type="selection"  width="55"> </el-table-column>
 
-                <el-table-column label="GroupNumber" prop="id">
+                <el-table-column label="GroupNumber" prop="number">
                 </el-table-column>
-                <el-table-column label="service" prop="totalAmount">
-                </el-table-column>
-                <el-table-column label="价格" prop="totalAmount">
-                </el-table-column>
-                <el-table-column label="订单状态" prop="shipmentState">
+                <el-table-column label="订单状态" prop="state">
                 </el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                    <el-button
-                      size="mini"
-                      @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button
-                      size="mini"
-                      type="danger"
-                      @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    <el-button type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)" size="mini" circle ></el-button>                    
                   </template>
                 </el-table-column>
             </el-table>
@@ -128,7 +122,7 @@
         </div>
 
         <div class="order-detail">
-            <div class="shipments-container" v-if="currentOrder">
+            <div class="line-item-groups-container" v-if="currentOrder">
                 <table style="width: 100%">
                     <tr>
                         <td> 用户名 </td>
@@ -139,18 +133,18 @@
                         <td> <span>{{ currentOrder.storeName }}</span></td>
                     </tr>
                 </table>
-                <template v-for="shipment in currentOrder.shipments">
+                <div v-for="lineItemGroup in currentOrder.lineItemGroups" class="group-container">
                     <table style="width: 100%">
                         <tr>
                             <td>GroupNumber</td>
-                            <td> {{shipment.number}} </td>
+                            <td> {{lineItemGroup.number}} </td>
                             <td>State</td>
-                            <td> {{shipment.state}} </td>
+                            <td> {{lineItemGroup.state}} </td>
                         </tr>
                         <tr>
                             <td> Services </td>
                             <td>
-                                <div v-for="lineItem in shipment.lineItems">
+                                <div v-for="lineItem in lineItemGroup.lineItems">
                                     <span>{{ lineItem.name }}</span>
                                     <span>{{ lineItem.price }}</span>
                                 </div>
@@ -158,10 +152,10 @@
                         </tr>
                         <tr>
                             <td>Images</td>
-                            <td> {{shipment.number}} </td>
+                            <td> {{lineItemGroup.number}} </td>
                         </tr>
                     </table>
-                </template>
+                </div>
 
                 <div class="actions">
                     <el-button @click="ChangeCurrentOrderState(false)">DrawBack</el-button>
@@ -202,8 +196,7 @@ export default {
                 filters: {
                     keyword: '',
                     startEndTime: null,
-                    shipmentState: '',
-                    storeId: 0
+                    lineItemGroupState: '',
                 },
                 multipleSelection: [],
                 orderStateOptions: [{
@@ -286,8 +279,9 @@ export default {
 
             },
             handleDialogOpen(){
-              this.filters.shipmentState = this.orderState
-              this.shipmentList.length = 0
+              this.filters.keyword = ""
+              this.filters.lineItemGroupState = this.orderState
+              this.lineItemGroupList.length = 0
               console.log('handleDialogOpen yeah')
             },
             handleKeywordChange(value){
@@ -299,19 +293,41 @@ export default {
             async handleCurrentRowChange(row) {
                 if( row ){
                   this.currentGroup = row;
-                  console.log('handleCurrentRowChange', row, this.currentGroup)
+                  this.currentOrder = this.currentGroup.order
+
+                  console.log('handleCurrentRowChange', this.currentOrder, this.currentGroup)
                 }else{
-                  this.currentOrder = null
+                  this.currentGroup = null
                 }
             },
             async findOrderByGroupNumber(number) {
-              const orderResult = await findOrderByGroupNumber(number)
-              const orderDetail = this.buildOrderFromApiResult(orderResult)
-              this.currentOrder = orderDetail
-              //this.orderDetail.find
-              this.$nextTick(() => {
-                  this.orderDetailList.push(orderDetail)
+              // find in orderDetailList
+              this.currentOrder = this.orderDetailList.find((order)=>{
+                let found = order.lineItemGroups.find((group) => {
+                  return group.number == number
+                })
+                return found != null
               })
+
+              if( this.currentOrder ){
+                this.currentGroup = this.currentOrder.lineItemGroups.find( (group)=>{
+                  return group.number == number
+                })
+              }else{
+                // find by network
+                const orderResult = await findOrderByGroupNumber(number)
+                const orderDetail = this.buildOrderFromApiResult(orderResult)
+                this.currentOrder = orderDetail
+                this.currentGroup = this.currentOrder.lineItemGroups.find(function( group, index){
+                  return group.number == number
+                })
+                //this.orderDetail.find
+                this.$nextTick(() => {
+                  this.orderDetailList.push(this.currentOrder)
+                  this.lineItemGroupList.push(this.currentGroup)
+                })
+              }
+
             }
 
         }

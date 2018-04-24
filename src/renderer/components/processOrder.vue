@@ -134,18 +134,18 @@
                         <td> <span>{{ currentOrder.storeName }}</span></td>
                     </tr>
                 </table>
-                  <div v-for="line_item_group in currentOrder.line_item_groups" class="group-container">
+                  <div v-for="lineItemGroup in currentOrder.lineItemGroups" class="group-container">
                     <table style="width: 100%">
                         <tr>
                             <td>GroupNumber</td>
-                            <td> {{line_item_group.number}} </td>
+                            <td> {{lineItemGroup.number}} </td>
                             <td>State</td>
-                            <td> {{line_item_group.state}} </td>
+                            <td> {{lineItemGroup.state}} </td>
                         </tr>
                         <tr>
                             <td> Services </td>
                             <td>
-                                <div v-for="lineItem in line_item_group.lineItems">
+                                <div v-for="lineItem in lineItemGroup.lineItems">
                                     <span>{{ lineItem.name }}</span>
                                     <span>{{ lineItem.price }}</span>
                                 </div>

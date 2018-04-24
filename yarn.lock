@@ -3080,14 +3080,15 @@ element-resize-detector@^1.1.13:
   dependencies:
     batch-processor "^1.0.0"
 
-element-ui@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.2.1.tgz#9efb17a37d161b5cbca9998f3f217ccb4fa7da55"
+element-ui@^2.3.6:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.3.6.tgz#6771aa41a51bc967bdaad64e429ff50b528b15e3"
   dependencies:
     async-validator "~1.8.1"
     babel-helper-vue-jsx-merge-props "^2.0.0"
     deepmerge "^1.2.0"
     normalize-wheel "^1.0.1"
+    resize-observer-polyfill "^1.5.0"
     throttle-debounce "^1.0.1"
 
 elliptic@^6.0.0:
@@ -7503,6 +7504,10 @@ require-uncached@^1.0.3:
 requires-port@1.0.x, requires-port@1.x.x, requires-port@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
+
+resize-observer-polyfill@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.0.tgz#660ff1d9712a2382baa2cad450a4716209f9ca69"
 
 resolve-cwd@^2.0.0:
   version "2.0.0"

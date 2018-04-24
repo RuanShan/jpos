@@ -61,7 +61,7 @@
     "@websanova/vue-auth": "^2.21.3-beta",
     "axios": "^0.16.1",
     "echarts": "^3.8.0",
-    "element-ui": "^2.2.1",
+    "element-ui": "^2.3.6",
     "es6-promise": "^4.2.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "highcharts": "^6.0.2",

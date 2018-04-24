@@ -1,5 +1,5 @@
  <template>
-	<div class="rating_container">
+  <div class="rating_container">
         <section class="star_container">
             <svg class="grey_fill" v-for="num in 5" :key="num">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#star"></use>
@@ -17,13 +17,13 @@
 
 <script>
     export default {
-    	data(){
+      data(){
             return{
-               
+
             }
         },
         mounted(){
-        	
+
         },
         props:['rating'],
     }
@@ -31,7 +31,7 @@
 
 <style lang="scss" scoped>
     @import '../../style/mixin';
-	.rating_container{
+  .rating_container{
         position: relative;
         top: .2rem;
         @include wh(2rem, .4rem);

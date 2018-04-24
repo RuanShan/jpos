@@ -1,3 +1,7 @@
+import {
+    evolvePosOrders
+}
+from '@/api/getData'
 export var apiResultMixin = {
   methods: {
     async ChangeOrderState( orderNumbers = [], forward = true) {

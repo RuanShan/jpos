@@ -25,12 +25,12 @@ export var apiResultMixin = {
         groupState: orderResult.group_state,
         paymentState: orderResult.payment_state,
         payments: orderResult.payments,
-        line_item_groups: []
+        lineItemGroups: []
       }
 
       orderResult.line_item_groups.forEach(function(groupResult, i){
-        let group = { number: groupResult.number, state: groupResult.state, lineItems:[]}
-        order.line_item_groups.push( group )
+        let group = { order: order, number: groupResult.number, state: groupResult.state, lineItems:[]}
+        order.lineItemGroups.push( group )
         let groupedlineItems = []
         orderResult.line_items.forEach(function(lineItemResult ){
           const lineItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.variant.name, price: lineItemResult.price }

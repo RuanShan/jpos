@@ -1,5 +1,5 @@
 import { getStyle } from '../../config/mUtils'
-import { imgBaseUrl, localapi, proapi } from '../../config/env'
+//import { imgBaseUrl, localapi, proapi } from '../../config/env'
 
 export const loadMore = {
 	directives: {
@@ -26,9 +26,9 @@ export const loadMore = {
 
 				el.addEventListener('touchstart', () => {
 					height = heightEl.clientHeight;
-					if (scrollType == 2) {
-						height = height
-					}
+					//if (scrollType == 2) {
+					//	height = height
+					//}
 					setTop = el.offsetTop;
 					paddingBottom = getStyle(el, 'paddingBottom');
 					marginBottom = getStyle(el, 'marginBottom');
