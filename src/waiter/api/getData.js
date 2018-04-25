@@ -300,3 +300,16 @@ export const evolvePosOrders = (data) => fetch('/api/v1/pos_orders/all_step', da
  */
 
 export const evolvePosShipment = (shipment_id, data) => fetch('/api/v1/pos_shipments/' + shipment_id + '/one_step', data, 'PUT');
+
+/**
+ * get cards
+ * return: { cards:[{number:xxx, name:xxx, current_value, transactions:[]}]}
+ */
+
+export const getUserCards = (userId) => fetch('/api/v1/users/'+userId+'/cards');
+
+/**
+ * get card transactions
+ */
+
+export const getCardTransactions = (cardId) => fetch('/api/v1/cards/'+cardId+'/transactions');
