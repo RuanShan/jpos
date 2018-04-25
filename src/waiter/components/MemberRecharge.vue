@@ -89,6 +89,7 @@ export default {
     console.log(
       "会员的原有余额 :" + this.memberRechargeData.memberCardRemaining
     );
+    this.$emit("myLog", "888");
   },
   methods: {
     //接收到数字键盘输入的数字
@@ -100,6 +101,10 @@ export default {
       // console.log("会员的原有余额 :" + this.memberRechargeData.memberCardRemaining);
       // console.log("装换字符串 : " + (this.temp).toString() );
       // console.log("  ");
+    },
+    //提交服务器执行的异步操作
+    async customerRecharge() {
+      this.serverReturnData = await recharge(this.memberRechargeData);
     },
     //保存按钮事件处理
     save() {
@@ -115,18 +120,20 @@ export default {
         return false;
       } else {
         //主要是提交服务器
-        this.dialogVisible = false; //关闭当前窗口
         this.memberRechargeData.memberCardRemaining = this.temp.toString(); //来自数字键盘组件的充值数据加上会员原有的余额数据,再付给会员余额
-        //提交服务器后,处理
+        //提交服务器后,等待SerVer响应后处理
         this.customerRecharge().then(() => {
           //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
           if (
             this.serverReturnData.Id != "" &&
             typeof this.serverReturnData.Id != "undefined"
           ) {
-            this.$emit("saveRechargeButton", this.memberRechargeData); //本窗口的会员数据出给父组件接口
-            console.log("充值返回的会员ID = " + this.serverReturnData.Id);
-          } else {  //弹出提示
+            this.dialogVisible = false; //关闭当前窗口
+            this.$emit("saveRechargeButton", this.memberRechargeData.Id);
+
+            console.log("充值返回的会员ID... = " + this.serverReturnData.Id);
+          } else {
+            //弹出提示
             this.$alert("提交服务器失败,请联系管理员!!!", "错误提示", {
               confirmButtonText: "确定"
             });
@@ -148,10 +155,7 @@ export default {
     closeWindow() {
       console.log("我关闭了!!!");
       this.$parent.memberRechargeWindow = false; //调用父组件的数据
-    },
-    //提交服务器执行的异步操作
-    async customerRecharge() {
-      this.serverReturnData = await recharge(this.memberRechargeData);
+      // this.$emit("saveRechargeButton", this.memberRechargeData.Id);
     }
   }
 };

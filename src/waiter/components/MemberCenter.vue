@@ -3,7 +3,7 @@
     <el-row>
       <div class="grid-content bg-purple-light">
         <!-- 会员中心窗口 -> START -->
-        <el-dialog title="会员中心" :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true" center style="color: #1533db;">
+        <el-dialog title="会员中心" :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true" center @close="closeWindow()" style="color: #1533db;">
           <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
           <el-form status-icon label-width="100px" class="MCenter-el-form">
             <el-row>
@@ -11,13 +11,13 @@
                 <!-- 上部信息左侧 -->
                 <div class="grid-content bg-purple-light">
                   <div>
-                    <h2>卡号:&nbsp;&nbsp;&nbsp;{{memberData.memberNum}}</h2>
+                    <h2>卡号:&nbsp;&nbsp;&nbsp;{{memberCenterData.memberNum}}</h2>
                   </div>
                   <div>
-                    <h2>姓名:&nbsp;&nbsp;&nbsp;{{memberData.memberName}}</h2>
+                    <h2>姓名:&nbsp;&nbsp;&nbsp;{{memberCenterData.memberName}}</h2>
                   </div>
                   <div>
-                    <h2>电话:&nbsp;&nbsp;&nbsp;{{memberData.memberPhone}}</h2>
+                    <h2>电话:&nbsp;&nbsp;&nbsp;{{memberCenterData.memberPhone}}</h2>
                   </div>
                 </div>
               </el-col>
@@ -28,7 +28,7 @@
                     <div class="grid-content bg-purple">
                       <h3>余额</h3>
                       <div>
-                        ¥ {{memberData.memberCardRemaining}}
+                        ¥ {{memberCenterData.memberCardRemaining}}
                       </div>
                       <div>
                         <el-button type="warning" plain size="mini" @click="rechargeButton">充值</el-button>
@@ -111,7 +111,7 @@
     <!-- 编辑会员窗口 -> END -->
 
     <!-- 充值中心窗口 -> Start -->
-    <member-recharge v-if="memberRechargeWindow" :memberCenterData="memberCenterData" v-on:saveRechargeButton="saveRechargeButton($event)">
+    <member-recharge v-if="memberRechargeWindow" :memberCenterData="memberCenterData" @saveRechargeButton="saveRechargeButton($event)">
     </member-recharge>
     <!-- 充值中心窗口 -> END -->
 
@@ -123,6 +123,7 @@
 <script>
 import MemberEdit from "@/components/MemberEdit.vue";
 import MemberRecharge from "@/components/MemberRecharge.vue";
+import { getCustomer } from "@/api/getData";
 
 export default {
   props: ["memberData"],
@@ -161,7 +162,8 @@ export default {
           nameB: "到期时间",
           dataB: ""
         }
-      ]
+      ],
+      returnSerVerData: {} //接收到的SerVer数据
     };
   },
   mounted() {
@@ -180,20 +182,43 @@ export default {
     },
     //接收到编辑会员窗口的数据后执行
     saveEditDataButton(memberEditData) {
+      this.dialogVisible = true; //打开当前窗口
       this.memberEditWindows = false; //关闭编辑会员窗口
-      this.memberCenterData = memberEditData; //把编辑会员窗口的会员数据发给本窗口的会员数据
+      // this.memberCenterData = memberEditData; //把编辑会员窗口的会员数据发给本窗口的会员数据
+      this.getSverVerCustomer(this.memberCenterData.Id).then(() => {
+        this.memberCenterData = this.returnSerVerData; // 把从SerVer得到的用户数据给当前窗口的用户数据
+        //***刷新数据 */
+      });
     },
     //充值按钮点击事件
     rechargeButton() {
       console.log("充值开始了");
       this.memberRechargeWindow = true;
     },
+    //获取SerVer用户数据,异步获取
+    async getSverVerCustomer(Id) {
+      this.returnSerVerData = await getCustomer(Id);
+    },
     //接收到充值页面来的数据
-    saveRechargeButton(memberRechargeData) {
+    saveRechargeButton(id) {
+      // console.log("saveRechargeButton=" + id);
       this.dialogVisible = true;
-      this.memberCenterData = memberRechargeData;
-      this.memberRechargeWindow = false;
-      this.tableData[0].dataA = this.memberCenterData.memberCardGrade;
+      this.getSverVerCustomer(this.memberCenterData.Id).then(() => {
+        this.memberCenterData = this.returnSerVerData; // 把从SerVer得到的用户数据给当前窗口的用户数据
+        this.memberRechargeWindow = false; //关闭充值窗口
+        this.tableData[0].dataA = this.memberCenterData.memberCardGrade; //显示数据
+      });
+    },
+    closeWindow() {
+      console.log("Center  关闭了***");
+    },
+    //MemberKeyWord打开用户中心窗口时的事件处理函数
+    updateForId(Id) {
+      // console.log(Id);
+      this.getSverVerCustomer(Id).then(() => {
+        this.memberCenterData = this.returnSerVerData; // 把从SerVer得到的用户数据给当前窗口的用户数据
+        //更新页面数据          
+      })
     }
   }
 };

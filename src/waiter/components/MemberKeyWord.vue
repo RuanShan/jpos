@@ -1,5 +1,5 @@
 <template>
- <div class="customer_container">
+  <div class="customer_container">
     <div class="customer-button" @click="dialogVisible = true">
       <div>
         <h4 style='padding-top:10px;'>{{buttonName}}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -11,31 +11,31 @@
         <h6 style='padding-top:10px; padding-bottom:5px'>余额:&nbsp;&nbsp;{{buttonRemaining}}&nbsp;&nbsp;元</h6>
       </div>
     </div>
-   
-  <!-- 会员关键字窗口 -> START -->
-  <el-dialog  title="会员关键字"  :visible.sync="dialogVisible"  width="30%"  :before-close="handleClose" >
-    <el-input v-model="inputNumber" placeholder="请输入会员/手机号"></el-input>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="openAddMemberWindws">确 定</el-button>
-    </span>
-  </el-dialog> 
-  <!-- 会员关键字窗口 -> END -->
 
-  <!-- 添加会员组件 Start-->
-  <member-add v-if="memberAddWindowVisible" :inputNumber="inputNumber" 
-    v-on:AddMemberReturnData="AddMemberReturnData($event)"></member-add>
-  <!-- 添加会员组件 END-->
-    
-  <!-- 会员中心组件 Start-->
-  <member-center v-if="memberCenterWindowVisible" :memberData="memberData" v-on:SelectMemberButton="SelectMemberButton($event)"></member-center>
-  <!-- 会员中心组件 END-->
- </div>
+    <!-- 会员关键字窗口 -> START -->
+    <el-dialog title="会员关键字" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+      <el-input v-model="inputNumber" placeholder="请输入会员/手机号"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="openAddMemberWindws">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 会员关键字窗口 -> END -->
+
+    <!-- 添加会员组件 Start-->
+    <member-add v-if="memberAddWindowVisible" :inputNumber="inputNumber" v-on:AddMemberReturnData="AddMemberReturnData($event)"></member-add>
+    <!-- 添加会员组件 END-->
+
+    <!-- 会员中心组件 Start-->
+    <member-center v-if="memberCenterWindowVisible" ref="membercenter" :memberData="memberData" v-on:SelectMemberButton="SelectMemberButton($event)"></member-center>
+    <!-- 会员中心组件 END-->
+  </div>
 </template>
 
 <script>
 import MemberAdd from "@/components/MemberAdd.vue";
 import MemberCenter from "@/components/MemberCenter.vue";
+import { log } from "util";
 
 export default {
   components: {
@@ -67,13 +67,18 @@ export default {
       this.memberAddWindowVisible = true;
       this.memberCenterWindowVisible = false;
     },
+    //添加用户组件传回来的事件处理
     AddMemberReturnData(returnData) {
-      this.memberAddWindowVisible = false;
-      this.memberCenterWindowVisible = true;
       this.memberData = returnData;
+      this.memberAddWindowVisible = false; //关闭添加用户窗口
+      this.memberCenterWindowVisible = true; //打开用户中心窗口
+      this.$nextTick(() => {
+        this.$refs.membercenter.updateForId(this.memberData.Id);
+      });
     },
     //接收到会员中心窗口的数据后执行
     SelectMemberButton(memberCenterData) {
+      log("SelectMemberButton = " + memberCenterData);
       this.dialogVisible = false; //关闭查询会员窗口
       this.memberCenterWindowVisible = false; //关闭会议中心窗口
       this.memberData = memberCenterData; //会员中心的修改数据给memberData

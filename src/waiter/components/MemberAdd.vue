@@ -1,48 +1,49 @@
 <template>
- <div class="customer_container">
-  <!-- 会员添加窗口 -> START -->
-    <el-dialog  title="会员添加"  :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true"  >
-     <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" status-icon label-width="100px" class="demo-ruleForm">
-        
+  <div class="customer_container">
+    <!-- 会员添加窗口 -> START -->
+    <el-dialog title="会员添加" :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true">
+      <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
+      <el-form :model="memberAddData" :rules="rules" ref="memberAddData" status-icon label-width="100px" class="demo-memberAddData">
+
         <el-form-item label="会员编号" prop="memberNum">
-          <el-input v-model="ruleForm.memberNum" ></el-input>
+          <el-input v-model="memberAddData.memberNum"></el-input>
         </el-form-item>
-       <el-form-item label="会员密码" prop="passWord">
-          <el-input v-model="ruleForm.passWord"></el-input>
+        <el-form-item label="会员密码" prop="passWord">
+          <el-input v-model="memberAddData.passWord"></el-input>
         </el-form-item>
         <el-form-item label="密码确认" prop="passWord_confirm">
-          <el-input v-model="ruleForm.passWord_confirm"></el-input>
+          <el-input v-model="memberAddData.passWord_confirm"></el-input>
         </el-form-item>
-         <el-form-item label="会员姓名" prop="memberName">
-          <el-input v-model="ruleForm.memberName"></el-input>
+        <el-form-item label="会员姓名" prop="memberName">
+          <el-input v-model="memberAddData.memberName"></el-input>
         </el-form-item>
         <el-form-item label="会员电话" prop="memberPhone">
-          <el-input v-model="ruleForm.memberPhone"></el-input>
+          <el-input v-model="memberAddData.memberPhone"></el-input>
         </el-form-item>
         <el-form-item label="过期时间" required>
-            <el-form-item prop="outTime">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.outTime" style="width: 100%;"></el-date-picker>
-            </el-form-item>
+          <el-form-item prop="outTime">
+            <el-date-picker type="date" placeholder="选择日期" v-model="memberAddData.outTime" style="width: 100%;"></el-date-picker>
+          </el-form-item>
         </el-form-item>
         <el-form-item label="会员生日" required>
-            <el-form-item prop="birthday">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.birthday" format="MM 月 dd 日"  value-format="MM-dd" style="width: 100%;"></el-date-picker>
-            </el-form-item>
+          <el-form-item prop="birthday">
+            <el-date-picker type="date" placeholder="选择日期" v-model="memberAddData.birthday" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+          </el-form-item>
         </el-form-item>
         <el-form-item label="联系地址" prop="address">
-          <el-input v-model="ruleForm.address"></el-input>
+          <el-input v-model="memberAddData.address"></el-input>
         </el-form-item>
         <el-form-item label="输入备注" prop="desc">
-          <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+          <el-input type="textarea" v-model="memberAddData.desc"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
+          <el-button type="primary" @click="submitForm('memberAddData')">立即创建</el-button>
+          <el-button @click="resetForm('memberAddData')">重置</el-button>
         </el-form-item>
       </el-form>
-    </el-dialog> <!-- 会员添加窗口 -> END -->
- </div>
+    </el-dialog>
+    <!-- 会员添加窗口 -> END -->
+  </div>
 </template>
 
 
@@ -72,7 +73,7 @@ export default {
     var validatePassConfirm = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.passWord) {
+      } else if (value !== this.memberAddData.passWord) {
         callback(new Error("两次输入密码不一致!"));
       } else {
         callback();
@@ -97,7 +98,7 @@ export default {
     }
     return {
       dialogVisible: true, //窗口显示标志位
-      ruleForm: {
+      memberAddData: {
         memberNum: "",
         passWord: "",
         passWord_confirm: "",
@@ -173,31 +174,20 @@ export default {
     };
   },
   mounted: function() {
-    this.ruleForm.memberNum = this.inputNumber;
-    this.ruleForm.memberName = this.inputNumber;
+    this.memberAddData.memberNum = this.inputNumber;
+    this.memberAddData.memberName = this.inputNumber;
   },
   methods: {
-    // test() {
-    //   this.addCustomer().then(() => {
-    //     console.log(this.returnData);
-    //     console.log(this.returnData.Id);
-    //   });
-    // },
-
     //添加会员方法,异步,请求服务器,调用getData.js中createCustomer
-    async addCustomer() {
-      this.returnData = await createCustomer(
-        this.memberNum,
-        this.passWord,
-        this.memberPhone
-      );
+    async addCustomer(data) {
+      this.returnData = await createCustomer(data);
     },
 
     //提交
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.addCustomer().then(() => {
+          this.addCustomer(this.memberAddData).then(() => {
             //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
             if (
               this.returnData.Id != "" &&
