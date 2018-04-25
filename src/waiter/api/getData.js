@@ -303,7 +303,7 @@ export const evolvePosShipment = (shipment_id, data) => fetch('/api/v1/pos_shipm
 
 /**
  * get cards
- * return: { cards:[{number:xxx, name:xxx, current_value, transactions:[]}]}
+ * return: { cards:[{number:xxx, name:xxx, current_value, transactions:[card_id, amount,]}]}
  */
 
 export const getUserCards = (userId) => fetch('/api/v1/users/'+userId+'/cards');
