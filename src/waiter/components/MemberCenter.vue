@@ -1,4 +1,4 @@
-<template>
+<template rsf="centerWindow">
   <div class="customer_container">
     <el-row>
       <div class="grid-content bg-purple-light">
@@ -48,12 +48,12 @@
                   </el-col>
                   <el-col :span="8" class="center">
                     <div class="grid-content bg-purple">
-                      <h3>优惠券</h3>
+                      <h3>充值记录</h3>
                       <div>
-                        0
+                        ****
                       </div>
                       <div>
-                        <el-button type="warning" plain size="mini">兑换</el-button>
+                        <el-button type="warning" plain size="mini" @click="openTopUpRecordWindow()">查看</el-button>
                       </div>
                     </div>
                   </el-col>
@@ -115,6 +115,9 @@
     </member-recharge>
     <!-- 充值中心窗口 -> END -->
 
+    <!-- 充值记录查询窗口 -> Start -->
+    <member-topup-record v-if="memberTopUpRecordWindow" :memberCenterData="memberCenterData" @topUpRecordButton="topUpRecordButton($event)"></member-topup-record>
+    <!-- 充值记录查询窗口 -> END -->
   </div>
 </template>
 
@@ -123,19 +126,22 @@
 <script>
 import MemberEdit from "@/components/MemberEdit.vue";
 import MemberRecharge from "@/components/MemberRecharge.vue";
+import MemberTopUpRecord from "@/components/MemberTopUpRecord.vue";
 import { getCustomer } from "@/api/getData";
 
 export default {
   props: ["memberData"],
   components: {
     "member-edit": MemberEdit,
-    "member-recharge": MemberRecharge
+    "member-recharge": MemberRecharge,
+    "member-topup-record": MemberTopUpRecord
   },
   data() {
     return {
       dialogVisible: true, //窗口显示标志位
       memberEditWindows: false, //会员编辑窗口显示标志位
       memberRechargeWindow: false, //充值中心窗口显示标志位
+      memberTopUpRecordWindow: false, //查询会员记录窗口标志位
       memberCenterData: {}, //会员中心的会员数据
       tableData: [
         {
@@ -217,8 +223,22 @@ export default {
       // console.log(Id);
       this.getSverVerCustomer(Id).then(() => {
         this.memberCenterData = this.returnSerVerData; // 把从SerVer得到的用户数据给当前窗口的用户数据
-        //更新页面数据          
-      })
+        //更新页面数据
+      });
+    },
+    //打开充值记录窗口
+    openTopUpRecordWindow() {
+      this.memberTopUpRecordWindow = true;
+    },
+    //充值记录窗口关闭时触发的事件处理
+    topUpRecordButton(Id) {
+      this.dialogVisible = true;
+      this.memberTopUpRecordWindow = false;
+      this.getSverVerCustomer(Id).then(() => {
+        this.memberCenterData = this.returnSerVerData; // 把从SerVer得到的用户数据给当前窗口的用户数据
+        //更新页面数据
+      });
+      console.log("充值记录窗口传过来的消息@@@@@@@@@@@");
     }
   }
 };

@@ -73,7 +73,8 @@ export default {
       this.memberAddWindowVisible = false; //关闭添加用户窗口
       this.memberCenterWindowVisible = true; //打开用户中心窗口
       this.$nextTick(() => {
-        this.$refs.membercenter.updateForId(this.memberData.Id);
+        //利用ref实现父组件通知子组件
+        this.$refs.membercenter.updateForId(this.memberData.Id); //this.$refs.子组件的ref名称.子组件的所有方法
       });
     },
     //接收到会员中心窗口的数据后执行

@@ -89,7 +89,6 @@ export default {
     console.log(
       "会员的原有余额 :" + this.memberRechargeData.memberCardRemaining
     );
-    this.$emit("myLog", "888");
   },
   methods: {
     //接收到数字键盘输入的数字
