@@ -50,7 +50,8 @@ export default {
     //处理按键
     _handleKeyPress(e) {
       let num = e.target.dataset.num;
-
+      // console.log(num);
+      
       //不同按键处理逻辑
       // -1 代表无效按键，直接返回
       if (num == -1) return false;

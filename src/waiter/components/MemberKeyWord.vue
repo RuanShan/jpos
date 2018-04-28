@@ -35,7 +35,7 @@
 <script>
 import MemberAdd from "@/components/MemberAdd.vue";
 import MemberCenter from "@/components/MemberCenter.vue";
-import { log } from "util";
+// import { log } from "util";
 
 export default {
   components: {
@@ -64,6 +64,12 @@ export default {
         .catch(_ => {});
     },
     openAddMemberWindws() {
+      if (this.inputNumber == "1234") {
+        this.$alert("已经存在\"1234\"用户ID", "错误提示", {
+          confirmButtonText: "确定"
+        });
+        return false;
+      }
       this.memberAddWindowVisible = true;
       this.memberCenterWindowVisible = false;
     },
@@ -79,7 +85,7 @@ export default {
     },
     //接收到会员中心窗口的数据后执行
     SelectMemberButton(memberCenterData) {
-      log("SelectMemberButton = " + memberCenterData);
+      console.log("SelectMemberButton = " + memberCenterData);
       this.dialogVisible = false; //关闭查询会员窗口
       this.memberCenterWindowVisible = false; //关闭会议中心窗口
       this.memberData = memberCenterData; //会员中心的修改数据给memberData

@@ -14,7 +14,7 @@
         </el-col>
         <el-col :span="6">
           <div class="grid-content bg-purple">
-            <!-- <el-button type="primary" @click="test()">主要按钮</el-button> -->
+            <el-button type="primary" @click="test()">主要按钮</el-button>
           </div>
         </el-col>
         <el-col :span="6">
@@ -23,11 +23,12 @@
           </div>
         </el-col>
       </el-row>
-      <div class="block">
+      <!-- 时间区间 -->
+      <!-- <div class="block">
         <span class="demonstration">时间区间</span>
         <el-date-picker v-model="section" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="right">
         </el-date-picker>
-      </div>
+      </div> -->
 
       <el-table :data="memberTransactionsTable" :stripe="true" height="250" style="width: 100%">
         <el-table-column type="index" label="序号" :index="indexMethod">
@@ -50,6 +51,10 @@
 
 <script>
 import { getUserCards } from "@/api/getData";
+// import { foundCustomer } from "@/api/getData";
+
+
+
 
 export default {
   props: ["memberCenterData"],
@@ -107,7 +112,9 @@ export default {
       console.log("充值记录窗口被关闭了!!!");
       this.$emit("topUpRecordButton",this.memberTopUpRecordData.Id)
     },
-    test() {}
+    test() {
+
+    }
   },
 
   mounted() {

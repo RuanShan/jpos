@@ -39,6 +39,7 @@
         <el-form-item>
           <el-button type="primary" @click="submitForm('memberAddData')">立即创建</el-button>
           <el-button @click="resetForm('memberAddData')">重置</el-button>
+          <el-button @click="fillIn()" type="danger">测试填入</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -210,7 +211,17 @@ export default {
     //重置
     resetForm(formName) {
       this.$refs[formName].resetFields();
-    }
+    },
+
+    fillIn(){
+      this.memberAddData.memberNum = "9874556";
+      this.memberAddData.passWord = "9874556";
+      this.memberAddData.passWord_confirm = "9874556";
+      this.memberAddData.memberPhone = "13000000000";
+      this.memberAddData.outTime = new Date();
+      this.memberAddData.birthday = new Date();
+    },
+    
   }
 };
 </script>
