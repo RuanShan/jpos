@@ -30,7 +30,8 @@
                 </div>
                 <div class="num">
                   <div>
-                    <button data-num='D' @click.stop='_handleKeyPress'>backspace </button>
+                    <button data-num='C' @click.stop='pressKeyC()'>C </button>
+                    <!-- <button data-num='D' @click.stop='_handleKeyPress'>backspace </button> -->
                   </div>
                 </div>
                 <div class="num" style="float: right; height: 10em;">
@@ -81,7 +82,8 @@
                 </div>
                 <div class="num">
                   <div>
-                    <button data-num='C' @click.stop='pressKeyC()'>C </button>
+                    <button data-num='00' @click.stop='_handleKeyPress'>00 </button>
+                    <!-- <button data-num='C' @click.stop='pressKeyC()'>C </button> -->
                   </div>
                 </div>
                 <div class="num">
