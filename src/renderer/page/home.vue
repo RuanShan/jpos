@@ -6,13 +6,13 @@
                 <el-col :span="4"><div class="data_list today_head"><span class="data_num head">当日数据：</span></div></el-col>
         <el-col :span="4"><div class="data_list"><span class="data_num">{{userCount}}</span> 新增用户</div></el-col>
         <el-col :span="4"><div class="data_list"><span class="data_num">{{orderCount}}</span> 新增订单</div></el-col>
-                <el-col :span="4"><div class="data_list"><span class="data_num">{{adminCount}}</span> 新增管理员</div></el-col>
+                <el-col :span="4"><div class="data_list"><span class="data_num">{{cardCount}}</span> 新增管理员</div></el-col>
       </el-row>
             <el-row :gutter="20">
                 <el-col :span="4"><div class="data_list all_head"><span class="data_num head">总数据：</span></div></el-col>
                 <el-col :span="4"><div class="data_list"><span class="data_num">{{allUserCount}}</span> 注册用户</div></el-col>
                 <el-col :span="4"><div class="data_list"><span class="data_num">{{allOrderCount}}</span> 订单</div></el-col>
-                <el-col :span="4"><div class="data_list"><span class="data_num">{{allAdminCount}}</span> 管理员</div></el-col>
+                <el-col :span="4"><div class="data_list"><span class="data_num">{{allCardCount}}</span> 管理员</div></el-col>
             </el-row>
     </section>
     <tendency :sevenDate='sevenDate' :sevenDay='sevenDay'></tendency>
@@ -23,7 +23,7 @@
   import headTop from '@/components/headTop'
   import tendency from '@/components/tendency'
   import dtime from 'time-formater'
-  import {userCount, orderCount, getUserCount, getOrderCount, adminDayCount, adminCount} from '@/api/getData'
+  import {selectedDaysCount, todayCount, totalCount} from '@/api/getData'
   var Promise = require('es6-promise').Promise
 
 export default {
@@ -31,10 +31,10 @@ export default {
       return {
         userCount: null,
         orderCount: null,
-        adminCount: null,
+        cardCount: null,
         allUserCount: null,
         allOrderCount: null,
-        allAdminCount: null,
+        allCardCount: null,
         sevenDay: [],
         sevenDate: [[], [], []]
       }
@@ -56,33 +56,28 @@ export default {
   },
     methods: {
       async initData () {
-        const today = dtime().format('YYYY-MM-DD')
-        Promise.all([userCount(today), orderCount(today), adminDayCount(today), getUserCount(), getOrderCount(), adminCount()])
+        //const today = dtime().format('YYYY-MM-DD')
+        Promise.all([todayCount(), totalCount()])
           .then(res => {
-            this.userCount = res[0].count
-            this.orderCount = res[1].count
-            this.adminCount = res[2].count
-            this.allUserCount = res[3].count
-            this.allOrderCount = res[4].count
-            this.allAdminCount = res[5].count
+            this.userCount = res[0].new_customers_count
+            this.orderCount = res[0].new_orders_count
+            this.cardCount = res[0].new_cards_count
+            this.allUserCount = res[1].new_customers_count
+            this.allOrderCount = res[1].new_orders_count
+            this.allCardCount = res[1].new_cards_count
           }).catch(err => {
             console.log(err)
           })
       },
       async getSevenData () {
-        const apiArr = [[], [], []]
-        this.sevenDay.forEach(item => {
-          apiArr[0].push(userCount(item))
-          apiArr[1].push(orderCount(item))
-          apiArr[2].push(adminDayCount(item))
-        })
-        const promiseArr = [...apiArr[0], ...apiArr[1], ...apiArr[2]]
-        Promise.all(promiseArr).then(res => {
+
+        selectedDaysCount( {days:this.sevenDay} ).then(res => {
           const resArr = [[], [], []]
-          res.forEach((item, index) => {
-            if (item.status == 1) {
-              resArr[Math.floor(index / 7)].push(item.count)
-            }
+          res.sale_days.forEach((item, index) => {
+            resArr[0].push( item.new_customers_count )
+            resArr[1].push( item.new_orders_count )
+            resArr[2].push( item.new_cards_count )
+
           })
           this.sevenDate = resArr
         }).catch(err => {

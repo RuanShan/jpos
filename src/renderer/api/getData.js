@@ -19,6 +19,29 @@ export const signout = () => fetch('/admin/singout')
 export const getUserInfo = () => fetch('/users/info', {}, 'GET');
 
 /**
+ * 某一天 statis
+ */
+
+export const selectedDayCount = () => fetch('/api/v1/sale_days/selected_day')
+
+/**
+ * 某一天 statis
+ */
+
+export const selectedDaysCount = (data) => fetch('/api/v1/sale_days/selected_days', data, 'PUT' )
+/**
+ * 某一天 statis
+ */
+
+export const todayCount = () => fetch('/api/v1/sale_days/today')
+
+/**
+ * Life statis
+ */
+
+export const totalCount = () => fetch('/api/v1/sale_days/total')
+
+/**
  * api请求量
  */
 
