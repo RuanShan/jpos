@@ -216,6 +216,12 @@ export const updateFood = data => fetch('/shopping/v2/updatefood', data, 'POST')
 export const deleteFood = food_id => fetch('/shopping/v2/food/' + food_id, {}, 'DELETE')
 
 /**
+ * 获取Customer信息
+ */
+
+export const getCustomerList = user_id => fetch('/api/v1/customers');
+
+/**
  * 获取用户列表
  */
 
@@ -232,7 +238,7 @@ export const getUserCount = data => fetch('/v1/users/count', data)
  */
 
 export const getOrderList = data => fetch('/api/v1/pos_orders', data)
-//export const getOrderList = data => fetch('/bos/orders', data)
+
 
 /**
  * 根据订单状态统计数量
@@ -256,6 +262,7 @@ export const getOrder = orderNumber => fetch('/api/v1/orders/'+orderNumber)
  */
 
 export const findOrderByGroupNumber = groupNumber => fetch('/api/v1/pos_orders/find_by_group_number/'+groupNumber)
+
 
 /**
  * 获取用户信息
@@ -290,6 +297,12 @@ export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/'+or
  */
 
 export const evolvePosOrders = ( data ) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
+
+/**
+ * 获取Item列表
+ */
+
+export const getLineItemGroupList = data => fetch('/api/v1/line_item_groups', data)
 
 /**
  * POS订单下一步

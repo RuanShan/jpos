@@ -10,7 +10,7 @@ const root = r => require.ensure([], () => r(require('@/page/manage')), 'manage'
 const home = r => require.ensure([], () => r(require('@/page/home')), 'home')
 const addShop = r => require.ensure([], () => r(require('@/page/addShop')), 'addShop')
 const addGoods = r => require.ensure([], () => r(require('@/page/addGoods')), 'addGoods')
-const userList = r => require.ensure([], () => r(require('@/page/userList')), 'userList')
+const customerList = r => require.ensure([], () => r(require('@/page/customerList')), 'customerList')
 const shopList = r => require.ensure([], () => r(require('@/page/shopList')), 'shopList')
 const menuList = r => require.ensure([], () => r(require('@/page/menuList')), 'menuList')
 const foodList = r => require.ensure([], () => r(require('@/page/foodList')), 'foodList')
@@ -48,8 +48,8 @@ const orderFlow = r => require.ensure([], () => r(require('@/page/orderFlow')), 
 //       component: addGoods,
 //       meta: ['添加数据', '添加商品']
 //     }, {
-//       path: '/userList',
-//       component: userList,
+//       path: '/customerList',
+//       component: customerList,
 //       meta: ['数据管理', '用户列表']
 //     }, {
 //       path: '/shopList',
@@ -132,13 +132,31 @@ let routes = [
         name: 'Dashboard',
         meta: {  iconClass: 'el-icon-news' },
       }, {
+        path: '/orders',
+        component: Abstract,
+        name: '订单',
+        meta: {  iconClass: 'el-icon-goods' },
+        children: [
+          {
+           path: 'orderList',
+           component: orderList,
+           name: '订单列表',
+           meta: { breadcrumbs: ['订单', '订单列表'] }
+         }, {
+           path: 'orderFlow',
+           component: orderFlow,
+           name: '订单处理',
+           meta: { breadcrumbs: ['订单', '订单处理'] }
+         }
+        ]
+      }, {
         path: '/base',
         component: Abstract,
         name: '数据管理',
         meta: {  iconClass: 'el-icon-tickets' },
         children:[{
-            path: 'userList',
-            component: userList,
+            path: 'customerList',
+            component: customerList,
             name: '用户列表',
             meta: { breadcrumbs: ['数据管理', '用户列表'] }
           }, {
@@ -162,24 +180,6 @@ let routes = [
             name: '管理员列表',
             meta: { breadcrumbs: ['数据管理', '管理员列表'] }
           }
-        ]
-      }, {
-        path: '/orders',
-        component: Abstract,
-        name: '订单',
-        meta: {  iconClass: 'el-icon-goods' },
-        children: [
-          {
-           path: 'orderList',
-           component: orderList,
-           name: '订单列表',
-           meta: { breadcrumbs: ['订单', '订单列表'] }
-         }, {
-           path: 'orderFlow',
-           component: orderFlow,
-           name: '订单处理',
-           meta: { breadcrumbs: ['订单', '订单处理'] }
-         }
         ]
       }, {
         path: '/edit',

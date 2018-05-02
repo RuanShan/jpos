@@ -114,7 +114,8 @@
 -->
 <div class="order-flow-container fillcontain">
   <scan-product :order-state="currentOrderState" :dialog-visible.sync="scanShipmentDialogVisible" @order-state-changed="orderStateChanged"> </scan-product>
-  <process-order :order-state="currentOrderState" :dialog-visible.sync="processOrderDialogVisible" @order-state-changed="orderStateChanged" @myLog="myLog"> </process-order>
+  <process-order :order-state="currentOrderState" :dialog-visible.sync="processOrderDialogVisible" @order-state-changed="orderStateChanged" > </process-order>
+  <process-item :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged" > </process-item>
 
   <div class="table_container ">
     <div class="steps clear">
@@ -123,7 +124,9 @@
         <div class="step">
           <div class="linex offset-l50" style=""> </div>
           <div class="title"> new orders  <div  class="badge"> <sup> {{orderCount.pending}} </sup> </div>
-            <div> <el-button @click="processOrders('pending')">处理</el-button>
+            <div>
+              <el-button @click="processItems('pending')">Item</el-button>
+              <el-button @click="processOrders('pending')">处理</el-button>
               <el-button @click="handleScanOrders('pending')">Scan</el-button>
             </div>
           </div>
@@ -133,7 +136,9 @@
         <div class="step">
           <div class="linex "> </div>
           <div class="title"> ready for factory  <div  class="badge"> <sup> {{orderCount.ready_for_factory}} </sup> </div>
-            <div> <el-button @click="processOrders('ready_for_factory')">处理</el-button>
+            <div>
+              <el-button @click="processItems('ready_for_factory')">Item</el-button>
+              <el-button @click="processOrders('ready_for_factory')">处理</el-button>
               <el-button @click="handleScanOrders('ready_for_factory')">Scan</el-button>
             </div>
           </div>
@@ -141,7 +146,9 @@
         <div class="step" style="float:right;">
           <div class="linex offset-l50" style=""> </div>
           <div class="title"> ready  <div  class="badge"> <sup> {{orderCount.ready}} </sup> </div>
-            <div> <el-button @click="processOrders('ready')">处理</el-button>
+            <div>
+              <el-button @click="processItems('ready')">Item</el-button>
+              <el-button @click="processOrders('ready')">处理</el-button>
               <el-button @click="handleScanOrders('ready')">Scan</el-button>
             </div>
           </div>
@@ -158,7 +165,9 @@
           <div class="linex offset-r50"> </div>
           <div class="liney offset-t50" > </div>
           <div class="title"> processing  <div  class="badge"> <sup> {{orderCount.processing}} </sup> </div>
-            <div> <el-button @click="processOrders('processing')">处理</el-button>
+            <div>
+              <el-button @click="processItems('processing')">Item</el-button>
+              <el-button @click="processOrders('processing')">处理</el-button>
               <el-button @click="handleScanOrders('processing')">Scan</el-button>
             </div>
           </div>
@@ -166,7 +175,10 @@
         <div class="step" style="width:100%;">
           <div class="linex offset-r50"> </div>
           <div class="title"> ready_for_store  <div  class="badge"> <sup> {{orderCount.ready_for_store}} </sup> </div>
-            <div> <el-button @click="processOrders('ready_for_store')">处理</el-button> </div>
+            <div>
+              <el-button @click="processItems('ready_for_store')">Item</el-button>
+              <el-button @click="processOrders('ready_for_store')">处理</el-button>
+            </div>
           </div>
         </div>
 
@@ -183,6 +195,7 @@
 
 import headTop from '@/components/headTop'
 import processOrder from '@/components/processOrder'
+import processItem from '@/components/processItem'
 import scanProduct from '@/components/scanProduct'
 import {
     getOrderList, getPosOrderCounts
@@ -196,7 +209,8 @@ from '@/components/userDataMixin'
 export default {
     data() {
             return {
-                processOrderDialogVisible: false,
+              processOrderDialogVisible: false,
+              processItemDialogVisible: false,
                 scanShipmentDialogVisible: false,
                 tableData: [],
                 currentRow: null,
@@ -242,6 +256,7 @@ export default {
         components: {
             headTop,
             processOrder,
+            processItem,
             scanProduct
         },
         mixins: [userDataMixin],
@@ -260,9 +275,6 @@ export default {
                 const orderCounstResult  = await getPosOrderCounts( )
                 Object.assign( this.orderCount, orderCounstResult )
             },
-            myLog( msg ){
-                alert("yes, got myLog"+msg)
-            },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`)
             },
@@ -270,6 +282,11 @@ export default {
                 this.currentPage = val
                 this.offset = (val - 1) * this.limit
                 this.getOrders()
+            },
+            processItems( orderState ) {
+                this.processItemDialogVisible=true
+                this.currentOrderState = orderState
+                console.log('processItems')
             },
             processOrders( orderState ) {
                 this.processOrderDialogVisible=true

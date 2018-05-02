@@ -1,0 +1,350 @@
+<style lang="scss">
+
+@import '../style/mixin';
+.item-process-container {
+    position: relative;
+    .item-list {
+        position: absolute;
+        top: 80px;
+        bottom: 0;
+        left: 0;
+        width: 30%;
+        padding: 16px;
+        border: 1px #efefef solid;
+    }
+    .item-detail {
+        position: absolute;
+        width: 70%;
+        top: 80px;
+        bottom: 0;
+        right: 0;
+        padding: 16px;
+        border: 1px #efefef solid;
+        .group-container{
+          border-bottom: 1px solid #ebeef5;
+        }
+        .actions {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            text-align: right;
+        }
+    }
+    table.bordered {
+        width: 100%;
+        td {
+            vertical-align: top;
+            border-bottom: 1px solid #ebeef5;
+        }
+        tr:hover{
+          background-color: #f5f7fa;
+        }
+    }
+    .pagination {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+    }
+}
+
+.demo-table-expand {
+    font-size: 0;
+}
+
+.demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+}
+
+.demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+}
+
+.filters {
+    margin: 0 0 20px 0;
+    border: 1px #efefef solid;
+    padding: 10px;
+    background: #f9f9f9;
+    .filter {
+        display: inline-block;
+        width: auto;
+        padding: 10px;
+        border-radius: 5px;
+        .el-select {
+            display: inline-block;
+        }
+    }
+    .el-input {
+        width: 150px;
+        display: inline-block;
+    }
+}
+
+</style>
+
+<template>
+
+<el-dialog title="提示" :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen">
+
+    <div class="item-process-container fillcontain clear">
+        <!-- filters start -->
+        <div class="filters">
+            <div class="filter">
+                关键字:
+                <el-input label="Keyword" placeholder="请输入Item号" v-model="filters.keyword"></el-input>
+            </div>
+            <div class="filter">
+                状态:
+                <el-select v-model="filters.groupState" placeholder="All">
+                    <el-option v-for="item in itemStateOptions" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
+            <el-button type="primary" @click="handleSearch()">搜索</el-button>
+        </div>
+        <!-- filters end -->
+
+        <div class="item-list">
+            <el-table :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
+                <el-table-column label="订单 ID" prop="id">
+                </el-table-column>
+                <el-table-column label="总价格" prop="totalAmount">
+                </el-table-column>
+                <el-table-column label="订单状态" prop="groupState">
+                </el-table-column>
+            </el-table>
+            <div class="pagination" style="text-align: left;margin-top: 10px;">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total,  pager" :total="count">
+                </el-pagination>
+            </div>
+        </div>
+
+        <div class="item-detail">
+            <div class="line-item-groups-container" v-if="currentItem">
+                <table class="bitemed" style="width: 100%">
+                    <tr>
+                        <td> 用户名 </td>
+                        <td> <span>{{ currentItem.userName }}</span></td>
+                    </tr>
+                    <tr>
+                        <td> 店铺名称 </td>
+                        <td> <span>{{ currentItem.storeName }}</span></td>
+                    </tr>
+                </table>
+                  <div v-for="lineItemGroup in currentItem.lineItemGroups" class="group-container">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>GroupNumber</td>
+                            <td> {{lineItemGroup.number}} </td>
+                            <td>State</td>
+                            <td> {{lineItemGroup.state}} </td>
+                        </tr>
+                        <tr>
+                            <td> Services </td>
+                            <td>
+                                <div v-for="lineItem in lineItemGroup.lineItems">
+                                    <span>{{ lineItem.name }}</span>
+                                    <span>{{ lineItem.price }}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Images</td>
+                            <td> line item group images </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="actions">
+                    <el-button @click="ChangeCurrentItemState(false)">DrawBack</el-button>
+                    <el-button @click="ChangeCurrentItemState(true)" type="primary">NextStep</el-button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</el-dialog>
+
+</template>
+
+<script>
+
+import {
+    getLineItemGroupList, getLineItemGroup, evolveLineItemGroups
+}
+from '@/api/getData'
+import {
+    userDataMixin
+}
+from '@/components/userDataMixin'
+import {
+    apiResultMixin
+}
+from '@/components/apiResultMixin'
+
+
+export default {
+    data() {
+            return {
+                itemList: [],
+                currentItem: null,
+                itemDetailList: [],
+                perPage: 2,
+                count: 0,
+                currentPage: 1,
+                storeId: null,
+                filters: {
+                    keyword: '',
+                    startEndTime: null,
+                    groupState: '',
+                    storeId: 0
+                },
+                multipleSelection: [],
+                itemStateOptions: [{
+                    value: 'pending',
+                    label: '新订单'
+                }, {
+                    value: 'ready_for_factory',
+                    label: '准备发工厂'
+                }, {
+                    value: 'processing',
+                    label: 'processing'
+                }, {
+                    value: 'ready_for_store',
+                    label: 'ready_for_store'
+                }, {
+                    value: 'ready',
+                    label: '待交付'
+                }]
+
+            }
+        },
+        mixins: [userDataMixin, apiResultMixin],
+        props: ['dialogVisible', 'orderState', 'itemCounts'],
+        created() {
+            console.log('processItem created')
+
+        },
+        computed: {
+            computedVisible: function() {
+                return this.dialogVisible
+            },
+        },
+        methods: {
+            async initData() {
+                    this.getLineItemGroups()
+            },
+            ChangeItemStates(forward = true) {
+                let itemNumbers = this.multipleSelection.map((item) => item.number)
+                if (itemNumbers.length == 0) {
+                    this.$message({
+                        message: '警告哦，Please select a item at least',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                this.MoveItemToNextState( itemNumbers,forward )
+            },
+            ChangeCurrentItemState(forward = true) {
+                if (this.currentItem == null) {
+                    this.$message({
+                        message: '警告哦，Please select a item at least',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                let itemNumbers = [ this.currentItem.number ]
+
+                this.MoveItemToNextState( itemNumbers,forward )
+            },
+
+            async MoveItemToNextState( itemNumbers = [], forward = true) {
+                let queryParams = {
+                    item_numbers: itemNumbers,
+                    forward
+                }
+                console.log('ChangeItemStates', queryParams)
+                const posItemsReturn = await evolveLineItemGroups(queryParams)
+                if (posItemsReturn.count > 0) {
+                    this.getLineItemGroups()
+                    this.$emit('item-state-changed')
+                }
+            },
+
+            handleSelectionChange(val) {
+                this.multipleSelection = val
+            },
+            handleDialogClose(done) {
+
+                this.$emit('update:dialogVisible', false)
+                done();
+
+            },
+            handleDialogOpen(){
+              this.itemDetailList = []
+              this.filters.groupState = this.orderState
+              this.initData()
+              console.log('handleDialogOpen yeah')
+            },
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`)
+            },
+
+            handleCurrentPageChange(val) {
+                this.currentPage = val
+                this.offset = (val - 1) * this.limit
+                this.getLineItemGroups()
+            },
+            async getLineItemGroups() {
+                let queryParams = {
+                    page: this.currentPage,
+                    per_page: this.perPage,
+                }
+
+                if (this.filters.keyword.length > 0) {
+                    // item.number || item.users.username
+                    queryParams["q[number_cont]"] = this.filters.keyword
+                }
+                console.log("this.filters",this.filters )
+                if (this.filters.groupState.length > 0 ) {
+                    queryParams["q[state_eq]"] = this.filters.groupState
+                }
+
+                console.log("queryParams", queryParams)
+                const itemsResult = await getLineItemGroupList(queryParams)
+                this.count = itemsResult.total_count
+                this.itemList.splice( 0, this.itemList.length, ...this.buildItemsFromApiResult(itemsResult))
+                this.$emit('myLog','async init')
+
+            },
+            async handleCurrentRowChange(row) {
+                if( row ){
+                  const detailIndex = this.itemDetailList.findIndex(function(currentValue) {
+                      return currentValue.number == row.number
+                  })
+                  if (detailIndex < 0) {
+                      //const storeInfo = await getStore(row.store_id)
+                      //const userInfo = await getUserInfo(row.user_id)
+                      const itemResult = await getLineItemGroup(row.number)
+                      const itemDetail = this.buildItemFromApiResult(itemResult)
+                      this.currentItem = itemDetail
+                      this.$nextTick(() => {
+                          this.itemDetailList.push(itemDetail)
+                      })
+                  } else {
+                      this.currentItem = this.itemDetailList[detailIndex];
+                  }
+                  console.log('handleCurrentRowChange', row, this.currentItem)
+
+                }else{
+                  this.currentItem = null
+                }
+            }
+        }
+}
+
+</script>
