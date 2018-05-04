@@ -152,7 +152,7 @@
       <div class="location clear">
         <div class="step step1" >
           <div class="linex offset-l50" style=""> </div>
-          <div class=""> new orders  <div  class="badge"> <sup> {{itemCounts.pending}} </sup> </div>
+          <div class=""> 新订单 <div  class="badge"> <sup> {{itemCounts.pending}} </sup> </div>
             <div>
               <el-button @click="processItems('pending')" size="small">Item</el-button>
               <el-button @click="handleScanOrders('pending')" size="small">Scan</el-button>
@@ -162,7 +162,7 @@
 
         <div class="step transfer1">
           <div class="linex "> </div>
-          <div class="title"> new -&gt; ready for factory  <div  class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
+          <div class="title"> 送货确认 <div  class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
             <div>
               <el-button @click="handleTransferProducts('pending', 'ready_for_factory')" size="small">Transfer</el-button>
             </div>
@@ -172,7 +172,7 @@
 
         <div class="step transfer1" style="top:50%;">
           <div class="linex offset-l50" style=""> </div>
-          <div class="title"> ready &lt;- ready_for_store  <div  class="badge"> <sup> {{itemCounts.ready}} </sup> </div>
+          <div class="title"> 门店验收  <div  class="badge"> <sup> {{itemCounts.ready}} </sup> </div>
             <div>
               <el-button @click="processItems('ready')">Item</el-button>
               <el-button @click="handleScanOrders('ready')">Scan</el-button>
@@ -190,7 +190,7 @@
         <div class="step step2" >
           <div class="linex offset-r50"> </div>
           <div class="liney offset-t50" > </div>
-          <div class="title"> processing  <div  class="badge"> <sup> {{itemCounts.processing}} </sup> </div>
+          <div class="title"> 专业服务  <div  class="badge"> <sup> {{itemCounts.processing}} </sup> </div>
             <div>
               <el-button @click="processItems('processing')">Item</el-button>
               <el-button @click="handleScanOrders('processing')">Scan</el-button>
@@ -199,7 +199,7 @@
         </div>
         <div class="step transfer2" >
           <div class="linex offset-r50"> </div>
-          <div class="title">  ready-for-factory -&gt; processing  <div  class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
+          <div class="title">  收货确认  <div  class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
             <div>
               <el-button @click="processItems('ready_for_store')">Item</el-button>
               <el-button @click="handleScanOrders('ready_for_store')">Scan</el-button>
@@ -209,7 +209,7 @@
 
         <div class="step transfer2" style="top:50%;">
           <div class="linex offset-r50"> </div>
-          <div class="title"> processing -&gt; ready_for_store  <div  class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
+          <div class="title"> 工厂验收  <div  class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
             <div>
               <el-button @click="processItems('ready_for_store')">Item</el-button>
               <el-button @click="handleScanOrders('ready_for_store')">Scan</el-button>
