@@ -109,11 +109,13 @@
 
         <div class="item-list">
             <el-table :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
-                <el-table-column label="订单 ID" prop="id">
+              <el-table-column label="GroupNumber" prop="number">
+              </el-table-column>
+              <el-table-column label="Order" prop="orderId">
+              </el-table-column>
+                <el-table-column label="总价格" prop="cost">
                 </el-table-column>
-                <el-table-column label="总价格" prop="totalAmount">
-                </el-table-column>
-                <el-table-column label="订单状态" prop="groupState">
+                <el-table-column label="订单状态" prop="state">
                 </el-table-column>
             </el-table>
             <div class="pagination" style="text-align: left;margin-top: 10px;">
@@ -134,20 +136,20 @@
                         <td> <span>{{ currentItem.storeName }}</span></td>
                     </tr>
                 </table>
-                  <div v-for="lineItemGroup in currentItem.lineItemGroups" class="group-container">
                     <table style="width: 100%">
                         <tr>
                             <td>GroupNumber</td>
-                            <td> {{lineItemGroup.number}} </td>
+                            <td> {{currentItem.number}} </td>
                             <td>State</td>
-                            <td> {{lineItemGroup.state}} </td>
+                            <td> {{currentItem.state}} </td>
                         </tr>
                         <tr>
                             <td> Services </td>
                             <td>
-                                <div v-for="lineItem in lineItemGroup.lineItems">
+                                <div v-for="lineItem in currentItem.lineItems">
                                     <span>{{ lineItem.name }}</span>
                                     <span>{{ lineItem.price }}</span>
+                                    <span>{{ lineItem.state }}</span>
                                 </div>
                             </td>
                         </tr>
@@ -156,7 +158,6 @@
                             <td> line item group images </td>
                         </tr>
                     </table>
-                </div>
 
                 <div class="actions">
                     <el-button @click="ChangeCurrentItemState(false)">DrawBack</el-button>
@@ -173,7 +174,7 @@
 <script>
 
 import {
-    getLineItemGroupList, getLineItemGroup, evolveLineItemGroups
+    getLineItemGroupList,  evolveLineItemGroups
 }
 from '@/api/getData'
 import {
@@ -258,20 +259,25 @@ export default {
                     return;
                 }
                 let itemNumbers = [ this.currentItem.number ]
-
                 this.MoveItemToNextState( itemNumbers,forward )
             },
 
             async MoveItemToNextState( itemNumbers = [], forward = true) {
                 let queryParams = {
-                    item_numbers: itemNumbers,
+                    numbers: itemNumbers,
                     forward
                 }
                 console.log('ChangeItemStates', queryParams)
                 const posItemsReturn = await evolveLineItemGroups(queryParams)
                 if (posItemsReturn.count > 0) {
+                  let itemCount = this.itemList.length - posItemsReturn.count
+                  if( itemCount <= 0 ){
+                    if( this.currentPage > 0){
+                      this.currentPage -= 1// go previous page
+                    }
+                  }
                     this.getLineItemGroups()
-                    this.$emit('item-state-changed')
+                    this.$emit('order-state-changed')
                 }
             },
 
@@ -309,7 +315,7 @@ export default {
                     // item.number || item.users.username
                     queryParams["q[number_cont]"] = this.filters.keyword
                 }
-                console.log("this.filters",this.filters )
+
                 if (this.filters.groupState.length > 0 ) {
                     queryParams["q[state_eq]"] = this.filters.groupState
                 }
@@ -317,27 +323,12 @@ export default {
                 console.log("queryParams", queryParams)
                 const itemsResult = await getLineItemGroupList(queryParams)
                 this.count = itemsResult.total_count
-                this.itemList.splice( 0, this.itemList.length, ...this.buildItemsFromApiResult(itemsResult))
-                this.$emit('myLog','async init')
+                this.itemList.splice( 0, this.itemList.length, ...this.buildItemGroupsFromApiResult(itemsResult))
 
             },
-            async handleCurrentRowChange(row) {
+            handleCurrentRowChange(row) {
                 if( row ){
-                  const detailIndex = this.itemDetailList.findIndex(function(currentValue) {
-                      return currentValue.number == row.number
-                  })
-                  if (detailIndex < 0) {
-                      //const storeInfo = await getStore(row.store_id)
-                      //const userInfo = await getUserInfo(row.user_id)
-                      const itemResult = await getLineItemGroup(row.number)
-                      const itemDetail = this.buildItemFromApiResult(itemResult)
-                      this.currentItem = itemDetail
-                      this.$nextTick(() => {
-                          this.itemDetailList.push(itemDetail)
-                      })
-                  } else {
-                      this.currentItem = this.itemDetailList[detailIndex];
-                  }
+                  this.currentItem = row
                   console.log('handleCurrentRowChange', row, this.currentItem)
 
                 }else{

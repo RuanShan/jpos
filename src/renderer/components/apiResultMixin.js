@@ -65,6 +65,29 @@ export var apiResultMixin = {
       })
       return orders
     },
+    buildItemGroupsFromApiResult: function( itemGroupsResult ){
+      let itemGroups = []
+      itemGroupsResult.line_item_groups.forEach(function(item, i){
+        let group = {
+          id: item.id,
+          orderId: item.order_id,
+          name: item.name,
+          number: item.number,
+          cost: item.cost,
+          state: item.state,
+          lineItems: []
+        }
+
+        item.line_items.forEach(function(lineItemResult ){
+          const lineItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.variant.name, price: lineItemResult.price }
+          group.lineItems.push( lineItem )
+        })
+
+        itemGroups.push(group)
+      })
+      return itemGroups
+    },
+
     buildUser: function( userResult ){
       const user = { storeId: 0, avatar: 'default.jpg',  apiKey: '' }
       user.storeId = userResult.store_id

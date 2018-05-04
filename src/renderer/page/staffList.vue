@@ -30,7 +30,7 @@
                   @current-change="handleCurrentChange"
                   :current-page="currentPage"
                   :page-size="20"
-                  layout="total, prev, pager, next"
+                  layout="prev, pager, next"
                   :total="count">
                 </el-pagination>
             </div>
@@ -40,7 +40,7 @@
 
 <script>
     import headTop from '@/components/headTop'
-    import {getUserList, getUserCount} from '@/api/getData'
+    import {staffList} from '@/api/getData'
     export default {
       data () {
         return {
@@ -63,7 +63,7 @@
           }],
           currentRow: null,
           offset: 0,
-          limit: 20,
+          perPage: 20,
           count: 0,
           currentPage: 1
         }
@@ -77,12 +77,6 @@
       methods: {
         async initData () {
           try {
-            const countData = await getUserCount()
-            if (countData.status == 1) {
-              this.count = countData.count
-            } else {
-              throw new Error('获取数据失败')
-            }
             this.getUsers()
           } catch (err) {
             console.log('获取数据失败', err)
@@ -93,19 +87,19 @@
         },
         handleCurrentChange (val) {
           this.currentPage = val
-          this.offset = (val - 1) * this.limit
           this.getUsers()
         },
         async getUsers () {
-          const Users = await getUserList({offset: this.offset, limit: this.limit})
+          const response = await staffList({page: this.currentPage, per_page: this.perPage})
           this.tableData = []
-          Users.forEach(item => {
+          response.users.forEach(item => {
             const tableData = {}
             tableData.username = item.username
-            tableData.registe_time = item.registe_time
-            tableData.city = item.city
+            tableData.display_created_at = item.display_created_at
+            tableData.mobile = item.mobile
             this.tableData.push(tableData)
           })
+          this.count = response.count
         }
       }
     }

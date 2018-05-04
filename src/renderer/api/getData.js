@@ -80,6 +80,7 @@ export const adminDayCount = date => fetch('/statis/admin/' + date + '/count')
  * 管理员列表
  */
 
+export const staffList = data => fetch('/api/v1/staffs', data)
 export const adminList = data => fetch('/admin/all', data)
 
 /**
@@ -168,8 +169,10 @@ export const updateResturant = data => fetch('/shopping/updateshop', data, 'POST
 export const deleteResturant = storeId => fetch('/shopping/restaurant/' + storeId, {}, 'DELETE')
 
 /**
- * 获取食品列表
+ * 获取selling_services列表
  */
+export const getProducts = data => fetch('/api/v1/selling_services', data)
+export const getCards = data => fetch('/api/v1/selling_cards', data)
 
 export const getFoods = data => fetch('/shopping/v2/foods', data)
 
@@ -303,6 +306,17 @@ export const evolvePosOrders = ( data ) => fetch('/api/v1/pos_orders/all_step', 
  */
 
 export const getLineItemGroupList = data => fetch('/api/v1/line_item_groups', data)
+
+/**
+ * search Item列表
+ */
+
+export const findLineItemGroups = data => fetch('/api/v1/line_item_groups/search', data, 'POST')
+
+/**
+ * 根据Item状态统计数量
+ */
+export const getLineItemGroupCounts = () => fetch('/api/v1/line_item_groups/counts')
 
 /**
  * POS订单下一步

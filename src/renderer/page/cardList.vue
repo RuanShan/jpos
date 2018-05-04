@@ -160,7 +160,7 @@
 <script>
     import headTop from '@/components/headTop'
     import {baseUrl, baseImgPath} from '@/config/env'
-    import {getFoods, getFoodsCount, getMenu, updateFood, deleteFood, getStore, getMenuById} from '@/api/getData'
+    import {getCards, getMenu, updateFood, deleteFood, getStore, getMenuById} from '@/api/getData'
     export default {
       data () {
         return {
@@ -168,8 +168,7 @@
           baseImgPath,
           restaurant_id: null,
           city: {},
-          offset: 0,
-          limit: 20,
+          perPage: 20,
           count: 0,
           tableData: [],
           currentPage: 1,
@@ -217,13 +216,7 @@
       methods: {
         async initData () {
           try {
-            const countData = await getFoodsCount({restaurant_id: this.restaurant_id})
-            if (countData.status == 1) {
-              this.count = countData.count
-            } else {
-              throw new Error('获取数据失败')
-            }
-            this.getFoods()
+            this.getCards()
           } catch (err) {
             console.log('获取数据失败', err)
           }
@@ -243,10 +236,12 @@
             console.log('获取食品种类失败', err)
           }
         },
-        async getFoods () {
-          const Foods = await getFoods({offset: this.offset, limit: this.limit, restaurant_id: this.restaurant_id})
+        async getCards () {
+          const productsResult = await getCards({page: this.currentPage, per_page: this.perPage})
+console.log( "productsResult=", productsResult )
+          this.count = productsResult.total_count
           this.tableData = []
-          Foods.forEach((item, index) => {
+          productsResult.products.forEach((item, index) => {
             const tableData = {}
             tableData.name = item.name
             tableData.item_id = item.item_id
@@ -284,8 +279,7 @@
         },
         handleCurrentChange (val) {
           this.currentPage = val
-          this.offset = (val - 1) * this.limit
-          this.getFoods()
+          this.getCards()
         },
         expand (row, status) {
           if (status) {
@@ -367,7 +361,7 @@
                 type: 'success',
                 message: '更新食品信息成功'
               })
-              this.getFoods()
+              this.getCards()
             } else {
               this.$message({
                 type: 'error',

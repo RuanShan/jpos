@@ -13,8 +13,9 @@ const addGoods = r => require.ensure([], () => r(require('@/page/addGoods')), 'a
 const customerList = r => require.ensure([], () => r(require('@/page/customerList')), 'customerList')
 const shopList = r => require.ensure([], () => r(require('@/page/shopList')), 'shopList')
 const menuList = r => require.ensure([], () => r(require('@/page/menuList')), 'menuList')
-const foodList = r => require.ensure([], () => r(require('@/page/foodList')), 'foodList')
-const adminList = r => require.ensure([], () => r(require('@/page/adminList')), 'adminList')
+const productList = r => require.ensure([], () => r(require('@/page/productList')), 'productList')
+const cardList = r => require.ensure([], () => r(require('@/page/cardList')), 'cardList')
+const staffList = r => require.ensure([], () => r(require('@/page/staffList')), 'staffList')
 const visitor = r => require.ensure([], () => r(require('@/page/visitor')), 'visitor')
 const newMember = r => require.ensure([], () => r(require('@/page/newMember')), 'newMember')
 const uploadImg = r => require.ensure([], () => r(require('@/page/uploadImg')), 'uploadImg')
@@ -25,6 +26,7 @@ const explain = r => require.ensure([], () => r(require('@/page/explain')), 'exp
 
 const orderList = r => require.ensure([], () => r(require('@/page/orderList')), 'orderList')
 const orderFlow = r => require.ensure([], () => r(require('@/page/orderFlow')), 'orderFlow')
+const itemFlow = r => require.ensure([], () => r(require('@/page/itemFlow')), 'itemFlow')
 
 // const routesX = [
 //   {
@@ -60,16 +62,16 @@ const orderFlow = r => require.ensure([], () => r(require('@/page/orderFlow')), 
 //       component: menuList,
 //       meta: ['数据管理', '菜单列表']
 //     }, {
-//       path: '/foodList',
-//       component: foodList,
+//       path: '/productList',
+//       component: productList,
 //       meta: ['数据管理', '食品列表']
 //     }, {
 //       path: '/orderList',
 //       component: orderList,
 //       meta: ['数据管理', '订单列表']
 //     }, {
-//       path: '/adminList',
-//       component: adminList,
+//       path: '/staffList',
+//       component: staffList,
 //       meta: ['数据管理', '管理员列表']
 //     }, {
 //       path: '/visitor',
@@ -147,6 +149,11 @@ let routes = [
            component: orderFlow,
            name: '订单处理',
            meta: { breadcrumbs: ['订单', '订单处理'] }
+         }, {
+           path: 'ItemFlow',
+           component: itemFlow,
+           name: 'Item处理',
+           meta: { breadcrumbs: ['订单', 'Item处理'] }
          }
         ]
       }, {
@@ -157,8 +164,8 @@ let routes = [
         children:[{
             path: 'customerList',
             component: customerList,
-            name: '用户列表',
-            meta: { breadcrumbs: ['数据管理', '用户列表'] }
+            name: 'customer列表',
+            meta: { breadcrumbs: ['数据管理', 'customer列表'] }
           }, {
             path: 'shopList',
             component: shopList,
@@ -170,15 +177,20 @@ let routes = [
             name: '菜单列表',
             meta: { breadcrumbs: ['数据管理', '菜单列表'] }
           }, {
-            path: '/foodList',
-            component: foodList,
-            name: '食品列表',
-            meta: { breadcrumbs: ['数据管理', '食品列表'] }
+            path: '/productList',
+            component: productList,
+            name: 'product列表',
+            meta: { breadcrumbs: ['数据管理', 'product列表'] }
           }, {
-            path: '/adminList',
-            component: adminList,
-            name: '管理员列表',
-            meta: { breadcrumbs: ['数据管理', '管理员列表'] }
+            path: '/cardList',
+            component: cardList,
+            name: 'card列表',
+            meta: { breadcrumbs: ['数据管理', 'card列表'] }
+          }, {
+            path: '/staffList',
+            component: staffList,
+            name: 'staff列表',
+            meta: { breadcrumbs: ['数据管理', 'staff列表'] }
           }
         ]
       }, {
