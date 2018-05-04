@@ -21,10 +21,11 @@
         }
     }
     .el-transfer{
-      width: 80%;
+      width: 80%;height: 100%;
       margin: 0 auto;
       .el-transfer-panel{
         width: 40%;
+        height: 100%;
       }
     }
     .pagination {
@@ -96,13 +97,7 @@
 
         <div class="order-list">
             <el-transfer v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name'}" @change="handleTransferItems"></el-transfer>
-
-            <div class="actions" v-if="orderState=='pending'">
-                <el-button @click="ChangeCurrentGroupState(true)" type="primary">Receive</el-button>
-            </div>
-
         </div>
-
 
     </div>
 </el-dialog>
