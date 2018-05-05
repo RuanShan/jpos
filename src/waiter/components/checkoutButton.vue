@@ -1,6 +1,6 @@
 <template>
   <div class="checkout-container">
-    <div class="check-button" @click="dialogVisible = true"> this is checkout button </div>
+    <div class="check-button" @click="openTheWindow()"> 收款 ：&nbsp;￥&nbsp;{{totalMoney}} </div>
     <el-dialog :visible.sync="dialogVisible" :show-close=false :fullscreen=true>
       <div slot="title" class="dialog-title">提示, this is all right
       </div>
@@ -161,8 +161,23 @@ export default {
       temp = this.inputSum - this.totalMoney; //
       this.giveChange = temp.toFixed(2);
     },
+    //按键C处理函数
     pressKeyC(){
       this.giveChange = "";
+    },
+    //打开窗口处理函数
+    openTheWindow(){
+      if (this.totalMoney == "") {
+        // 这个条件应该是根据后台返回的数据判断
+        this.$message({
+          message: "还没有商品哦，请添加后在结账",
+          type: "warning"
+        });
+        return;
+      }
+      else{
+        this.dialogVisible = true;
+      }
     }
   },
   watch: {
