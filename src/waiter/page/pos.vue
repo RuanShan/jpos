@@ -9,17 +9,17 @@
         <span class="sr-only">Loading...</span>
       </div>
       <el-row class="pos-content">
-        <el-col :span="7" class="pos-order" id="orderList">
+        <el-col :span="9" class="pos-order" id="orderList">
           <el-tabs>
             <el-tab-pane label="点餐">
-              <el-table :data="orderList" style="width:100%;">
+              <el-table :data="orderList" border stripe style="width:100%;">
                 <el-table-column prop="name" label="商品名"></el-table-column>
+                <el-table-column prop="variantName" label="明细"></el-table-column>
                 <el-table-column prop="count" label="数量" width="70"></el-table-column>
                 <el-table-column prop="price" label="金额" width="70"></el-table-column>
                 <el-table-column label="操作" width="100" fixed="right">
                   <template slot-scope="scope">
-                    <el-button type="text" size="mini" @click="delSingleGoods(scope.row)">删除</el-button>
-                    <el-button type="text" size="mini" @click="addOrderList(scope.row)">增加</el-button>
+                    <el-button type="danger" size="mini" @click="delSingleGoods(scope.row)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -32,14 +32,13 @@
                   <i>元</i>
                 </div>
                 <div class="btn-group">
-                  <el-button type="success" size="mini" @click="checkout">结账</el-button>
-                  <el-button type="warning" size="mini">挂单</el-button>
+                  <!-- <el-button type="success" size="mini" @click="checkout">结账</el-button>
+                  <el-button type="warning" size="mini">挂单</el-button> -->
                   <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
                 </div>
                 <!-- <customerButton>  </customerButton> -->
                 <MemberKeyWord></MemberKeyWord>
-                <checkoutButton :order-list="orderList" :totalMoney="totalMoney"> </checkoutButton>
-
+                <checkou-button :order-list="orderList" :totalMoney="totalMoney"> </checkou-button>
               </div>
             </el-tab-pane>
             <!-- <el-tab-pane label="挂单">挂单</el-tab-pane>
@@ -48,43 +47,51 @@
           <el-tab-pane label="卖萌">卖萌</el-tab-pane> -->
           </el-tabs>
         </el-col>
-        <el-col :span="17">
+        <el-col :span="15">
           <div class="hot-goods">
             <div class="title">
               热销商品
             </div>
-            <div>
+            <!-- <div>
               <el-row class="hot-list">
-                <el-col class="hot-item" :span="4" v-for="goods in hotGoods" :key="goods.id" @click.native="addOrderList(goods)">
+                <el-col class="hot-item" :span="12" v-for="goods in hotGoods" :key="goods.id" @click.native="addOrderList(goods)">
                   <div class="grid-content bg-purple">
                     <span>{{goods.name}}</span>
-                    <span class="price">￥{{goods.price}}元</span>
+                    <span class="price">￥{{goods.price}}恭喜发财元</span>
                   </div>
                 </el-col>
               </el-row>
-            </div>
+            </div> -->
           </div>
           <div class="goods-type">
             <el-tabs>
-
               <el-tab-pane v-for="menu in menuList" :key="menu.id" v-bind:label="menu.name">
                 <div>
                   <el-row class="cook-list">
-                    <el-col class="cook-item" :span="4" v-for="goods in getTaxonProducts(menu.id)" :key="goods.id" @click.native="addOrderList(goods)">
+                    <el-col class="cook-item" :span="24" v-for="goods in getTaxonProducts(menu.id)" :key="goods.id" @click.native="openClassify(goods)">
                       <div class="food-wrapper">
                         <div class="food-img">
                           <img :src="getProductImageUrl(goods)" width="100%" />
                         </div>
                         <div class="good-info">
                           <span class="food-name">{{goods.name}}</span>
-                          <span class="food-price">￥&nbsp;{{goods.price}}&nbsp;元</span>
+                          <!-- <span class="food-price">￥&nbsp;{{goods.price}}&nbsp; 元</span> -->
                         </div>
                       </div>
+                      <el-row>
+                        <el-col :span="6" v-for="(variants,index) in goods.variants" :key="index">
+                          <div>
+                            <el-button type="primary" plain @click="addOrderList(goods,index)">
+                              <span >{{variants.name}}</span>
+                              <el-tag type="danger">{{variants.price}}</el-tag>
+                            </el-button>
+                          </div>
+                        </el-col>
+                      </el-row>
                     </el-col>
                   </el-row>
                 </div>
               </el-tab-pane>
-
             </el-tabs>
           </div>
         </el-col>
@@ -112,7 +119,7 @@ export default {
     return {
       geohash: "", //geohash位置信息
       storeId: null, //商店id值
-      storeName: "",  //店铺名称
+      storeName: "", //店铺名称
       showLoading: true, //显示加载动画
       shopDetailData: null, //商铺详情
       menuList: [], //食品列表
@@ -128,14 +135,17 @@ export default {
       drinks: [],
       packages: [],
       totalMoney: 0, //合计
-      totalCount: 0
+      totalCount: 0,
+      openClassVisible: false, //分类试图可见开关
+      variants: [], //分类数组
+      testData: {}
     };
   },
   components: {
     loading,
     leftNav,
     headTop,
-    checkoutButton,
+    "checkou-button": checkoutButton, //收款按钮组件
     customerButton,
     MemberKeyWord
   },
@@ -173,7 +183,7 @@ export default {
         this.latitude,
         this.longitude
       );
-      //获取商铺食品列表
+      //获取商铺食品列表 //获取商铺食品列表
       let taxonsData = await foodMenu(1);
 
       if (taxonsData) {
@@ -181,6 +191,7 @@ export default {
       }
 
       let productsData = await getProducts();
+      this.testData = productsData; //测试使用
       console.log(this.shopDetailData, taxonsData, productsData);
 
       if (productsData) {
@@ -200,28 +211,43 @@ export default {
         ? baseImgPath + image.product_url
         : baseImgPath + "/img/noimage/product.jpg";
     },
-    addOrderList(goods) {
+    addOrderList(goods, index) {
       // 增加商品
       this.totalMoney = 0;
       this.totalCount = 0;
       // 根据判断的值编写业务逻辑
-
       let newGoods = {
         id: goods.id,
         product_id: goods.id,
-        variant_id: goods.master.id,
+        variant_id: goods.variants[index].id,
         name: goods.name,
-        price: Number(goods.price),
+        variantName:goods.variants[index].options_text,
+        price: Number(goods.variants[index].price),
         count: 1
       };
       this.orderList.push(newGoods);
-
       this.getSum();
     },
+    //求和
+    getSum() {
+      // 汇总数量和金额
+      let temp = 0;
+      this.totalCount = 0;
+      this.totalMoney = 0;
+      if (this.orderList) {
+        this.orderList.forEach((el, i) => {
+          this.totalCount += el.count;
+          temp += el.count * el.price;
+        });
+      }
+      console.log(temp);
+      this.totalMoney = temp.toFixed(2);
+    },
+
     delSingleGoods(goods) {
       // 删除当个商品
       this.orderList = this.orderList.filter(o => {
-        return o.id !== goods.id;
+        return o.variant_id !== goods.variant_id;
       });
       this.getSum();
       this.$message({
@@ -229,6 +255,7 @@ export default {
         type: "success"
       });
     },
+
     clearAllGoods() {
       if (!this.totalCount) {
         // 这个条件应该是根据后台返回的数据判断
@@ -247,6 +274,7 @@ export default {
         type: "warning"
       });
     },
+
     checkout() {
       // 模拟结账
       if (!this.totalCount) {
@@ -265,20 +293,11 @@ export default {
       this.totalCount = 0;
       this.totalMoney = 0;
     },
-    getSum() {
-      // 汇总数量和金额
-      let temp = 0;
-      this.totalCount = 0;
-      this.totalMoney = 0;
-      if (this.orderList) {
-        this.orderList.forEach((el, i) => {
-          this.totalCount += el.count;
-          temp += el.count * el.price;
-        });
-      }
-      console.log(temp);
-      
-      this.totalMoney = temp.toFixed(2);
+
+    openClassify(goods) {
+      this.openClassVisible = true;
+      this.variants = goods.variants;
+      this.testData = goods;
     }
   },
   watch: {
