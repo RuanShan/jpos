@@ -231,6 +231,12 @@ export const getCustomerList = user_id => fetch('/api/v1/customers');
 export const getUserList = data => fetch('/v1/users/list', data)
 
 /**
+ * 获取用户列表
+ */
+
+export const findUsers = data => fetch('/api/v1/users/search', data, 'POST')
+
+/**
  * 获取用户数量
  */
 
@@ -339,3 +345,11 @@ export const evolveLineItemGroups = ( data ) => fetch('/api/v1/line_item_groups/
  */
 
 export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/'+number)
+
+/**
+ * update LineItem worker_id列表
+ * data: worker_id,
+ *       ids - line_item.id
+ */
+
+export const fulfillLineItems = data => fetch('/api/v1/line_items/fulfill', data, 'PUT')

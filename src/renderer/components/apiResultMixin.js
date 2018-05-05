@@ -79,7 +79,9 @@ export var apiResultMixin = {
         }
 
         item.line_items.forEach(function(lineItemResult ){
-          const lineItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.variant.name, price: lineItemResult.price }
+          const lineItem = { group: group, id: lineItemResult.id,
+            groupNumber: lineItemResult.group_number, worker_id: lineItemResult.worker_id,
+            name: lineItemResult.variant.name, price: lineItemResult.price }
           group.lineItems.push( lineItem )
         })
 

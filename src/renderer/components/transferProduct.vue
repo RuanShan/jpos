@@ -36,28 +36,30 @@
     .print{
       float: right;
     }
-}
 
-
-.filters {
-    margin: 0 0 20px 0;
-    border: 1px #efefef solid;
-    padding: 10px;
-    background: #f9f9f9;
-    .filter {
-        display: inline-block;
-        width: auto;
+    .filters {
+        margin: 0 0 20px 0;
+        border: 1px #efefef solid;
         padding: 10px;
-        border-radius: 5px;
-        .el-select {
+        background: #f9f9f9;
+        .filter {
+            display: inline-block;
+            width: auto;
+            padding: 10px;
+            border-radius: 5px;
+            .el-select {
+                display: inline-block;
+            }
+        }
+        .el-input {
+            width: 150px;
             display: inline-block;
         }
     }
-    .el-input {
-        width: 150px;
-        display: inline-block;
-    }
+
 }
+
+
 
 </style>
 

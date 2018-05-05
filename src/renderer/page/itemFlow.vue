@@ -1,112 +1,112 @@
 <style lang="scss" >
 
 @import '../style/mixin';
-.item-flow-container{
-  .el-dialog__body{
-    /*fullscreen process dialog*/
-    height: 90%;
-  }
-  .location{
-    position: relative;
-    float: left;
-    padding: 6px;
-    border: 2px dashed #c5c5c5;
-    width: 45%;
-    &.ship{
-      width: 10%;
-      border-color: transparent;
-      background-color: gray;
-      text-align: center;
+.item-flow-container {
+    .el-dialog__body {
+        /*fullscreen process dialog*/
+        height: 90%;
     }
-  }
-  .step{
-    position:relative;
-    float:left;
-    padding: 20px;
-    height: 140px;
-    &.step0{
-      min-height: 300px;
+    .location {
+        position: relative;
+        float: left;
+        padding: 6px;
+        border: 2px dashed #c5c5c5;
+        width: 45%;
+        &.ship {
+            width: 10%;
+            border-color: transparent;
+            background-color: gray;
+            text-align: center;
+        }
     }
-    &.step1{
-      width: 50%;
-      min-height: 600px;
-      background-color: #32CD32;
+    .step {
+        position: relative;
+        float: left;
+        padding: 20px;
+        height: 140px;
+        &.step0 {
+            min-height: 300px;
+        }
+        &.step1 {
+            width: 50%;
+            min-height: 600px;
+            background-color: #32CD32;
+        }
+        &.step2 {
+            width: 50%;
+            float: right;
+            min-height: 600px;
+            background-color: #32CD32;
+        }
+        &.transfer1 {
+            width: 50%;
+            height: 50%;
+            position: absolute;
+            right: 0;
+        }
+        &.transfer2 {
+            width: 50%;
+            height: 50%;
+            position: absolute;
+            left: 0;
+        }
+        .ready {
+            position: absolute;
+            top: 50%;
+        }
+        .pending {}
+        .title {
+            @include center min-height: 100px;
+            background-color: #32CD32;
+        }
+        .linex {
+            @include center height: 2px;
+            width: 100%;
+            border-color: inherit;
+            background-color: #c0c4cc;
+            &.offset-l50 {
+                width: 50%;
+                transform: translate(0, -50%);
+            }
+            &.offset-r50 {
+                width: 50%;
+                transform: translate(-100%, -50%);
+            }
+        }
+        .liney {
+            @include center height: 100%;
+            width: 2px;
+            border-color: inherit;
+            background-color: #c0c4cc;
+            &.offset-t50 {
+                height: 50%;
+                transform: translate(-50%, 0);
+            }
+            &.offset-b50 {
+                height: 50%;
+                transform: translate(-50%, -100%);
+            }
+        }
+        .badge {
+            position: relative;
+            vertical-align: middle;
+            display: inline-block;
+            sup {
+                background-color: #f56c6c;
+                border-radius: 10px;
+                color: #fff;
+                display: inline-block;
+                font-size: 12px;
+                height: 18px;
+                line-height: 18px;
+                padding: 0 6px;
+                text-align: center;
+                border: 1px solid #fff;
+            }
+        }
     }
-    &.step2{
-      width: 50%;
-      float: right;
-      min-height: 600px;
-      background-color: #32CD32;
-    }
-    &.transfer1{
-      width: 50%;
-      height: 50%;
-      position: absolute;
-      right: 0;
-    }
-    &.transfer2{
-      width: 50%;
-      height: 50%;
-      position: absolute;
-      left: 0;
-    }
-
-    .title{
-      @include center
-      min-height: 100px;
-      background-color: #32CD32;
-    }
-    .linex{
-      @include center
-      height: 2px;
-      width: 100%;
-      border-color: inherit;
-      background-color: #c0c4cc;
-
-      &.offset-l50{
-        width:50%;
-        transform: translate(0, -50%);
-      }
-      &.offset-r50{
-        width:50%;
-        transform: translate(-100%,-50%);
-      }
-    }
-    .liney{
-      @include center
-      height: 100%;
-      width: 2px;
-      border-color: inherit;
-      background-color: #c0c4cc;
-      &.offset-t50{
-        height:50%;
-        transform: translate(-50%, 0);
-      }
-      &.offset-b50{
-        height:50%;
-        transform: translate(-50%,-100%);
-      }
-    }
-    .badge{
-      position: relative;
-      vertical-align: middle;
-      display: inline-block;
-      sup{
-        background-color: #f56c6c;
-        border-radius: 10px;
-        color: #fff;
-        display: inline-block;
-        font-size: 12px;
-        height: 18px;
-        line-height: 18px;
-        padding: 0 6px;
-        text-align: center;
-        border: 1px solid #fff;
-      }
-    }
-
-  }
 }
+
 .table_container {
     padding: 20px 0;
 }
@@ -126,11 +126,10 @@
     width: 50%;
 }
 
-
-
 </style>
 
 <template>
+
 <!--
 # 记录商品的处理流程
 # pending : 店里收到商品
@@ -141,86 +140,105 @@
 # shipped: 已交付客户
 -->
 <div class="item-flow-container fillcontain">
-  <scan-product :order-state="currentOrderState" :dialog-visible.sync="scanShipmentDialogVisible" @order-state-changed="orderStateChanged"> </scan-product>
-  <process-order :order-state="currentOrderState" :dialog-visible.sync="processOrderDialogVisible" @order-state-changed="orderStateChanged" > </process-order>
-  <process-item :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged" > </process-item>
-  <transfer-product :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged" > </transfer-product>
+    <scan-product :order-state="currentOrderState" :dialog-visible.sync="scanShipmentDialogVisible" @order-state-changed="orderStateChanged"> </scan-product>
+    <process-order :order-state="currentOrderState" :dialog-visible.sync="processOrderDialogVisible" @order-state-changed="orderStateChanged"> </process-order>
+    <process-item :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </process-item>
+    <transfer-product :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </transfer-product>
+    <worker-performance :order-state="currentOrderState" :dialog-visible.sync="workerPerformanceDialogVisible" @order-state-changed="orderStateChanged"> </worker-performance>
 
-  <div class="table_container ">
-    <div class="steps clear">
+    <div class="table_container ">
+        <div class="steps clear">
 
-      <div class="location clear">
-        <div class="step step1" >
-          <div class="linex offset-l50" style=""> </div>
-          <div class=""> 新订单 <div  class="badge"> <sup> {{itemCounts.pending}} </sup> </div>
-            <div>
-              <el-button @click="processItems('pending')" size="small">Item</el-button>
-              <el-button @click="handleScanOrders('pending')" size="small">Scan</el-button>
+            <div class="location clear">
+                <div class="step step1">
+                    <div class="linex offset-l50" style=""> </div>
+                    <div class="pending"> 客户物品
+                        <div class="badge"> <sup> {{itemCounts.pending}} </sup> </div>
+                        <div>
+                            <el-button @click="processItems('pending')" size="small">Item</el-button>
+                            <el-button @click="handleScanOrders('pending')" size="small">Scan</el-button>
+                        </div>
+                    </div>
+
+                    <div class="ready"> 等待交付
+                        <div class="badge"> <sup> {{itemCounts.ready}} </sup> </div>
+                        <div>
+                            <el-button @click="processItems('ready')" size="small">Item</el-button>
+                            <el-button @click="handleScanOrders('ready')" size="small">Scan</el-button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="step transfer1">
+                    <div class="linex "> </div>
+                    <div class="title"> 门店发货
+                        <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
+                        <div>
+                            <el-button @click="handleTransferProducts('pending', 'ready_for_factory')" size="small">Transfer</el-button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="step transfer1" style="top:50%;">
+                    <div class="linex offset-l50" style=""> </div>
+                    <div class="title"> 门店待验收
+                        <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
+                        <div>
+                            <el-button @click="handleTransferProducts('ready_for_store', 'ready')" size="small">Transfer</el-button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
 
-        <div class="step transfer1">
-          <div class="linex "> </div>
-          <div class="title"> 送货确认 <div  class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
-            <div>
-              <el-button @click="handleTransferProducts('pending', 'ready_for_factory')" size="small">Transfer</el-button>
+            <div class="location ship">
+                <div class="step step0" style="width:100%;">
+                    <div class="title"> car </div>
+                </div>
+                <div class="step step0" style="width:100%;">
+                    <div class="title"> car </div>
+                </div>
             </div>
-          </div>
-        </div>
 
+            <div class="location clear">
+                <div class="step step2">
+                    <div class="linex offset-r50"> </div>
+                    <div class="liney offset-t50"> </div>
+                    <div class="title">
+                        <div class="badge"> <sup> {{itemCounts.processing}} </sup> </div> 专业服务
+                        <div class="badge"> <sup> {{itemCounts.processed}} </sup> </div>
+                        <div>
+                            <el-button @click="processItems('processing')">Item</el-button>
+                            <el-button @click="handleWorkerPerformance('processing')">工作量录入</el-button>
+                            <el-button @click="handleScanOrders('processing')">Scan验收</el-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="step transfer2">
+                    <div class="linex offset-r50"> </div>
+                    <div class="title"> 工厂待收货
+                        <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
+                        <div>
+                            <el-button @click="handleTransferProducts('ready_for_factory', 'none')" size="small">Transfer</el-button>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="step transfer1" style="top:50%;">
-          <div class="linex offset-l50" style=""> </div>
-          <div class="title"> 门店验收  <div  class="badge"> <sup> {{itemCounts.ready}} </sup> </div>
-            <div>
-              <el-button @click="processItems('ready')">Item</el-button>
-              <el-button @click="handleScanOrders('ready')">Scan</el-button>
+                <div class="step transfer2" style="top:50%;">
+                    <div class="linex offset-r50"> </div>
+                    <div class="title"> 工厂发货
+                        <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
+                        <div>
+                            <el-button @click="handleTransferProducts('processed', 'ready_for_store')" size="small">Transfer</el-button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+
+
         </div>
-      </div>
-
-      <div class="location ship">
-        <div class="step step0" style="width:100%;">  <div class="title"> car </div> </div>
-        <div class="step step0" style="width:100%;">  <div class="title"> car </div>  </div>
-       </div>
-
-      <div class="location clear">
-        <div class="step step2" >
-          <div class="linex offset-r50"> </div>
-          <div class="liney offset-t50" > </div>
-          <div class="title"> 专业服务  <div  class="badge"> <sup> {{itemCounts.processing}} </sup> </div>
-            <div>
-              <el-button @click="processItems('processing')">Item</el-button>
-              <el-button @click="handleScanOrders('processing')">Scan</el-button>
-            </div>
-          </div>
-        </div>
-        <div class="step transfer2" >
-          <div class="linex offset-r50"> </div>
-          <div class="title">  收货确认  <div  class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
-            <div>
-              <el-button @click="processItems('ready_for_store')">Item</el-button>
-              <el-button @click="handleScanOrders('ready_for_store')">Scan</el-button>
-            </div>
-          </div>
-        </div>
-
-        <div class="step transfer2" style="top:50%;">
-          <div class="linex offset-r50"> </div>
-          <div class="title"> 工厂验收  <div  class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
-            <div>
-              <el-button @click="processItems('ready_for_store')">Item</el-button>
-              <el-button @click="handleScanOrders('ready_for_store')">Scan</el-button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
     </div>
-  </div>
 </div>
 
 </template>
@@ -232,6 +250,7 @@ import processOrder from '@/components/processOrder'
 import processItem from '@/components/processItem'
 import scanProduct from '@/components/scanProduct'
 import transferProduct from '@/components/transferProduct'
+import workerPerformance from '@/components/workerPerformance'
 import {
     getOrderList, getLineItemGroupCounts
 }
@@ -244,10 +263,11 @@ from '@/components/userDataMixin'
 export default {
     data() {
             return {
-              processOrderDialogVisible: false,
-              processItemDialogVisible: false,
+                processOrderDialogVisible: false,
+                processItemDialogVisible: false,
                 scanShipmentDialogVisible: false,
                 transferProductDialogVisible: false,
+                workerPerformanceDialogVisible: false,
                 tableData: [],
                 currentRow: null,
                 currentOrderState: null,
@@ -256,10 +276,11 @@ export default {
                 count: 0,
                 currentPage: 1,
                 storeId: null,
-                itemCounts:{
+                itemCounts: {
                     pending: 0,
                     ready_for_factory: 0,
                     processing: 0,
+                    processed: 0,
                     ready_for_store: 0,
                     ready: 0,
                     shipped: 0
@@ -295,7 +316,8 @@ export default {
             processOrder,
             processItem,
             scanProduct,
-            transferProduct
+            transferProduct,
+            workerPerformance
         },
         mixins: [userDataMixin],
         created() {
@@ -310,79 +332,85 @@ export default {
 
         methods: {
             async initData() {
-                const orderCounstResult  = await getLineItemGroupCounts( )
-                Object.assign( this.itemCounts, orderCounstResult )
-            },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`)
-            },
-            handleCurrentChange(val) {
-                this.currentPage = val
-                this.offset = (val - 1) * this.limit
-                this.getOrders()
-            },
-            processItems( orderState ) {
-                this.processItemDialogVisible=true
-                this.currentOrderState = orderState
-                console.log('processItems')
-            },
-            processOrders( orderState ) {
-                this.processOrderDialogVisible=true
-                this.currentOrderState = orderState
-                console.log('processOrders')
-            },
-            handleScanOrders( orderState ) {
-                this.scanShipmentDialogVisible=true
-                this.currentOrderState = orderState
-                console.log('handleScanOrders')
-            },
-            handleTransferProducts( orderState, nextOrderState ) {
-                this.currentOrderState = orderState
-                this.nextOrderState = nextOrderState
-                this.transferProductDialogVisible=true
-                console.log('handleScanOrders')
-            },
-            orderStateChanged( ){
-                this.initData()
-            },
+                    const orderCounstResult = await getLineItemGroupCounts()
+                    Object.assign(this.itemCounts, orderCounstResult)
+                },
+                handleSizeChange(val) {
+                    console.log(`每页 ${val} 条`)
+                },
+                handleCurrentChange(val) {
+                    this.currentPage = val
+                    this.offset = (val - 1) * this.limit
+                    this.getOrders()
+                },
+                processItems(orderState) {
+                    this.processItemDialogVisible = true
+                    this.currentOrderState = orderState
+                    console.log('processItems')
+                },
+                processOrders(orderState) {
+                    this.processOrderDialogVisible = true
+                    this.currentOrderState = orderState
+                    console.log('processOrders')
+                },
+                handleScanOrders(orderState) {
+                    this.scanShipmentDialogVisible = true
+                    this.currentOrderState = orderState
+                    console.log('handleScanOrders')
+                },
+                handleTransferProducts(orderState, nextOrderState) {
+                    this.currentOrderState = orderState
+                    this.nextOrderState = nextOrderState
+                    this.transferProductDialogVisible = true
+                    console.log('handleScanOrders')
+                },
+                handleWorkerPerformance(orderState) {
+                    this.workerPerformanceDialogVisible = true
+                    this.currentOrderState = orderState
+                    console.log('handleWorkerPerformance')
+                },
 
-            async getOrders() {
-                let queryParams = {
-                    page: this.currentPage,
-                    per_page: this.perPage,
-                }
-                if (this.filters.storeId > 0) {
-                    queryParams["q[store_id_eq]"] = this.filters.storeId
+                orderStateChanged() {
+                    this.initData()
+                },
 
-                }
+                async getOrders() {
+                    let queryParams = {
+                        page: this.currentPage,
+                        per_page: this.perPage,
+                    }
+                    if (this.filters.storeId > 0) {
+                        queryParams["q[store_id_eq]"] = this.filters.storeId
 
-                if (this.filters.keyword.length > 0) {
-                    // order.number ||  || order.users.username
-                    queryParams["q[user_username_cont]"] = this.filters.keyword
-                }
-                if (this.filters.shipment_state.length > 0 && this.filters.shipment_state != 'all') {
-                    // order.number ||  || order.users.username
-                    queryParams["q[group_state_eq]"] = this.filters.shipment_state
-                }
+                    }
 
-                const ordersResult = await getOrderList(queryParams)
-                this.count = ordersResult.total_count
-                console.log("total_count", this.count)
-                this.tableData = []
-                ordersResult.orders.forEach((item, index) => {
-                    const rowData = {}
-                    rowData.id = item.id
-                    rowData.number = item.number
-                    rowData.total_amount = item.display_total
-                    rowData.status = item.state
-                    rowData.user_id = item.user_id
-                    rowData.store_id = item.store_id
-                    rowData.index = index
-                    rowData.shipment_state = item.shipment_state
-                    rowData.payment_state = item.payment_state
-                    this.tableData.push(rowData)
-                })
-            },
+                    if (this.filters.keyword.length > 0) {
+                        // order.number ||  || order.users.username
+                        queryParams["q[user_username_cont]"] = this.filters.keyword
+                    }
+                    if (this.filters.shipment_state.length > 0 && this.filters.shipment_state != 'all') {
+                        // order.number ||  || order.users.username
+                        queryParams["q[group_state_eq]"] = this.filters.shipment_state
+                    }
+
+                    const ordersResult = await getOrderList(queryParams)
+                    this.count = ordersResult.total_count
+                    console.log("total_count", this.count)
+                    this.tableData = []
+                    ordersResult.orders.forEach((item, index) => {
+                        const rowData = {}
+                        rowData.id = item.id
+                        rowData.number = item.number
+                        rowData.total_amount = item.display_total
+                        rowData.status = item.state
+                        rowData.user_id = item.user_id
+                        rowData.store_id = item.store_id
+                        rowData.index = index
+                        rowData.shipment_state = item.shipment_state
+                        rowData.payment_state = item.payment_state
+                        this.tableData.push(rowData)
+                    })
+                },
         }
 }
 
