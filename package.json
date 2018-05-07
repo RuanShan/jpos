@@ -59,8 +59,10 @@
   },
   "dependencies": {
     "@websanova/vue-auth": "^2.21.3-beta",
+    "aws-sdk": "^2.233.1",
     "axios": "^0.16.1",
     "echarts": "^3.8.0",
+    "electron-printer": "^0.0.5",
     "element-ui": "^2.3.6",
     "es6-promise": "^4.2.4",
     "friendly-errors-webpack-plugin": "^1.6.1",

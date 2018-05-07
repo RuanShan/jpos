@@ -121,6 +121,8 @@ import {
 }
 from '@/components/apiResultMixin'
 
+import{ printMixin } from '@/components/mixin/print'
+
 export default {
     data() {
             return {
@@ -157,7 +159,7 @@ export default {
 
             }
         },
-        mixins: [userDataMixin, apiResultMixin],
+        mixins: [userDataMixin, apiResultMixin, printMixin],
         props: ['dialogVisible', 'orderState','nextOrderState', 'orderCounts'],
         created() {
         },
