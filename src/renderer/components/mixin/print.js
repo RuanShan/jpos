@@ -1,4 +1,4 @@
-import  printer  from 'electron-printer'
+import  printer  from 'printer'
 
 export var printMixin = {
   methods: {
