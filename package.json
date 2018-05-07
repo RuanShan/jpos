@@ -72,6 +72,7 @@
     "localforage": "^1.6.0",
     "lodash": "^4.17.5",
     "node-notifier": "^5.2.1",
+    "printer": "^0.2.2",
     "time-formater": "^1.0.1",
     "url-assembler": "^1.2.9",
     "vue": "^2.5.2",

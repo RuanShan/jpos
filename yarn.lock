@@ -7008,6 +7008,10 @@ pretty-error@^2.0.2:
     renderkid "^2.0.1"
     utila "~0.4"
 
+printer@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/printer/-/printer-0.2.2.tgz#830b8f5c97b97fd9b464d4f4e105d43337792296"
+
 private@^0.1.6, private@^0.1.7, private@~0.1.5:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/private/-/private-0.1.8.tgz#2381edb3689f7a53d653190060fcf822d2f368ff"
