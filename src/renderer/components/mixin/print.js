@@ -1,9 +1,10 @@
-import  printer  from 'printer'
+import { ipcRenderer }  from  'electron'
 
 export var printMixin = {
   methods: {
     getPrinters: function(){
-      printer.getPrinters()
+      ipcRenderer.send('jpos-aget-printers', 'ping');
+
     }
   }
 }
