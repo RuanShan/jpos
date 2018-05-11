@@ -1,14 +1,19 @@
-import { getPrinters, getSupportedPrintFormats } from 'printer'
 import { ipcMain }  from  'electron'
 
-export function bindIpcPrinter(){
-  ipcMain.on('jpos-aget-printers', function(event, arg) {
-    let printers =  getPrinters()
+//import { EscPrint }  from  './esc_print'
+import { TsplPrint }  from  './tspl_print'
 
-    console.log( "printers", printers )
-    console.log( "getSupportedPrintFormats", getSupportedPrintFormats() )
+export function bindIpcPrinter(){
+
+
+
+  ipcMain.on('jpos-aget-printers', function(event, arg) {
 
     console.log(arg); // prints "pong"
+
+    //EscPrint()
+    TsplPrint()
+    console.log("end jpos-aget-printers")
   });
 
 }
