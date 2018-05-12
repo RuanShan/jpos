@@ -2,6 +2,7 @@
 
 import { app, BrowserWindow } from 'electron'
 
+import { bindIpcPrinter } from '../ipc/printer'
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -46,6 +47,10 @@ app.on('activate', () => {
   }
 })
 
+app.on('ready', function(){
+  console.log('bindIpcPrinter')
+  bindIpcPrinter()
+})
 /**
  * Auto Updater
  *

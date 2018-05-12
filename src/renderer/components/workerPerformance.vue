@@ -1,15 +1,14 @@
 <style lang="scss">
-@import '../style/mixin';
-@import '../style/print';
 
-.transfer-product-container {
+@import '../style/mixin';
+.worker-performance-container {
     position: relative;
     .order-list {
         position: absolute;
         top: 80px;
         bottom: 0;
-        left: 0;
-        right: 0;
+        left: 10%;
+        width: 80%;
         padding: 16px;
         border: 1px #efefef solid;
         .actions {
@@ -20,23 +19,36 @@
             text-align: right;
         }
     }
-    .el-transfer{
-      width: 80%;height: 100%;
-      margin: 0 auto;
-      .el-transfer-panel{
-        width: 40%;
-        height: 100%;
-      }
+    .order-detail {
+        position: absolute;
+        width: 0;
+        top: 80px;
+        bottom: 0;
+        right: 0;
+        padding: 16px;
+        border: 1px #efefef solid;
+        .group-container{
+          border-bottom: 1px solid #ebeef5;
+        }
+        .actions {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            text-align: right;
+        }
+    }
+    table {
+        width: 100%;
+        td {
+            vertical-align: top;
+        }
     }
     .pagination {
         position: absolute;
         right: 16px;
         bottom: 16px;
     }
-    .print{
-      float: right;
-    }
-
     .filters {
         margin: 0 0 20px 0;
         border: 1px #efefef solid;
@@ -50,9 +62,11 @@
             .el-select {
                 display: inline-block;
             }
+            .product-select{
+              width: 300px;
+            }
         }
         .el-input {
-            width: 150px;
             display: inline-block;
         }
     }
@@ -60,45 +74,70 @@
 }
 
 
-
 </style>
 
 <template>
 
 <el-dialog title="提示" :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen">
-    <div id="printable" class="print-only">
-      this is test
-      <el-table :data="printableData"  style="width: 100%">
-        <el-table-column prop="number" label="Number"  width="180">  </el-table-column>
-        <el-table-column prop="name" label="Name"  width="180">  </el-table-column>
-        <el-table-column prop="created_at" label="created_at">  </el-table-column>
-      </el-table>
 
-    </div>
-
-
-    <div class="transfer-product-container fillcontain clear">
+    <div class="worker-performance-container fillcontain clear">
         <!-- filters start -->
         <div class="filters">
+
             <div class="filter">
+              Worker:
+              <el-select v-model="currentWorkerId" placeholder="All">
+                  <el-option v-for="item in workerList" :key="item.id" :label="item.username" :value="item.id">
+                  </el-option>
+              </el-select>
+              Product:
+              <el-select v-model="currentProductIds" multiple placeholder="All" class="product-select">
+                  <el-option v-for="item in productList" :key="item.id" :label="item.name" :value="item.id">
+                  </el-option>
+              </el-select>
+
+            </div>
+            <div class="filter" style="float:right;">
                 关键字:
                 <el-input label="Keyword" placeholder="请输入订单号或用户名" v-model="filters.keyword" @change="handleKeywordChange"></el-input>
             </div>
-            <div class="filter">
-                状态:
-                <el-select v-model="filters.groupState" placeholder="All">
-                    <el-option v-for="item in orderStateOptions" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-            </div>
-            <el-button type="primary" @click="handleSearch()">搜索</el-button>
-
-            <el-button class="print" type="primary" @click="handlePrint()">Print</el-button>
         </div>
         <!-- filters end -->
 
         <div class="order-list">
-            <el-transfer v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name'}" @change="handleTransferItems"></el-transfer>
+
+            <el-table ref="lineItemGroupTable" :data="lineItemList" highlight-current-row @current-change="handleCurrentRowChange" @selection-change="handleSelectionChange" :row-key="row => row.number" style="width: 100%">
+               <el-table-column  type="selection"  width="55"> </el-table-column>
+
+               <el-table-column label="GroupNumber" prop="groupNumber">
+               </el-table-column>
+               <el-table-column label="Name" prop="name">
+               </el-table-column>
+                <el-table-column label="订单状态" prop="group.state">
+                </el-table-column>
+                <el-table-column label="Worker" >
+                  <template slot-scope="scope">
+                    <p v-if="scope.row.worker_id>0">
+                      <span v-for="worker in workerList" v-if="worker.id==scope.row.worker_id">
+                        {{ worker.username }}
+                      </span>
+                    </p>
+
+                  </template>
+                </el-table-column>
+
+            </el-table>
+
+            <div class="actions" v-if="orderState=='pending'">
+                <el-button @click="ChangeCurrentGroupState(true)" type="primary">Receive</el-button>
+            </div>
+
+            <div class="actions" v-if="orderState=='processing'">
+              <el-button type="danger" @click="handleDiscardSelection()">remove</el-button>
+              <el-button @click="handleFulfillLineItems(false)">Cancel</el-button>
+
+              <el-button type="primary" @click="handleFulfillLineItems()">OK</el-button>
+            </div>
         </div>
 
     </div>
@@ -109,7 +148,7 @@
 <script>
 
 import {
-    findLineItemGroups, findOrderByGroupNumber, evolveLineItemGroups
+    getProducts, findUsers, findLineItemGroups, fulfillLineItems, findOrderByGroupNumber
 }
 from '@/api/getData'
 import {
@@ -121,23 +160,24 @@ import {
 }
 from '@/components/apiResultMixin'
 
-import{ printMixin } from '@/components/mixin/print'
+import _ from 'lodash'
 
 export default {
     data() {
             return {
                 currentOrder: null,
                 currentGroup: null,// a order may have several line_item_groups
-                orderDetailList: [],
+                currentWorkerId: null,
+                currentProductIds: [],
+                lineItemList: [],
                 lineItemGroupList: [],
-                itemList: [],
-                transferedItemIds: [],
-                perPage: 100,
+                workerList: [],
+                productList: [],
                 storeId: null,
                 filters: {
                     keyword: '',
                     startEndTime: null,
-                    groupState: '',
+                    lineItemGroupState: '',
                 },
                 multipleSelection: [],
                 orderStateOptions: [{
@@ -155,26 +195,55 @@ export default {
                 }, {
                     value: 'ready',
                     label: '待交付'
-                }],
+                }]
 
             }
         },
-        mixins: [userDataMixin, apiResultMixin, printMixin],
-        props: ['dialogVisible', 'orderState','nextOrderState', 'orderCounts'],
+        mixins: [userDataMixin, apiResultMixin],
+        props: ['dialogVisible', 'orderState', 'orderCounts'],
         created() {
+
         },
         computed: {
             computedVisible: function() {
                 return this.dialogVisible
-            },
-            printableData: function(){
-                return this.lineItemGroupList.filter((item)=>{ return item.state === this.nextOrderState})
             }
 
         },
         methods: {
             initData() {
-              this.getLineItemGroups()
+              let queryParams = { q: { spree_roles_name_eq:"worker" } }
+              findUsers(queryParams).then((res)=>{
+                this.workerList = res.users
+                if( this.workerList.length>0){
+                  this.currentWorkerId = this.workerList[0].id
+                }
+              })
+              getProducts().then((res)=>{
+                this.productList = res.products
+              })
+
+              let groupQueryParams = { q: { state_eq:"processing" } }
+              findLineItemGroups(groupQueryParams).then((res)=>{
+
+                this.count = res.total_count
+                this.lineItemGroupList.splice( 0, 0, ...this.buildItemGroupsFromApiResult(res))
+                console.log("computedLineItems", this.computedLineItems)
+                this.lineItemList = _.flatten( this.lineItemGroupList.map((item)=>{ return item.lineItems } ) )
+              })
+
+            },
+            handleFulfillLineItems(forward = true) {
+                let lineItemIds = this.multipleSelection.map((lineItem) => lineItem.id)
+                if (lineItemIds.length == 0) {
+                    this.$message({
+                        message: '警告哦，Please select a order at least',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                this.fulfillLineItems( lineItemIds )
             },
             ChangeCurrentGroupState(forward = true) {
                 if (this.currentGroup == null) {
@@ -186,19 +255,20 @@ export default {
                 }
                 let groupNumbers = [ this.currentGroup.number ]
 
-                this.changeGroupToNextState( groupNumbers,forward )
+                this.MoveGroupToNextState( groupNumbers,forward )
             },
 
-            async changeGroupToNextState( ids = [], forward = true) {
+            async fulfillLineItems( lineItemIds = []) {
                 let queryParams = {
-                    ids,
-                    forward
+                    ids: lineItemIds,
+                    worker_id: this.currentWorkerId
                 }
-                const groupsReturn = await evolveLineItemGroups(queryParams)
-                if (groupsReturn.count > 0) {
+                console.log('handleFulfillLineItems', queryParams)
+                const response = await fulfillLineItems(queryParams)
+                if (response.count > 0) {
+                  this.handleDiscardSelection(  )
                   this.$emit('order-state-changed')
                 }
-                //return groupsReturn.count
             },
 
             handleDialogClose(done) {
@@ -208,9 +278,8 @@ export default {
 
             },
             handleDialogOpen(){
-              this.filters.keyword = ""
+
               this.lineItemGroupList.length = 0
-              this.transferedItemIds.length = 0
               this.initData()
               console.log('handleDialogOpen yeah')
             },
@@ -224,6 +293,15 @@ export default {
                 this.multipleSelection = val
                 console.log("handleSelectionChange=", this.multipleSelection)
             },
+            handleDiscardSelection(  ){
+              console.log("1handleDiscardSelection=", this.multipleSelection)
+              _.remove( this.lineItemList, (item)=>{
+                return this.multipleSelection.includes(item)
+              })
+              this.$refs.lineItemGroupTable.clearSelection();
+              this.$refs.lineItemGroupTable.setCurrentRow();
+              console.log("2handleDiscardSelection=", this.multipleSelection)
+            },
             async handleCurrentRowChange(row) {
                 if( row ){
                   this.currentGroup = row;
@@ -234,58 +312,6 @@ export default {
                   this.currentGroup = null
                   this.currentOrder = null
                 }
-            },
-            async handleTransferItems(){
-              let changeToPrevious = []
-              let chagneToNext = []
-              console.log( "handleTransferItems", this.transferedItemIds )
-              this.lineItemGroupList.forEach( (item)=>{
-                if( this.transferedItemIds.includes( item.id )){
-                  if( item.state !== this.nextOrderState){
-                    chagneToNext.push( item )
-                  }
-                }else{
-                  if( item.state !== this.orderState){
-                    changeToPrevious.push( item )
-                  }
-                }
-              })
-              if( changeToPrevious.length>0){
-                let ids = changeToPrevious.map((item)=>{ return item.id })
-                this.changeGroupToNextState(ids, false ).then(()=>{
-                  changeToPrevious.forEach( (item)=>{
-                    item.state = this.orderState
-                  })
-                })
-              }
-              if( chagneToNext.length>0){
-                let ids = chagneToNext.map((item)=>{return item.id} )
-                this.changeGroupToNextState( ids, true ).then(()=>{
-                  chagneToNext.forEach( (item)=>{
-                    item.state = this.nextOrderState
-                  })
-                })
-              }
-
-
-            },
-            async getLineItemGroups() {
-                let queryParams = {
-                    page: this.currentPage,
-                    per_page: this.perPage,
-                    q: {state_in: [this.orderState, this.nextOrderState]}
-                }
-
-                const itemsResult = await findLineItemGroups(queryParams)
-                this.count = itemsResult.total_count
-                this.lineItemGroupList.splice( 0, this.lineItemGroupList.length, ...this.buildItemGroupsFromApiResult(itemsResult))
-                this.lineItemGroupList.forEach((item)=>{
-                  if( item.state ===  this.nextOrderState ){
-                    this.transferedItemIds.push( item.id )
-                  }
-                })
-
-                console.log("itemsResult", itemsResult, "itemList",this.itemList)
             },
             async findOrderByGroupNumber(number) {
               // find in orderDetailList
@@ -320,14 +346,6 @@ console.log( "this.currentOrder", this.currentOrder, "this.currentGroup ", this.
                 })
               }
 
-            },
-            handlePrint(){
-              //console.log("printableData", this.printableData)
-              console.log("getPrinters", this.getPrinters())
-              
-              //var printWin = window.open('','','left=0,top=0,width=1,height=1,toolbar=0,scrollbars=0,status  =0')
-              //printWin.focus()
-              //window.print()
             }
 
         }
