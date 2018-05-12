@@ -13,9 +13,13 @@
     </div>
 
     <!-- 会员关键字窗口 -> START -->
-    <el-dialog title="会员关键字" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+    <el-dialog title="会员关键字" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" @close="closeMemberKeyWordWindow()">
       <el-input v-model="inputNumber" placeholder="请输入会员/手机号"></el-input>
+      <el-input v-model="inputNumber" placeholder="请输入会员/手机号"></el-input>
+
       <span slot="footer" class="dialog-footer">
+        <el-button type="">选择</el-button>
+        <el-button type="">新建</el-button>
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="openAddMemberWindws">确 定</el-button>
       </span>
@@ -35,7 +39,7 @@
 <script>
 import MemberAdd from "@/components/MemberAdd.vue";
 import MemberCenter from "@/components/MemberCenter.vue";
-// import { log } from "util";
+import { getCustomer } from "@/api/getData";
 
 export default {
   components: {
@@ -52,8 +56,15 @@ export default {
       buttonName: "来宾", //按钮姓名显示
       buttonRemaining: "", //按钮余额显示
       buttonNum: "", //按钮编号显示
-      NoVisible: false //按钮中"No"显示标志位
+      NoVisible: false, //按钮中"No"显示标志位
+      returnSerVerData: {} //SerVer返回的数据
     };
+  },
+  mounted() {
+    this.getSverVerCustomer(456789).then(() => {
+      console.log("应该返回会员数据了");
+      console.log(this.returnSerVerData);
+    });
   },
   methods: {
     handleClose(done) {
@@ -65,7 +76,7 @@ export default {
     },
     openAddMemberWindws() {
       if (this.inputNumber == "1234") {
-        this.$alert("已经存在\"1234\"用户ID", "错误提示", {
+        this.$alert('已经存在"1234"用户ID', "错误提示", {
           confirmButtonText: "确定"
         });
         return false;
@@ -95,6 +106,14 @@ export default {
       this.buttonNum = this.memberData.memberNum; //按钮上显示会员编号
       this.inputNumber = ""; //清空KeyWord输入框
       console.log("选好了***");
+    },
+    //获取SerVer用户数据,异步获取
+    async getSverVerCustomer(Id) {
+      let Ids = "id-" + Id;
+      this.returnSerVerData = await getCustomer(Ids);
+    },
+    closeMemberKeyWordWindow() {
+      this.$emit("MemberData", this.memberData);
     }
   }
 };
