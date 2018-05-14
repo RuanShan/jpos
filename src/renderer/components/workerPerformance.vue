@@ -78,19 +78,19 @@
 
 <template>
 
-<el-dialog title="提示" :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen">
+<el-dialog title="工作量录入" :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen">
 
     <div class="worker-performance-container fillcontain clear">
         <!-- filters start -->
         <div class="filters">
 
             <div class="filter">
-              Worker:
+              工人:
               <el-select v-model="currentWorkerId" placeholder="All">
                   <el-option v-for="item in workerList" :key="item.id" :label="item.username" :value="item.id">
                   </el-option>
               </el-select>
-              Product:
+              工作:
               <el-select v-model="currentProductIds" multiple placeholder="All" class="product-select">
                   <el-option v-for="item in productList" :key="item.id" :label="item.name" :value="item.id">
                   </el-option>
@@ -98,8 +98,7 @@
 
             </div>
             <div class="filter" style="float:right;">
-                关键字:
-                <el-input label="Keyword" placeholder="请输入订单号或用户名" v-model="filters.keyword" @change="handleKeywordChange"></el-input>
+                关键字:<el-input label="Keyword" placeholder="请输入物品编号" v-model="filters.keyword" @change="handleKeywordChange"></el-input>
             </div>
         </div>
         <!-- filters end -->
@@ -109,13 +108,13 @@
             <el-table ref="lineItemGroupTable" :data="lineItemList" highlight-current-row @current-change="handleCurrentRowChange" @selection-change="handleSelectionChange" :row-key="row => row.number" style="width: 100%">
                <el-table-column  type="selection"  width="55"> </el-table-column>
 
-               <el-table-column label="GroupNumber" prop="groupNumber">
+               <el-table-column label="物品编号" prop="groupNumber">
                </el-table-column>
-               <el-table-column label="Name" prop="name">
+               <el-table-column label="工作内容" prop="name">
                </el-table-column>
                 <el-table-column label="订单状态" prop="group.state">
                 </el-table-column>
-                <el-table-column label="Worker" >
+                <el-table-column label="工人" >
                   <template slot-scope="scope">
                     <p v-if="scope.row.worker_id>0">
                       <span v-for="worker in workerList" v-if="worker.id==scope.row.worker_id">

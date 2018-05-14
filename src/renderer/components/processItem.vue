@@ -23,6 +23,9 @@
         .group-container{
           border-bottom: 1px solid #ebeef5;
         }
+        table tr{
+          vertical-align:top;
+        }
         .actions {
             position: absolute;
             bottom: 16px;
@@ -116,7 +119,7 @@
             <div class="line-item-groups-container" v-if="currentItem">
                 <table class="bitemed" style="width: 100%">
                     <tr>
-                        <td> 用户名 </td>
+                        <td> 客户姓名 </td>
                         <td> <span>{{ currentItem.userName }}</span></td>
                     </tr>
                     <tr>
@@ -126,13 +129,13 @@
                 </table>
                     <table style="width: 100%">
                         <tr>
-                            <td>GroupNumber</td>
+                            <td> 物品条码 </td>
                             <td> {{currentItem.number}} </td>
-                            <td>State</td>
+                            <td> 状态 </td>
                             <td> {{currentItem.state}} </td>
                         </tr>
                         <tr>
-                            <td> Services </td>
+                            <td> 服务项目 </td>
                             <td>
                                 <div v-for="lineItem in currentItem.lineItems">
                                     <span>{{ lineItem.name }}</span>
@@ -142,14 +145,14 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Images</td>
+                            <td>物品图片</td>
                             <td> line item group images </td>
                         </tr>
                     </table>
 
                 <div class="actions">
-                    <el-button @click="ChangeCurrentItemState(false)">DrawBack</el-button>
-                    <el-button @click="ChangeCurrentItemState(true)" type="primary">NextStep</el-button>
+                    <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
+                    <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button>
                 </div>
             </div>
 
