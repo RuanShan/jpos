@@ -4,10 +4,10 @@
         <!-- filters start -->
         <div class="filters">
             <div class="filter">
-                Keyword: <el-input label="Keyword" placeholder="请输入number or username" v-model="filters.keyword"></el-input>
+                关键字: <el-input label="Keyword" placeholder="请输入number or username" v-model="filters.keyword"></el-input>
             </div>
             <div class="filter">
-                OrderState: <el-select v-model="filters.shipment_state" placeholder="All">
+                状态: <el-select v-model="filters.shipment_state" placeholder="All">
                             <el-option
                               v-for="item in orderStateOptions"
                               :key="item.value"
@@ -26,7 +26,7 @@
         <!-- filters end -->
 
         <el-table
-          :data="tableData"
+          :data="orderList"
           @expand-change='expandChange'
                 :expand-row-keys='expendRow'
                 :row-key="row => row.index"
@@ -57,12 +57,24 @@
             prop="id">
           </el-table-column>
           <el-table-column
+            label="店铺"
+            prop="storeName">
+          </el-table-column>
+          <el-table-column
+            label="订单内容"
+            prop="storeName">
+          </el-table-column>
+          <el-table-column
             label="总价格"
-            prop="total_amount">
+            prop="totalAmount">
           </el-table-column>
           <el-table-column
             label="订单状态"
             prop="status">
+          </el-table-column>
+          <el-table-column
+            label="创建时间"
+            prop="displayCreatedAt">
           </el-table-column>
       </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
@@ -83,10 +95,11 @@
     import headTop from '@/components/headTop'
     import {getOrderList, getStore, getUserInfo, getOrder} from '@/api/getData'
     import {userDataMixin} from '@/components/userDataMixin'
-
+    import { apiResultMixin  } from '@/components/apiResultMixin'
     export default {
       data () {
         return {
+          orderList: [],
           tableData: [],
           currentRow: null,
           perPage: 2,
@@ -107,7 +120,7 @@
       components: {
         headTop
       },
-      mixins: [userDataMixin],
+      mixins: [userDataMixin, apiResultMixin],
       created(){
         this.getAdminData().then(res=>{
           if (this.userInfo.id) {
@@ -154,8 +167,10 @@
 
           const ordersResult = await getOrderList(queryParams)
           this.count = ordersResult.total_count
-          console.log( "total_count", this.count)
+
           this.tableData = []
+          this.orderList = this.buildOrdersFromApiResult( ordersResult )
+          console.log( "orderList", this.orderList)
           ordersResult.orders.forEach((item, index) => {
               const rowData = {}
               rowData.id = item.id

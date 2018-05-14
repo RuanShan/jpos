@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export var apiResultMixin = {
   methods: {
     // order = {
@@ -60,7 +62,8 @@ export var apiResultMixin = {
         order.shipmentState = item.shipment_state
         order.paymentState = item.payment_state
         order.groupState = item.groupState
-
+        order.createdAt = moment(item.created_at)        
+        order.displayCreatedAt = order.createdAt.format('MM-DD HH:mm')
         orders.push(order)
       })
       return orders

@@ -104,6 +104,20 @@
                 border: 1px solid #fff;
             }
         }
+        .part-top {
+            height: 50%;
+            position: absolute;
+            top: 0;
+            left:0;
+            right: 0;
+        }
+        .part-bottom {
+            height: 50%;
+            position: absolute;
+            bottom: 0;
+            left:0;
+            right: 0;
+        }
     }
 }
 
@@ -151,21 +165,27 @@
 
             <div class="location clear">
                 <div class="step step1">
-                    <div class="linex offset-l50" style=""> </div>
-                    <div class="pending"> 客户物品
+
+                    <div class="pending part-top">
+                      <div class="title">
+                        客户物品
                         <div class="badge"> <sup> {{itemCounts.pending}} </sup> </div>
                         <div>
                             <el-button @click="processItems('pending')" size="small">Item</el-button>
                             <el-button @click="handleScanOrders('pending')" size="small">Scan</el-button>
                         </div>
+                      </div>
                     </div>
 
-                    <div class="ready"> 等待交付
+                    <div class="ready part-bottom">
+                      <div class="title">
+                        等待交付
                         <div class="badge"> <sup> {{itemCounts.ready}} </sup> </div>
                         <div>
                             <el-button @click="processItems('ready')" size="small">Item</el-button>
                             <el-button @click="handleScanOrders('ready')" size="small">Scan</el-button>
                         </div>
+                      </div>
                     </div>
 
                 </div>
@@ -182,7 +202,7 @@
 
 
                 <div class="step transfer1" style="top:50%;">
-                    <div class="linex offset-l50" style=""> </div>
+                    <div class="linex " style=""> </div>
                     <div class="title"> 门店待验收
                         <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
                         <div>
@@ -203,8 +223,6 @@
 
             <div class="location clear">
                 <div class="step step2">
-                    <div class="linex offset-r50"> </div>
-                    <div class="liney offset-t50"> </div>
                     <div class="title">
                         <div class="badge"> <sup> {{itemCounts.processing}} </sup> </div> 专业服务
                         <div class="badge"> <sup> {{itemCounts.processed}} </sup> </div>
@@ -216,7 +234,7 @@
                     </div>
                 </div>
                 <div class="step transfer2">
-                    <div class="linex offset-r50"> </div>
+                    <div class="linex"> </div>
                     <div class="title"> 工厂待收货
                         <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
                         <div>
@@ -226,7 +244,7 @@
                 </div>
 
                 <div class="step transfer2" style="top:50%;">
-                    <div class="linex offset-r50"> </div>
+                    <div class="linex"> </div>
                     <div class="title"> 工厂发货
                         <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
                         <div>

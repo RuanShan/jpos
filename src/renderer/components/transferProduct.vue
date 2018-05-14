@@ -324,7 +324,7 @@ console.log( "this.currentOrder", this.currentOrder, "this.currentGroup ", this.
             handlePrint(){
               //console.log("printableData", this.printableData)
               console.log("getPrinters", this.getPrinters())
-              
+
               //var printWin = window.open('','','left=0,top=0,width=1,height=1,toolbar=0,scrollbars=0,status  =0')
               //printWin.focus()
               //window.print()

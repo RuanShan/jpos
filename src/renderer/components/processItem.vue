@@ -82,7 +82,7 @@
         <div class="filters">
             <div class="filter">
                 关键字:
-                <el-input label="Keyword" placeholder="请输入Item号" v-model="filters.keyword"></el-input>
+                <el-input label="Keyword" placeholder="请输入物品条码" v-model="filters.keyword"></el-input>
             </div>
             <div class="filter">
                 状态:
@@ -97,9 +97,9 @@
 
         <div class="item-list">
             <el-table :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
-              <el-table-column label="GroupNumber" prop="number">
+              <el-table-column label="物品条码" prop="number">
               </el-table-column>
-              <el-table-column label="Order" prop="orderId">
+              <el-table-column label="订单Id" prop="orderId">
               </el-table-column>
                 <el-table-column label="总价格" prop="cost">
                 </el-table-column>
@@ -200,10 +200,13 @@ export default {
                     label: '准备发工厂'
                 }, {
                     value: 'processing',
-                    label: 'processing'
+                    label: '专业服务'
+                }, {
+                    value: 'processed',
+                    label: '工厂验收'
                 }, {
                     value: 'ready_for_store',
-                    label: 'ready_for_store'
+                    label: '工厂发货'
                 }, {
                     value: 'ready',
                     label: '待交付'

@@ -152,8 +152,8 @@ let routes = [
          }, {
            path: 'ItemFlow',
            component: itemFlow,
-           name: 'Item处理',
-           meta: { breadcrumbs: ['订单', 'Item处理'] }
+           name: '物品处理',
+           meta: { breadcrumbs: ['订单', '物品处理'] }
          }
         ]
       }, {
