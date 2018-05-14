@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="24">
-        <div class="grid-content bg-purple-light" style="margin-top: 200px;">
+        <div class="grid-content bg-purple-light" style="margin-top: 20px;">
           <!-- <div class='input-box'>{{ money }}</div> -->
           <el-row :gutter="20">
             <el-col :span="12" :offset="6">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="num" style="float: right; height: 10em;">
                   <div>
-                    <button class="place-order" @click.stop="confirm()">确认 </button>
+                    <button class="place-order" @click.stop="confirm()">现金找零 </button>
                   </div>
                 </div>
                 <div class="num">

@@ -28,10 +28,10 @@ export const selectedDayCount = () => fetch('/api/v1/sale_days/selected_day')
  * 某一天 statis
  */
 
-export const selectedDaysCount = (data) => fetch('/api/v1/sale_days/selected_days', data, 'PUT' )
-/**
- * 某一天 statis
- */
+export const selectedDaysCount = (data) => fetch('/api/v1/sale_days/selected_days', data, 'PUT')
+    /**
+     * 某一天 statis
+     */
 
 export const todayCount = () => fetch('/api/v1/sale_days/today')
 
@@ -94,7 +94,7 @@ export const adminCount = () => fetch('/admin/count')
  */
 
 export const cityGuess = () => fetch('/v1/cities', {
-  type: 'guess'
+    type: 'guess'
 })
 
 /**
@@ -108,9 +108,9 @@ export const addShop = data => fetch('/shopping/addShop', data, 'POST')
  */
 
 export const searchplace = (cityid, value) => fetch('/v1/pois', {
-  type: 'search',
-  city_id: cityid,
-  keyword: value
+    type: 'search',
+    city_id: cityid,
+    keyword: value
 })
 
 /**
@@ -148,7 +148,7 @@ export const getResturants = data => fetch('/shopping/restaurants', data)
  */
 
 export const getStore = storeId => fetch('/api/v1/stores/' + storeId)
-//export const getStore = storeId => fetch('/shopping/restaurant/' + storeId)
+    //export const getStore = storeId => fetch('/shopping/restaurant/' + storeId)
 
 /**
  * 获取餐馆数量
@@ -225,6 +225,12 @@ export const deleteFood = food_id => fetch('/shopping/v2/food/' + food_id, {}, '
 export const getCustomerList = user_id => fetch('/api/v1/customers');
 
 /**
+ * 根据电话号码查找Customer
+ */
+
+export const findCustomers = phone_num => fetch('/api/v1/users/search');
+
+/**
  * 获取用户列表
  */
 
@@ -264,13 +270,13 @@ export const getOrderCount = data => fetch('/bos/orders/count', data)
  * 获取订单Detail
  */
 
-export const getOrder = orderNumber => fetch('/api/v1/orders/'+orderNumber)
+export const getOrder = orderNumber => fetch('/api/v1/orders/' + orderNumber)
 
 /**
  * 获取订单Detail
  */
 
-export const findOrderByGroupNumber = groupNumber => fetch('/api/v1/pos_orders/find_by_group_number/'+groupNumber)
+export const findOrderByGroupNumber = groupNumber => fetch('/api/v1/pos_orders/find_by_group_number/' + groupNumber)
 
 
 /**
@@ -296,7 +302,7 @@ export const getUserCity = () => fetch('/v1/user/city/count')
  * forward: false， 可选参数，如果表示订单转向上一步
  */
 
-export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/'+order_id+'/one_step', data, 'PUT');
+export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/' + order_id + '/one_step', data, 'PUT');
 
 /**
  * 所有POS订单下一步
@@ -305,7 +311,7 @@ export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/'+or
  *
  */
 
-export const evolvePosOrders = ( data ) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
+export const evolvePosOrders = (data) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
 
 /**
  * 获取Item列表
@@ -329,7 +335,7 @@ export const getLineItemGroupCounts = () => fetch('/api/v1/line_item_groups/coun
  * forward: false， 可选参数，如果表示订单转向上一步
  */
 
-export const evolveLineItemGroup = (shipment_id, data) => fetch('/api/v1/line_item_groups/'+shipment_id+'/one_step', data, 'PUT');
+export const evolveLineItemGroup = (shipment_id, data) => fetch('/api/v1/line_item_groups/' + shipment_id + '/one_step', data, 'PUT');
 
 /**
  * 所有 line_item_group 下一步
@@ -338,13 +344,13 @@ export const evolveLineItemGroup = (shipment_id, data) => fetch('/api/v1/line_it
  *
  */
 
-export const evolveLineItemGroups = ( data ) => fetch('/api/v1/line_item_groups/all_step', data, 'PUT');
+export const evolveLineItemGroups = (data) => fetch('/api/v1/line_item_groups/all_step', data, 'PUT');
 
 /**
  * 获取 LineItemGroup Detail
  */
 
-export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/'+number)
+export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/' + number)
 
 /**
  * update LineItem worker_id列表

@@ -37,8 +37,8 @@
                   <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
                 </div>
                 <!-- <customerButton>  </customerButton> -->
-                <MemberKeyWord></MemberKeyWord>
-                <checkou-button :order-list="orderList" :totalMoney="totalMoney"> </checkou-button>
+                <MemberKeyWord @MemberData="MemberData($event)"></MemberKeyWord>
+                <checkou-button :order-list="orderList" :totalMoney="totalMoney" :customerData="customerData"> </checkou-button>
               </div>
             </el-tab-pane>
             <!-- <el-tab-pane label="挂单">挂单</el-tab-pane>
@@ -298,6 +298,10 @@ export default {
       this.openClassVisible = true;
       this.variants = goods.variants;
       this.testData = goods;
+    },
+    //MemberKeyWord组件关闭后事件处理-----传过来memberData对象
+    MemberData(memberData){
+      this.customerData = memberData;
     }
   },
   watch: {
