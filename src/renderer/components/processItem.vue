@@ -85,12 +85,12 @@
         <div class="filters">
             <div class="filter">
                 关键字:
-                <el-input label="Keyword" placeholder="请输入物品条码" v-model="filters.keyword"></el-input>
+                <el-input label="Keyword" placeholder="请输入物品编号" v-model="filters.keyword"></el-input>
             </div>
             <div class="filter">
                 状态:
                 <el-select v-model="filters.groupState" placeholder="All">
-                    <el-option v-for="item in itemStateOptions" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="item in orderStateOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </div>
@@ -100,7 +100,7 @@
 
         <div class="item-list">
             <el-table :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
-              <el-table-column label="物品条码" prop="number">
+              <el-table-column label="物品编号" prop="number">
               </el-table-column>
               <el-table-column label="订单Id" prop="orderId">
               </el-table-column>
@@ -129,7 +129,7 @@
                 </table>
                     <table style="width: 100%">
                         <tr>
-                            <td> 物品条码 </td>
+                            <td> 物品编号 </td>
                             <td> {{currentItem.number}} </td>
                             <td> 状态 </td>
                             <td> {{currentItem.state}} </td>
@@ -169,9 +169,9 @@ import {
 }
 from '@/api/getData'
 import {
-    userDataMixin
+    userDataMixin, orderDataMixin
 }
-from '@/components/userDataMixin'
+from '@/components/mixin/commonDataMixin'
 import {
     apiResultMixin
 }
@@ -195,29 +195,10 @@ export default {
                     storeId: 0
                 },
                 multipleSelection: [],
-                itemStateOptions: [{
-                    value: 'pending',
-                    label: '新订单'
-                }, {
-                    value: 'ready_for_factory',
-                    label: '准备发工厂'
-                }, {
-                    value: 'processing',
-                    label: '专业服务'
-                }, {
-                    value: 'processed',
-                    label: '工厂验收'
-                }, {
-                    value: 'ready_for_store',
-                    label: '工厂发货'
-                }, {
-                    value: 'ready',
-                    label: '待交付'
-                }]
 
             }
         },
-        mixins: [userDataMixin, apiResultMixin],
+        mixins: [userDataMixin, orderDataMixin, apiResultMixin],
         props: ['dialogVisible', 'orderState', 'itemCounts'],
         created() {
             console.log('processItem created')

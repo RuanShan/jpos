@@ -1,14 +1,14 @@
 <style lang="scss">
 
 @import '../style/mixin';
-.worker-performance-container {
+.scan-product-container {
     position: relative;
     .order-list {
         position: absolute;
         top: 80px;
         bottom: 0;
-        left: 10%;
-        width: 80%;
+        left: 0;
+        width: 30%;
         padding: 16px;
         border: 1px #efefef solid;
         .actions {
@@ -21,7 +21,7 @@
     }
     .order-detail {
         position: absolute;
-        width: 0;
+        width: 70%;
         top: 80px;
         bottom: 0;
         right: 0;
@@ -62,15 +62,12 @@
             .el-select {
                 display: inline-block;
             }
-            .product-select{
-              width: 300px;
-            }
         }
         .el-input {
+            width: 150px;
             display: inline-block;
         }
     }
-
 }
 
 
@@ -78,51 +75,34 @@
 
 <template>
 
-<el-dialog title="工作量录入" :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen">
+<el-dialog title="提示" :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen">
 
-    <div class="worker-performance-container fillcontain clear">
+    <div class="scan-product-container fillcontain clear">
         <!-- filters start -->
         <div class="filters">
-
             <div class="filter">
-              工人:
-              <el-select v-model="currentWorkerId" placeholder="All">
-                  <el-option v-for="item in workerList" :key="item.id" :label="item.username" :value="item.id">
-                  </el-option>
-              </el-select>
-              工作:
-              <el-select v-model="currentProductIds" multiple placeholder="All" class="product-select">
-                  <el-option v-for="item in productList" :key="item.id" :label="item.name" :value="item.id">
-                  </el-option>
-              </el-select>
-
+                关键字:
+                <el-input label="Keyword" placeholder="请输入物品编号" v-model="filters.keyword" @change="handleKeywordChange"></el-input>
             </div>
-            <div class="filter" style="float:right;">
-                关键字:<el-input label="Keyword" placeholder="请输入物品编号" v-model="filters.keyword" @change="handleKeywordChange"></el-input>
+            <div class="filter">
+                状态:
+                <el-select v-model="filters.lineItemGroupState" placeholder="All">
+                    <el-option v-for="item in orderStateOptions" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
             </div>
+            <el-button type="primary" @click="handleSearch()">搜索</el-button>
         </div>
         <!-- filters end -->
 
         <div class="order-list">
 
-            <el-table ref="lineItemGroupTable" :data="lineItemList" highlight-current-row @current-change="handleCurrentRowChange" @selection-change="handleSelectionChange" :row-key="row => row.number" style="width: 100%">
+            <el-table ref="lineItemGroupTable" :data="lineItemGroupList" highlight-current-row @current-change="handleCurrentRowChange" @selection-change="handleSelectionChange" :row-key="row => row.number" style="width: 100%">
                <el-table-column  type="selection"  width="55"> </el-table-column>
 
-               <el-table-column label="物品编号" prop="groupNumber">
-               </el-table-column>
-               <el-table-column label="工作内容" prop="name">
-               </el-table-column>
-                <el-table-column label="订单状态" prop="group.state">
+                <el-table-column label="物品编号" prop="number">
                 </el-table-column>
-                <el-table-column label="工人" >
-                  <template slot-scope="scope">
-                    <p v-if="scope.row.worker_id>0">
-                      <span v-for="worker in workerList" v-if="worker.id==scope.row.worker_id">
-                        {{ worker.username }}
-                      </span>
-                    </p>
-
-                  </template>
+                <el-table-column label="订单状态" prop="state">
                 </el-table-column>
 
             </el-table>
@@ -132,13 +112,60 @@
             </div>
 
             <div class="actions" v-if="orderState=='processing'">
-
-              <el-button  @click="handleCloseDialog()">关闭窗口</el-button>
-
-              <el-button type="primary" @click="handleFulfillLineItems()">确认工作量</el-button>
+              <el-button type="primary" @click="ChangeGroupStates()">验收</el-button>
             </div>
+            <div class="actions" v-if="orderState=='processed'">
+              <el-button @click="ChangeGroupStates(false)">取消验收</el-button>
+            </div>
+
+
         </div>
 
+        <div class="order-detail">
+            <div class="line-item-groups-container" v-if="currentOrder">
+                <table style="width: 100%">
+                    <tr>
+                        <td> 用户名 </td>
+                        <td> <span>{{ currentOrder.userName }}</span></td>
+                    </tr>
+                    <tr>
+                        <td> 店铺名称 </td>
+                        <td> <span>{{ currentOrder.storeName }}</span></td>
+                    </tr>
+                </table>
+                <div v-for="lineItemGroup in currentOrder.lineItemGroups" class="group-container">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>GroupNumber</td>
+                            <td> {{lineItemGroup.number}} </td>
+                            <td>State</td>
+                            <td> {{lineItemGroup.state}} </td>
+                        </tr>
+                        <tr>
+                            <td> Services </td>
+                            <td>
+                                <div v-for="lineItem in lineItemGroup.lineItems">
+                                    <span>{{ lineItem.name }}</span>
+                                    <span>{{ lineItem.price }}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Images</td>
+                            <td> {{lineItemGroup.number}} </td>
+                        </tr>
+                    </table>
+                </div>
+
+
+                <div class="actions" >
+                    <el-button @click="ChangeCurrentGroupState(false)">DrawBack</el-button>
+                    <el-button @click="ChangeCurrentGroupState(true)" type="primary">NextStep</el-button>
+                </div>
+
+            </div>
+
+        </div>
     </div>
 </el-dialog>
 
@@ -147,7 +174,7 @@
 <script>
 
 import {
-    getProducts, findUsers, findLineItemGroups, fulfillLineItems, findOrderByGroupNumber
+    findOrderByGroupNumber, evolveLineItemGroups
 }
 from '@/api/getData'
 import {
@@ -166,12 +193,8 @@ export default {
             return {
                 currentOrder: null,
                 currentGroup: null,// a order may have several line_item_groups
-                currentWorkerId: null,
-                currentProductIds: [],
-                lineItemList: [],
+                orderDetailList: [],
                 lineItemGroupList: [],
-                workerList: [],
-                productList: [],
                 storeId: null,
                 filters: {
                     keyword: '',
@@ -184,41 +207,19 @@ export default {
         mixins: [userDataMixin, orderDataMixin, apiResultMixin],
         props: ['dialogVisible', 'orderState', 'orderCounts'],
         created() {
-
+            console.log('scanProduct created')
         },
         computed: {
             computedVisible: function() {
                 return this.dialogVisible
             }
-
         },
         methods: {
-            initData() {
-              this.currentWorkerId = null
-              let queryParams = { q: { spree_roles_name_eq:"worker" } }
-              findUsers(queryParams).then((res)=>{
-                this.workerList = res.users
-                if( this.workerList.length>0){
-                  this.currentWorkerId = this.workerList[0].id
-                }
-              })
-              getProducts().then((res)=>{
-                this.productList = res.products
-              })
-
-              let groupQueryParams = { q: { state_eq:"processing" } }
-              findLineItemGroups(groupQueryParams).then((res)=>{
-
-                this.count = res.total_count
-                this.lineItemGroupList.splice( 0, 0, ...this.buildItemGroupsFromApiResult(res))
-                console.log("computedLineItems", this.computedLineItems)
-                this.lineItemList = _.flatten( this.lineItemGroupList.map((item)=>{ return item.lineItems } ) )
-              })
-
+            async initData() {
             },
-            handleFulfillLineItems(forward = true) {
-                let lineItemIds = this.multipleSelection.map((lineItem) => lineItem.id)
-                if (lineItemIds.length == 0) {
+            ChangeGroupStates(forward = true) {
+                let groupNumbers = this.multipleSelection.map((order) => order.number)
+                if (groupNumbers.length == 0) {
                     this.$message({
                         message: '警告哦，Please select a order at least',
                         type: 'warning'
@@ -226,7 +227,7 @@ export default {
                     return;
                 }
 
-                this.fulfillLineItems( lineItemIds )
+                this.MoveGroupToNextState( groupNumbers,forward )
             },
             ChangeCurrentGroupState(forward = true) {
                 if (this.currentGroup == null) {
@@ -241,32 +242,29 @@ export default {
                 this.MoveGroupToNextState( groupNumbers,forward )
             },
 
-            async fulfillLineItems( lineItemIds = []) {
+            async MoveGroupToNextState( groupNumbers = [], forward = true) {
                 let queryParams = {
-                    ids: lineItemIds,
-                    worker_id: this.currentWorkerId
+                    numbers: groupNumbers,
+                    forward
                 }
-                console.log('handleFulfillLineItems', queryParams)
-                const response = await fulfillLineItems(queryParams)
-                if (response.count > 0) {
+                console.log('ChangeGroupStates', queryParams)
+                const groupsReturn = await evolveLineItemGroups(queryParams)
+                if (groupsReturn.count > 0) {
                   this.handleDiscardSelection(  )
                   this.$emit('order-state-changed')
                 }
             },
 
             handleDialogClose(done) {
-              // 用户点击X 触发 关闭事件
+
                 this.$emit('update:dialogVisible', false)
                 done();
-            },
-            handleCloseDialog(){
-                //用户点击 关闭窗口按钮，
-                this.$emit('update:dialogVisible', false)
+
             },
             handleDialogOpen(){
-
+              this.filters.keyword = ""
+              this.filters.lineItemGroupState = this.orderState
               this.lineItemGroupList.length = 0
-              this.initData()
               console.log('handleDialogOpen yeah')
             },
             handleKeywordChange(value){
@@ -281,8 +279,8 @@ export default {
             },
             handleDiscardSelection(  ){
               console.log("1handleDiscardSelection=", this.multipleSelection)
-              _.remove( this.lineItemList, (item)=>{
-                return this.multipleSelection.includes(item)
+              _.remove( this.lineItemGroupList, (group)=>{
+                return this.multipleSelection.includes(group)
               })
               this.$refs.lineItemGroupTable.clearSelection();
               this.$refs.lineItemGroupTable.setCurrentRow();
@@ -316,7 +314,7 @@ export default {
                 if( !this.lineItemGroupList.includes(this.currentGroup)){
                   this.lineItemGroupList.push(this.currentGroup)
                 }
-
+console.log( "this.currentOrder", this.currentOrder, "this.currentGroup ", this.currentGroup,  "number=",number)
               }else{
                 // find by network
                 const orderResult = await findOrderByGroupNumber(number)

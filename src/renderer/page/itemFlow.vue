@@ -154,8 +154,7 @@
 # shipped: 已交付客户
 -->
 <div class="item-flow-container fillcontain">
-    <scan-product :order-state="currentOrderState" :dialog-visible.sync="scanShipmentDialogVisible" @order-state-changed="orderStateChanged"> </scan-product>
-    <process-order :order-state="currentOrderState" :dialog-visible.sync="processOrderDialogVisible" @order-state-changed="orderStateChanged"> </process-order>
+    <scan-product :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </scan-product>
     <process-item :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </process-item>
     <transfer-product :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </transfer-product>
     <worker-performance :order-state="currentOrderState" :dialog-visible.sync="workerPerformanceDialogVisible" @order-state-changed="orderStateChanged"> </worker-performance>
@@ -278,7 +277,7 @@ export default {
             return {
                 processOrderDialogVisible: false,
                 processItemDialogVisible: false,
-                scanShipmentDialogVisible: false,
+                scanProductDialogVisible: false,
                 transferProductDialogVisible: false,
                 workerPerformanceDialogVisible: false,
                 tableData: [],
@@ -361,13 +360,8 @@ export default {
                     this.currentOrderState = orderState
                     console.log('processItems')
                 },
-                processOrders(orderState) {
-                    this.processOrderDialogVisible = true
-                    this.currentOrderState = orderState
-                    console.log('processOrders')
-                },
                 handleScanOrders(orderState) {
-                    this.scanShipmentDialogVisible = true
+                    this.scanProductDialogVisible = true
                     this.currentOrderState = orderState
                     console.log('handleScanOrders')
                 },

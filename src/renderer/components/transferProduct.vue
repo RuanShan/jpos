@@ -113,9 +113,10 @@ import {
 }
 from '@/api/getData'
 import {
-    userDataMixin
+    userDataMixin, orderDataMixin
 }
-from '@/components/userDataMixin'
+from '@/components/mixin/commonDataMixin'
+
 import {
     apiResultMixin
 }
@@ -140,26 +141,9 @@ export default {
                     groupState: '',
                 },
                 multipleSelection: [],
-                orderStateOptions: [{
-                    value: 'pending',
-                    label: '新订单'
-                }, {
-                    value: 'ready_for_factory',
-                    label: '准备发工厂'
-                }, {
-                    value: 'processing',
-                    label: 'processing'
-                }, {
-                    value: 'ready_for_store',
-                    label: 'ready_for_store'
-                }, {
-                    value: 'ready',
-                    label: '待交付'
-                }],
-
             }
         },
-        mixins: [userDataMixin, apiResultMixin, printMixin],
+        mixins: [userDataMixin, orderDataMixin,  apiResultMixin, printMixin],
         props: ['dialogVisible', 'orderState','nextOrderState', 'orderCounts'],
         created() {
         },
