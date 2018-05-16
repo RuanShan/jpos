@@ -164,9 +164,9 @@ import {
 }
 from '@/api/getData'
 import {
-    userDataMixin
+    userDataMixin, orderDataMixin
 }
-from '@/components/userDataMixin'
+from '@/components/mixin/commonDataMixin'
 import {
     apiResultMixin
 }
@@ -190,26 +190,10 @@ export default {
                     storeId: 0
                 },
                 multipleSelection: [],
-                orderStateOptions: [{
-                    value: 'pending',
-                    label: '新订单'
-                }, {
-                    value: 'ready_for_factory',
-                    label: '准备发工厂'
-                }, {
-                    value: 'processing',
-                    label: 'processing'
-                }, {
-                    value: 'ready_for_store',
-                    label: 'ready_for_store'
-                }, {
-                    value: 'ready',
-                    label: '待交付'
-                }]
-
+                
             }
         },
-        mixins: [userDataMixin, apiResultMixin],
+        mixins: [userDataMixin, orderDataMixin, apiResultMixin],
         props: ['dialogVisible', 'orderState', 'orderCounts'],
         created() {
             console.log('processOrder created')

@@ -4,10 +4,10 @@
         <!-- filters start -->
         <div class="filters">
             <div class="filter">
-                Keyword: <el-input label="Keyword" placeholder="请输入number or username" v-model="filters.keyword"></el-input>
+                关键字: <el-input label="Keyword" placeholder="请输入订单ID" v-model="filters.keyword"></el-input>
             </div>
             <div class="filter">
-                OrderState: <el-select v-model="filters.shipment_state" placeholder="All">
+                状态: <el-select v-model="filters.shipment_state" placeholder="不限" clearable >
                             <el-option
                               v-for="item in orderStateOptions"
                               :key="item.value"
@@ -26,26 +26,33 @@
         <!-- filters end -->
 
         <el-table
-          :data="tableData"
+          :data="orderList"
           @expand-change='expandChange'
                 :expand-row-keys='expendRow'
-                :row-key="row => row.index"
+                :row-key="row => row.id"
           style="width: 100%">
           <el-table-column type="expand">
             <template slot-scope="props">
-
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item label="用户名" >
-                  <span>{{ props.row.username }}</span>
+                  <span>{{ props.row.userName }}</span>
                 </el-form-item>
                 <el-form-item label="店铺名称">
                   <span>{{ props.row.storeName }}</span>
                 </el-form-item>
-                <div v-for="lineItem in props.row.lineItems" >
-                  <el-form-item label="name">
+                <div v-for="lineItemGroup in props.row.lineItemGroups" >
+                  <el-form-item label="物品编码">
+                    <span>{{ lineItemGroup.number }}</span>
+                  </el-form-item>
+                  <el-form-item label="服务">
+                    <span>{{ lineItemGroup.name }}</span>
+                  </el-form-item>
+                </div>
+                <div v-for="lineItem in props.row.extraLineItems" >
+                  <el-form-item label="商品名称">
                     <span>{{ lineItem.name }}</span>
                   </el-form-item>
-                  <el-form-item label="price">
+                  <el-form-item label="商品价格">
                     <span>{{ lineItem.price }}</span>
                   </el-form-item>
                 </div>
@@ -57,12 +64,20 @@
             prop="id">
           </el-table-column>
           <el-table-column
+            label="店铺"
+            prop="storeName">
+          </el-table-column>
+          <el-table-column
             label="总价格"
-            prop="total_amount">
+            prop="totalAmount">
           </el-table-column>
           <el-table-column
             label="订单状态"
-            prop="status">
+            prop="groupState">
+          </el-table-column>
+          <el-table-column
+            label="创建时间"
+            prop="displayCreatedAt">
           </el-table-column>
       </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
@@ -81,33 +96,27 @@
 
 <script>
     import headTop from '@/components/headTop'
-    import {getOrderList, getStore, getUserInfo, getOrder} from '@/api/getData'
-    import {userDataMixin} from '@/components/userDataMixin'
-
+    import {getOrderList, getOrder} from '@/api/getData'
+    import {userDataMixin, orderDataMixin} from '@/components/mixin/commonDataMixin'
+    import { apiResultMixin } from '@/components/apiResultMixin'
     export default {
       data () {
         return {
-          tableData: [],
+          orderList: [],
           currentRow: null,
-          perPage: 2,
+          perPage: 12,
           count: 0,
           currentPage: 1,
           storeId: null,
           expendRow: [],
           filters: { keyword: '', startEndTime: null, shipment_state: 'all', storeId: 0 },
           multipleSelection: [],
-          orderStateOptions: [{ value: 'all', label: 'all' },
-            { value: 'pending', label: 'pending' },
-            { value: 'partial', label: 'partial' },
-            { value: 'ready_for_factory', label: 'ready_for_factory' },
-            { value: 'ready', label: 'ready' }]
-
         }
       },
       components: {
         headTop
       },
-      mixins: [userDataMixin],
+      mixins: [userDataMixin, orderDataMixin, apiResultMixin],
       created(){
         this.getAdminData().then(res=>{
           if (this.userInfo.id) {
@@ -118,8 +127,10 @@
           }
         })
       },
-      mounted () {
-
+      computed: {
+        newOrderStateOptions: function(){
+          Array.of( ...this.orderStateOptions )
+        }
       },
       methods: {
         async initData () {
@@ -154,45 +165,21 @@
 
           const ordersResult = await getOrderList(queryParams)
           this.count = ordersResult.total_count
-          console.log( "total_count", this.count)
-          this.tableData = []
-          ordersResult.orders.forEach((item, index) => {
-              const rowData = {}
-              rowData.id = item.id
-              rowData.number = item.number
-              rowData.total_amount = item.display_total
-              rowData.status = item.state
-              rowData.user_id = item.user_id
-              rowData.store_id = item.store_id
-              rowData.index = index
-              rowData.shipment_state = item.shipment_state
-              rowData.payment_state = item.payment_state
-              this.tableData.push(rowData)
-          })
+
+          this.orderList = this.buildOrdersFromApiResult( ordersResult )
+          console.log( "orderList", this.orderList)
+
         },
         async expandChange (row, expandedRows) {
-        console.log('expandChange', expandedRows, row)
-          if (expandedRows.indexOf(row)>=0) {
-            const storeInfo = await getStore(row.store_id)
-            const userInfo = await getUserInfo(row.user_id)
-            const orderInfo = await getOrder(row.number)
-            const lineItems = []
-            orderInfo.line_items.forEach((item,index)=>{
-              const rowData = {}
-              rowData.name = item.variant.name
-              rowData.options_text = item.variant.options_text
-              rowData.price = item.price
-              lineItems.push( rowData )
-            })
-            console.log("orderInfo.line_items", lineItems)
+          console.log('expandChange', row)
+          //如果当前行没有订单详细数据，则加载 lineItems
+          if (!row.lineItemGroups ) {
+            //const userInfo = await getUserInfo(row.user_id)
+            const orderResult = await getOrder(row.number)
+            const orderDetail = this.buildOrderFromApiResult( orderResult )
 
-            this.tableData.splice(row.index, 1, {...row, ...{storeName: storeInfo.name, username: userInfo.username, createdAt: orderInfo.created_at, lineItems: lineItems }})
-            this.$nextTick(() => {
-              this.expendRow.push(row.index)
-            })
-          } else {
-            const index = this.expendRow.indexOf(row.index)
-            this.expendRow.splice(index, 1)
+            let orderIndex = this.orderList.indexOf(row)
+            Object.assign( this.orderList[orderIndex], orderDetail )
           }
         }
       }

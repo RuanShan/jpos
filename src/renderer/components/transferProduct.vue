@@ -113,9 +113,10 @@ import {
 }
 from '@/api/getData'
 import {
-    userDataMixin
+    userDataMixin, orderDataMixin
 }
-from '@/components/userDataMixin'
+from '@/components/mixin/commonDataMixin'
+
 import {
     apiResultMixin
 }
@@ -140,26 +141,9 @@ export default {
                     groupState: '',
                 },
                 multipleSelection: [],
-                orderStateOptions: [{
-                    value: 'pending',
-                    label: '新订单'
-                }, {
-                    value: 'ready_for_factory',
-                    label: '准备发工厂'
-                }, {
-                    value: 'processing',
-                    label: 'processing'
-                }, {
-                    value: 'ready_for_store',
-                    label: 'ready_for_store'
-                }, {
-                    value: 'ready',
-                    label: '待交付'
-                }],
-
             }
         },
-        mixins: [userDataMixin, apiResultMixin, printMixin],
+        mixins: [userDataMixin, orderDataMixin,  apiResultMixin, printMixin],
         props: ['dialogVisible', 'orderState','nextOrderState', 'orderCounts'],
         created() {
         },
@@ -324,7 +308,7 @@ console.log( "this.currentOrder", this.currentOrder, "this.currentGroup ", this.
             handlePrint(){
               //console.log("printableData", this.printableData)
               console.log("getPrinters", this.getPrinters())
-              
+
               //var printWin = window.open('','','left=0,top=0,width=1,height=1,toolbar=0,scrollbars=0,status  =0')
               //printWin.focus()
               //window.print()

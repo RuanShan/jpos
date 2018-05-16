@@ -7,8 +7,8 @@
         position: absolute;
         top: 80px;
         bottom: 0;
-        left: 0;
-        width: 30%;
+        left: 10%;
+        width: 80%;
         padding: 16px;
         border: 1px #efefef solid;
         .actions {
@@ -50,7 +50,8 @@
         bottom: 16px;
     }
     .filters {
-        margin: 0 0 20px 0;
+        width: 80%;
+        margin: 0 auto;
         border: 1px #efefef solid;
         padding: 10px;
         background: #f9f9f9;
@@ -81,8 +82,8 @@
         <!-- filters start -->
         <div class="filters">
             <div class="filter">
-                关键字: {{orderState}}
-                <el-input label="Keyword" placeholder="请输入订单号或用户名" v-model="filters.keyword" @change="handleKeywordChange"></el-input>
+                关键字:
+                <el-input label="Keyword" placeholder="请输入物品编号" v-model="filters.keyword" @change="handleKeywordChange"></el-input>
             </div>
             <div class="filter">
                 状态:
@@ -100,7 +101,7 @@
             <el-table ref="lineItemGroupTable" :data="lineItemGroupList" highlight-current-row @current-change="handleCurrentRowChange" @selection-change="handleSelectionChange" :row-key="row => row.number" style="width: 100%">
                <el-table-column  type="selection"  width="55"> </el-table-column>
 
-                <el-table-column label="GroupNumber" prop="number">
+                <el-table-column label="物品编号" prop="number">
                 </el-table-column>
                 <el-table-column label="订单状态" prop="state">
                 </el-table-column>
@@ -112,56 +113,16 @@
             </div>
 
             <div class="actions" v-if="orderState=='processing'">
-              <el-button type="danger" @click="handleDiscardSelection()">remove</el-button>
-              <el-button @click="ChangeGroupStates(false)">DrawBack</el-button>
+              <el-button  @click="handleCloseDialog()">关闭窗口</el-button>
 
-              <el-button type="primary" @click="ChangeGroupStates()">NextStep</el-button>
+              <el-button type="primary" @click="ChangeGroupStates()">验收</el-button>
             </div>
+            <div class="actions" v-if="orderState=='processed'">
+              <el-button @click="ChangeGroupStates(false)">取消验收</el-button>
+            </div>
+
+
         </div>
-
-        <div class="order-detail">
-            <div class="line-item-groups-container" v-if="currentOrder">
-                <table style="width: 100%">
-                    <tr>
-                        <td> 用户名 </td>
-                        <td> <span>{{ currentOrder.userName }}</span></td>
-                    </tr>
-                    <tr>
-                        <td> 店铺名称 </td>
-                        <td> <span>{{ currentOrder.storeName }}</span></td>
-                    </tr>
-                </table>
-                <div v-for="lineItemGroup in currentOrder.lineItemGroups" class="group-container">
-                    <table style="width: 100%">
-                        <tr>
-                            <td>GroupNumber</td>
-                            <td> {{lineItemGroup.number}} </td>
-                            <td>State</td>
-                            <td> {{lineItemGroup.state}} </td>
-                        </tr>
-                        <tr>
-                            <td> Services </td>
-                            <td>
-                                <div v-for="lineItem in lineItemGroup.lineItems">
-                                    <span>{{ lineItem.name }}</span>
-                                    <span>{{ lineItem.price }}</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Images</td>
-                            <td> {{lineItemGroup.number}} </td>
-                        </tr>
-                    </table>
-                </div>
-
-
-                <div class="actions" >
-                    <el-button @click="ChangeCurrentGroupState(false)">DrawBack</el-button>
-                    <el-button @click="ChangeCurrentGroupState(true)" type="primary">NextStep</el-button>
-                </div>
-
-            </div>
 
         </div>
     </div>
@@ -176,9 +137,9 @@ import {
 }
 from '@/api/getData'
 import {
-    userDataMixin
+    userDataMixin, orderDataMixin
 }
-from '@/components/userDataMixin'
+from '@/components/mixin/commonDataMixin'
 import {
     apiResultMixin
 }
@@ -200,26 +161,9 @@ export default {
                     lineItemGroupState: '',
                 },
                 multipleSelection: [],
-                orderStateOptions: [{
-                    value: 'pending',
-                    label: '新订单'
-                }, {
-                    value: 'ready_for_factory',
-                    label: '准备发工厂'
-                }, {
-                    value: 'processing',
-                    label: 'processing'
-                }, {
-                    value: 'ready_for_store',
-                    label: 'ready_for_store'
-                }, {
-                    value: 'ready',
-                    label: '待交付'
-                }]
-
             }
         },
-        mixins: [userDataMixin, apiResultMixin],
+        mixins: [userDataMixin, orderDataMixin, apiResultMixin],
         props: ['dialogVisible', 'orderState', 'orderCounts'],
         created() {
             console.log('scanProduct created')
@@ -271,10 +215,12 @@ export default {
             },
 
             handleDialogClose(done) {
-
                 this.$emit('update:dialogVisible', false)
                 done();
-
+            },
+            handleCloseDialog(){
+                //用户点击 关闭窗口按钮，
+                this.$emit('update:dialogVisible', false)
             },
             handleDialogOpen(){
               this.filters.keyword = ""

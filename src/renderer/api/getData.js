@@ -350,10 +350,7 @@ export const evolveLineItemGroups = (data) => fetch('/api/v1/line_item_groups/al
  * 获取 LineItemGroup Detail
  */
 
-<<<<<<< HEAD
 export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/' + number)
-=======
-export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/'+number)
 
 /**
  * update LineItem worker_id列表
@@ -362,4 +359,3 @@ export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/'+numb
  */
 
 export const fulfillLineItems = data => fetch('/api/v1/line_items/fulfill', data, 'PUT')
->>>>>>> bc38fc0c439968452376d2336e83e295efdaa377
