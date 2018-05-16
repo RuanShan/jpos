@@ -5,37 +5,38 @@
       <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
       <el-form :model="memberAddData" :rules="rules" ref="memberAddData" status-icon label-width="100px" class="demo-memberAddData">
 
-        <el-form-item label="会员编号" prop="memberNum">
+        <!-- <el-form-item label="会员卡号" prop="memberNum">
           <el-input v-model="memberAddData.memberNum"></el-input>
+        </el-form-item> -->
+        <el-form-item label="会员电话" prop="mobile">
+          <el-input v-model="memberAddData.mobile"></el-input>
         </el-form-item>
-        <el-form-item label="会员密码" prop="passWord">
-          <el-input v-model="memberAddData.passWord"></el-input>
+        <el-form-item label="会员姓名" prop="username">
+          <el-input v-model="memberAddData.username"></el-input>
         </el-form-item>
-        <el-form-item label="密码确认" prop="passWord_confirm">
-          <el-input v-model="memberAddData.passWord_confirm"></el-input>
+        <el-form-item label="会员密码" prop="password">
+          <el-input v-model="memberAddData.password"></el-input>
         </el-form-item>
-        <el-form-item label="会员姓名" prop="memberName">
-          <el-input v-model="memberAddData.memberName"></el-input>
+        <el-form-item label="密码确认" prop="password_confirm">
+          <el-input v-model="memberAddData.password_confirm"></el-input>
         </el-form-item>
-        <el-form-item label="会员电话" prop="memberPhone">
-          <el-input v-model="memberAddData.memberPhone"></el-input>
-        </el-form-item>
-        <el-form-item label="过期时间" required>
+
+        <!-- <el-form-item label="过期时间" required>
           <el-form-item prop="outTime">
             <el-date-picker type="date" placeholder="选择日期" v-model="memberAddData.outTime" style="width: 100%;"></el-date-picker>
           </el-form-item>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="会员生日" required>
-          <el-form-item prop="birthday">
-            <el-date-picker type="date" placeholder="选择日期" v-model="memberAddData.birthday" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+          <el-form-item prop="birth">
+            <el-date-picker type="date" placeholder="选择日期" v-model="memberAddData.birth" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-form-item>
         <el-form-item label="联系地址" prop="address">
           <el-input v-model="memberAddData.address"></el-input>
         </el-form-item>
-        <el-form-item label="输入备注" prop="desc">
+        <!-- <el-form-item label="输入备注" prop="desc">
           <el-input type="textarea" v-model="memberAddData.desc"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="submitForm('memberAddData')">立即创建</el-button>
           <el-button @click="resetForm('memberAddData')">重置</el-button>
@@ -60,21 +61,21 @@ export default {
   props: ["inputNumber"],
   data() {
     //验证卡号--1.不能空;2.必须是数字;3.四至十一个字符
-    var checkmemberNum = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("不能为空"));
-      }
-      if (!isvalidNumber(value)) {
-        callback(new Error("请输入数字值"));
-      } else {
-        callback();
-      }
-    };
+    // var checkmemberNum = (rule, value, callback) => {
+    //   if (!value) {
+    //     return callback(new Error("不能为空"));
+    //   }
+    //   if (!isvalidNumber(value)) {
+    //     callback(new Error("请输入数字值"));
+    //   } else {
+    //     callback();
+    //   }
+    // };
     //验证规则---两次密码是否一致
     var validatePassConfirm = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.memberAddData.passWord) {
+      } else if (value !== this.memberAddData.password) {
         callback(new Error("两次输入密码不一致!"));
       } else {
         callback();
@@ -89,10 +90,10 @@ export default {
         callback();
       }
     };
-    function isvalidNumber(str) {
-      var regNumber = /^[0-9]*$/;
-      return regNumber.test(str);
-    }
+    // function isvalidNumber(str) {
+    //   var regNumber = /^[0-9]*$/;
+    //   return regNumber.test(str);
+    // }
     function isvalidPhone(str) {
       var reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
       return reg.test(str);
@@ -100,30 +101,31 @@ export default {
     return {
       dialogVisible: true, //窗口显示标志位
       memberAddData: {
-        memberNum: "",
-        passWord: "",
-        passWord_confirm: "",
-        memberName: "",
-        memberPhone: "",
+        // memberNum: "",
+        password: "",
+        password_confirm: "",
+        username: "",
+        mobile: "",
         outTime: "",
-        birthday: "",
+        birth: "",
         address: "",
-        type: [],
-        desc: ""
+        type: []
+        // desc: ""
       },
-      returnData: {},
+      createCustomerData: { user: {} },
+      returnData: {}, //添加会员方法,异步,请求服务器,调用getData.js中createCustomer
       rules: {
-        memberNum: [
-          {
-            required: true,
-            min: 4,
-            max: 11,
-            message: "长度在 4 到 11 个数字",
-            trigger: "blur"
-          },
-          { required: true, validator: checkmemberNum, trigger: "blur" }
-        ],
-        passWord: [
+        // memberNum: [
+        //   {
+        //     required: true,
+        //     min: 4,
+        //     max: 11,
+        //     message: "长度在 4 到 11 个数字",
+        //     trigger: "blur"
+        //   },
+        //   { required: true, validator: checkmemberNum, trigger: "blur" }
+        // ],
+        password: [
           { required: true, message: "请输入密码", trigger: "blur" },
           {
             required: true,
@@ -133,7 +135,7 @@ export default {
             trigger: "blur"
           }
         ],
-        passWord_confirm: [
+        password_confirm: [
           { required: true, message: "请输入密码", trigger: "blur" },
           {
             required: true,
@@ -144,7 +146,7 @@ export default {
           },
           { validator: validatePassConfirm, trigger: "blur" }
         ],
-        memberPhone: [
+        mobile: [
           { required: true, message: "请输入电话号码", trigger: "blur" },
           {
             min: 4,
@@ -162,7 +164,7 @@ export default {
             trigger: "change"
           }
         ]
-        // birthday: [
+        // birth: [
         //   {
         //     type: "date",
         //     required: true,
@@ -176,7 +178,7 @@ export default {
   },
   mounted: function() {
     this.memberAddData.memberNum = this.inputNumber;
-    this.memberAddData.memberName = this.inputNumber;
+    this.memberAddData.username = this.inputNumber;
   },
   methods: {
     //添加会员方法,异步,请求服务器,调用getData.js中createCustomer
@@ -188,14 +190,31 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.addCustomer(this.memberAddData).then(() => {
+          this.switchData(); //转换成SerVer需要的数据
+          this.addCustomer(this.createCustomerData).then(() => {
             //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
             if (
-              this.returnData.Id != "" &&
-              typeof this.returnData.Id != "undefined"
+              this.returnData.hasOwnProperty("id") &&
+              this.returnData.id != "" &&
+              typeof this.returnData.id != "undefined"
             ) {
               this.$emit("AddMemberReturnData", this.returnData);
+              this.dialogVisible = false;
               // console.log(this.returnData.Id);
+            } else {
+              //判读返回的数据中是否有错误
+              if (this.returnData.hasOwnProperty("error")) {
+                //如果返回数据中有错误
+                this.$alert(this.returnData.errors, "错误提示", {
+                  confirmButtonText: "确定"
+                });
+                return false;
+              } else {
+                this.$alert("id错误", "错误提示", {
+                  confirmButtonText: "确定"
+                });
+                return false;
+              }
             }
           });
           // alert("submit!");
@@ -212,20 +231,26 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-
-    fillIn(){
-      this.memberAddData.memberNum = "9874556";
-      this.memberAddData.passWord = "9874556";
-      this.memberAddData.passWord_confirm = "9874556";
-      this.memberAddData.memberPhone = "13000000000";
-      this.memberAddData.outTime = new Date();
-      this.memberAddData.birthday = new Date();
+    //转换成SerVer需要的数据
+    switchData() {
+      this.createCustomerData.user.username = this.memberAddData.username;
+      this.createCustomerData.user.mobile = this.memberAddData.mobile;
+      this.createCustomerData.user.password = this.memberAddData.password;
+      this.createCustomerData.user.address = this.memberAddData.address;
+      this.createCustomerData.user.birth = this.memberAddData.birth;
     },
-    
+
+    fillIn() {
+      this.memberAddData.memberNum = "9874556";
+      this.memberAddData.password = "9874556";
+      this.memberAddData.password_confirm = "9874556";
+      this.memberAddData.mobile = "13000000000";
+      this.memberAddData.outTime = new Date();
+      this.memberAddData.birth = new Date();
+    }
   }
 };
 </script>
 
 <style scoped>
-
 </style>

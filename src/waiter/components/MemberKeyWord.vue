@@ -15,7 +15,7 @@
     <!-- 会员关键字窗口 -> START -->
     <el-dialog title="会员关键字" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" @close="closeMemberKeyWordWindow()">
       <el-input v-model="inputNumber" placeholder="请输入会员/手机号"></el-input>
-      <el-input v-model="inputNumber" placeholder="请输入会员/手机号"></el-input>
+      <el-autocomplete v-model="inputNumber" :fetch-suggestions="querySearchAsync" placeholder="请输入会员手机号码" @select="handleSelect" :trigger-on-focus="false"></el-autocomplete>
 
       <span slot="footer" class="dialog-footer">
         <el-button type="">选择</el-button>
@@ -23,6 +23,8 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="openAddMemberWindws">确 定</el-button>
       </span>
+      <el-button type="danger" @click="test()">测试</el-button>
+
     </el-dialog>
     <!-- 会员关键字窗口 -> END -->
 
@@ -40,6 +42,7 @@
 import MemberAdd from "@/components/MemberAdd.vue";
 import MemberCenter from "@/components/MemberCenter.vue";
 import { getCustomer } from "@/api/getData";
+import { findCustomers } from "@/api/getData";
 
 export default {
   components: {
@@ -57,7 +60,12 @@ export default {
       buttonRemaining: "", //按钮余额显示
       buttonNum: "", //按钮编号显示
       NoVisible: false, //按钮中"No"显示标志位
-      returnSerVerData: {} //SerVer返回的数据
+      returnSerVerData: {}, //SerVer返回的数据
+      searchReturnData: {}, //搜索提示的电话号码数据
+      searchValue: [],
+      restaurants: [],
+      timeout: null,
+      searchFlag: false
     };
   },
   mounted() {
@@ -91,7 +99,7 @@ export default {
       this.memberCenterWindowVisible = true; //打开用户中心窗口
       this.$nextTick(() => {
         //利用ref实现父组件通知子组件
-        this.$refs.membercenter.updateForId(this.memberData.Id); //this.$refs.子组件的ref名称.子组件的所有方法
+        this.$refs.membercenter.updateForId(this.memberData.id); //this.$refs.子组件的ref名称.子组件的所有方法
       });
     },
     //接收到会员中心窗口的数据后执行
@@ -112,8 +120,60 @@ export default {
       let Ids = "id-" + Id;
       this.returnSerVerData = await getCustomer(Ids);
     },
+    //从SerVer上获取模糊搜索的用户数据,异步获取
+    async searchCustomers() {
+      this.searchReturnData = await findCustomers();
+    },
+    //关闭窗口时处理函数-----发射memberData数据给父组件
     closeMemberKeyWordWindow() {
       this.$emit("MemberData", this.memberData);
+    },
+    test() {
+      this.searchCustomers().then(() => {
+        this.searchReturnData.users.forEach(user => {
+          let val = { value: user.mobile };
+          this.searchValue.push(val);
+        });
+        console.log("搜索用户数据成功了,感谢您!!!");
+      });
+    },
+    querySearchAsync(queryString, cb) {
+      if (this.searchFlag == true) {
+        console.log("searchFlag = true 了!!!!");
+        var restaurants = this.searchValue;
+        var results = queryString
+          ? restaurants.filter(this.createStateFilter(queryString))
+          : restaurants;
+
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          cb(results);
+        }, 10 * Math.random());
+      }
+    },
+    createStateFilter(queryString) {
+      return inputNumber => {
+        return (
+          inputNumber.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
+    },
+    handleSelect(item) { //点击选中建议项时触发
+      console.log("选择了" + item);
+    }
+  },
+  watch: {
+    inputNumber: function() {
+      if (this.inputNumber.length == 4) {
+        this.searchCustomers().then(() => {
+          this.searchReturnData.users.forEach(user => {
+            let val = { value: user.mobile };
+            this.searchValue.push(val);
+          });
+          // console.log("搜索用户数据成功了,感谢您!!!");
+        });
+        this.searchFlag = true;
+      }
     }
   }
 };

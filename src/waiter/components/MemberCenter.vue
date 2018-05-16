@@ -11,13 +11,13 @@
                 <!-- 上部信息左侧 -->
                 <div class="grid-content bg-purple-light">
                   <div>
-                    <h2>卡号:&nbsp;&nbsp;&nbsp;{{memberCenterData.memberNum}}</h2>
+                    <h2>ID:&nbsp;&nbsp;&nbsp;{{memberCenterData.id}}</h2>
                   </div>
                   <div>
-                    <h2>姓名:&nbsp;&nbsp;&nbsp;{{memberCenterData.memberName}}</h2>
+                    <h2>姓名:&nbsp;&nbsp;&nbsp;{{memberCenterData.username}}</h2>
                   </div>
                   <div>
-                    <h2>电话:&nbsp;&nbsp;&nbsp;{{memberCenterData.memberPhone}}</h2>
+                    <h2>电话:&nbsp;&nbsp;&nbsp;{{memberCenterData.mobile}}</h2>
                   </div>
                 </div>
               </el-col>
@@ -61,16 +61,23 @@
               </el-col>
             </el-row>
 
-            <el-table :data="tableData" :show-header="false" border style="width: 100%; background-color:#ffcbb3">
-              <el-table-column prop="nameA">
-              </el-table-column>
-              <el-table-column prop="dataA">
-              </el-table-column>
-              <el-table-column prop="nameB">
+            <el-row>
+              <el-col :span="12">
+                <el-table :data="tableData" :show-header="false" border style="width: 100%; background-color:#ffcbb3">
+                  <el-table-column prop="name">
+                  </el-table-column>
+                  <el-table-column prop="data">
+                  </el-table-column>
+                  <!-- <el-table-column prop="nameB">
               </el-table-column>
               <el-table-column prop="dataB">
-              </el-table-column>
-            </el-table>
+              </el-table-column> -->
+                </el-table>
+              </el-col>
+              <el-col :span="12">
+
+              </el-col>
+            </el-row>
 
             <el-row style="margin-top:50px">
               <!-- <el-col :span="4"><div class="grid-content bg-purple">123123</div></el-col> -->
@@ -145,28 +152,20 @@ export default {
       memberCenterData: {}, //会员中心的会员数据
       tableData: [
         {
-          nameA: "会员等级",
-          dataA: "",
-          nameB: "持有次卡",
-          dataB: ""
+          name: "创建时间",
+          data: ""
         },
         {
-          nameA: "会员折扣",
-          dataA: "",
-          nameB: "购物卡",
-          dataB: ""
+          name: "会员生日",
+          data: ""
         },
         {
-          nameA: "会员生日",
-          dataA: "",
-          nameB: "联系地址",
-          dataB: ""
+          name: "E-Mail",
+          data: ""
         },
         {
-          nameA: "开卡日期",
-          dataA: "",
-          nameB: "到期时间",
-          dataB: ""
+          name: "地址",
+          data: ""
         }
       ],
       returnSerVerData: {} //接收到的SerVer数据
@@ -174,7 +173,10 @@ export default {
   },
   mounted() {
     this.memberCenterData = this.memberData;
-    this.tableData[3].dataA = this.memberCenterData.openCardDate;
+    this.tableData[0].data = this.memberCenterData.created_at.substring(0,10);
+    this.tableData[1].data = this.memberCenterData.birth.substring(0,10);
+    this.tableData[2].data = this.memberCenterData.email;
+    this.tableData[3].data = this.memberCenterData.address;
   },
   methods: {
     //单击选中会员按钮后向父窗口"MemberKeyWord"发送本窗口的会员数据
@@ -219,9 +221,9 @@ export default {
       console.log("Center  关闭了***");
     },
     //MemberKeyWord打开用户中心窗口时的事件处理函数
-    updateForId(Id) {
+    updateForId(id) {
       // console.log(Id);
-      this.getSverVerCustomer(Id).then(() => {
+      this.getSverVerCustomer(id).then(() => {
         this.memberCenterData = this.returnSerVerData; // 把从SerVer得到的用户数据给当前窗口的用户数据
         //更新页面数据
       });
