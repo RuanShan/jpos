@@ -27,11 +27,12 @@ export var apiResultMixin = {
         groupState: orderResult.group_state,
         paymentState: orderResult.payment_state,
         payments: orderResult.payments,
-        lineItemGroups: []
+        lineItemGroups: [],
+        extraLineItems: []
       }
 
       orderResult.line_item_groups.forEach(function(groupResult, i){
-        let group = { order: order, number: groupResult.number, state: groupResult.state, lineItems:[]}
+        let group = { order: order, number: groupResult.number, state: groupResult.state, lineItems:[], name: groupResult.name}
         order.lineItemGroups.push( group )
         let groupedlineItems = []
         orderResult.line_items.forEach(function(lineItemResult ){
@@ -41,6 +42,14 @@ export var apiResultMixin = {
           }
         })
         group.lineItems = groupedlineItems
+      })
+
+      // 其它子订单 如：购买商品订单，充值订单，购买打折卡订单
+      orderResult.line_items.forEach(function(lineItemResult ){
+        if( !lineItemResult.group_number ){
+          const lineItem = { name: lineItemResult.variant.name, price: lineItemResult.price }
+          order.extraLineItems.push( lineItem )
+        }
       })
 
       return order
@@ -54,15 +63,15 @@ export var apiResultMixin = {
         order.number = item.number
         order.totalAmount = item.display_total
         order.status = item.state
-        order.userID = item.user_id
+        order.userId = item.user_id
         order.storeId = item.store_id
         order.userName = item.user_name
         order.storeName = item.store_name
         order.index = i
         order.shipmentState = item.shipment_state
         order.paymentState = item.payment_state
-        order.groupState = item.groupState
-        order.createdAt = moment(item.created_at)        
+        order.groupState = item.group_state
+        order.createdAt = moment(item.created_at)
         order.displayCreatedAt = order.createdAt.format('MM-DD HH:mm')
         orders.push(order)
       })

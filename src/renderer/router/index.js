@@ -164,8 +164,8 @@ let routes = [
         children:[{
             path: 'customerList',
             component: customerList,
-            name: 'customer列表',
-            meta: { breadcrumbs: ['数据管理', 'customer列表'] }
+            name: '客户列表',
+            meta: { breadcrumbs: ['数据管理', '客户列表'] }
           }, {
             path: 'shopList',
             component: shopList,
@@ -179,18 +179,18 @@ let routes = [
           }, {
             path: '/productList',
             component: productList,
-            name: 'product列表',
-            meta: { breadcrumbs: ['数据管理', 'product列表'] }
+            name: '商品列表',
+            meta: { breadcrumbs: ['数据管理', '商品列表'] }
           }, {
             path: '/cardList',
             component: cardList,
-            name: 'card列表',
-            meta: { breadcrumbs: ['数据管理', 'card列表'] }
+            name: '会员卡列表',
+            meta: { breadcrumbs: ['数据管理', '会员卡列表'] }
           }, {
             path: '/staffList',
             component: staffList,
-            name: 'staff列表',
-            meta: { breadcrumbs: ['数据管理', 'staff列表'] }
+            name: '员工列表',
+            meta: { breadcrumbs: ['数据管理', '员工列表'] }
           }
         ]
       }, {
