@@ -1,7 +1,6 @@
 <template>
   <div id="app" class="clearfix">
-    <div class="logo">LOGO</div>
-    <div class="main">
+    <div class="main wrapper">
       <router-view></router-view>
     </div>
   </div>
@@ -21,19 +20,17 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.logo{
-  position: absolute;
-  top:0;
-  left: 0;
-  width: 50px;
-  height: 50px;
-  padding: 5px;
-  line-height: 50px;
+#app, .wrapper, body, html{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
+
 .main {
-  margin-left: 50px;
+/*  margin-left: 50px;
   background-color: #eff2f7;
   min-height: 100%;
+*/
 }
 
 .clearfix:before,

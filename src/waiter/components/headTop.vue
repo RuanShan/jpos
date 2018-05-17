@@ -1,6 +1,6 @@
 <template>
     <div class="header_container">
-    {{storeName}}
+    <div class="title left"> {{storeName}} </div>
     <el-dropdown @command="handleCommand" position='start'>
       <img :src="userAvatarUrl" class="avator">-{{userInfo.username}}
       <el-dropdown-menu slot="dropdown">
@@ -66,7 +66,10 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 20px;
+    padding-left: 50px;
+    .title{
+      padding: 0 10px;
+    }
   }
   .avator{
     @include wh(36px, 36px);
