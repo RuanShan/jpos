@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="clearfix">
-    <div class="main wrapper">
+    <div class="wrapper">
       <router-view></router-view>
     </div>
   </div>
@@ -27,12 +27,13 @@ export default {
 }
 
 .main {
-/*  margin-left: 50px;
+  margin-left: 50px;
   background-color: #eff2f7;
   min-height: 100%;
-*/
 }
-
+.container{
+  padding: 6px;
+}
 .clearfix:before,
 .clearfix:after {
   content: "";
