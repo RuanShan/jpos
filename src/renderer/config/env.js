@@ -14,13 +14,8 @@ if (process.env.NODE_ENV == 'development') {
     baseUrl = 'http://localhost:3001'
     baseImgPath = 'http://localhost:3001/img/'
 } else {
-<<<<<<< HEAD
-    baseUrl = 'http://cangdu.org:8001'
-    baseImgPath = 'http://cangdu.org:8001/img/'
-=======
   baseUrl = 'http://jpos_api.firecart.cn:3001'
   baseImgPath = 'http://jpos_api.firecart.cn:3001/img/'
->>>>>>> 7e6ad39f038429c4233ce72a61004f762977cbf7
 }
 
 export {
