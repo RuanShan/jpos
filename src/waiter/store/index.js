@@ -30,7 +30,7 @@ const actions = {
         user.storeId = userResult.store_id
         user.avatar = userResult.avatar
         user.apiKey = userResult.api_key
-
+        user.name = userResult.username
         commit('saveAdminInfo', user)
       } else {
         throw new Error(userResult)

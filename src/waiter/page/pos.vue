@@ -1,8 +1,5 @@
 <template>
   <div>
-    <headTop :store-name="storeName"></headTop>
-    <leftNav></leftNav>
-
     <div class="pos">
       <div class="loading" v-if="false">
         <i class="fa fa-spinner fa-pulse fa-1x"></i>
@@ -101,15 +98,13 @@
 </template>
 
 <script>
-import leftNav from "@/components/LeftNav/LeftNav.vue";
-import headTop from "@/components/headTop.vue";
 import customerButton from "@/components/customerButton.vue";
 import checkoutButton from "@/components/checkoutButton.vue";
 import MemberKeyWord from "@/components/MemberKeyWord.vue";
 
 import { mapState, mapActions } from "vuex";
 import { userDataMixin } from "@/components/userDataMixin";
-import { shopDetails, foodMenu, getProducts } from "@/api/getData";
+import { foodMenu, getProducts } from "@/api/getData";
 import loading from "@/components/common/loading";
 import { baseImgPath } from "@/config/env";
 // import buyCart from '@/components/common/buyCart'
@@ -143,15 +138,13 @@ export default {
   },
   components: {
     loading,
-    leftNav,
-    headTop,
     "checkou-button": checkoutButton, //收款按钮组件
     customerButton,
     MemberKeyWord
   },
   mixins: [userDataMixin],
   computed: {
-    ...mapState(["userInfo", "latitude", "longitude", "cartList"]),
+    ...mapState(["userInfo", "cartList"]),
     selectedTaxonProducts: function() {
       return this.productList.filter(function(product) {
         //return product.taxon_ids.includes( 0 )
@@ -160,15 +153,15 @@ export default {
     }
   },
   created() {
-    this.getAdminData().then(res => {
-      console.log("created");
-      if (this.userInfo.id) {
-        this.storeId = this.userInfo.storeId;
-        this.initData();
-      } else {
-        this.$router.push("/");
-      }
-    });
+    this.initData();
+    // this.getAdminData().then(res => {
+    //   console.log("created");
+    //   if (this.userInfo.id) {
+    //     this.initData();
+    //   } else {
+    //     this.$router.push("/");
+    //   }
+    // });
   },
   mounted: function() {
     //let orderListHeight = document.body.clientHeight;
@@ -177,12 +170,7 @@ export default {
   methods: {
     ...mapActions(["getAdminData"]),
     async initData() {
-      //获取商铺信息
-      this.shopDetailData = await shopDetails(
-        this.storeId,
-        this.latitude,
-        this.longitude
-      );
+
       //获取商铺食品列表 //获取商铺食品列表
       let taxonsData = await foodMenu(1);
 
@@ -198,7 +186,6 @@ export default {
         this.productList = productsData.products;
       }
 
-      this.storeName = this.shopDetailData.name;
     },
     getTaxonProducts: function(taxonId) {
       return this.productList.filter(function(product) {
@@ -327,7 +314,7 @@ export default {
   bottom: 50px;
   border-bottom: 1px solid #d3dce6;
   border-top: 1px solid #d3dce6;
-  
+
   .pos-content {
     height: 100%;
     .pos-order {
