@@ -1,8 +1,8 @@
 <template>
     <div class="header_container">
-    {{storeName}}-{{userInfo.username}}
+    {{storeName}}
     <el-dropdown @command="handleCommand" position='start'>
-      <img :src="userAvatarUrl" class="avator">
+      <img :src="userAvatarUrl" class="avator">-{{userInfo.username}}
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="home">首页</el-dropdown-item>
         <el-dropdown-item command="singout">退出</el-dropdown-item>
@@ -62,7 +62,7 @@ export default {
   @import '../style/mixin';
   .header_container{
     background-color: #EFF2F7;
-    height: 60px;
+    height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;

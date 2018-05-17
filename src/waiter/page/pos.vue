@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <div>
     <headTop :store-name="storeName"></headTop>
     <leftNav></leftNav>
 
@@ -97,7 +97,7 @@
         </el-col>
       </el-row>
     </div>
-  </el-container>
+  </div>
 </template>
 
 <script>
@@ -325,6 +325,9 @@ export default {
   left: 50px;
   right: 0;
   bottom: 50px;
+  border-bottom: 1px solid #d3dce6;
+  border-top: 1px solid #d3dce6;
+  
   .pos-content {
     height: 100%;
     .pos-order {
