@@ -32,3 +32,9 @@ http://jpos_api.firecart.cn/v2/index_entry
 
 
 http://127.0.0.1:8001/shopping/v2/menu/count
+
+
+
+条形码编码 选用 CODE39
+================================================================================
+https://baike.baidu.com/item/CODE39/1144107?fr=aladdin
