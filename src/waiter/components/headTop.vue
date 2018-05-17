@@ -69,6 +69,7 @@ export default {
   @import '../style/mixin';
   .header_container{
     background-color: #EFF2F7;
+    border-top: 1px solid #d3dce6;
     height: 50px;
     display: flex;
     justify-content: space-between;

@@ -63,7 +63,6 @@ export default {
     left: 0;
     width: 50px;
     height: 50px;
-    padding: 5px;
     line-height: 50px;
     background-color: #fff;
 
