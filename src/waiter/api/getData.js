@@ -220,10 +220,27 @@ export const getOrderCount = data => fetch('/bos/orders/count', data);
 export const getCustomer = user_id => fetch('/api/v1/users/' + user_id);
 
 /**
- * 根据客户号码搜索用户信息
+ * 根据条件搜索用户信息
  */
 
 export const findCustomers = data => fetch('/api/v1/users/search', data, 'POST');
+
+
+/**
+ * 获取所有用户信息
+ */
+
+export const findCustomers_1 = data => fetch('/api/v1/users/search_1', data, 'POST');
+
+
+/**
+ * 根据电话号码搜索得到用户信息
+ */
+
+export const findCustomers_2 = data => fetch('/api/v1/users/search_2', data, 'POST');
+
+
+
 
 /**
  * Update Customer 信息
