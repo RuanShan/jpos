@@ -1,6 +1,8 @@
 <style lang="scss">
 
 @import '../style/mixin';
+@import '../style/element_ui_custom';
+
 .item-process-container {
     position: relative;
     .item-list {
@@ -78,7 +80,11 @@
 
 <template>
 
-<el-dialog title="提示" :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen">
+<el-dialog :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen" :show-close="false" class="el-custom">
+  <div slot="title" class="dialog-title-wrap">
+    <div class="left back"> <i class="el-icon-back" @click="CloseDialog()"></i> </div>
+    <div>  {{computedDialogTitle}} </div>
+  </div>
 
     <div class="item-process-container fillcontain clear">
         <!-- filters start -->
@@ -208,6 +214,17 @@ export default {
             computedVisible: function() {
                 return this.dialogVisible
             },
+            computedDialogTitle: function(){
+              if( this.orderState == "pending"){
+                return "新订单物品"
+              }else if( this.orderState == "processing"){
+                return "正在处理订单"
+              }else if( this.orderState == "ready"){
+                return "等待交付订单"
+              }else{
+                return "物品列表"
+              }
+            }
         },
         methods: {
             async initData() {
@@ -260,10 +277,8 @@ export default {
                 this.multipleSelection = val
             },
             handleDialogClose(done) {
-
                 this.$emit('update:dialogVisible', false)
                 done();
-
             },
             handleDialogOpen(){
               this.itemDetailList = []
@@ -309,7 +324,11 @@ export default {
                 }else{
                   this.currentItem = null
                 }
-            }
+            },
+            CloseDialog() {
+                this.$emit('update:dialogVisible', false)
+            },
+
         }
 }
 

@@ -116,20 +116,21 @@ export var apiResultMixin = {
 
       if( productResult.has_variants ){
         productResult.variants.forEach(function(variantResult ){
-          let variant = buildVariant( variantResult )
+          let variant = this.buildVariant( variantResult )
           product.variants.push( variant )
         })
 
       }else{
-        product.master = buildVariant( productResult.master )
+        product.master = this.buildVariant( productResult.master )
       }
     },
 
     buildVariant: function( variantResult){
       const variant = {className: 'Variant', price: variantResult.price, name: variantResult.name, optionValueTexts: ""}
       variantResult.option_values.forEach(function(){
-        
+
       })
+      return variant
     },
     buildProducts: function( productsResult) {
 

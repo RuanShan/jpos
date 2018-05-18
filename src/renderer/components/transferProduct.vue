@@ -1,6 +1,7 @@
 <style lang="scss">
 @import '../style/mixin';
 @import '../style/print';
+@import '../style/element_ui_custom';
 
 .transfer-product-container {
     position: relative;
@@ -38,10 +39,12 @@
     }
 
     .filters {
-        margin: 0 0 20px 0;
-        border: 1px #efefef solid;
+      width: 80%;
+        margin: 0 auto;
         padding: 10px;
+        /*border: 1px #efefef solid;
         background: #f9f9f9;
+        */
         .filter {
             display: inline-block;
             width: auto;
@@ -65,7 +68,7 @@
 
 <template>
 
-<el-dialog title="提示" :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen">
+<el-dialog :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen" class="el-custom">
     <div id="printable" class="print-only">
       this is test
       <el-table :data="printableData"  style="width: 100%">
@@ -73,9 +76,12 @@
         <el-table-column prop="name" label="Name"  width="180">  </el-table-column>
         <el-table-column prop="created_at" label="created_at">  </el-table-column>
       </el-table>
-
     </div>
 
+    <div slot="title" class="dialog-title-wrap">
+      <div class="left back"> <i class="el-icon-back" @click="CloseDialog()"></i> </div>
+      <div>  {{computedDialogTitle}} </div>
+    </div>
 
     <div class="transfer-product-container fillcontain clear">
         <!-- filters start -->
@@ -92,8 +98,9 @@
                 </el-select>
             </div>
             <el-button type="primary" @click="handleSearch()">搜索</el-button>
-
-            <el-button class="print" type="primary" @click="handlePrint()">Print</el-button>
+            <div class="filter right">
+              <el-button type="primary" @click="handlePrint()">Print</el-button>
+            </div>
         </div>
         <!-- filters end -->
 
@@ -304,6 +311,9 @@ console.log( "this.currentOrder", this.currentOrder, "this.currentGroup ", this.
                 })
               }
 
+            },
+            CloseDialog() {
+                this.$emit('update:dialogVisible', false)
             },
             handlePrint(){
               //console.log("printableData", this.printableData)

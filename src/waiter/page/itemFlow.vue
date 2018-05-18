@@ -2,6 +2,9 @@
 
 @import '../style/mixin';
 .item-flow-container {
+    border-top: 1px solid #d3dce6;
+    height: 100%;
+    padding: 30px 30px 30px 80px;
     .el-dialog__body {
         /*fullscreen process dialog*/
         height: 90%;
@@ -30,6 +33,16 @@
           bottom:0;
           right:0;
           left:0;
+        }
+        .overlay{
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 1;
+          background-color: #fff;
+          opacity: 0.5;
         }
     }
     .step {
@@ -153,7 +166,7 @@
 # ready: 可以交给客户了
 # shipped: 已交付客户
 -->
-<div class="item-flow-container fillcontain">
+<div class="item-flow-container ">
     <scan-product :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </scan-product>
     <process-item :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </process-item>
     <transfer-product :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </transfer-product>
@@ -214,7 +227,7 @@
             </div>
 
             <div class="location clear">
-
+              <div class="overlay"></div>
                 <div class="step step2">
                   <div class="head"> 工厂                </div>
                     <div class="title">
