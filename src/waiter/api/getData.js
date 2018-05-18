@@ -214,6 +214,19 @@ export const getOrderList = data => fetch('/api/v1/pos_orders', data);
 export const getOrderCount = data => fetch('/bos/orders/count', data);
 
 /**
+ * 获取订单Detail
+ */
+
+export const getOrder = orderNumber => fetch('/api/v1/orders/' + orderNumber)
+
+/**
+ * 获取订单Detail
+ */
+
+export const findOrderByGroupNumber = groupNumber => fetch('/api/v1/pos_orders/find_by_group_number/' + groupNumber)
+
+
+/**
  * 获取Customer信息
  */
 
@@ -301,11 +314,52 @@ export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/' + 
 export const evolvePosOrders = (data) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
 
 /**
+ * 获取Item列表
+ */
+
+export const getLineItemGroupList = data => fetch('/api/v1/line_item_groups', data)
+
+/**
+ * search Item列表
+ */
+
+export const findLineItemGroups = data => fetch('/api/v1/line_item_groups/search', data, 'POST')
+
+/**
+ * 根据Item状态统计数量
+ */
+export const getLineItemGroupCounts = () => fetch('/api/v1/line_item_groups/counts')
+
+/**
  * POS订单下一步
  * forward: false， 可选参数，如果表示订单转向上一步
  */
 
-export const evolvePosShipment = (shipment_id, data) => fetch('/api/v1/pos_shipments/' + shipment_id + '/one_step', data, 'PUT');
+export const evolveLineItemGroup = (shipment_id, data) => fetch('/api/v1/line_item_groups/' + shipment_id + '/one_step', data, 'PUT');
+
+/**
+ * 所有 line_item_group 下一步
+ * entities: numbers，
+ *           forward: false， 可选参数，如果表示订单转向上一步
+ *
+ */
+
+export const evolveLineItemGroups = (data) => fetch('/api/v1/line_item_groups/all_step', data, 'PUT');
+
+/**
+ * 获取 LineItemGroup Detail
+ */
+
+export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/' + number)
+
+/**
+ * update LineItem worker_id列表
+ * data: worker_id,
+ *       ids - line_item.id
+ */
+
+export const fulfillLineItems = data => fetch('/api/v1/line_items/fulfill', data, 'PUT')
+
 
 /**
  * get cards 获取会员持有的会员卡信息

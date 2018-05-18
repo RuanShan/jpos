@@ -359,3 +359,26 @@ export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/' + nu
  */
 
 export const fulfillLineItems = data => fetch('/api/v1/line_items/fulfill', data, 'PUT')
+
+
+/**
+ * get cards 获取会员持有的会员卡信息
+ * return: { cards:[{id:xxx, number:xxx, name:xxx, current_value, transactions:[card_id, amount, creat_at, serialNum, status]}]}
+ *                   id:        数据库的id号
+ *                   number:    会员卡号码
+ *                   name:      会员卡名称
+ *                   current_value: 剩余金额
+ *                   car_id:    等于id
+ *                   amount:    剩余金额
+ *                   creat_at:  (充值)创建时间
+ *                   serialNum: 流水号
+ *                   status:    状态
+ */
+
+export const getUserCards = (userId) => fetch('/api/v1/users/' + userId + '/cards');
+
+/**
+ * get card transactions 根据会员卡Id获取会员卡充值记录
+ */
+
+export const getCardTransactions = (cardId) => fetch('/api/v1/cards/' + cardId + '/transactions');
