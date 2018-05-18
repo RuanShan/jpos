@@ -63,9 +63,7 @@ export default {
       returnSerVerData: {}, //SerVer返回的数据
       searchReturnData: {}, //搜索提示的电话号码数据
       searchValue: [],
-      restaurants: [],
-      timeout: null,
-      searchFlag: false
+      temp: {}
     };
   },
   mounted() {
@@ -124,6 +122,10 @@ export default {
     async searchCustomers() {
       this.searchReturnData = await findCustomers();
     },
+    //通过电话号码得从SerVer上获取用户数据,异步获取
+    async pepleFromMobile() {
+      this.searchReturnData = await findCustomers({mobile});
+    },
     //关闭窗口时处理函数-----发射memberData数据给父组件
     closeMemberKeyWordWindow() {
       this.$emit("MemberData", this.memberData);
@@ -137,45 +139,53 @@ export default {
         console.log("搜索用户数据成功了,感谢您!!!");
       });
     },
+    //远程搜索输入框函数-----提示功能
     querySearchAsync(queryString, cb) {
-      if (this.searchFlag == true) {
-        console.log("searchFlag = true 了!!!!");
-        var restaurants = this.searchValue;
-        var results = queryString
-          ? restaurants.filter(this.createStateFilter(queryString))
-          : restaurants;
-
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-          cb(results);
-        }, 10 * Math.random());
-      }
-    },
-    createStateFilter(queryString) {
-      return inputNumber => {
-        return (
-          inputNumber.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
-    },
-    handleSelect(item) { //点击选中建议项时触发
-      console.log("选择了" + item);
-    }
-  },
-  watch: {
-    inputNumber: function() {
-      if (this.inputNumber.length == 4) {
+      console.log(this.inputNumber.length);
+      if (this.inputNumber.length >= 1 && this.inputNumber.length <= 3) {
+        console.log("四次了@@@@@@@@@@@@@@@@@@@@");
+        this.searchValue.length = 0;
         this.searchCustomers().then(() => {
           this.searchReturnData.users.forEach(user => {
             let val = { value: user.mobile };
             this.searchValue.push(val);
           });
-          // console.log("搜索用户数据成功了,感谢您!!!");
+          console.log("push  完毕了!!!");
+          let results = queryString
+            ? this.searchValue.filter(this.createStateFilter(queryString))
+            : this.searchValue;
+          cb(results);
         });
-        this.searchFlag = true;
       }
-    }
-  }
+      if (this.inputNumber.length > 3) {
+        let results = queryString
+          ? this.searchValue.filter(this.createStateFilter(queryString))
+          : this.searchValue;
+        cb(results);
+      }
+    },
+    //提示功能的过滤函数-----去掉多余不符合条件的项
+    createStateFilter(queryString) {
+      return inputNumber => {
+        return (
+          inputNumber.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          0
+        );
+      };
+    },
+    //点击选中建议项时触发-----通过选中的电话号码提交SerVer得到特定会员 mobile
+    handleSelect(item) {
+      let obj = {"q":{
+       "mobile_cont":""
+      }};
+      obj.q.mobile_cont = item.value;
+      this.temp = obj;
+      
+      console.log("选择了" + item);
+    },
+
+  },
+  watch: {}
 };
 </script>
 <style lang="scss" scoped >

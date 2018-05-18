@@ -236,7 +236,7 @@ export const getCustomer = user_id => fetch('/api/v1/users/' + user_id);
  * 根据客户号码搜索用户信息
  */
 
-export const findCustomers = mobile => fetch('/api/v1/users/search');
+export const findCustomers = data => fetch('/api/v1/users/search', data, 'POST');
 
 /**
  * Update Customer 信息
