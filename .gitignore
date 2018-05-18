@@ -71,3 +71,9 @@ thumbs.db
 !.gitkeep
 
 .vscode/
+
+# 编辑器生成的备份文件
+*.bak
+#
+src/waiter/config/env.js
+src/renderer/config/env.js
