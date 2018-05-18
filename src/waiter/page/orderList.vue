@@ -34,9 +34,9 @@
 
 <template>
 
-<div class="orders-container">
+<div class="orders-container main">
     <leftNav></leftNav>
-    <div class="table_container">
+    <div class="container">
         <h3> order list </h3>
         <!-- filters start -->
         <div class="filters">

@@ -1,14 +1,21 @@
 <template>
-    <div class="header_container">
+  <div class="header_container">
     <div class="title left"> {{storeName}} </div>
-    <el-dropdown @command="handleCommand" position='start'>
-      <img :src="userAvatarUrl" class="avator">-{{userInfo.username}}
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="home">首页</el-dropdown-item>
-        <el-dropdown-item command="singout">退出</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+    <div class="header-right ">
+      <div class="header-user-con">
+        <div> <img :src="userAvatarUrl" class="avator"></div>
+        <el-dropdown @command="handleCommand" class='right'>
+          <span class="el-dropdown-link">
+            {{userInfo.name}}<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="home">首页</el-dropdown-item>
+            <el-dropdown-item command="singout">退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -62,6 +69,7 @@ export default {
   @import '../style/mixin';
   .header_container{
     background-color: #EFF2F7;
+    border-top: 1px solid #d3dce6;
     height: 50px;
     display: flex;
     justify-content: space-between;
@@ -70,11 +78,19 @@ export default {
     .title{
       padding: 0 10px;
     }
+    .header-right {
+        float: right;
+        padding-right: 50px;
+        .header-user-con{
+            display: flex;
+            align-items: center;
+        }
+    }
   }
   .avator{
     @include wh(36px, 36px);
     border-radius: 50%;
-    margin-right: 37px;
+    margin: 0 8px;
   }
   .el-dropdown-menu__item{
         text-align: center;

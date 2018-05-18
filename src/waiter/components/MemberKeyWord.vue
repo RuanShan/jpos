@@ -190,7 +190,7 @@ export default {
 </script>
 <style lang="scss" scoped >
 .customer-button {
-  // height: 80px;
+  height: 50px;
   text-align: center;
   font-size: 21px;
   color: #fff;

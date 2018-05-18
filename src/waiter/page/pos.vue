@@ -1,8 +1,5 @@
 <template>
   <div>
-    <headTop :store-name="storeName"></headTop>
-    <leftNav></leftNav>
-
     <div class="pos">
       <div class="loading" v-if="false">
         <i class="fa fa-spinner fa-pulse fa-1x"></i>
@@ -10,18 +7,17 @@
       </div>
       <el-row class="pos-content">
         <el-col :span="9" class="pos-order" id="orderList">
-          <el-tabs>
-            <el-tab-pane label="点餐">
+
               <el-table :data="orderList" border stripe style="width:100%;">
                 <el-table-column prop="name" label="商品名"></el-table-column>
                 <el-table-column prop="variantName" label="明细"></el-table-column>
                 <el-table-column prop="count" label="数量" width="70"></el-table-column>
                 <el-table-column prop="price" label="金额" width="70"></el-table-column>
-                <el-table-column label="操作" width="100" fixed="right">
+                <!-- <el-table-column label="操作" width="100" fixed="right">
                   <template slot-scope="scope">
                     <el-button type="danger" size="mini" @click="delSingleGoods(scope.row)">删除</el-button>
                   </template>
-                </el-table-column>
+                </el-table-column> -->
               </el-table>
               <div class="order-final">
                 <div class="order-sum">
@@ -30,28 +26,16 @@
                   <i>金额：</i>
                   <span>{{totalMoney}}</span>&nbsp;
                   <i>元</i>
-                </div>
-                <div class="btn-group">
-                  <!-- <el-button type="success" size="mini" @click="checkout">结账</el-button>
-                  <el-button type="warning" size="mini">挂单</el-button> -->
                   <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
                 </div>
                 <!-- <customerButton>  </customerButton> -->
                 <MemberKeyWord @MemberData="MemberData($event)"></MemberKeyWord>
                 <checkou-button :order-list="orderList" :totalMoney="totalMoney" :customerData="customerData"> </checkou-button>
               </div>
-            </el-tab-pane>
-            <!-- <el-tab-pane label="挂单">挂单</el-tab-pane>
-          <el-tab-pane label="外卖">外卖</el-tab-pane>
-          <el-tab-pane label="配送">配送</el-tab-pane>
-          <el-tab-pane label="卖萌">卖萌</el-tab-pane> -->
-          </el-tabs>
+
         </el-col>
         <el-col :span="15">
           <div class="hot-goods">
-            <div class="title">
-              热销商品
-            </div>
             <!-- <div>
               <el-row class="hot-list">
                 <el-col class="hot-item" :span="12" v-for="goods in hotGoods" :key="goods.id" @click.native="addOrderList(goods)">
@@ -68,7 +52,7 @@
               <el-tab-pane v-for="menu in menuList" :key="menu.id" v-bind:label="menu.name">
                 <div>
                   <el-row class="cook-list">
-                    <el-col class="cook-item" :span="24" v-for="goods in getTaxonProducts(menu.id)" :key="goods.id" @click.native="openClassify(goods)">
+                    <el-col class="cook-item" :span="6" v-for="goods in getTaxonProducts(menu.id)" :key="goods.id" @click.native="openClassify(goods)">
                       <div class="food-wrapper">
                         <div class="food-img">
                           <img :src="getProductImageUrl(goods)" width="100%" />
@@ -77,17 +61,18 @@
                           <span class="food-name">{{goods.name}}</span>
                           <!-- <span class="food-price">￥&nbsp;{{goods.price}}&nbsp; 元</span> -->
                         </div>
-                      </div>
-                      <el-row>
-                        <el-col :span="6" v-for="(variants,index) in goods.variants" :key="index">
-                          <div>
-                            <el-button type="primary" plain @click="addOrderList(goods,index)">
-                              <span >{{variants.name}}</span>
-                              <el-tag type="danger">{{variants.price}}</el-tag>
-                            </el-button>
+
+                        <div class="variants-wrapper">
+                          <div class="clear">
+                            <div v-for="(variant,index) in goods.variants" :key="index" class="left" >
+                              <el-button size="mini"  @click="addOrderList(goods,index)">
+                                <span >{{variant.name}}-{{variant.price}}</span>
+                              </el-button>
+                            </div>
                           </div>
-                        </el-col>
-                      </el-row>
+                        </div>
+                      </div>
+
                     </el-col>
                   </el-row>
                 </div>
@@ -101,15 +86,13 @@
 </template>
 
 <script>
-import leftNav from "@/components/LeftNav/LeftNav.vue";
-import headTop from "@/components/headTop.vue";
 import customerButton from "@/components/customerButton.vue";
 import checkoutButton from "@/components/checkoutButton.vue";
 import MemberKeyWord from "@/components/MemberKeyWord.vue";
 
 import { mapState, mapActions } from "vuex";
 import { userDataMixin } from "@/components/userDataMixin";
-import { shopDetails, foodMenu, getProducts } from "@/api/getData";
+import { foodMenu, getProducts } from "@/api/getData";
 import loading from "@/components/common/loading";
 import { baseImgPath } from "@/config/env";
 // import buyCart from '@/components/common/buyCart'
@@ -143,15 +126,13 @@ export default {
   },
   components: {
     loading,
-    leftNav,
-    headTop,
     "checkou-button": checkoutButton, //收款按钮组件
     customerButton,
     MemberKeyWord
   },
   mixins: [userDataMixin],
   computed: {
-    ...mapState(["userInfo", "latitude", "longitude", "cartList"]),
+    ...mapState(["userInfo", "cartList"]),
     selectedTaxonProducts: function() {
       return this.productList.filter(function(product) {
         //return product.taxon_ids.includes( 0 )
@@ -160,15 +141,15 @@ export default {
     }
   },
   created() {
-    this.getAdminData().then(res => {
-      console.log("created");
-      if (this.userInfo.id) {
-        this.storeId = this.userInfo.storeId;
-        this.initData();
-      } else {
-        this.$router.push("/");
-      }
-    });
+    this.initData();
+    // this.getAdminData().then(res => {
+    //   console.log("created");
+    //   if (this.userInfo.id) {
+    //     this.initData();
+    //   } else {
+    //     this.$router.push("/");
+    //   }
+    // });
   },
   mounted: function() {
     //let orderListHeight = document.body.clientHeight;
@@ -177,12 +158,7 @@ export default {
   methods: {
     ...mapActions(["getAdminData"]),
     async initData() {
-      //获取商铺信息
-      this.shopDetailData = await shopDetails(
-        this.storeId,
-        this.latitude,
-        this.longitude
-      );
+
       //获取商铺食品列表 //获取商铺食品列表
       let taxonsData = await foodMenu(1);
 
@@ -198,7 +174,6 @@ export default {
         this.productList = productsData.products;
       }
 
-      this.storeName = this.shopDetailData.name;
     },
     getTaxonProducts: function(taxonId) {
       return this.productList.filter(function(product) {
@@ -327,10 +302,11 @@ export default {
   bottom: 50px;
   border-bottom: 1px solid #d3dce6;
   border-top: 1px solid #d3dce6;
-  
+
   .pos-content {
     height: 100%;
     .pos-order {
+      position: relative;
       height: 100%;
       .el-tabs {
         height: 100%;
@@ -356,7 +332,17 @@ export default {
 .pos-order {
   background-color: #f9fafc;
   border-right: 1px solid #c0ccda;
-  min-height: 100%;
+  .el-table{
+    position: absolute;
+    top: 0;
+    bottom: 130px;
+  }
+  .el-table__body-wrapper{
+    position: absolute;
+    top: 48px;
+    bottom: 0px;
+    overflow-y: auto;
+  }
 }
 
 .btn-group {
@@ -365,7 +351,7 @@ export default {
 }
 
 .order-sum {
-  padding: 10px;
+  height:30px;
   text-align: center;
   background-color: #fff;
   border-bottom: 1px solid #d3dce6;
@@ -408,45 +394,54 @@ export default {
     color: #58b7ff;
   }
 }
-
+.goods-type{
+  .el-tabs__item{
+    min-width: 80px;
+    text-align: center;
+  }
+  .el-tabs__content{
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    overflow-y: auto;
+  }
+}
 .cook-list {
   padding: 20px;
   .cook-item {
     height: auto;
     padding: 2px;
-    margin: 2px;
     overflow: hidden;
-    background-color: #fff;
+
     cursor: pointer;
     transition: 0.5s;
     &:hover {
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      
       transform: translate3d(0, -2px, 0);
       border: none;
     }
     .food-wrapper {
-      display: flex;
-      .good-info {
-        margin-left: 4px;
-        height: 54px;
+        background-color: #fff;
+      .food-img {
+        width: 100%;
+      }
+      .good-info{
+        text-align: center;
+      }
+      .food-name {
+        color: brown;
+        font-size: 14px;
+        letter-spacing: 1px;
+      }
+      .food-price {
+        display: block;
+        font-size: 12px;
+        padding-top: 4px;
       }
     }
-    .food-img {
-      flex-basis: 54px;
-      width: 54px;
-    }
-    .food-name {
-      display: block;
-      color: brown;
-      font-size: 14px;
-      letter-spacing: 1px;
-    }
 
-    .food-price {
-      display: block;
-      font-size: 12px;
-      padding-top: 4px;
-    }
+
+
   }
 }
 </style>

@@ -3,12 +3,15 @@
       <div class="logo">LOGO</div>
       <ul class="nav">
         <li class="el-menu-item">
-
-          <router-link to="/waiter/" ><div class="text-sm"> 收银  </div></router-link>
+          <router-link to="/waiter/" >
+            <div class="text-sm"> 收银  </div>
+          </router-link>
         </li>
         <li class="el-menu-item">
-          <i class="fa fa-bars"></i>
-          <div class="text-sm"><router-link to="/waiter/orders" > 订单 </router-link></div>
+          <router-link to="/waiter/orders" >
+            <i class="fa fa-bars"></i>
+            <div class="text-sm"> 订单 </div>
+          </router-link>
         </li>
         <li class="el-menu-item">
           <i class="fa fa-bars"></i>
@@ -51,13 +54,15 @@ export default {
   background-color: #1d8ce0;
   top: 0;
 
+  .router-link-exact-active{
+    background-color: #eff2f7;
+  }
   .logo{
     position: absolute;
     top:0;
     left: 0;
     width: 50px;
     height: 50px;
-    padding: 5px;
     line-height: 50px;
     background-color: #fff;
 
@@ -75,6 +80,9 @@ export default {
     cursor: pointer;
     &:hover {
       color: #000;
+    }
+    a{
+      display: block;
     }
   }
   .text-sm {
