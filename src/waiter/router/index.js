@@ -6,7 +6,8 @@ Vue.use(Router);
 const loginPage = r => require.ensure([], () => r(require('@/page/login')), 'login')
 const homePage = r => require.ensure([], () => r(require('@/page/home')), 'home')
 const posPage = r => require.ensure([], () => r(require('@/page/pos')), 'pos')
-const ordersPage = r => require.ensure([], () => r(require('@/page/orderList')), 'orders')
+//const ordersPage = r => require.ensure([], () => r(require('@/page/orderList')), 'orders')
+const itemGroupsPage = r => require.ensure([], () => r(require('@/page/itemFlow')), 'orders')
 
 
 const routes = [
@@ -24,8 +25,8 @@ const routes = [
       component: posPage,
       meta: []
     },{
-			path: 'orders',
-			component: ordersPage,
+			path: 'itemGroups',
+			component: itemGroupsPage,
 			meta: [],
 		}]
   }

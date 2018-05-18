@@ -13,11 +13,11 @@
                 <el-table-column prop="variantName" label="明细"></el-table-column>
                 <el-table-column prop="count" label="数量" width="70"></el-table-column>
                 <el-table-column prop="price" label="金额" width="70"></el-table-column>
-                <!-- <el-table-column label="操作" width="100" fixed="right">
+                <el-table-column label="操作" width="100" >
                   <template slot-scope="scope">
-                    <el-button type="danger" size="mini" @click="delSingleGoods(scope.row)">删除</el-button>
+                    <i class="el-icon-remove-outline" @click="delSingleGoods(scope.row)"></i>
                   </template>
-                </el-table-column> -->
+                </el-table-column>
               </el-table>
               <div class="order-final">
                 <div class="order-sum">
@@ -359,7 +359,6 @@ export default {
     font-size: 12px;
   }
   span {
-    color: #fe5916;
   }
 }
 
@@ -416,7 +415,7 @@ export default {
     cursor: pointer;
     transition: 0.5s;
     &:hover {
-      
+
       transform: translate3d(0, -2px, 0);
       border: none;
     }

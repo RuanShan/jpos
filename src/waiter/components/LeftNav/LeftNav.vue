@@ -8,7 +8,7 @@
           </router-link>
         </li>
         <li class="el-menu-item">
-          <router-link to="/waiter/orders" >
+          <router-link to="/waiter/itemGroups" >
             <i class="fa fa-bars"></i>
             <div class="text-sm"> 订单 </div>
           </router-link>
