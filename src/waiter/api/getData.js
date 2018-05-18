@@ -303,6 +303,13 @@ export const createCustomer = (data) => fetch('/api/v1/users', data, 'POST');
 
 /**
  * 支付订单
+ * 参数
+ * order: {
+ *  "user_id": 8,
+ *    "line_items": [
+ *      { "variant_id": 15, "quantity": 1 }
+ *    ]
+ *  }
  */
 
 export const checkout = (entities) => fetch('/api/v1/orders', entities, 'POST');
