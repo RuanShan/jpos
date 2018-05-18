@@ -33,7 +33,7 @@
     <!-- 添加会员组件 END-->
 
     <!-- 会员中心组件 Start-->
-    <member-center v-if="memberCenterWindowVisible" ref="membercenter" :memberData="memberData" v-on:SelectMemberButton="SelectMemberButton($event)"></member-center>
+    <member-center v-if="memberCenterWindowVisible" ref="membercenter" :customerId="customerId" v-on:SelectMemberButton="SelectMemberButton($event)"></member-center>
     <!-- 会员中心组件 END-->
   </div>
 </template>
@@ -42,7 +42,9 @@
 import MemberAdd from "@/components/MemberAdd.vue";
 import MemberCenter from "@/components/MemberCenter.vue";
 import { getCustomer } from "@/api/getData";
-import { findCustomers } from "@/api/getData";
+// import { findCustomers } from "@/api/getData";
+import { findCustomers_1 } from "@/api/getData";
+import { findCustomers_2 } from "@/api/getData";
 
 export default {
   components: {
@@ -63,7 +65,8 @@ export default {
       returnSerVerData: {}, //SerVer返回的数据
       searchReturnData: {}, //搜索提示的电话号码数据
       searchValue: [],
-      temp: {}
+      customerByMobile:{},//通过电话号码搜索得到的会员信息
+      customerId: null
     };
   },
   mounted() {
@@ -120,11 +123,11 @@ export default {
     },
     //从SerVer上获取模糊搜索的用户数据,异步获取
     async searchCustomers() {
-      this.searchReturnData = await findCustomers();
+      this.searchReturnData = await findCustomers_1();
     },
     //通过电话号码得从SerVer上获取用户数据,异步获取
-    async pepleFromMobile() {
-      this.searchReturnData = await findCustomers({mobile});
+    async customerFromMobile(mobile) {
+      this.customerByMobile = await findCustomers_2(mobile);
     },
     //关闭窗口时处理函数-----发射memberData数据给父组件
     closeMemberKeyWordWindow() {
@@ -132,11 +135,7 @@ export default {
     },
     test() {
       this.searchCustomers().then(() => {
-        this.searchReturnData.users.forEach(user => {
-          let val = { value: user.mobile };
-          this.searchValue.push(val);
-        });
-        console.log("搜索用户数据成功了,感谢您!!!");
+        console.log("搜索用户数据完成了,你看看");
       });
     },
     //远程搜索输入框函数-----提示功能
@@ -175,15 +174,20 @@ export default {
     },
     //点击选中建议项时触发-----通过选中的电话号码提交SerVer得到特定会员 mobile
     handleSelect(item) {
-      let obj = {"q":{
-       "mobile_cont":""
-      }};
+      let obj = {
+        q: {
+          "mobile_cont" : ""
+        }
+      };
       obj.q.mobile_cont = item.value;
-      this.temp = obj;
-      
-      console.log("选择了" + item);
-    },
+      this.customerFromMobile(obj).then(()=>{
+        this.customerId = this.customerByMobile.users[0].id;
+        this.dialogVisible = false;
+        this.memberCenterWindowVisible = true;
+      });
 
+      console.log("选择了" + item);
+    }
   },
   watch: {}
 };

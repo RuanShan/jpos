@@ -1,130 +1,46 @@
-<template rsf="centerWindow">
-  <div class="customer_container">
-    <el-row>
-      <div class="grid-content bg-purple-light">
-        <!-- 会员中心窗口 -> START -->
-        <el-dialog title="会员中心" :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true" center @close="closeWindow()" style="color: #1533db;">
-          <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
-          <el-form status-icon label-width="100px" class="MCenter-el-form">
-            <el-row>
-              <el-col :span="12">
-                <!-- 上部信息左侧 -->
-                <div class="grid-content bg-purple-light">
-                  <div>
-                    <h2>ID:&nbsp;&nbsp;&nbsp;{{memberCenterData.id}}</h2>
-                  </div>
-                  <div>
-                    <h2>姓名:&nbsp;&nbsp;&nbsp;{{memberCenterData.username}}</h2>
-                  </div>
-                  <div>
-                    <h2>电话:&nbsp;&nbsp;&nbsp;{{memberCenterData.mobile}}</h2>
-                  </div>
-                </div>
-              </el-col>
-              <el-col :span="12">
-                <!-- 上部信息右侧 -->
-                <div class="grid-content bg-purple-light">
-                  <el-col :span="8" class="center">
-                    <div class="grid-content bg-purple">
-                      <h3>余额</h3>
-                      <div>
-                        ¥ {{memberCenterData.memberCardRemaining}}
-                      </div>
-                      <div>
-                        <el-button type="warning" plain size="mini" @click="rechargeButton">充值</el-button>
-                      </div>
-                    </div>
-                  </el-col>
-                  <el-col :span="8" class="center">
-                    <div class="grid-content bg-purple-light">
-                      <h3>积分</h3>
-                      <div>
-                        0
-                      </div>
-                      <div>
-                        <el-button type="warning" plain size="mini">查看</el-button>
-                      </div>
-                    </div>
-                  </el-col>
-                  <el-col :span="8" class="center">
-                    <div class="grid-content bg-purple">
-                      <h3>充值记录</h3>
-                      <div>
-                        ****
-                      </div>
-                      <div>
-                        <el-button type="warning" plain size="mini" @click="openTopUpRecordWindow()">查看</el-button>
-                      </div>
-                    </div>
-                  </el-col>
-                </div>
-              </el-col>
-            </el-row>
-
-            <el-row>
-              <el-col :span="12">
-                <el-table :data="tableData" :show-header="false" border style="width: 100%; background-color:#ffcbb3">
-                  <el-table-column prop="name">
-                  </el-table-column>
-                  <el-table-column prop="data">
-                  </el-table-column>
-                  <!-- <el-table-column prop="nameB">
+<template >
+  <div>
+    <el-dialog title="提示" :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true" center @close="closeWindow()">
+      <el-row>
+        <el-col :span="12">
+          <div class="grid-content bg-purple">
+            <div>
+              <h2>ID:&nbsp;&nbsp;&nbsp;{{memberCenterData.id}}</h2>
+            </div>
+            <div>
+              <h2>姓名:&nbsp;&nbsp;&nbsp;{{memberCenterData.username}}</h2>
+            </div>
+            <div>
+              <h2>电话:&nbsp;&nbsp;&nbsp;{{memberCenterData.mobile}}</h2>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="grid-content bg-purple-light">
+            sadfasdf
+          </div>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <div >
+            124314
+            <el-table :data="tableDataA" style="width: 100%">
+              <el-table-column prop="date" label="日期" width="180">
               </el-table-column>
-              <el-table-column prop="dataB">
-              </el-table-column> -->
-                </el-table>
-              </el-col>
-              <el-col :span="12">
-
-              </el-col>
-            </el-row>
-
-            <el-row style="margin-top:50px">
-              <!-- <el-col :span="4"><div class="grid-content bg-purple">123123</div></el-col> -->
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">
-                  <el-button type="info" @click="editMember()" style="width:100%">编辑</el-button>
-                </div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light"></div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple"></div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light"></div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple"></div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">
-                  <el-button type="danger" @click="selectMember()" style="width:100%;height:80px">
-                    <h2>选中会员</h2>
-                  </el-button>
-                </div>
-              </el-col>
-            </el-row>
-          </el-form>
-        </el-dialog>
-        <!-- 会员中心窗口 -> END -->
-      </div>
-    </el-row>
-
-    <!-- 编辑会员窗口 -> Start -->
-    <member-edit v-if="memberEditWindows" v-bind:memberCenterData="memberCenterData" v-on:saveEditDataButton="saveEditDataButton($event)">
-    </member-edit>
-    <!-- 编辑会员窗口 -> END -->
-
-    <!-- 充值中心窗口 -> Start -->
-    <member-recharge v-if="memberRechargeWindow" :memberCenterData="memberCenterData" @saveRechargeButton="saveRechargeButton($event)">
-    </member-recharge>
-    <!-- 充值中心窗口 -> END -->
-
-    <!-- 充值记录查询窗口 -> Start -->
-    <member-topup-record v-if="memberTopUpRecordWindow" :memberCenterData="memberCenterData" @topUpRecordButton="topUpRecordButton($event)"></member-topup-record>
-    <!-- 充值记录查询窗口 -> END -->
+              <el-table-column prop="name" label="姓名" width="180">
+              </el-table-column>
+              <el-table-column prop="address" label="地址">
+              </el-table-column>
+            </el-table>
+            8979798
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="grid-content bg-purple"></div>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -137,7 +53,7 @@ import MemberTopUpRecord from "@/components/MemberTopUpRecord.vue";
 import { getCustomer } from "@/api/getData";
 
 export default {
-  props: ["memberData"],
+  props: ["customerId"],
   components: {
     "member-edit": MemberEdit,
     "member-recharge": MemberRecharge,
@@ -150,7 +66,7 @@ export default {
       memberRechargeWindow: false, //充值中心窗口显示标志位
       memberTopUpRecordWindow: false, //查询会员记录窗口标志位
       memberCenterData: {}, //会员中心的会员数据
-      tableData: [
+      tableDataA: [
         {
           name: "创建时间",
           data: ""
@@ -172,11 +88,16 @@ export default {
     };
   },
   mounted() {
-    this.memberCenterData = this.memberData;
-    this.tableData[0].data = this.memberCenterData.created_at.substring(0,10);
-    this.tableData[1].data = this.memberCenterData.birth.substring(0,10);
-    this.tableData[2].data = this.memberCenterData.email;
-    this.tableData[3].data = this.memberCenterData.address;
+    this.getSverVerCustomer(this.customerId).then(() => {
+      this.memberCenterData = this.returnSerVerData;
+      this.tableDataA[0].data = this.memberCenterData.created_at.substring(
+        0,
+        10
+      );
+      this.tableDataA[1].data = this.memberCenterData.birth.substring(0, 10);
+      this.tableDataA[2].data = this.memberCenterData.email;
+      this.tableDataA[3].data = this.memberCenterData.address;
+    });
   },
   methods: {
     //单击选中会员按钮后向父窗口"MemberKeyWord"发送本窗口的会员数据
@@ -214,7 +135,7 @@ export default {
       this.getSverVerCustomer(this.memberCenterData.Id).then(() => {
         this.memberCenterData = this.returnSerVerData; // 把从SerVer得到的用户数据给当前窗口的用户数据
         this.memberRechargeWindow = false; //关闭充值窗口
-        this.tableData[0].dataA = this.memberCenterData.memberCardGrade; //显示数据
+        this.tableDataA[0].dataA = this.memberCenterData.memberCardGrade; //显示数据
       });
     },
     closeWindow() {
