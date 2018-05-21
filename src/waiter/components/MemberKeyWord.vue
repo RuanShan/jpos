@@ -1,5 +1,5 @@
 <template>
-  <div class="customer_container">
+  <div class="">
     <div class="customer-button" @click="dialogVisible = true">
       <div>
         <h4 style='padding-top:10px;'>{{buttonName}}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -194,7 +194,7 @@ export default {
 </script>
 <style lang="scss" scoped >
 .customer-button {
-  height: 50px;
+  height: 60px;
   text-align: center;
   font-size: 21px;
   color: #fff;

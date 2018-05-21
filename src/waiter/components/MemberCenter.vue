@@ -23,7 +23,7 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <div >
+          <div>
             124314
             <el-table :data="tableDataA" style="width: 100%">
               <el-table-column prop="date" label="日期" width="180">

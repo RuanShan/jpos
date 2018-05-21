@@ -33,6 +33,12 @@
           <i class="fa fa-gears"></i>
           <div class="text-sm">设置</div>
         </li>
+        <li class="el-menu-item">
+          <router-link to="/waiter/testGroups" >
+            <i class="fa fa-bars"></i>
+            <div class="text-sm"> 测试 </div>
+          </router-link>
+        </li>
       </ul>
     </div>
 </template>
