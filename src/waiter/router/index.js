@@ -11,34 +11,6 @@ const itemGroupsPage = r => require.ensure([], () => r(require('@/page/itemFlow'
 const testPage = r => require.ensure([], () => r(require('@/page/functionalTest')), 'orders')
 
 
-<<<<<<< HEAD
-const routes = [{
-        path: '/',
-        name: 'login',
-        component: loginPage
-    },
-    {
-        path: '/waiter',
-        component: homePage,
-        name: '',
-        children: [{
-                path: '',
-                component: posPage,
-                meta: []
-            },
-            {
-                path: 'itemGroups',
-                component: itemGroupsPage,
-                meta: [],
-            },
-            {
-                path: 'testGroups',
-                component: testPage,
-                meta: [],
-            },
-        ]
-    }
-=======
 const routes = [
   {
     path: '/',
@@ -62,9 +34,12 @@ const routes = [
 			path: 'itemGroups',
 			component: itemGroupsPage,
 			meta: [],
-		}]
+		},{
+        path: 'testGroups',
+        component: testPage,
+        meta: [],
+    }]
   }
->>>>>>> 3e66b745b8a90c9291cb5410ef66753889d43a16
 ]
 
 export default new Router({
