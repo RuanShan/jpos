@@ -303,15 +303,22 @@ export const createCustomer = (data) => fetch('/api/v1/users', data, 'POST');
 
 /**
  * 支付订单
+ * 参数
+ * order: {
+ *  "user_id": 8,
+ *    "line_items": [
+ *      { "variant_id": 15, "quantity": 1 }
+ *    ]
+ *  }
  */
 
-export const checkout = (entities) => fetch('/api/v1/orders', entities, 'POST');
+export const checkout = (entities) => fetch('/api/v1/pos_orders', entities, 'POST');
 
 /**
  * 会员充值
  */
 
-export const recharge = (entities) => fetch('/api/v1/orders', entities, 'POST');
+export const recharge = (entities) => fetch('/api/v1/pos_orders', entities, 'POST');
 
 
 /**

@@ -36,7 +36,7 @@
                 </div>
                 <div class="num" style="float: right; height: 10em;">
                   <div>
-                    <button class="place-order" @click.stop="confirm()">现金找零 </button>
+                    <button class="place-order" @click.stop="confirm()">确认 </button>
                   </div>
                 </div>
                 <div class="num">
@@ -119,6 +119,7 @@ export default {
       money: ""
     };
   },
+  props:['initialMoney'],
   //监控money数据变化,每变化一次执行
   watch: {
     money: function(checkoutInputSum, money) {
@@ -219,17 +220,18 @@ export default {
     //确认按钮事件函数,提交父组件
     confirm() {
       console.log(this.money);
-      
-      if (this.money !== "") {
-        console.log("确认 按下了,请注意!!!");
-        this.$emit("giveChangeOnFun");
-      }
-      else{
-        this.$alert("请输入金额", "错误提示", {
-            confirmButtonText: "确定"
-          });
-          return false;
-      }
+      this.$emit("giveChangeOnFun");
+
+      // if (this.money !== "") {
+      //   console.log("确认 按下了,请注意!!!");
+      //   this.$emit("giveChangeOnFun");
+      // }
+      // else{
+      //   this.$alert("请输入金额", "错误提示", {
+      //       confirmButtonText: "确定"
+      //     });
+      //     return false;
+      // }
     },
     pressKeyC(){
       this.money = "";

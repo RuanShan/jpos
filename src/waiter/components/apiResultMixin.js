@@ -112,28 +112,43 @@ export var apiResultMixin = {
     // id, name, description, price, has_variants
     buildProduct: function( productResult ){
       //
-      const product = { className: 'Product', variants: []}
+      const product = { className: 'Product', id: productResult.id,
+          price: productResult, name: productResult.name,
+          variants: [], taxonIds: productResult.taxon_ids
+        }
 
       if( productResult.has_variants ){
-        productResult.variants.forEach(function(variantResult ){
+        productResult.variants.forEach((variantResult ) => {
           let variant = this.buildVariant( variantResult )
           product.variants.push( variant )
         })
 
-      }else{
-        product.master = this.buildVariant( productResult.master )
       }
+      product.master = this.buildVariant( productResult.master )
+
+      return product
     },
 
     buildVariant: function( variantResult){
-      const variant = {className: 'Variant', price: variantResult.price, name: variantResult.name, optionValueTexts: ""}
-      variantResult.option_values.forEach(function(){
-
+      const variant = {className: 'Variant', id: variantResult.id,  price: variantResult.price,
+        name: variantResult.name, images: variantResult.images,
+        optionsText: variantResult.options_text, optionValueTexts: []
+      }
+      variantResult.option_values.forEach(function(ov){
+        variant.optionValueTexts.push(ov.presentation)
       })
       return variant
     },
     buildProducts: function( productsResult) {
+      const products = productsResult.products.map( (productResult ) => {
+        return  this.buildProduct( productResult )
+      })
+      return products
+    },
 
+    generateGroupNumber:function(  ){
+      let timestamp = moment().format("YYMMDDHHmmss")
+      return  timestamp
     }
   }
 }

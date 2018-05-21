@@ -333,13 +333,13 @@ export default {
         },
         mixins: [userDataMixin],
         created() {
-            this.getAdminData().then(res => {
-                if (this.userInfo.id) {
+          //  this.getAdminData().then(res => {
+          //      if (this.userInfo.id) {
                     this.initData()
-                } else {
-                    this.$router.push('/login')
-                }
-            })
+          //      } else {
+          //          this.$router.push('/login')
+          //      }
+          //  })
         },
 
         methods: {

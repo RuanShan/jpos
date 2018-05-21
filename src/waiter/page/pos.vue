@@ -66,7 +66,7 @@
                           <div class="clear">
                             <div v-for="(variant,index) in goods.variants" :key="index" class="left" >
                               <el-button size="mini"  @click="addOrderList(goods,index)">
-                                <span >{{variant.name}}-{{variant.price}}</span>
+                                <span >{{variant.optionValueTexts.join()}}({{variant.price}})</span>
                               </el-button>
                             </div>
                           </div>
@@ -92,6 +92,8 @@ import MemberKeyWord from "@/components/MemberKeyWord.vue";
 
 import { mapState, mapActions } from "vuex";
 import { userDataMixin } from "@/components/userDataMixin";
+import { apiResultMixin } from '@/components/apiResultMixin'
+
 import { foodMenu, getProducts } from "@/api/getData";
 import loading from "@/components/common/loading";
 import { baseImgPath } from "@/config/env";
@@ -130,7 +132,7 @@ export default {
     customerButton,
     MemberKeyWord
   },
-  mixins: [userDataMixin],
+  mixins: [userDataMixin, apiResultMixin],
   computed: {
     ...mapState(["userInfo", "cartList"]),
     selectedTaxonProducts: function() {
@@ -166,18 +168,17 @@ export default {
         this.menuList = taxonsData.taxons;
       }
 
-      let productsData = await getProducts();
-      this.testData = productsData; //测试使用
-      console.log(this.shopDetailData, taxonsData, productsData);
+      let productsResult = await getProducts();
+      console.log(this.shopDetailData, productsResult);
 
-      if (productsData) {
-        this.productList = productsData.products;
+      if (productsResult) {
+        this.productList = this.buildProducts( productsResult )
       }
 
     },
     getTaxonProducts: function(taxonId) {
       return this.productList.filter(function(product) {
-        return product.taxon_ids.includes(taxonId);
+        return product.taxonIds.includes(taxonId);
       });
     },
     getProductImageUrl: function(product) {
@@ -196,8 +197,9 @@ export default {
         product_id: goods.id,
         variant_id: goods.variants[index].id,
         name: goods.name,
-        variantName:goods.variants[index].options_text,
+        variantName:goods.variants[index].optionsText,
         price: Number(goods.variants[index].price),
+        group_number: this.generateGroupNumber(),
         count: 1
       };
       this.orderList.push(newGoods);
