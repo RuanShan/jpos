@@ -10,6 +10,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import '@/style/common.scss'
 
+import EventBus from './plugins/EventBus'
+Vue.use(EventBus)
+
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 

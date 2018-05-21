@@ -227,7 +227,7 @@
             </div>
 
             <div class="location clear">
-              <div class="overlay"></div>
+              <div class="overlayx"></div>
                 <div class="step step2">
                   <div class="head"> 工厂                </div>
                     <div class="title">
@@ -346,8 +346,16 @@ export default {
                     this.$router.push('/login')
                 }
             })
-        },
 
+            this.$bus.$on('created-order', ()=>{
+              console.log('on created-order')
+              this.initData()
+            })
+
+        },
+        beforeRouteUpdate (to, from, next) {
+          this.initData()
+        },
         methods: {
             async initData() {
                     const orderCounstResult = await getLineItemGroupCounts()

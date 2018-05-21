@@ -105,7 +105,6 @@
     <checkout-keyboard ref="keyboard" @checkoutInputSum="checkoutInputSum($event)" @giveChangeOnFun="giveChangeOnFun($event)" @pressKeyC="pressKeyC($event)"></checkout-keyboard>
 
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="confirmButton()">确 定</el-button>
     </div>
   </el-dialog>
 </div>
@@ -179,7 +178,7 @@ export default {
     //结账请求参数
     checkoutParams: function(){
       let order =  { user_id: this.customerData.id }
-      order.line_items = this.orderList.map((item)=>{ return { variant_id: item.variant_id}})
+      order.line_items = this.orderList.map((item)=>{ return { quantity: 1, variant_id: item.variant_id, group_number: item.group_number}})
       return order
     },
     // 支付总额
@@ -284,16 +283,12 @@ export default {
         //总数相等,提交SerVer
         checkout( { order: this.checkoutParams } ).then(()=>{
           this.dialogVisible = false;
+          this.$bus.$emit('created-order')
+          console.log('emit created-order')
 
-          const h = this.$createElement;
           this.$notify({
             title: "订单提交SerVer",
-            message: h(
-              "i", {
-                style: "color: teal"
-              },
-              "这是虚拟的,假设的,实验用的,非真实的.请注意!!!!!"
-            )
+            message: "这是虚拟的,假设的,实验用的,非真实的.请注意!!!!!"
           });
         })
 

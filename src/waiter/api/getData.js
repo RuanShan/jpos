@@ -312,13 +312,13 @@ export const createCustomer = (data) => fetch('/api/v1/users', data, 'POST');
  *  }
  */
 
-export const checkout = (entities) => fetch('/api/v1/orders', entities, 'POST');
+export const checkout = (entities) => fetch('/api/v1/pos_orders', entities, 'POST');
 
 /**
  * 会员充值
  */
 
-export const recharge = (entities) => fetch('/api/v1/orders', entities, 'POST');
+export const recharge = (entities) => fetch('/api/v1/pos_orders', entities, 'POST');
 
 
 /**

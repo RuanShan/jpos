@@ -77,3 +77,4 @@ thumbs.db
 #
 src/waiter/config/env.js
 src/renderer/config/env.js
+build/*
