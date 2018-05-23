@@ -1,74 +1,85 @@
 <template>
-  <div class="">
-    <div class="customer-button" @click="dialogVisible = true">
-      <div>
-        <h4 style='padding-top:10px;'>{{buttonName}}&nbsp;&nbsp;&nbsp;&nbsp;
-          <span style="font-size:12px;background:#ebb563;" v-if="NoVisible">No:&nbsp;&nbsp;{{buttonNum}}
-          </span>
-        </h4>
-      </div>
-      <div>
-        <h6 style='padding-top:10px; padding-bottom:5px'>余额:&nbsp;&nbsp;{{buttonRemaining}}&nbsp;&nbsp;元</h6>
-      </div>
-    </div>
+<div class="">
+  <!-- 会员关键字窗口 -> START -->
+  <el-dialog title="会员关键字" :visible="computedVisible" width="30%" :before-close="handleClose" @open="handleOpen">
+    <el-select v-model="inputNumber" :remote-method="searchCustomers" placeholder="请输入会员/手机号"    filterable
+    remote >
+    <el-option
+      v-for="item in computedCustomerOptions"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
 
-    <!-- 会员关键字窗口 -> START -->
-    <el-dialog title="会员关键字" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" @close="closeMemberKeyWordWindow()">
-      <el-input v-model="inputNumber" placeholder="请输入会员/手机号"></el-input>
-      <el-autocomplete v-model="inputNumber" :fetch-suggestions="querySearchAsync" placeholder="请输入会员手机号码" @select="handleSelect" :trigger-on-focus="false"></el-autocomplete>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button type="">选择</el-button>
+    <span slot="footer" class="dialog-footer">
         <el-button type="">新建</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="openAddMemberWindws">确 定</el-button>
-      </span>
-      <el-button type="danger" @click="test()">测试</el-button>
+    </span>
 
-    </el-dialog>
-    <!-- 会员关键字窗口 -> END -->
+  </el-dialog>
+  <!-- 会员关键字窗口 -> END -->
 
-    <!-- 添加会员组件 Start-->
-    <member-add v-if="memberAddWindowVisible" :inputNumber="inputNumber" v-on:AddMemberReturnData="AddMemberReturnData($event)"></member-add>
-    <!-- 添加会员组件 END-->
+  <!-- 添加会员组件 Start-->
+  <member-add v-if="memberAddWindowVisible" :inputNumber="inputNumber" v-on:AddMemberReturnData="AddMemberReturnData($event)"></member-add>
+  <!-- 添加会员组件 END-->
 
-    <!-- 会员中心组件 Start-->
-    <member-center v-if="memberCenterWindowVisible" ref="membercenter" :customerId="customerId" v-on:SelectMemberButton="SelectMemberButton($event)"></member-center>
-    <!-- 会员中心组件 END-->
-  </div>
+  <!-- 会员中心组件 Start-->
+  <member-center v-if="memberCenterWindowVisible" ref="membercenter" :customerId="customerId" v-on:SelectMemberButton="SelectMemberButton($event)"></member-center>
+  <!-- 会员中心组件 END-->
+</div>
 </template>
 
 <script>
-import MemberAdd from "@/components/MemberAdd.vue";
-import MemberCenter from "@/components/MemberCenter.vue";
-import { getCustomer } from "@/api/getData";
-// import { findCustomers } from "@/api/getData";
-import { findCustomers_1 } from "@/api/getData";
-import { findCustomers_2 } from "@/api/getData";
+import _ from "lodash"
+import MemberAdd from "@/components/MemberAdd.vue"
+import MemberCenter from "@/components/MemberCenter.vue"
+import {
+  getCustomer,
+  findCustomers
+} from "@/api/getData"
+import {
+  DialogMixin
+} from '@/components/mixin/DialogMixin'
+import {
+  apiResultMixin
+} from '@/components/apiResultMixin'
 
 export default {
   components: {
     "member-add": MemberAdd,
-    "member-center": MemberCenter
+    "member-center": MemberCenter,
   },
   data() {
     return {
-      dialogVisible: false, //是否显示窗口标志位
+      customerList: [], //
       memberAddWindowVisible: false, //添加会员窗口显示标志位
       memberCenterWindowVisible: false, //会员中心窗口显示标志位
       inputNumber: "", //输入框
       memberData: "", //用户数据
-      buttonName: "来宾", //按钮姓名显示
       buttonRemaining: "", //按钮余额显示
       buttonNum: "", //按钮编号显示
       NoVisible: false, //按钮中"No"显示标志位
       returnSerVerData: {}, //SerVer返回的数据
       searchReturnData: {}, //搜索提示的电话号码数据
       searchValue: [],
-      customerByMobile:{},//通过电话号码搜索得到的会员信息
+      customerByMobile: {}, //通过电话号码搜索得到的会员信息
       customerId: null
     };
   },
+  computed: {
+    computedCustomerOptions: function() {
+
+      return this.customerList.map((customer) => {
+        return {
+          value: customer.id,
+          label: customer.mobile
+        }
+      })
+    }
+  },
+  mixins: [DialogMixin, apiResultMixin],
+  props: ['dialogVisible'],
   mounted() {
     this.getSverVerCustomer(456789).then(() => {
       console.log("应该返回会员数据了");
@@ -76,12 +87,13 @@ export default {
     });
   },
   methods: {
+    handleOpen() {
+      console.log("computedCustomerOptions", this.computedCustomerOptions)
+    },
     handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then(_ => {
-          done();
-        })
-        .catch(_ => {});
+      this.$emit("MemberData", this.memberData)
+      done()
+      this.handleCloseDialog()
     },
     openAddMemberWindws() {
       if (this.inputNumber == "1234") {
@@ -109,7 +121,6 @@ export default {
       this.dialogVisible = false; //关闭查询会员窗口
       this.memberCenterWindowVisible = false; //关闭会议中心窗口
       this.memberData = memberCenterData; //会员中心的修改数据给memberData
-      this.buttonName = this.memberData.memberName; //改变会员按钮上的"来宾"名称,显示会员姓名
       this.buttonRemaining = this.memberData.memberCardRemaining; //改变会员按钮上的"余额"信息,显示会员余额
       this.NoVisible = true; //按钮上的"No"显示开关
       this.buttonNum = this.memberData.memberNum; //按钮上显示会员编号
@@ -122,52 +133,25 @@ export default {
       this.returnSerVerData = await getCustomer(Ids);
     },
     //从SerVer上获取模糊搜索的用户数据,异步获取
-    async searchCustomers() {
-      this.searchReturnData = await findCustomers_1();
+    searchCustomers(keyword) {
+      console.log( "searchCustomers")
+      this.searchCustomersAsync( keyword, this);
     },
     //通过电话号码得从SerVer上获取用户数据,异步获取
     async customerFromMobile(mobile) {
-      this.customerByMobile = await findCustomers_2(mobile);
-    },
-    //关闭窗口时处理函数-----发射memberData数据给父组件
-    closeMemberKeyWordWindow() {
-      this.$emit("MemberData", this.memberData);
-    },
-    test() {
-      this.searchCustomers().then(() => {
-        console.log("搜索用户数据完成了,你看看");
-      });
     },
     //远程搜索输入框函数-----提示功能
-    querySearchAsync(queryString, cb) {
-      console.log(this.inputNumber.length);
-      if (this.inputNumber.length >= 1 && this.inputNumber.length <= 3) {
-        console.log("四次了@@@@@@@@@@@@@@@@@@@@");
-        this.searchValue.length = 0;
-        this.searchCustomers().then(() => {
-          this.searchReturnData.users.forEach(user => {
-            let val = { value: user.mobile };
-            this.searchValue.push(val);
-          });
-          console.log("push  完毕了!!!");
-          let results = queryString
-            ? this.searchValue.filter(this.createStateFilter(queryString))
-            : this.searchValue;
-          cb(results);
-        });
-      }
-      if (this.inputNumber.length > 3) {
-        let results = queryString
-          ? this.searchValue.filter(this.createStateFilter(queryString))
-          : this.searchValue;
-        cb(results);
-      }
-    },
+    searchCustomersAsync:_.debounce(( keyword, vm) => {
+      findCustomers({q:{mobile_or_username_cont:keyword }}).then((customersResult)=>{
+        vm.customerList =  vm.buildCustomers(customersResult)
+        console.log("customersResult2",vm.customerList)
+      })
+    },450),
     //提示功能的过滤函数-----去掉多余不符合条件的项
-    createStateFilter(queryString) {
+    createStateFilter(keyword) {
       return inputNumber => {
         return (
-          inputNumber.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          inputNumber.value.toLowerCase().indexOf(keyword.toLowerCase()) ===
           0
         );
       };
@@ -176,11 +160,11 @@ export default {
     handleSelect(item) {
       let obj = {
         q: {
-          "mobile_cont" : ""
+          "mobile_cont": ""
         }
       };
       obj.q.mobile_cont = item.value;
-      this.customerFromMobile(obj).then(()=>{
+      this.customerFromMobile(obj).then(() => {
         this.customerId = this.customerByMobile.users[0].id;
         this.dialogVisible = false;
         this.memberCenterWindowVisible = true;
@@ -193,12 +177,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped >
-.customer-button {
-  height: 60px;
-  text-align: center;
-  font-size: 21px;
-  color: #fff;
-  background-color: #909399;
-  border-color: #909399;
-}
+
 </style>

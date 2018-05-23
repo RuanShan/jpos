@@ -230,29 +230,27 @@ export const findOrderByGroupNumber = groupNumber => fetch('/api/v1/pos_orders/f
  * 获取Customer信息
  */
 
-export const getCustomer = user_id => fetch('/api/v1/users/' + user_id);
+export const getCustomer = user_id => fetch('/api/v1/customers/' + user_id);
 
 /**
- * 根据条件搜索用户信息
+ * 根据条件搜索客户信息
  */
 
-export const findCustomers = data => fetch('/api/v1/users/search', data, 'POST');
-
-
-/**
- * 获取所有用户信息
- */
-
-export const findCustomers_1 = data => fetch('/api/v1/users/search_1', data, 'POST');
+export const findCustomers = data => fetch('/api/v1/customers/search', data, 'POST');
 
 
 /**
- * 根据电话号码搜索得到用户信息
+ * 获取所有客户信息
  */
 
-export const findCustomers_2 = data => fetch('/api/v1/users/search_2', data, 'POST');
+export const findCustomers_1 = data => fetch('/api/v1/customers/search_1', data, 'POST');
 
 
+/**
+ * 根据电话号码搜索得到客户信息
+ */
+
+export const findCustomers_2 = data => fetch('/api/v1/customers/search_2', data, 'POST');
 
 
 /**

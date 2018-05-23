@@ -145,6 +145,20 @@ export var apiResultMixin = {
       })
       return products
     },
+    buildCustomer: function( userResult ){
+      const user = { storeId: 0, avatar: 'default.jpg',  apiKey: '' }
+      user.storeId = userResult.store_id
+      user.id = userResult.id
+      user.mobile = userResult.mobile
+      user.name = userResult.name
+      return user
+    },
+    buildCustomers: function( customersResult ){
+      const customers = customersResult.users.map( (productResult ) => {
+        return  this.buildCustomer( productResult )
+      })
+      return customers
+    },
 
     generateGroupNumber:function(  ){
       let timestamp = moment().format("YYMMDDHHmmss")

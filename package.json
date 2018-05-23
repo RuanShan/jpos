@@ -59,6 +59,7 @@
     }
   },
   "dependencies": {
+    "@onekiloparsec/vue-xeditable": "^0.4.1",
     "@websanova/vue-auth": "^2.21.3-beta",
     "aws-sdk": "^2.234.1",
     "axios": "^0.16.1",
@@ -76,7 +77,6 @@
     "moment": "^2.22.1",
     "node-notifier": "^5.2.1",
     "printer": "^0.2.2",
-    "select2-component": "^5.3.0",
     "time-formater": "^1.0.1",
     "url-assembler": "^1.2.9",
     "usb-detection": "^2.1.0",
@@ -85,6 +85,7 @@
     "vue-electron": "^1.0.6",
     "vue-quill-editor": "^3.0.5",
     "vue-router": "^3.0.1",
+    "vue-select": "^2.4.0",
     "vuex": "^3.0.0"
   },
   "devDependencies": {
