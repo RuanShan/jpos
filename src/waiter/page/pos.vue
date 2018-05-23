@@ -9,47 +9,58 @@
     </div>
     <el-row class="pos-content">
       <el-col :span="12" class="pos-order">
+        <el-tabs >
+          <el-tab-pane label="订单" class="new-order">
+            <div class="customer-container">
+              <div> customer search </div>
+              <div> customer info </div>
+            </div>
+           <el-table :data="sortedOrderItemList" border stripe style="width:100%;" class="order-item-list">
+             <el-table-column label="物品序号">
+               <template slot-scope="scope">
+                 <vue-xeditable  :name="'groupNumber_'+scope.row.index+'_xeditable'" v-model="scope.row.groupNumber" type="number" @value-did-change="handleGroupNumberChanged"></vue-xeditable>
+               </template>
+             </el-table-column>
+             <el-table-column prop="fullName" label="商品名"></el-table-column>
+             <el-table-column prop="unitPrice" label="单价"></el-table-column>
+             <el-table-column prop="quantity" label="数量" ></el-table-column>
+             <el-table-column prop="discount" label="折扣" >折扣</el-table-column>
+             <el-table-column prop="price" label="金额" >金额</el-table-column>
+             <el-table-column label="操作" width="50">
+               <template slot-scope="scope">
+                       <i class="el-icon-remove-outline" @click="delOrderItem(scope.row)"></i>
+               </template>
+             </el-table-column>
+           </el-table>
+           <div class="order-final">
+             <div class="order-sum">
+               <i>数量：</i>
+               <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
+               <i>金额：</i>
+               <span>{{totalMoney}}</span>&nbsp;
+               <i>元</i>
+               <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
+             </div>
+             <!-- <customerButton>  </customerButton> -->
+             <div class="customer-button" @click="openMemberSearchDislog">
+               <div>
+                 <h4 style='padding-top:10px;'>{{customer.name}}&nbsp;&nbsp;&nbsp;&nbsp;
+                         <span style="font-size:12px;background:#ebb563;" v-if="customer.cards">No:&nbsp;&nbsp;xxxxxx
+                         </span>
+                       </h4>
+               </div>
+               <div>
+                 <h6 style='padding-top:10px; padding-bottom:5px'>余额:&nbsp;&nbsp;{{customer.balance}}&nbsp;&nbsp;元</h6>
+               </div>
+             </div>
+             <checkou-button :order-list="orderItemList" :totalMoney="totalMoney" :customerData="customer"> </checkou-button>
+           </div>
+         </el-tab-pane >
+         <el-tab-pane  label="取单" class="ready-order">
+           客户取单
+         </el-tab-pane >
+        </el-tabs>
 
-        <el-table :data="sortedOrderItemList" border stripe style="width:100%;">
-          <el-table-column label="物品序号">
-            <template slot-scope="scope">
-              <vue-xeditable  :name="'groupNumber_'+scope.row.index+'_xeditable'" v-model="scope.row.groupNumber" type="number" @value-did-change="handleGroupNumberChanged"></vue-xeditable>
-            </template>
-          </el-table-column>
-          <el-table-column prop="fullName" label="商品名"></el-table-column>
-          <el-table-column prop="unitPrice" label="单价"></el-table-column>
-          <el-table-column prop="quantity" label="数量" ></el-table-column>
-          <el-table-column prop="discount" label="折扣" >折扣</el-table-column>
-          <el-table-column prop="price" label="金额" >金额</el-table-column>
-          <el-table-column label="操作" width="50">
-            <template slot-scope="scope">
-                    <i class="el-icon-remove-outline" @click="delOrderItem(scope.row)"></i>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="order-final">
-          <div class="order-sum">
-            <i>数量：</i>
-            <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
-            <i>金额：</i>
-            <span>{{totalMoney}}</span>&nbsp;
-            <i>元</i>
-            <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
-          </div>
-          <!-- <customerButton>  </customerButton> -->
-          <div class="customer-button" @click="openMemberSearchDislog">
-            <div>
-              <h4 style='padding-top:10px;'>{{customer.name}}&nbsp;&nbsp;&nbsp;&nbsp;
-                      <span style="font-size:12px;background:#ebb563;" v-if="customer.cards">No:&nbsp;&nbsp;xxxxxx
-                      </span>
-                    </h4>
-            </div>
-            <div>
-              <h6 style='padding-top:10px; padding-bottom:5px'>余额:&nbsp;&nbsp;{{customer.balance}}&nbsp;&nbsp;元</h6>
-            </div>
-          </div>
-          <checkou-button :order-list="orderItemList" :totalMoney="totalMoney" :customerData="customer"> </checkou-button>
-        </div>
 
       </el-col>
       <el-col :span="12">
@@ -392,6 +403,7 @@ export default {
                     height: 100%;
                 }
             }
+
         }
         .order-final {
             position: absolute;
@@ -403,9 +415,19 @@ export default {
     .pos-order {
         background-color: #f9fafc;
         border-right: 1px solid #c0ccda;
-        .el-table {
+        .el-tabs__item {
+            min-width: 80px;
+            text-align: center;
+        }
+        .el-tabs__content {
+
+        }
+        .customer-container{
+          height: 80px;
+        }
+        .order-item-list {
             position: absolute;
-            top: 0;
+            top: 80px;
             bottom: 130px;
         }
         .el-table__body-wrapper {

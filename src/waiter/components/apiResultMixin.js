@@ -114,7 +114,7 @@ export var apiResultMixin = {
       //
       const product = { className: 'Product', id: productResult.id,
           price: productResult, name: productResult.name,
-          variants: [], taxonIds: productResult.taxon_ids
+          variants: [], taxonIds: productResult.taxon_ids, relateds: []
         }
 
       if( productResult.has_variants ){
@@ -122,10 +122,25 @@ export var apiResultMixin = {
           let variant = this.buildVariant( variantResult )
           product.variants.push( variant )
         })
-
       }
       product.master = this.buildVariant( productResult.master )
 
+      //商品对每种卡的折扣
+      //relateds:[{
+      //    "relation_type_id": 1,
+      //    "relatable_id": 1,
+      //    "related_to_id": 6,
+      //    "discount_amount": "0.0",
+      //    "discount_percent": "70.0"
+      // }],
+      productResult.relateds.forEach((relatedResult ) => {
+        let related = { relationTypeId: relatedResult.relation_type_id,
+                  relatableId: relatedResult.relatable_id,
+                  relatedToId: relatedResult.related_to_id,
+                  discountAmount: parseInt( relatedResult.discount_amount ),
+                  discountPercent: parseInt( relatedResult.discount_percent )}
+        product.relateds.push( related )
+      })
       return product
     },
 
