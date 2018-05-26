@@ -128,10 +128,10 @@ export var apiResultMixin = {
       //商品对每种卡的折扣
       //relateds:[{
       //    "relation_type_id": 1,
-      //    "relatable_id": 1,
-      //    "related_to_id": 6,
+      //    "relatable_id": 1, 会员卡类型ID
+      //    "related_to_id": 6, 打折商品ID
       //    "discount_amount": "0.0",
-      //    "discount_percent": "70.0"
+      //    "discount_percent": "70.0" 折扣率
       // }],
       productResult.relateds.forEach((relatedResult ) => {
         let related = { relationTypeId: relatedResult.relation_type_id,
@@ -166,12 +166,33 @@ export var apiResultMixin = {
       user.id = userResult.id
       user.mobile = userResult.mobile
       user.name = userResult.name
+      user.customerType =  userResult.customer_type
+      user.normalOrderTotal =  userResult.normal_order_total
+      user.normalOrderCount =  userResult.normal_order_count
+      user.cards = []
+      // cards:[{"id":1,"user_id":8,"code":"7f9bd55a64254af48694723d4622eabfcd4f5197","current_value":"2000.0","name":"PrepaidCard1000 - Master","discount_percent":null,"discount_amount":null,"product_id":1]
+      userResult.cards.forEach(function(cardResult){
+        const card = {
+          className: 'Spree::Card',
+          id: cardResult.id,
+          name: cardResult.name,
+          currentValue: parseInt( cardResult.current_value ),
+          discountPercent: parseInt( cardResult.discount_percent ),
+          discountAmount: parseInt( cardResult.discount_amount ),
+          status: cardResult.status,
+          code: ( cardResult.code.length <10 ? cardResult.code : cardResult.code.slice(0,8)), // 显示前8位
+          productId: cardResult.product_id
+        }
+        user.cards.push(card)
+      })
+
       return user
     },
     buildCustomers: function( customersResult ){
       const customers = customersResult.users.map( (productResult ) => {
         return  this.buildCustomer( productResult )
       })
+      console.log( "customersResult=", customersResult, "customers=",customers)
       return customers
     },
 

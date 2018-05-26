@@ -271,7 +271,11 @@ export const getAddressById = address_id => fetch('/v1/addresse/' + address_id);
 
 export const getUserCity = () => fetch('/v1/user/city/count');
 
+/**
+ * 获取支付方式列表
+ */
 
+export const getPaymentMethods = () => fetch('/api/v1/payment_methods');
 
 /********************************************************************************
  from vue2-elm

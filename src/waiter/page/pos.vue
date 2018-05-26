@@ -1,6 +1,6 @@
 <template>
 <div>
-  <MemberKeyWord @MemberData="MemberData($event)" :dialog-visible.sync="memberSearchDislogVisible"></MemberKeyWord>
+  <CheckoutDialog :order-list="orderItemList" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible"></CheckoutDialog>
 
   <div class="pos">
     <div class="loading" v-if="false">
@@ -8,62 +8,80 @@
       <span class="sr-only">Loading...</span>
     </div>
     <el-row class="pos-content">
-      <el-col :span="12" class="pos-order">
-        <el-tabs >
+      <el-col :span="13" class="pos-order">
+        <el-tabs>
           <el-tab-pane label="订单" class="new-order">
-            <div class="customer-container">
-              <div> customer search </div>
-              <div> customer info </div>
+            <div class="customer-container clear">
+              <el-form ref="customerForm" size="mini"  :inline="true" class="search-form">
+                <el-form-item label="会员搜索">
+                  <el-select v-model="customerId" :remote-method="searchCustomers" placeholder="请输入会员/手机号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
+                    <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                  </el-select> {{customerId}}
+                </el-form-item>
+
+                <el-button type="" size="mini" @click="clearAllGoods" class="right">添加会员</el-button>
+
+              </el-form>
+              <div class="search-result clear">
+                <div class="left" style="width:60%;padding: 0 5px;">
+                  <table style="width:100%">
+                    <tr><th>客户类型</th><td>{{currentCustomer.customerType}}</td><th>移动电话</th><td>{{currentCustomer.mobile}}</td> </tr>
+                    <tr><th>消费次数</th><td>{{currentCustomer.normalOrderCount}}</td><th>消费金额</th><td>{{currentCustomer.normalOrderTotal}}</td> </tr>
+                  </table>
+                </div>
+                <div class="right"  style="width:40%;padding: 0 5px;">
+                  <div class="cards">
+                    <div v-for="card in currentCustomer.cards" class="card " >
+                      <el-checkbox label="" name="type"></el-checkbox>
+                      <div class="">
+                        <!-- <span >储值卡5000元6折卡(#10001) 余额:0元</span> -->
+                        <span >{{card.name}} </span><br/>
+                        <span>#{{card.code}} </span>
+                        <span>余额:{{card.currentValue}}元 </span>
+                      </div>
+                    </div>
+
+                    <div v-show="addNewCardButtonAvailable"> 当前用户没有会员卡，创建？</div>
+                  </div>
+                </div>
+              </div>
             </div>
-           <el-table :data="sortedOrderItemList" border stripe style="width:100%;" class="order-item-list">
-             <el-table-column label="物品序号">
-               <template slot-scope="scope">
-                 <vue-xeditable  :name="'groupNumber_'+scope.row.index+'_xeditable'" v-model="scope.row.groupNumber" type="number" @value-did-change="handleGroupNumberChanged"></vue-xeditable>
+            <el-table :data="sortedOrderItemList" border stripe style="width:100%;" class="order-item-list">
+              <el-table-column label="物品序号">
+                <template slot-scope="scope">
+                 <vue-xeditable  :name="'groupPosition_'+scope.row.index+'_xeditable'" v-model="scope.row.groupPosition" type="number" @value-did-change="handleGroupPositionChanged"></vue-xeditable>
                </template>
-             </el-table-column>
-             <el-table-column prop="fullName" label="商品名"></el-table-column>
-             <el-table-column prop="unitPrice" label="单价"></el-table-column>
-             <el-table-column prop="quantity" label="数量" ></el-table-column>
-             <el-table-column prop="discount" label="折扣" >折扣</el-table-column>
-             <el-table-column prop="price" label="金额" >金额</el-table-column>
-             <el-table-column label="操作" width="50">
-               <template slot-scope="scope">
+              </el-table-column>
+              <el-table-column prop="fullName" label="商品名"></el-table-column>
+              <el-table-column prop="unitPrice" label="单价"></el-table-column>
+              <el-table-column prop="quantity" label="数量"></el-table-column>
+              <el-table-column prop="discount" label="折扣">折扣</el-table-column>
+              <el-table-column prop="price" label="金额">金额</el-table-column>
+              <el-table-column label="操作" width="50">
+                <template slot-scope="scope">
                        <i class="el-icon-remove-outline" @click="delOrderItem(scope.row)"></i>
                </template>
-             </el-table-column>
-           </el-table>
-           <div class="order-final">
-             <div class="order-sum">
-               <i>数量：</i>
-               <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
-               <i>金额：</i>
-               <span>{{totalMoney}}</span>&nbsp;
-               <i>元</i>
-               <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
-             </div>
-             <!-- <customerButton>  </customerButton> -->
-             <div class="customer-button" @click="openMemberSearchDislog">
-               <div>
-                 <h4 style='padding-top:10px;'>{{customer.name}}&nbsp;&nbsp;&nbsp;&nbsp;
-                         <span style="font-size:12px;background:#ebb563;" v-if="customer.cards">No:&nbsp;&nbsp;xxxxxx
-                         </span>
-                       </h4>
-               </div>
-               <div>
-                 <h6 style='padding-top:10px; padding-bottom:5px'>余额:&nbsp;&nbsp;{{customer.balance}}&nbsp;&nbsp;元</h6>
-               </div>
-             </div>
-             <checkou-button :order-list="orderItemList" :totalMoney="totalMoney" :customerData="customer"> </checkou-button>
-           </div>
-         </el-tab-pane >
-         <el-tab-pane  label="取单" class="ready-order">
-           客户取单
-         </el-tab-pane >
+              </el-table-column>
+            </el-table>
+            <div class="order-final">
+              <div class="order-sum">
+                <i>数量：</i>
+                <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
+                <i>金额：</i>
+                <span>{{totalMoney}}</span>&nbsp;
+                <i>元</i>
+                <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
+              </div>
+              <div class="check-button" @click="openCheckoutDialog()" > 收款 ：&nbsp;￥&nbsp;{{totalMoney}} </div>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="取单" class="ready-order">
+            客户取单
+          </el-tab-pane>
         </el-tabs>
-
-
       </el-col>
-      <el-col :span="12">
+      <el-col :span="11">
         <div class="hot-goods">
           <!-- <div>
               <el-row class="hot-list">
@@ -81,7 +99,7 @@
             <el-tab-pane v-for="menu in menuList" :key="menu.id" v-bind:label="menu.name">
               <div>
                 <el-row class="cook-list">
-                  <el-col class="cook-item" :span="6" v-for="goods in getTaxonProducts(menu.id)" :key="goods.id" @click.native="openClassify(goods)">
+                  <el-col class="cook-item" :span="6" v-for="goods in getTaxonProducts(menu.id)" :key="goods.id">
                     <div class="food-wrapper">
                       <div class="food-img">
                         <img :src="getProductImageUrl(goods)" width="100%" />
@@ -116,9 +134,9 @@
 
 <script>
 import customerButton from "@/components/customerButton.vue"
-import checkoutButton from "@/components/checkoutButton.vue"
-import MemberKeyWord from "@/components/MemberKeyWord.vue"
 
+import CheckoutDialog from "@/components/CheckoutDialog.vue"
+import _ from "lodash"
 
 import {
   mapState,
@@ -133,7 +151,8 @@ import {
 
 import {
   foodMenu,
-  getProducts
+  getProducts,
+  findCustomers
 } from "@/api/getData";
 import loading from "@/components/common/loading";
 import {
@@ -144,7 +163,6 @@ export default {
   name: "pos",
   data() {
     return {
-      geohash: "", //geohash位置信息
       storeId: null, //商店id值
       storeName: "", //店铺名称
       showLoading: true, //显示加载动画
@@ -154,25 +172,24 @@ export default {
       selectedTaxonId: 0,
       productList: [],
       baseImgPath,
-      customer: {
+      defaultCustomer: {
+        customerType: "无", //客户类型：无，散客，会员
         name: "来宾",
-        balance: 0
+        balance: 0,
+        cards: []
       }, //改变当前选择会员，显示会员相关信息
       orderItemList: [], //订单 {variantId, price, quantity}
       packages: [],
-      totalMoney: 0, //合计
-      totalCount: 0,
-      openClassVisible: false, //分类试图可见开关
-      variants: [], //分类数组
-      testData: {},
-      memberSearchDislogVisible: false
+      checkoutDialogVisible: false,
+      customerList: [], //按关键字搜索到的客户列表
+      customerId: null
+
     };
   },
   components: {
     loading,
-    "checkou-button": checkoutButton, //收款按钮组件
     customerButton,
-    MemberKeyWord,
+    CheckoutDialog,
   },
   mixins: [userDataMixin, apiResultMixin],
   computed: {
@@ -183,17 +200,56 @@ export default {
         return false;
       });
     },
-    sortedOrderItemList:function(){
-      return this.orderItemList.sort((a,b)=>{ return (a.groupNumber - b.groupNumber) })
+    sortedOrderItemList: function() {
+      return this.orderItemList.sort((a, b) => {
+        return (a.groupPosition - b.groupPosition)
+      })
     },
-    maxGroupNumber: function(){
+    computedCustomerOptions: function() {
+      return this.customerList.map((customer) => {
+        return {
+          value: customer.id,
+          label: customer.mobile
+        }
+      })
+    },
+    //当前选择的客户
+    currentCustomer: function(){
+      let customer = this.defaultCustomer
+      if( this.customerId ){
+        customer = this.customerList.find((customer, index, arr) => {
+          return customer.id ==   this.customerId
+        })
+        if( !customer ){
+          customer = this.defaultCustomer
+        }
+      }
+      return customer
+    },
+    totalCount: function(){
+      return this.orderItemList.reduce((total, item)=>{
+        return total += item.quantity
+      }, 0)
+    },
+    totalMoney: function(){
+      let t = this.orderItemList.reduce((total, item)=>{
+        return total += item.price
+      }, 0)
+      return t.toFixed(2)
+    },
+    addNewCardButtonAvailable: function(){
+      return this.currentCustomer.id && this.currentCustomer.cards.length == 0
+    },
+    maxGroupPosition: function() {
       // 返回 0 或 >0
-      let max = this.orderItemList.map((item)=>{return item.groupNumber}).sort().pop()
+      let max = this.orderItemList.map((item) => {
+        return item.groupPosition
+      }).sort().pop()
       return max ? max : 0
     },
-    nextGroupNumber: function(){
+    nextGroupPosition: function() {
       //取当前的最大数，再加 +1
-      return this.maxGroupNumber + 1
+      return this.maxGroupPosition + 1
     }
   },
   created() {
@@ -214,17 +270,13 @@ export default {
   methods: {
     ...mapActions(["getAdminData"]),
     async initData() {
-
       //获取商铺食品列表 //获取商铺食品列表
       let taxonsData = await foodMenu(1);
-
       if (taxonsData) {
         this.menuList = taxonsData.taxons;
       }
-
       let productsResult = await getProducts();
       console.log(this.shopDetailData, productsResult);
-
       if (productsResult) {
         this.productList = this.buildProducts(productsResult)
       }
@@ -243,51 +295,34 @@ export default {
     },
     addOrderItem(goods, index) {
       // 增加商品
-      this.totalMoney = 0;
-      this.totalCount = 0;
+      let vid = goods.variants[index].id
+
       // 根据判断的值编写业务逻辑
       let newGoods = {
         // index用来命名xeditable, 根据名称查找 orderItem, 修改对应值
         // [column]_[index]_[suffix] 示例：groupnumber_0_xeditable
         index: this.orderItemList.length,
         productId: goods.id,
-        variantId: goods.variants[index].id,
+        variantId: vid,
         name: goods.name,
         variantName: goods.variants[index].optionsText,
         fullName: goods.name + goods.variants[index].optionValueTexts.join(),
         unitPrice: Number(goods.variants[index].price), // 单价
         price: Number(goods.variants[index].price), // 金额
-        groupNumber: this.nextGroupNumber,
+        groupPosition: this.nextGroupPosition,
         quantity: 1,
-        discount: 100  //折扣率
-
-      };
-      this.orderItemList.push(newGoods);
-      console.log( "orderItemList", this.orderItemList)
-      this.getSum();
-    },
-    //求和
-    getSum() {
-      // 汇总数量和金额
-      let temp = 0;
-      this.totalCount = 0;
-      this.totalMoney = 0;
-      if (this.orderItemList) {
-        this.orderItemList.forEach((el, i) => {
-          this.totalCount += el.count;
-          temp += el.count * el.price;
-        });
+        discount: this.getDiscountOfVariant(vid) //计算选择商品对应当前客户会员卡的折扣率
       }
-      console.log(temp);
-      this.totalMoney = temp.toFixed(2);
+      this.computePrice(newGoods)
+      this.orderItemList.push(newGoods);
+      console.log("orderItemList", this.orderItemList)
     },
 
     delOrderItem(selectedOrderItem) {
       // 删除当个商品
       this.orderItemList = this.orderItemList.filter(o => {
-        return ! (( o.variantId == selectedOrderItem.variantId) && ( o.groupNumber == selectedOrderItem.groupNumber)) ;
+        return !((o.variantId == selectedOrderItem.variantId) && (o.groupPosition == selectedOrderItem.groupPosition));
       });
-      this.getSum();
       this.$message({
         message: selectedOrderItem.fullName + " > 删除成功",
         type: "success"
@@ -304,9 +339,6 @@ export default {
         return;
       }
       this.orderItemList = [];
-      this.totalCount = 0;
-      this.totalMoney = 0;
-      this.getSum();
       this.$message({
         message: "清空成功，请重新下单",
         type: "warning"
@@ -328,33 +360,87 @@ export default {
         type: "success"
       });
       this.orderItemList = [];
-      this.totalCount = 0;
-      this.totalMoney = 0;
     },
-    openClassify(goods) {
-      this.openClassVisible = true;
-      this.variants = goods.variants;
-      this.testData = goods;
-    },
-    // 更新groupNumber后，更新订单列表，
-    handleGroupNumberChanged(newValue, xeditableName){
-      console.log( "newValue=" + newValue +" xeditableName=" + xeditableName)
+    // 更新groupPosition后，更新订单列表，
+    handleGroupPositionChanged(newValue, xeditableName) {
+      console.log("newValue=" + newValue + " xeditableName=" + xeditableName)
       //示例：groupnumber_0_xeditable
-      let [ column, index ] = xeditableName.split('_')
-      index = parseInt( index)
-      console.log( " column="+column, "index="+index)
-      let newOrderItem = Object.assign({}, this.orderItemList[index], { [column]:newValue})
-      console.log(" old=",  this.orderItemList[index], "new=", newOrderItem)
+      let [column, index] = xeditableName.split('_')
+      index = parseInt(index)
+      let newOrderItem = Object.assign({}, this.orderItemList[index], {
+        [column]: newValue
+      })
+      console.log(" old=", this.orderItemList[index], "new=", newOrderItem)
       this.orderItemList.splice(index, 1, newOrderItem)
     },
     // 客户搜索事件处理
-    openMemberSearchDislog() {
-      console.log("openMemberSearchDislog")
-      this.memberSearchDislogVisible = true
+    openCheckoutDialog() {
+      console.log("openCheckoutDialog")
+      this.checkoutDialogVisible = true
     },
     //MemberKeyWord组件关闭后事件处理-----传过来memberData对象
     MemberData(memberData) {
-      this.customer = memberData;
+      //this.customer = memberData;
+    },
+    //根据关键字查找客户
+    //从SerVer上获取模糊搜索的用户数据,异步获取
+    searchCustomers(keyword) {
+      this.searchCustomersAsync(keyword, this);
+    },
+    //通过电话号码得从SerVer上获取用户数据,异步获取
+    async customerFromMobile(mobile) {},
+    //远程搜索输入框函数-----提示功能
+    searchCustomersAsync: _.debounce((keyword, vm) => {
+      findCustomers({
+        q: {
+          mobile_or_username_cont: keyword
+        }
+      }).then((customersResult) => {
+        vm.customerList = vm.buildCustomers(customersResult)
+      })
+    }, 450),
+    //店员改变当前选择客户,更新订单列表折扣率
+    handleCustomerChanged(selectedCustomerId){
+      if( selectedCustomerId ){
+        this.orderItemList.forEach((item)=>{
+          item.discount = this.getDiscountOfVariant( item.variantId )
+          this.computePrice(item)
+        })
+      }else{
+        this.orderItemList.forEach((item)=>{
+          item.discount = 100
+          this.computePrice(item)
+        })
+      }
+    },
+    findProductByVariantId( variantId ){
+      let product = this.productList.find((product)=>{
+        let vids = product.variants.map((v)=>{ return v.id})
+        return vids.indexOf( variantId ) >= 0
+      })
+      return product
+    },
+    getDiscountOfVariant( variantId ){
+      // 找到这个订单对应的商品
+      let discount = 100
+      const product = this.findProductByVariantId( variantId )
+
+      // 找到会员卡的分类ID，每个分类对应一些打折产品
+      this.currentCustomer.cards.forEach((card)=>{
+        let pid = card.productId
+        product.relateds.forEach((related) =>{
+          if( related.relatableId == pid){
+            if( related.discountPercent < discount){
+              discount = related.discountPercent
+            }
+          }
+        })
+      })
+      // 找到商品对应用户会员卡的打折信息，设置折扣率
+      return discount
+    },
+    computePrice( item ){
+      item.price = item.discount * item.unitPrice * item.quantity /100
     }
   },
   watch: {
@@ -380,10 +466,10 @@ export default {
     bottom: 50px;
     border-bottom: 1px solid #d3dce6;
     border-top: 1px solid #d3dce6;
-    span.vue-xeditable-value{
-      display: block;
+    span.vue-xeditable-value {
+        display: block;
     }
-    input.vue-xeditable-form-control{
+    input.vue-xeditable-form-control {
         width: 100%;
         padding: 0;
     }
@@ -403,7 +489,6 @@ export default {
                     height: 100%;
                 }
             }
-
         }
         .order-final {
             position: absolute;
@@ -420,15 +505,74 @@ export default {
             text-align: center;
         }
         .el-tabs__content {
+            }
+        .customer-container {
+          height: 118px;
+          border-top: 1px solid #ebeef5;
+          border-bottom: 1px solid #ebeef5;
+          background-color: #fff;
+          padding: 5px;
+          .search-form{
+            height: 28px;
+            .el-form-item {
+              margin-bottom: 5px;
+            }
+          }
 
-        }
-        .customer-container{
-          height: 80px;
+          .search-result{
+            position: relative;
+            height: 78px;
+            .left {
+              position: absolute;
+              top:0;bottom: 0;
+              left:0;
+            }
+            .right{
+              position: absolute;
+              top:0;bottom: 0;
+              right:0;
+            }
+            .cards{
+              position: relative;
+              border: 1px solid #ebeef5;
+              height: 100%;
+              overflow-y: auto;
+              .card{
+                font-size: 14px;
+                padding: 5px;
+                position: relative;
+                height: 3em;
+                div{
+                  position: absolute;
+                  top: 0;
+                  left: 2em;
+                  span{
+                    display: inline-block;
+                    padding: 5px 0 0;
+                  }
+                }
+              }
+            }
+          }
+          table{
+            td{
+              width: 28%;
+            }
+            td,th{
+              border: 1px solid #ebeef5;
+              padding: 6px 10px;
+              font-size: 14px;
+              box-sizing: border-box;
+              white-space: normal;
+              word-break: break-all;
+              line-height: 23px;
+            }
+          }
         }
         .order-item-list {
             position: absolute;
-            top: 80px;
-            bottom: 130px;
+            top: 130px;
+            bottom: 80px;
         }
         .el-table__body-wrapper {
             position: absolute;
@@ -445,11 +589,6 @@ export default {
             border-color: #909399;
         }
     }
-}
-
-.btn-group {
-    margin-top: 10px;
-    text-align: center;
 }
 
 .order-sum {
