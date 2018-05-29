@@ -14,16 +14,10 @@
           </router-link>
         </li>
         <li class="el-menu-item">
-          <i class="fa fa-bars"></i>
-          <div class="text-sm">店铺</div>
-        </li>
-        <li class="el-menu-item">
-          <i class="fa fa-coffee"></i>
-          <div class="text-sm">商品</div>
-        </li>
-        <li class="el-menu-item">
-          <i class="fa fa-vcard"></i>
-          <div class="text-sm">会员</div>
+          <router-link to="/waiter/members" >
+            <i class="fa fa-vcard"></i>
+            <div class="text-sm">会员</div>
+          </router-link>
         </li>
         <li class="el-menu-item">
           <i class="fa fa-bar-chart"></i>

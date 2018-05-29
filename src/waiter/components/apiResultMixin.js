@@ -167,7 +167,7 @@ export var apiResultMixin = {
       user.mobile = userResult.mobile
       user.name = userResult.name
       user.customerType =  userResult.customer_type
-      user.normalOrderTotal =  userResult.normal_order_total
+      user.normalOrderTotal =   parseInt(userResult.normal_order_total)
       user.normalOrderCount =  userResult.normal_order_count
       user.cards = []
       // cards:[{"id":1,"user_id":8,"code":"7f9bd55a64254af48694723d4622eabfcd4f5197","current_value":"2000.0","name":"PrepaidCard1000 - Master","discount_percent":null,"discount_amount":null,"product_id":1]

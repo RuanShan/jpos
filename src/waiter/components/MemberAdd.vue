@@ -1,7 +1,11 @@
 <template>
-  <div class="customer_container">
+  <div class="add_member_container cel-window">
     <!-- 会员添加窗口 -> START -->
-    <el-dialog title="会员添加" :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true">
+    <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="0" :modal="false">
+      <div slot="title" class="title-wrap">
+        <div class="left back"> <i class="el-icon-back" @click="handleCloseDialog()"></i> </div>
+        <div> 会员添加</div>
+      </div>
       <!-- <el-button type="primary" @click="test">主要按钮</el-button> -->
       <el-form :model="memberAddData" :rules="rules" ref="memberAddData" status-icon label-width="100px" class="demo-memberAddData">
 
@@ -56,9 +60,13 @@
 // **********
 
 import { createCustomer } from "@/api/getData";
+import {
+  DialogMixin
+} from '@/components/mixin/DialogMixin'
 
 export default {
-  props: ["inputNumber"],
+  props: ["inputNumber", 'dialogVisible'],
+  mixins: [DialogMixin],
   data() {
     //验证卡号--1.不能空;2.必须是数字;3.四至十一个字符
     // var checkmemberNum = (rule, value, callback) => {
@@ -99,7 +107,6 @@ export default {
       return reg.test(str);
     }
     return {
-      dialogVisible: true, //窗口显示标志位
       memberAddData: {
         // memberNum: "",
         password: "",
@@ -252,5 +259,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
+.add_member_container{
+
+}
 </style>

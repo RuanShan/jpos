@@ -1,6 +1,12 @@
 <template>
 <div>
+  <!-- 结账组件 Start-->
   <CheckoutDialog :order-list="orderItemList" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible"></CheckoutDialog>
+  <!-- 结账组件 End-->
+
+  <!-- 添加会员组件 Start-->
+  <member-add  v-on:AddMemberReturnData="AddMemberReturnData($event)" :dialog-visible.sync="memberAddWindowVisible"></member-add>
+  <!-- 添加会员组件 End-->
 
   <div class="pos">
     <div class="loading" v-if="false">
@@ -14,36 +20,25 @@
             <div class="customer-container clear">
               <el-form ref="customerForm" size="mini"  :inline="true" class="search-form">
                 <el-form-item label="会员搜索">
-                  <el-select v-model="customerId" :remote-method="searchCustomers" placeholder="请输入会员/手机号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
+                  <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入会员/手机号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
                     <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
-                  </el-select> {{customerId}}
+                  </el-select> {{customerComboId}}
                 </el-form-item>
 
-                <el-button type="" size="mini" @click="clearAllGoods" class="right">添加会员</el-button>
+                <el-button type="" size="mini" @click="handleNewCustomerButtonClicked" class="right">添加会员</el-button>
 
               </el-form>
               <div class="search-result clear">
-                <div class="left" style="width:60%;padding: 0 5px;">
+                <div >
                   <table style="width:100%">
-                    <tr><th>客户类型</th><td>{{currentCustomer.customerType}}</td><th>移动电话</th><td>{{currentCustomer.mobile}}</td> </tr>
-                    <tr><th>消费次数</th><td>{{currentCustomer.normalOrderCount}}</td><th>消费金额</th><td>{{currentCustomer.normalOrderTotal}}</td> </tr>
+                    <tr><th>客户类型</th><td>{{currentCustomer.customerType}}</td><th>移动电话</th><td>{{currentCustomer.mobile}}</td>
+                      <th>消费金额</th><td>{{currentCustomer.normalOrderTotal}}元</td>
+                    </tr>
+                    <tr ><th>会员卡号</th><td>{{currentCard.code}}</td><th>会员卡类型</th><td>{{currentCard.name}}</td>
+                      <th>会员卡余额</th><td>{{currentCard.currentValue}}</td>
+                    </tr>
                   </table>
-                </div>
-                <div class="right"  style="width:40%;padding: 0 5px;">
-                  <div class="cards">
-                    <div v-for="card in currentCustomer.cards" class="card " >
-                      <el-checkbox label="" name="type"></el-checkbox>
-                      <div class="">
-                        <!-- <span >储值卡5000元6折卡(#10001) 余额:0元</span> -->
-                        <span >{{card.name}} </span><br/>
-                        <span>#{{card.code}} </span>
-                        <span>余额:{{card.currentValue}}元 </span>
-                      </div>
-                    </div>
-
-                    <div v-show="addNewCardButtonAvailable"> 当前用户没有会员卡，创建？</div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -77,22 +72,14 @@
             </div>
           </el-tab-pane>
           <el-tab-pane label="取单" class="ready-order">
-            客户取单
+            <!-- 取单组件 Start-->
+            <OrderDelivery ></OrderDelivery>
+            <!-- 取单组件 End-->
           </el-tab-pane>
         </el-tabs>
       </el-col>
       <el-col :span="11">
         <div class="hot-goods">
-          <!-- <div>
-              <el-row class="hot-list">
-                <el-col class="hot-item" :span="12" v-for="goods in hotGoods" :key="goods.id" @click.native="addOrderItem(goods)">
-                  <div class="grid-content bg-purple">
-                    <span>{{goods.name}}</span>
-                    <span class="price">￥{{goods.price}}恭喜发财元</span>
-                  </div>
-                </el-col>
-              </el-row>
-            </div> -->
         </div>
         <div class="goods-type">
           <el-tabs>
@@ -133,9 +120,10 @@
 </template>
 
 <script>
-import customerButton from "@/components/customerButton.vue"
-
+import CustomerButton from "@/components/CustomerButton.vue"
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
+import MemberAdd from "@/components/MemberAdd.vue"
+import OrderDelivery from "@/components/OrderDelivery.vue"
 import _ from "lodash"
 
 import {
@@ -178,22 +166,36 @@ export default {
         balance: 0,
         cards: []
       }, //改变当前选择会员，显示会员相关信息
+      defaultCard:{
+        code: "无"
+      },
       orderItemList: [], //订单 {variantId, price, quantity}
       packages: [],
       checkoutDialogVisible: false,
+      memberAddWindowVisible: false,
       customerList: [], //按关键字搜索到的客户列表
-      customerId: null
+      //由于搜索列表的每一项是 会员+会员卡，即如果会员有两个卡就有两项，
+      //所以select的值为customerId+cardId, 当没有会员卡时，只有customerId
+      customerComboId: null,
 
     };
   },
   components: {
     loading,
-    customerButton,
+    CustomerButton,
     CheckoutDialog,
+    MemberAdd,
+    OrderDelivery
   },
   mixins: [userDataMixin, apiResultMixin],
   computed: {
     ...mapState(["userInfo", "cartList"]),
+    customerId: function(){
+      return ( this.customerComboId ? this.customerComboId.split('_')[0] : null )
+    },
+    cardId: function(){
+      return ( this.customerComboId ? this.customerComboId.split('_')[1] : null )
+    },
     selectedTaxonProducts: function() {
       return this.productList.filter(function(product) {
         //return product.taxon_ids.includes( 0 )
@@ -206,12 +208,21 @@ export default {
       })
     },
     computedCustomerOptions: function() {
-      return this.customerList.map((customer) => {
-        return {
-          value: customer.id,
-          label: customer.mobile
+      let ops = this.customerList.map((customer) => {
+        if( customer.cards.length > 0 ){
+          return customer.cards.map((card)=>{
+            return { value: [customer.id,card.id].join('_'),
+              label: customer.mobile + '(#'+card.code+')'
+            }
+          })
+        }else{
+          return [{
+            value: customer.id.toString(),
+            label: customer.mobile
+          }]
         }
       })
+      return _.flatten( ops )
     },
     //当前选择的客户
     currentCustomer: function(){
@@ -225,6 +236,16 @@ export default {
         }
       }
       return customer
+    },
+    currentCard: function(){
+      let card = this.defaultCard
+      let customer = this.currentCustomer
+      if( customer.cards.length > 0 ){
+        card = this.customer.cards.find((card, index, arr) => {
+          return card.id ==   this.cardId
+        })
+      }
+      return card
     },
     totalCount: function(){
       return this.orderItemList.reduce((total, item)=>{
@@ -420,6 +441,9 @@ export default {
       })
       return product
     },
+    handleNewCustomerButtonClicked(){
+      this.memberAddWindowVisible = true
+    },
     getDiscountOfVariant( variantId ){
       // 找到这个订单对应的商品
       let discount = 100
@@ -513,7 +537,7 @@ export default {
           background-color: #fff;
           padding: 5px;
           .search-form{
-            height: 28px;
+            height: 33px;
             .el-form-item {
               margin-bottom: 5px;
             }
@@ -556,7 +580,7 @@ export default {
           }
           table{
             td{
-              width: 28%;
+              width: 20%;
             }
             td,th{
               border: 1px solid #ebeef5;
@@ -564,7 +588,6 @@ export default {
               font-size: 14px;
               box-sizing: border-box;
               white-space: normal;
-              word-break: break-all;
               line-height: 23px;
             }
           }

@@ -2,19 +2,25 @@
 
 @import '../style/mixin';
 .item-flow-container {
-    border-top: 1px solid #d3dce6;
-    height: 100%;
-    padding: 30px 30px 30px 80px;
+  position: absolute;
+  top: 80px;
+  left: 80px;
+  right: 30px;
+  bottom: 30px;
+  border-top: 1px solid #d3dce6;
+
     .el-dialog__body {
         /*fullscreen process dialog*/
         height: 90%;
     }
+  .steps{
+    height: 100%;
     .location {
         position: relative;
         float: left;
-        padding: 6px;
         border: 2px dashed #c5c5c5;
         width: 45%;
+        height: 100%;
         &.ship {
             width: 10%;
             border-color: transparent;
@@ -48,20 +54,19 @@
     .step {
         position: relative;
         float: left;
-        padding: 20px;
-        height: 140px;
+        height: 100%;
         &.step0 {
             min-height: 300px;
         }
         &.step1 {
             width: 50%;
-            min-height: 600px;
+            min-height: 400px;
             background-color: #32CD32;
         }
         &.step2 {
             width: 50%;
             float: right;
-            min-height: 600px;
+            min-height: 400px;
             background-color: #32CD32;
         }
         &.transfer1 {
@@ -146,10 +151,7 @@
             right: 0;
         }
     }
-}
-
-.table_container {
-    padding: 20px 0;
+  }
 }
 
 
@@ -171,7 +173,7 @@
     <process-item :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </process-item>
     <transfer-product :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </transfer-product>
 
-    <div class="table_container ">
+    <div class="fillcontain ">
         <div class="steps clear">
 
             <div class="location clear">
