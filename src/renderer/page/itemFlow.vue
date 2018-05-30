@@ -264,7 +264,7 @@ import scanProduct from '@/components/scanProduct'
 import transferProduct from '@/components/transferProduct'
 import workerPerformance from '@/components/workerPerformance'
 import {
-    getOrderList, getLineItemGroupCounts
+    findOrders, getLineItemGroupCounts
 }
 from '@/api/getData'
 import {
@@ -400,7 +400,7 @@ export default {
                         queryParams["q[group_state_eq]"] = this.filters.shipment_state
                     }
 
-                    const ordersResult = await getOrderList(queryParams)
+                    const ordersResult = await findOrders(queryParams)
                     this.count = ordersResult.total_count
                     console.log("total_count", this.count)
                     this.tableData = []

@@ -163,7 +163,7 @@
 
 <script>
 import {
-  getLineItemGroupList,
+  findLineItemGroups,
   evolveLineItemGroups
 }
 from '@/api/getData'
@@ -305,9 +305,9 @@ export default {
       }
 
       console.log("queryParams", queryParams)
-      const itemsResult = await getLineItemGroupList(queryParams)
+      const itemsResult = await findLineItemGroups(queryParams)
       this.count = itemsResult.total_count
-      this.itemList.splice(0, this.itemList.length, ...this.buildItemGroupsFromApiResult(itemsResult))
+      this.itemList.splice(0, this.itemList.length, ...this.buildLineItemGroups(itemsResult))
 
     },
     handleCurrentRowChange(row) {

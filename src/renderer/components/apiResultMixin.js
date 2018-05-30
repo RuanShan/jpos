@@ -54,7 +54,7 @@ export var apiResultMixin = {
 
       return order
     },
-    buildOrdersFromApiResult: function( ordersResult ){
+    buildOrders: function( ordersResult ){
       let orders = []
       ordersResult.orders.forEach(function(item, i){
 
@@ -77,7 +77,7 @@ export var apiResultMixin = {
       })
       return orders
     },
-    buildItemGroupsFromApiResult: function( itemGroupsResult ){
+    buildLineItemGroups: function( itemGroupsResult ){
       let itemGroups = []
       itemGroupsResult.line_item_groups.forEach(function(item, i){
         let group = {

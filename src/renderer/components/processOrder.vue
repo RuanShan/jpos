@@ -160,7 +160,7 @@
 <script>
 
 import {
-    getOrderList, getOrder, evolvePosOrders
+    findOrders, getOrder, evolvePosOrders
 }
 from '@/api/getData'
 import {
@@ -286,9 +286,9 @@ export default {
                 }
 
                 console.log("queryParams", queryParams)
-                const ordersResult = await getOrderList(queryParams)
+                const ordersResult = await findOrders(queryParams)
                 this.count = ordersResult.total_count
-                this.orderList.splice( 0, this.orderList.length, ...this.buildOrdersFromApiResult(ordersResult))
+                this.orderList.splice( 0, this.orderList.length, ...this.buildOrders(ordersResult))
                 this.$emit('myLog','async init')
 
             },

@@ -269,7 +269,7 @@ export default {
 
                 const itemsResult = await findLineItemGroups(queryParams)
                 this.count = itemsResult.total_count
-                this.lineItemGroupList.splice( 0, this.lineItemGroupList.length, ...this.buildItemGroupsFromApiResult(itemsResult))
+                this.lineItemGroupList.splice( 0, this.lineItemGroupList.length, ...this.buildLineItemGroups(itemsResult))
                 this.lineItemGroupList.forEach((item)=>{
                   if( item.state ===  this.nextOrderState ){
                     this.transferedItemIds.push( item.id )

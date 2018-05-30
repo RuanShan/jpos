@@ -1,7 +1,7 @@
 <template>
   <div class="add_member_container cel-window">
     <!-- 会员添加窗口 -> START -->
-    <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="0" :modal="false">
+    <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="top" :modal="false">
       <div slot="title" class="title-wrap">
         <div class="left back"> <i class="el-icon-back" @click="handleCloseDialog()"></i> </div>
         <div> 会员添加</div>
@@ -107,6 +107,7 @@ export default {
       return reg.test(str);
     }
     return {
+      top: '0', /* 去除直接传 0 产生的 需要参数为string的警告 */
       memberAddData: {
         // memberNum: "",
         password: "",

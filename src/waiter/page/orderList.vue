@@ -124,7 +124,7 @@
 import leftNav from '@/components/LeftNav/LeftNav.vue'
 import headTop from '../components/headTop'
 import {
-    getOrderList, evolvePosOrders, getStore, getUserInfo, getAddressById
+    findOrders, evolvePosOrders, getStore, getUserInfo, getAddressById
 }
 from '@/api/getData'
 import {
@@ -205,7 +205,7 @@ export default {
             queryParams["q[group_state_eq]"] = this.filters.shipment_state
           }
 
-            const ordersResult = await getOrderList(queryParams)
+            const ordersResult = await findOrders(queryParams)
             this.count = ordersResult.total_count
             this.tableData = []
             ordersResult.orders.forEach((item, index) => {

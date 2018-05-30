@@ -252,7 +252,7 @@ export const getUserCount = data => fetch('/v1/users/count', data)
  * 获取订单列表
  */
 
-export const getOrderList = data => fetch('/api/v1/pos_orders', data)
+export const findOrders = data => fetch('/api/v1/pos_orders', data, 'POST')
 
 
 /**
@@ -312,12 +312,6 @@ export const evolvePosOrder = (order_id, data) => fetch('/api/v1/pos_orders/' + 
  */
 
 export const evolvePosOrders = (data) => fetch('/api/v1/pos_orders/all_step', data, 'PUT');
-
-/**
- * 获取Item列表
- */
-
-export const getLineItemGroupList = data => fetch('/api/v1/line_item_groups', data)
 
 /**
  * search Item列表

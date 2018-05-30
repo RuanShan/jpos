@@ -210,7 +210,7 @@ export default {
               findLineItemGroups(groupQueryParams).then((res)=>{
 
                 this.count = res.total_count
-                this.lineItemGroupList.splice( 0, 0, ...this.buildItemGroupsFromApiResult(res))
+                this.lineItemGroupList.splice( 0, 0, ...this.buildLineItemGroups(res))
                 console.log("computedLineItems", this.computedLineItems)
                 this.lineItemList = _.flatten( this.lineItemGroupList.map((item)=>{ return item.lineItems } ) )
               })

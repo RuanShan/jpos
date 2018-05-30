@@ -96,7 +96,7 @@
 
 <script>
     import headTop from '@/components/headTop'
-    import {getOrderList, getOrder} from '@/api/getData'
+    import {findOrders, getOrder} from '@/api/getData'
     import {userDataMixin, orderDataMixin} from '@/components/mixin/commonDataMixin'
     import { apiResultMixin } from '@/components/apiResultMixin'
     export default {
@@ -163,10 +163,10 @@
             queryParams["q[group_state_eq]"] = this.filters.shipment_state
           }
 
-          const ordersResult = await getOrderList(queryParams)
+          const ordersResult = await findOrders(queryParams)
           this.count = ordersResult.total_count
 
-          this.orderList = this.buildOrdersFromApiResult( ordersResult )
+          this.orderList = this.buildOrders( ordersResult )
           console.log( "orderList", this.orderList)
 
         },

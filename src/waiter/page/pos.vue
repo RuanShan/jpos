@@ -256,7 +256,7 @@ export default {
       let t = this.orderItemList.reduce((total, item)=>{
         return total += item.price
       }, 0)
-      return t.toFixed(2)
+      return Number(t).toFixed(2)
     },
     addNewCardButtonAvailable: function(){
       return this.currentCustomer.id && this.currentCustomer.cards.length == 0
