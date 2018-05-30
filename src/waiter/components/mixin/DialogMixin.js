@@ -1,6 +1,8 @@
 // 功能：将 el-dialog 对话框组件的触发按钮放到组件之外，
 //      同时保留open，close事件回调
 // 用法：
+//  0. 在子组件中 添加代码
+//    mixins: [DialogMixin]
 //  1. 子组件template中添加 :visible="computedVisible"
 //  <el-dialog title="工作量录入" :visible="computedVisible" >
 //  2. 在子组件script中，添加传值属性 dialogVisible
