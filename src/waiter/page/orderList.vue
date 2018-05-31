@@ -140,7 +140,6 @@ export default {
                 perPage: 2,
                 count: 4,
                 currentPage: 1,
-                storeId: null,
                 reserveSelection: false,
                 expendRow: [],
                 filters: { keyword: '', startEndTime: null, shipment_state: 'all' },

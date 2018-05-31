@@ -287,7 +287,6 @@ export default {
                 perPage: 12,
                 count: 0,
                 currentPage: 1,
-                storeId: null,
                 itemCounts: {
                     pending: 0,
                     ready_for_factory: 0,

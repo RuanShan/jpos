@@ -107,7 +107,6 @@
           perPage: 12,
           count: 0,
           currentPage: 1,
-          storeId: null,
           expendRow: [],
           filters: { keyword: '', startEndTime: null, shipment_state: 'all', storeId: 0 },
           multipleSelection: [],

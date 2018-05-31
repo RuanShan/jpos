@@ -10,7 +10,7 @@
         </el-form-item>
 
         <el-form-item label="订单搜索">
-          <el-select v-model="orderComboId" :remote-method="searchOrders" placeholder="请输入订单/物品号" filterable remote clearable @change="handleLineItemGroupChanged" @clear="handleLineItemGroupChanged">
+          <el-select v-model="orderComboId" :remote-method="searchOrders" placeholder="请输入订单/物品号" filterable remote clearable @change="handleOrderChanged" @clear="handleOrderChanged">
             <el-option v-for="item in computedOrderOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -31,15 +31,15 @@
       </div>
     </div>
     <el-table :data="computedLineItemGroups" border stripe style="width:100%;" class="order-item-list">
+      <el-table-column prop="displayCreatedAt" label="订单日期"></el-table-column>
       <el-table-column prop="number" label="物品条码"> </el-table-column>
-      <el-table-column prop="fullName" label="商品名"></el-table-column>
-      <el-table-column prop="unitPrice" label="单价"></el-table-column>
-      <el-table-column prop="quantity" label="数量"></el-table-column>
-      <el-table-column prop="discount" label="折扣">折扣</el-table-column>
+      <el-table-column prop="order.number" label="订单号"></el-table-column>
+      <el-table-column prop="name" label="服务项目"></el-table-column>
+      <el-table-column prop="displayState" label="状态"></el-table-column>
       <el-table-column prop="price" label="金额">金额</el-table-column>
       <el-table-column label="操作" width="50">
         <template slot-scope="scope">
-               <i class="el-icon-remove-outline" @click="delOrderItem(scope.row)"></i>
+               <i class="el-icon-remove-outline" @click="discardLineItemGroup(scope.row)"></i>
        </template>
       </el-table-column>
     </el-table>
@@ -51,7 +51,7 @@
         <span>{{totalMoney}}</span>&nbsp;
         <i>元</i>
       </div>
-      <div class="check-button" @click="openCheckoutDialog()" > 收款 ：&nbsp;￥&nbsp;{{totalMoney}} </div>
+      <div class="check-button" @click="completeOrders()" > 确认取单 ：&nbsp;￥&nbsp;{{totalMoney}} </div>
     </div>
 
   </div>
@@ -61,7 +61,7 @@
 <script>
 import _ from "lodash"
 import {
-  findCustomers, findOrders
+  findCustomers, findOrders, completeLineItemGroups
 } from "@/api/getData"
 import {
   apiResultMixin
@@ -80,14 +80,11 @@ export default {
       defaultCard:{
         code: "无"
       },
-      orderList: [], //订单 {variantId, price, quantity}
+      orderList: [],    //按关键字搜索到订单列表
       customerList: [], //按关键字搜索到的客户列表
       customerComboId: null,
       orderComboId: null,
-      currentOrder:{
-        lineItemGroup: [],
-        total: 0
-      },
+      currentOrders:[], // 当前选择的客户对应的订单列表, 按订单关键字搜索后，选择的订单列表
       currentCustomer: null,
     }
   },
@@ -134,8 +131,8 @@ export default {
       return _.flatten( ops )
     },
     computedLineItemGroups: function(){
-      let order = this.currentOrder
-      return ( order ? order.lineItemGroups : [] )
+      let ops = this.currentOrders.map((order) => { return order.lineItemGroups } )
+      return _.flatten( ops )
     },
     currentCard: function(){
       let card = this.defaultCard
@@ -147,16 +144,12 @@ export default {
       }
       return card
     },
-    currentOrder: function(){
-      let order = this.orderList.find((o)=>{ return (o.id == this.orderId) })
-      return order
-    },
     totalCount: function(){
       return this.orderList.length
     },
     totalMoney: function(){
-      let t = this.orderList.reduce((total, item)=>{
-        return total += item.cost
+      let t = this.currentOrders.reduce((total, item)=>{
+        return total += item.total
       }, 0)
       return Number(t).toFixed(2)
     },
@@ -196,34 +189,62 @@ export default {
           return customer.id ==   this.selectedCustomerId
         })
         //取得客户的最新订单，包括所有未完成的订单。
-        this.findLineItemGroupByCustomer()
+        this.findOrderByCustomer()
       }else{
         this.orderList = []
+        this.currentOrders = []
       }
     },
-    handleLineItemGroupChanged(selectedId){
+    handleOrderChanged(selectedId){
       if( selectedId ){
+        this.currentOrders = this.orderList.filter((o)=>{ return (o.id == this.orderId) })
+
         //取得客户的最新订单，包括所有未完成的订单。
-        this.findCustomerByLineItemGroup()
+        this.findCustomerByOrder()
       }else{
         this.orderList = []
       }
     },
-    async findLineItemGroupByCustomer(){
+    async findOrderByCustomer(){
       let cid = this.selectedCustomerId
       let q = { user_id_eq: cid, group_state_in: ['ready', 'pending']}
       const ordersResult = await findOrders({ q })
       this.orderList = this.buildOrders(ordersResult)
+      this.currentOrders = this.orderList
+      console.log( "currentOrders", this.currentOrders)
     },
-    async findCustomerByLineItemGroup(){
-      let order = this.currentOrder
-      if(order){
-        let q = { id_in: [order.userId] }
+    async findCustomerByOrder(){
+      let ids = this.currentOrders.map( (o)=>{ return o.userId})
+      if(ids.length > 0){
+        let q = { id_in: ids }
         const customersResult = await findCustomers({q})
         this.customerList = this.buildCustomers(customersResult)
+        this.currentCustomer = this.customerList[0]
       }
-    }
+    },
+    discardLineItemGroup( row ){
+      console.log( "row=",row)
+      let order = this.currentOrders.find((o)=>{  return o.id == row.orderId })
+      let i = order.lineItemGroups.indexOf( row )
+      if( i >= 0 ){
+        order.lineItemGroups.splice( i, 1)
+      }
+    },
+    completeOrders(){
+      //$confirm(message, title, options)
+      this.$confirm("确定交付客户以上物品吗？").then(()=>{
+        let ids = this.computedLineItemGroups.map((g)=>{ return g.id })
+        completeLineItemGroups( { ids } ).then((result)=>{
+          if( result.count == ids.length ){
+            this.$message({
+              message: '客户物品状态已成功更新！',
+              type: 'success'
+            });
+          }
+        })
 
+      })
+    }
   }
 }
 </script>

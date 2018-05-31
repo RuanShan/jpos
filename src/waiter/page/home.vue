@@ -18,7 +18,6 @@ export default {
   name: 'page',
   data() {
     return {
-      storeId: null, //商店id值
       storeName: "", //店铺名称
     }
   },
@@ -29,10 +28,11 @@ export default {
   },
   created() {
     this.getAdminData().then(res => {
-      console.log("created")
+      console.log("home page created", this.userInfo)
       if (this.userInfo.id) {
-        this.storeId = this.userInfo.storeId;
         this.initData();
+        this.$bus.$emit('UserInitializedEvent')
+
       } else {
         this.$router.push("/");
       }

@@ -1,0 +1,6 @@
+全局事件
+-------------------------------------------------------------------------------
+                                生成页面                    响应页面
+OrderCreatedEvent               CheckoutDialog               ItemFlow
+
+UserInitializedEvent

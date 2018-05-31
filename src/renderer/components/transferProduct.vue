@@ -141,7 +141,6 @@ export default {
                 itemList: [],
                 transferedItemIds: [],
                 perPage: 100,
-                storeId: null,
                 filters: {
                     keyword: '',
                     startEndTime: null,

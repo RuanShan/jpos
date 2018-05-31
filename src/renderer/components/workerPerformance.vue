@@ -172,7 +172,6 @@ export default {
                 lineItemGroupList: [],
                 workerList: [],
                 productList: [],
-                storeId: null,
                 filters: {
                     keyword: '',
                     startEndTime: null,

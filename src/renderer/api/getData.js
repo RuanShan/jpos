@@ -322,7 +322,7 @@ export const findLineItemGroups = data => fetch('/api/v1/line_item_groups/search
 /**
  * 根据Item状态统计数量
  */
-export const getLineItemGroupCounts = () => fetch('/api/v1/line_item_groups/counts')
+export const getLineItemGroupCounts = ( data ) => fetch('/api/v1/line_item_groups/counts', data, 'POST' )
 
 /**
  * POS订单下一步

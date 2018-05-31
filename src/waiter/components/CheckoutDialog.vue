@@ -49,7 +49,31 @@
         line-height: 40px;
     }
     .checkout-form{
-      td.title{ width: 9em }
+      table{
+        width: 440px;
+        margin: 0 auto;
+        th{
+          width: 8em;
+        }
+      }
+      td.money{
+        text-align: right;
+        span{
+          display: inline-block;
+          padding: 0 15px;
+          line-height: 40px;
+        }
+      }
+    }
+
+    .payment{
+
+      .el-select{
+        width: 6em;
+      }
+      .el-input-group > .el-input__inner {
+          text-align: right;
+      }
     }
 }
 </style>
@@ -60,54 +84,53 @@
       <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
       <div> 结算</div>
     </div>
-    <!-- <div class='main-part'> -->
-    <el-row :gutter="20">
-      <el-col :span="12" :offset="6">
-        <div class="checkout-form">
-          <table>
-            <tr>
-              <td class="title">应收金额 </td>
-              <td>
-                <span>{{totalMoney}}</span>
-              </td>
-              <td></td>
-            </tr>
-            <tr v-show="isShowPrepaidCard">
-              <td>会员卡支付 </td>
-              <td>
-                <el-input v-model="prepaidCardAmount" placeholder="" class="money"></el-input>
-              </td>
-              <td>
-              </td>
-            </tr>
-            <tr v-show="isShowPrepaidCard">
-              <td>会员支付密码 </td>
-              <td>
-                <el-input v-model="paymentPassword" placeholder="" class="money"></el-input>
-              </td>
-              <td>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                  <el-select v-model="selectPaymentMethodId" placeholder="">
-                    <el-option v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id">
-                    </el-option>
-                  </el-select>
-              </td>
-              <td>
-                <el-input v-model="orderRemainder" placeholder="" class="money"></el-input>
-              </td>
-              <td>
-              </td>
-            </tr>
-          </table>
 
-          <div class="">
-          </div>
-        </div>
-      </el-col>
-    </el-row>
+    <div class="checkout-form">
+      <table>
+        <tr>
+          <th class="title">应收金额 </th>
+          <td class="money">
+            <span>{{totalMoney}}</span>
+          </td>
+          <td></td>
+        </tr>
+        <tr v-show="isShowPrepaidCard">
+          <th>会员卡支付 </th>
+          <td>
+            <el-input v-model="prepaidCardAmount" placeholder="" class="money"></el-input>
+          </td>
+          <td>
+          </td>
+        </tr>
+        <tr v-show="isShowPrepaidCard">
+          <th>会员支付密码 </th>
+          <td>
+            <el-input v-model="paymentPassword" placeholder="" class="money"></el-input>
+          </td>
+          <td>
+          </td>
+        </tr>
+        <tr class="payment">
+          <th>
+            支付方式
+          </th>
+          <td>
+            <el-input v-model="orderRemainder" placeholder="" class="money">
+              <el-select v-model="selectPaymentMethodId" placeholder=""  slot="prepend" >
+                <el-option v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-input>
+          </td>
+          <td>
+          </td>
+        </tr>
+      </table>
+
+      <div class="">
+      </div>
+    </div>
+
 
     <div slot="footer" class="dialog-footer">
       <el-row>
@@ -242,15 +265,16 @@ export default {
 
         checkout( this.checkoutParams  ).then((res)=>{
           if( res.id> 0){
-            //this.$bus.$emit('created-order')
+            this.$bus.$emit('OrderCreatedEvent')
+
             this.$emit('update:dialogVisible', false)
 
-            this.$notify({
+            this.$message({
               title: "订单提交成功",
               message: "这是虚拟的,假设的,实验用的,非真实的.请注意!!!!!"
             });
           }else{
-            this.$notify({
+            this.$message({
               title: "订单提交失败",
               message: res.error
             });

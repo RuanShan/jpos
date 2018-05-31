@@ -18,25 +18,35 @@ export var apiResultMixin = {
     //    }
     // }
     buildOrderFromApiResult: function( orderResult ){
-      let order = { number: orderResult.number,
-        total: orderResult.total,
+      let order = {
+        id: orderResult.id,
+        number: orderResult.number,
+        total: parseInt(orderResult.total),
         userName: orderResult.user_name,
+        storeId: orderResult.store_id,
         storeName: orderResult.store_name,
         userId: orderResult.user_id,
         shipmentState: orderResult.shipment_state,
         groupState: orderResult.group_state,
         paymentState: orderResult.payment_state,
         payments: orderResult.payments,
+        createdAt: moment(orderResult.created_at),
         lineItemGroups: [],
         extraLineItems: []
       }
+      order.displayCreatedAt = order.createdAt.format('MM-DD HH:mm')
 
-      orderResult.line_item_groups.forEach(function(groupResult, i){
-        let group = { order: order, number: groupResult.number, state: groupResult.state, lineItems:[], name: groupResult.name}
+      orderResult.line_item_groups.forEach((groupResult, i)=>{
+        let group = { id: groupResult.id, orderId: groupResult.order_id, order: order,
+          number: groupResult.number, state: groupResult.state, lineItems:[], name: groupResult.name,
+          price: parseInt(groupResult.price), createdAt: moment(groupResult.created_at),
+         }
+        group.displayCreatedAt = group.createdAt.format('MM-DD HH:mm')
+        group.displayState = this.getOrderStateText( group.state )
         order.lineItemGroups.push( group )
         let groupedlineItems = []
         orderResult.line_items.forEach(function(lineItemResult ){
-          const lineItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.variant.name, price: lineItemResult.price }
+          const lineItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.cname, price: lineItemResult.price }
           if( groupResult.number == lineItemResult.group_number ){
             groupedlineItems.push( lineItem )
           }
@@ -45,7 +55,7 @@ export var apiResultMixin = {
       })
 
       // 其它子订单 如：购买商品订单，充值订单，购买打折卡订单
-      orderResult.line_items.forEach(function(lineItemResult ){
+      orderResult.line_items.forEach((lineItemResult)=>{
         if( !lineItemResult.group_number ){
           const lineItem = { name: lineItemResult.variant.name, price: lineItemResult.price }
           order.extraLineItems.push( lineItem )
@@ -56,57 +66,33 @@ export var apiResultMixin = {
     },
     buildOrders: function( ordersResult ){
       let orders = []
-      ordersResult.orders.forEach(function(item, i){
+      ordersResult.orders.forEach((item, i)=>{
 
-        const order = {}
-        order.id = item.id
-        order.number = item.number
-        order.totalAmount = item.display_total
-        order.status = item.state
-        order.userId = item.user_id
-        order.storeId = item.store_id
-        order.userName = item.user_name
-        order.storeName = item.store_name
-        order.index = i
-        order.shipmentState = item.shipment_state
-        order.paymentState = item.payment_state
-        order.groupState = item.group_state
-        order.createdAt = moment(item.created_at)
-        order.displayCreatedAt = order.createdAt.format('MM-DD HH:mm')
-        order.lineItemGroups = []
-        item.line_item_groups.forEach(function(item, i){
-          let group = {
-            id: item.id,
-            orderId: item.order_id,
-            name: item.name,
-            number: item.number,
-            cost: item.cost,
-            state: item.state,
-            lineItems: []
-          }
-          order.lineItemGroups.push(group)
-        })
+        let order = this.buildOrderFromApiResult( item )
         orders.push(order)
       })
       return orders
     },
     buildLineItemGroups: function( itemGroupsResult ){
       let itemGroups = []
-      itemGroupsResult.line_item_groups.forEach(function(item, i){
+      itemGroupsResult.line_item_groups.forEach((item, i)=>{
         let group = {
           id: item.id,
           orderId: item.order_id,
           name: item.name,
           number: item.number,
-          cost: item.cost,
+          price: item.price,
           state: item.state,
+          createdAt: moment(item.created_at),
           lineItems: []
         }
+        group.displayCreatedAt = group.createdAt.format('MM-DD HH:mm')
+        group.displayState = this.getOrderStateText( group.state )
 
         item.line_items.forEach(function(lineItemResult ){
           const lineItem = { group: group, id: lineItemResult.id,
             groupNumber: lineItemResult.group_number, worker_id: lineItemResult.worker_id,
-            name: lineItemResult.variant.name, price: lineItemResult.price }
+            name: lineItemResult.name, price: lineItemResult.price }
           group.lineItems.push( lineItem )
         })
 
@@ -212,6 +198,24 @@ export var apiResultMixin = {
     generateGroupNumber:function(  ){
       let timestamp = moment().format("YYMMDDHHmmss")
       return  timestamp
+    },
+    getOrderStateText( state ){
+        if( state == "pending"){
+          return "新订单"
+        }else if( state == "ready"){
+          return "待交付"
+        }else if( state == "ready_for_factory"){
+          return "准备发工厂"
+        }else if( state == "processing"){
+          return "专业服务"
+        }else if( state == "processed"){
+          return "工厂验收"
+        }else if( state == "ready_for_store"){
+          return "工厂发货"
+        }else if( state == "shipped"){
+          return "已交付客户"
+        }
+        return "未知"
     }
   }
 }

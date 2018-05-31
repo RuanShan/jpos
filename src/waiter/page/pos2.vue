@@ -127,7 +127,6 @@ export default {
   data() {
     return {
       geohash: "", //geohash位置信息
-      storeId: null, //商店id值
       storeName: "", //店铺名称
       showLoading: true, //显示加载动画
       shopDetailData: null, //商铺详情

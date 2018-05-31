@@ -3,8 +3,11 @@ import {mapState, mapActions} from 'vuex'
 export var userDataMixin = {
   computed: {
     ...mapState([
-      'userInfo','latitude','longitude','cartList'
+      'userInfo'
     ]),
+    storeId: function(){
+      return this.userInfo.storeId
+    }
   },
   methods: {
     ...mapActions(['getAdminData']),

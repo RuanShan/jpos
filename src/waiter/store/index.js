@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {getUserInfo} from '@/api/getData'
+import {
+  getUserInfo
+} from '@/api/getData'
 
 Vue.use(Vuex)
 
@@ -13,19 +15,24 @@ const state = {
 }
 
 const mutations = {
-  saveAdminInfo (state, userInfo) {
+  saveAdminInfo(state, userInfo) {
     state.userInfo = userInfo
   }
 }
 
 const actions = {
-  async getAdminData ({commit}) {
+  async getAdminData({
+    commit
+  }) {
     try {
       const userResult = await getUserInfo()
 
       if (userResult.id) {
-
-        const user = { storeId: 0, avatar: 'default.jpg',  apiKey: '' }
+        const user = {
+          storeId: 0,
+          avatar: 'default.jpg',
+          apiKey: ''
+        }
         user.id = userResult.id
         user.storeId = userResult.store_id
         user.avatar = userResult.avatar

@@ -251,6 +251,11 @@ export const findCustomers_1 = data => fetch('/api/v1/customers/search_1', data,
 
 export const findCustomers_2 = data => fetch('/api/v1/customers/search_2', data, 'POST');
 
+/**
+ * 获取用户列表
+ */
+
+export const findUsers = data => fetch('/api/v1/users/search', data, 'POST')
 
 /**
  * Update Customer 信息
@@ -308,7 +313,7 @@ export const createCustomer = (data) => fetch('/api/v1/users', data, 'POST');
  * order: {
  *  "user_id": 8,
  *    "line_items": [
- *      { "variant_id": 15, "quantity": 1 }
+ *      { "variant_id": 15, "quantity": 1, "cname": "修鞋", "memo": "右鞋外侧开缝" }
  *    ]
  *  }
  */
@@ -348,7 +353,7 @@ export const findLineItemGroups = data => fetch('/api/v1/line_item_groups/search
 /**
  * 根据Item状态统计数量
  */
-export const getLineItemGroupCounts = () => fetch('/api/v1/line_item_groups/counts')
+export const getLineItemGroupCounts = ( data ) => fetch('/api/v1/line_item_groups/counts', data, 'POST' )
 
 /**
  * POS订单下一步
@@ -380,6 +385,13 @@ export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/' + nu
 
 export const fulfillLineItems = data => fetch('/api/v1/line_items/fulfill', data, 'PUT')
 
+
+/**
+ * 交付订单物品
+ * data - { ids: [x,y,z...] }
+ */
+
+export const completeLineItemGroups = data => fetch('/api/v1/line_item_groups/all_complete', data, 'PUT' )
 
 /**
  * get cards 获取会员持有的会员卡信息

@@ -85,7 +85,7 @@ export var apiResultMixin = {
           orderId: item.order_id,
           name: item.name,
           number: item.number,
-          cost: item.cost,
+          price: item.price,
           state: item.state,
           lineItems: []
         }

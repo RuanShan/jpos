@@ -22,11 +22,9 @@
 </template>
 
 <script>
-import customerButton from "@/components/customerButton.vue";
 
 export default {
    components: {
-    "customer-button": customerButton,
   },
   data() {
     return {
@@ -41,8 +39,7 @@ export default {
         })
         .catch(_ => {});
     },
-   
+
   }
 };
 </script>
-

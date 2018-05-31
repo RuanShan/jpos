@@ -182,7 +182,6 @@ export default {
                 perPage: 2,
                 count: 0,
                 currentPage: 1,
-                storeId: null,
                 filters: {
                     keyword: '',
                     startEndTime: null,
@@ -190,7 +189,7 @@ export default {
                     storeId: 0
                 },
                 multipleSelection: [],
-                
+
             }
         },
         mixins: [userDataMixin, orderDataMixin, apiResultMixin],

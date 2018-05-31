@@ -154,7 +154,6 @@ export default {
                 currentGroup: null,// a order may have several line_item_groups
                 orderDetailList: [],
                 lineItemGroupList: [],
-                storeId: null,
                 filters: {
                     keyword: '',
                     startEndTime: null,

@@ -1,17 +1,28 @@
 <style lang="scss">
 @import '../style/mixin';
-@import '../style/element_ui_custom';
-
-.item-process-container {
+.process-item-container {
     position: relative;
-    .item-list {
+    .item-list-wrap {
         position: absolute;
         top: 80px;
         bottom: 0;
         left: 0;
         width: 30%;
-        padding: 16px;
         border: 1px #efefef solid;
+        .item-list{
+          position: absolute;
+          top: 0;
+          bottom: 48px;
+          width: 100%;
+          overflow-y: auto;
+        }
+        .pagination {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            left: 0;
+        }
+
     }
     .item-detail {
         position: absolute;
@@ -45,11 +56,6 @@
             background-color: #f5f7fa;
         }
     }
-    .pagination {
-        position: absolute;
-        right: 16px;
-        bottom: 16px;
-    }
 
     .filters {
         margin: 0 0 20px;
@@ -70,95 +76,93 @@
             display: inline-block;
         }
     }
+
 }
 </style>
 
 <template>
-<el-dialog :visible="computedVisible" fullscreen :before-close="handleDialogClose" @open="handleDialogOpen" :show-close="false" class="el-custom">
-  <div slot="title" class="dialog-title-wrap">
-    <div class="left back"> <i class="el-icon-back" @click="CloseDialog()"></i> </div>
-    <div> {{computedDialogTitle}} </div>
-  </div>
-
-  <div class="item-process-container fillcontain clear">
-    <!-- filters start -->
-    <div class="filters">
-      <div class="filter">
-        关键字:
-        <el-input label="Keyword" placeholder="请输入物品编号" v-model="filters.keyword"></el-input>
+  <div class="process-item-container cel-window">
+    <el-dialog :visible="computedVisible" @open="handleDialogOpen"  :show-close="false" :top="top" :modal="false">
+      <div slot="title" class="title-wrap">
+        <div class="left back"> <i class="el-icon-back" @click="handleCloseDialog()"></i> </div>
+        <div> 订单处理</div>
       </div>
-      <div class="filter">
-        状态:
-        <el-select v-model="filters.groupState" placeholder="All">
-          <el-option v-for="item in orderStateOptions" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-      </div>
-      <el-button type="primary" @click="handleSearch()">搜索</el-button>
-    </div>
-    <!-- filters end -->
 
-    <div class="item-list">
-      <el-table :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
-        <el-table-column label="物品编号" prop="number">
-        </el-table-column>
-        <el-table-column label="订单Id" prop="orderId">
-        </el-table-column>
-        <el-table-column label="总价格" prop="price">
-        </el-table-column>
-        <el-table-column label="订单状态" prop="state">
-        </el-table-column>
-      </el-table>
-      <div class="pagination" style="text-align: left;margin-top: 10px;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total,  pager" :total="count">
-        </el-pagination>
-      </div>
-    </div>
+      <div class=" fillcontain clear">
+        <!-- filters start -->
+        <div class="filters">
+          <div class="filter">
+            关键字:
+            <el-input label="Keyword" placeholder="请输入物品编号" v-model="filters.keyword"></el-input>
+          </div>
+          <el-button type="primary" @click="handleSearch()">搜索</el-button>
+        </div>
+        <!-- filters end -->
 
-    <div class="item-detail">
-      <div class="line-item-groups-container" v-if="currentItem">
-        <table class="bitemed" style="width: 100%">
-          <tr>
-            <td> 客户姓名 </td>
-            <td> <span>{{ currentItem.userName }}</span></td>
-          </tr>
-          <tr>
-            <td> 店铺名称 </td>
-            <td> <span>{{ currentItem.storeName }}</span></td>
-          </tr>
-        </table>
-        <table style="width: 100%">
-          <tr>
-            <td> 物品编号 </td>
-            <td> {{currentItem.number}} </td>
-            <td> 状态 </td>
-            <td> {{currentItem.state}} </td>
-          </tr>
-          <tr>
-            <td> 服务项目 </td>
-            <td>
-              <div v-for="lineItem in currentItem.lineItems">
-                <span>{{ lineItem.name }}</span>
-                <span>{{ lineItem.price }}</span>
-                <span>{{ lineItem.state }}</span>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>物品图片</td>
-            <td> line item group images </td>
-          </tr>
-        </table>
+        <div class="item-list-wrap">
+          <div class="item-list">
+            <el-table :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
+              <el-table-column label="物品编号" prop="number">
+              </el-table-column>
+              <el-table-column label="订单Id" prop="orderId">
+              </el-table-column>
+              <el-table-column label="总价格" prop="price">
+              </el-table-column>
+              <el-table-column label="物品状态" prop="displayState">
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="pagination" style="text-align: left;margin-top: 10px;">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total,  pager" :total="count">
+            </el-pagination>
+          </div>
+        </div>
 
-        <div class="actions">
-          <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
-          <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button>
+        <div class="item-detail">
+          <div class="line-item-groups-container" v-if="currentItem">
+            <table class="bitemed" style="width: 100%">
+              <tr>
+                <td> 客户姓名 </td>
+                <td> <span>{{ currentItem.userName }}</span></td>
+              </tr>
+              <tr>
+                <td> 店铺名称 </td>
+                <td> <span>{{ currentItem.storeName }}</span></td>
+              </tr>
+            </table>
+            <table style="width: 100%">
+              <tr>
+                <td> 物品编号 </td>
+                <td> {{currentItem.number}} </td>
+                <td> 状态 </td>
+                <td> {{currentItem.state}} </td>
+              </tr>
+              <tr>
+                <td> 服务项目 </td>
+                <td>
+                  <div v-for="lineItem in currentItem.lineItems">
+                    <span>{{ lineItem.name }}</span>
+                    <span>{{ lineItem.price }}</span>
+                    <span>{{ lineItem.state }}</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>物品图片</td>
+                <td> line item group images </td>
+              </tr>
+            </table>
+
+            <div class="actions">
+              <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
+              <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button>
+            </div>
+          </div>
+
         </div>
       </div>
-
-    </div>
+    </el-dialog>
   </div>
-</el-dialog>
 </template>
 
 <script>
@@ -176,15 +180,20 @@ import {
   apiResultMixin
 }
 from '@/components/apiResultMixin'
+import {
+  DialogMixin
+} from '@/components/mixin/DialogMixin'
 
 
 export default {
   data() {
     return {
+      top: '0',
+      /* 去除直接传 0 产生的 需要参数为string的警告 */
       itemList: [],
       currentItem: null,
       itemDetailList: [],
-      perPage: 2,
+      perPage: 12,
       count: 0,
       currentPage: 1,
       filters: {
@@ -197,27 +206,11 @@ export default {
 
     }
   },
-  mixins: [userDataMixin, orderDataMixin, apiResultMixin],
+  mixins: [DialogMixin, userDataMixin, orderDataMixin, apiResultMixin],
   props: ['dialogVisible', 'orderState', 'itemCounts'],
   created() {
-    console.log('processItem created')
-
   },
   computed: {
-    computedVisible: function() {
-      return this.dialogVisible
-    },
-    computedDialogTitle: function() {
-      if (this.orderState == "pending") {
-        return "新订单物品"
-      } else if (this.orderState == "processing") {
-        return "正在处理订单"
-      } else if (this.orderState == "ready") {
-        return "等待交付订单"
-      } else {
-        return "物品列表"
-      }
-    }
   },
   methods: {
     async initData() {
@@ -269,10 +262,7 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    handleDialogClose(done) {
-      this.$emit('update:dialogVisible', false)
-      done();
-    },
+
     handleDialogOpen() {
       this.itemDetailList = []
       this.filters.groupState = this.orderState
@@ -292,18 +282,19 @@ export default {
       let queryParams = {
         page: this.currentPage,
         per_page: this.perPage,
+        q:{
+          store_id_eq: this.storeId,
+          state_eq: this.orderState
+        }
       }
-
+    
       if (this.filters.keyword.length > 0) {
         // item.number || item.users.username
         queryParams["q[number_cont]"] = this.filters.keyword
       }
 
-      if (this.filters.groupState.length > 0) {
-        queryParams["q[state_eq]"] = this.filters.groupState
-      }
 
-      console.log("queryParams", queryParams)
+      console.log("queryParams", queryParams, this.userInfo)
       const itemsResult = await findLineItemGroups(queryParams)
       this.count = itemsResult.total_count
       this.itemList.splice(0, this.itemList.length, ...this.buildLineItemGroups(itemsResult))
@@ -317,11 +308,7 @@ export default {
       } else {
         this.currentItem = null
       }
-    },
-    CloseDialog() {
-      this.$emit('update:dialogVisible', false)
-    },
-
+    }
   }
 }
 </script>
