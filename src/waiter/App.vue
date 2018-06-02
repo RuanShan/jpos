@@ -43,4 +43,12 @@ export default {
 .clearfix:after {
   clear: both;
 }
+
+#expensecalendartable td{
+  padding:  0;
+}
+
+#expensecalendartable th{
+  padding:  0;
+}
 </style>
