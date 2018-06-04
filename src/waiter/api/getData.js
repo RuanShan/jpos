@@ -203,6 +203,8 @@ export const getUserCount = data => fetch('/v1/users/count', data);
 
 /**
  * 获取订单列表
+ *  data - page 第几页
+ *         per_page 每页多少条
  */
 export const findOrders = data => fetch('/api/v1/pos_orders/search', data, 'POST');
 
