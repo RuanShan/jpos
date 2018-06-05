@@ -159,6 +159,11 @@ export const getProducts = data => fetch('/api/v1/products', data);
 //export const getFoods = data => fetch('/shopping/v2/foods', data);
 
 /**
+ * 获取会员卡类型列表
+ */
+export const getCardTypes = data => fetch('/api/v1/selling_cards', data);
+
+/**
  * 获取食品数量
  */
 
@@ -263,7 +268,7 @@ export const findUsers = data => fetch('/api/v1/users/search', data, 'POST')
  * Update Customer 信息
  */
 
-export const updateCustomer = (user_id, data) => fetch('/api/v1/users/' + user_id, data, "PUT");
+export const updateCustomer = (user_id, data) => fetch('/api/v1/customers/' + user_id, data, "PUT");
 
 /**
  * 获取地址信息
@@ -307,7 +312,7 @@ export const shopDetails = (storeId, latitude, longitude) => fetch('/api/v1/stor
  * create customer
  */
 
-export const createCustomer = (data) => fetch('/api/v1/users', data, 'POST');
+export const createCustomer = (data) => fetch('/api/v1/customers', data, 'POST');
 
 /**
  * 支付订单

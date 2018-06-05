@@ -20,6 +20,13 @@ export var userDataMixin = {
 
 
 export var orderDataMixin = {
+  computed: {
+    ...mapState([
+      'paymentMethods',
+      'memberCardTypes'
+    ])
+
+  },
   data: function() {
     return {
       orderStateOptions: [{
@@ -44,6 +51,8 @@ export var orderDataMixin = {
     }
   },
   methods: {
+    ...mapActions(['getPaymentMethods', 'getMemberCardTypes']),
+
     getOrderStateText(state) {
       if (state == "pending") {
         return "新订单"

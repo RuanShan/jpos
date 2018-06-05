@@ -5,7 +5,7 @@
   <!-- 结账组件 End-->
 
   <!-- 添加会员组件 Start-->
-  <member-add  v-on:AddMemberReturnData="AddMemberReturnData($event)" :dialog-visible.sync="memberAddWindowVisible"></member-add>
+  <member-add  v-on:customerCreatedEvent="handleCustomerCreatedEvent" :dialog-visible.sync="memberAddWindowVisible"></member-add>
   <!-- 添加会员组件 End-->
 
   <div class="pos">
@@ -48,7 +48,7 @@
                  <vue-xeditable  :name="'groupPosition_'+scope.row.index+'_xeditable'" v-model="scope.row.groupPosition" type="number" @value-did-change="handleGroupPositionChanged"></vue-xeditable>
                </template>
               </el-table-column>
-              <el-table-column prop="fullName" label="商品名"></el-table-column>
+              <el-table-column prop="cname" label="商品名"></el-table-column>
               <el-table-column prop="unitPrice" label="单价"></el-table-column>
               <el-table-column prop="quantity" label="数量"></el-table-column>
               <el-table-column prop="discount" label="折扣">折扣</el-table-column>
@@ -300,7 +300,6 @@ export default {
       if (productsResult) {
         this.productList = this.buildProducts(productsResult)
       }
-
     },
     getTaxonProducts: function(taxonId) {
       return this.productList.filter(function(product) {
@@ -326,7 +325,7 @@ export default {
         variantId: vid,
         name: goods.name,
         variantName: goods.variants[index].optionsText,
-        fullName: goods.name + goods.variants[index].optionValueTexts.join(),
+        cname: goods.name + goods.variants[index].optionValueTexts.join(),
         unitPrice: Number(goods.variants[index].price), // 单价
         price: Number(goods.variants[index].price), // 金额
         groupPosition: this.nextGroupPosition,
@@ -344,7 +343,7 @@ export default {
         return !((o.variantId == selectedOrderItem.variantId) && (o.groupPosition == selectedOrderItem.groupPosition));
       });
       this.$message({
-        message: selectedOrderItem.fullName + " > 删除成功",
+        message: selectedOrderItem.cname + " > 删除成功",
         type: "success"
       });
     },
@@ -443,6 +442,13 @@ export default {
     handleNewCustomerButtonClicked(){
       this.memberAddWindowVisible = true
     },
+    handleCustomerCreatedEvent( customer ){
+      console.log(" handleCustomerCreatedEvent", customer)
+      //如果创建了用户，选择新创建的客户
+      if( customer ){
+        this.setCurrentCustomer( customer )
+      }
+    },
     getDiscountOfVariant( variantId ){
       // 找到这个订单对应的商品
       let discount = 100
@@ -464,6 +470,11 @@ export default {
     },
     computePrice( item ){
       item.price = item.discount * item.unitPrice * item.quantity /100
+    },
+    setCurrentCustomer( customer ){
+      //
+      this.customerList = [customer]
+      this.customerComboId = this.computedCustomerOptions[0].value
     }
   },
   watch: {

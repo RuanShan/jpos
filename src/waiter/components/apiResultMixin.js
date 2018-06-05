@@ -21,7 +21,8 @@ export var apiResultMixin = {
             let order = {
                 id: orderResult.id,
                 number: orderResult.number,
-                total: parseInt(orderResult.total),
+                total: parseInt(orderResult.total),          //实收价格
+                saleTotal: parseInt(orderResult.sale_total), //应收价格
                 userName: orderResult.user_name,
                 storeId: orderResult.store_id,
                 storeName: orderResult.store_name,
@@ -53,7 +54,11 @@ export var apiResultMixin = {
                 order.lineItemGroups.push(group)
                 let groupedlineItems = []
                 orderResult.line_items.forEach(function(lineItemResult) {
-                    const lineItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.cname, price: lineItemResult.price }
+                  // sale_price: 应收，discountPercent: 折扣率， price: 实收
+                    const lineItem = { groupNumber: lineItemResult.group_number, cname: lineItemResult.cname,
+                      price: lineItemResult.price, quantity:lineItemResult.quantity,
+                      salePrice: parseInt(lineItemResult.sale_price), discountPercent: parseInt(lineItemResult.discount_percent)
+                    }
                     if (groupResult.number == lineItemResult.group_number) {
                         groupedlineItems.push(lineItem)
                     }
