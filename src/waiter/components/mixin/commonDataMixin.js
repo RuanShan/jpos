@@ -23,7 +23,7 @@ export var orderDataMixin = {
   computed: {
     ...mapState([
       'paymentMethods',
-      'memberCardTypes'
+      'cardTypes'
     ])
 
   },
@@ -51,7 +51,7 @@ export var orderDataMixin = {
     }
   },
   methods: {
-    ...mapActions(['getPaymentMethods', 'getMemberCardTypes']),
+    ...mapActions(['getPaymentMethods', 'getCardTypes']),
 
     getOrderStateText(state) {
       if (state == "pending") {

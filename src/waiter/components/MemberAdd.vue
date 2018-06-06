@@ -1,88 +1,91 @@
 <template>
   <div class="add-member-container cel-window">
     <!-- 会员添加窗口 -> START -->
-    <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="top" :modal="false" @open="handleOpenDialog">
+    <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="'0'" :modal="false" @open="handleOpenDialog">
       <div slot="title" class="title-wrap">
         <div class="left back"> <i class="el-icon-back" @click="handleCloseDialog()"></i> </div>
         <div> 会员添加</div>
       </div>
-      <el-form :model="memberAddData" :rules="rules" ref="memberAddData" status-icon label-width="100px" class="new-member-form">
 
       <el-row :gutter="20" type="flex"  justify="center">
         <el-col :span="10">
-          <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>客户基本信息</span>
-              <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-            </div>
-              <el-form-item label="电话" prop="mobile">
-                <el-input v-model="memberAddData.mobile"></el-input>
-              </el-form-item>
-              <el-form-item label="姓名" prop="username">
-                <el-input v-model="memberAddData.username"></el-input>
-              </el-form-item>
-              <el-form-item label="生日" required>
-                <el-form-item prop="birth">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="memberAddData.birth" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+          <el-form :model="memberFormData" :rules="rules" ref="memberFormData" status-icon label-width="100px" class="new-member-form">
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span>客户基本信息</span>
+                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+              </div>
+                <el-form-item label="电话" prop="mobile"  required>
+                  <el-input v-model="memberFormData.mobile"></el-input>
                 </el-form-item>
-              </el-form-item>
-              <el-form-item label="联系地址" prop="address">
-                <el-input v-model="memberAddData.address"></el-input>
-              </el-form-item>
-              <el-form-item label="备注" prop="address">
-                <el-input type="textarea" v-model="memberAddData.memo"></el-input>
-              </el-form-item>
-          </el-card>
-        </el-col>
-        <el-col :span="10">
-          <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>会员卡信息</span>
-              <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-            </div>
-              <el-form-item label="会员卡号" prop="mobile">
-                <el-input v-model="memberAddData.mobile"  size="small"></el-input>
-              </el-form-item>
-              <el-form-item label="会员卡类型" prop="username">
-                <el-select v-model="memberAddData.variantId" placeholder="" >
-                  <el-option v-for="item in memberCardTypes" :key="item.id" :label="item.name" :value="item.id">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="到期时间" required>
-                <el-form-item prop="birth">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="memberAddData.birth" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+                <el-form-item label="姓名" prop="username">
+                  <el-input v-model="memberFormData.username"></el-input>
                 </el-form-item>
-              </el-form-item>
-              <el-form-item label="会员密码" prop="paymentPassword">
-                <el-input v-model="memberAddData.paymentPassword"></el-input>
-              </el-form-item>
-              <el-form-item label="付款方式" >
-                <el-select v-model="memberAddData.paymentMethodId" placeholder="" >
-                  <el-option v-for="item in paymentMethods" :key="item.id" :label="item.name" :value="item.id">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="充值金额" >
-                <el-input v-model="memberAddData.paymentAmount"></el-input>
-              </el-form-item>
-              <el-form-item label="备注" prop="address">
-                <el-input v-model="memberAddData.memo"></el-input>
-              </el-form-item>
-          </el-card>
-        </el-col>
-      </el-row>
+                <el-form-item label="生日">
+                  <el-form-item prop="birth">
+                    <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+                  </el-form-item>
+                </el-form-item>
+                <el-form-item label="联系地址" prop="address">
+                  <el-input v-model="memberFormData.address"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" prop="address">
+                  <el-input type="textarea" v-model="memberFormData.memo"></el-input>
+                </el-form-item>
+            </el-card>
+          </el-form>
 
-      <el-row :gutter="20" type="flex"  justify="center">
+        </el-col>
         <el-col :span="10">
-          <div>
-            <el-button type="primary" @click="addCustomer('memberAddData')">立即创建</el-button>
-            <el-button @click="resetForm('memberAddData')">重置</el-button>
-            <el-button @click="fillIn()" type="danger">测试填入</el-button>
-          </div>
+          <el-form :model="cardFormData" :rules="rules" ref="cardFormData" status-icon label-width="100px" class="new-member-form">
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span>会员卡信息</span>
+                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+              </div>
+                <el-form-item label="会员卡号" prop="cardNumber"  required>
+                  <el-input v-model="cardFormData.cardNumber" ></el-input>
+                </el-form-item>
+                <el-form-item label="会员卡类型" prop="variantId"  required>
+                  <el-select v-model="cardFormData.variantId" placeholder="" >
+                    <el-option v-for="item in cardTypes" :key="item.id" :label="item.name" :value="item.id">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="到期时间">
+                  <el-form-item prop="expireAt">
+                    <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+                  </el-form-item>
+                </el-form-item>
+                <el-form-item label="会员密码" prop="paymentPassword">
+                  <el-input v-model="cardFormData.paymentPassword"></el-input>
+                </el-form-item>
+                <el-form-item label="付款方式" prop="paymentMethodId" required>
+                  <el-select v-model="cardFormData.paymentMethodId" placeholder="请选择支付方式" >
+                    <el-option v-for="item in paymentMethods" :key="item.id" :label="item.name" :value="item.id">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="充值金额"  required>
+                  <el-input v-model="cardFormData.paymentAmount"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" prop="address">
+                  <el-input v-model="cardFormData.cardMemo"></el-input>
+                </el-form-item>
+            </el-card>
+          </el-form>
+
         </el-col>
       </el-row>
-    </el-form>
+        <el-row :gutter="20" type="flex"  justify="center">
+          <el-col :span="10">
+            <div class="actions">
+              <el-button type="primary" @click="addCustomer">立即创建</el-button>
+              <el-button @click="resetForm('memberFormData')">重置</el-button>
+              <el-button @click="fillIn()" type="danger">测试填入</el-button>
+            </div>
+          </el-col>
+        </el-row>
 
     </el-dialog>
     <!-- 会员添加窗口 -> END -->
@@ -96,9 +99,9 @@
 // 出口:this.$emit("AddMemberReturnData", this.returnData);
 // **********
 
-import { createCustomer } from "@/api/getData";
+import { createCustomer, customerMobileValidate } from "@/api/getData";
 import { orderDataMixin } from "@/components/mixin/commonDataMixin"
-import {  apiResultMixin} from '@/components/apiResultMixin'
+import { apiResultMixin } from '@/components/apiResultMixin'
 
 import {
   DialogMixin
@@ -119,99 +122,73 @@ export default {
     //     callback();
     //   }
     // };
-    //验证规则---两次密码是否一致
-    var validatePassConfirm = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.memberAddData.paymentPassword) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
-      }
-    };
+
     //验证规则---电话号码
     var validPhone = (rule, value, callback) => {
-      if (!isvalidPhone(value)) {
-        // console.log(value);
-        callback(new Error("请输入正确的11位手机号码"));
-      } else {
-        callback();
-      }
+
+        customerMobileValidate( value ).then(function(response){
+          if( response.result ){
+            callback();
+          }else{
+            callback(new Error("电话号码已经注册过。"))
+          }
+        },function(error){
+          callback(new Error(error))
+        });
     };
-    // function isvalidNumber(str) {
-    //   var regNumber = /^[0-9]*$/;
-    //   return regNumber.test(str);
-    // }
-    function isvalidPhone(str) {
-      var reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
-      return reg.test(str);
-    }
+
     return {
       top: '0', /* 去除直接传 0 产生的 需要参数为string的警告 */
-      memberAddData: {
-        // memberNum: "",
-        paymentPassword: "",
-        paymentPasswordConfirm: "",
+      memberFormData: {
         username: "",
         mobile: "",
-        outTime: "",
         birth: "",
         address: "",
-        type: []
-        // desc: ""
       },
+      cardFormData: {
+        cardNumber: "",
+        paymentAmount: null,
+        expireAt: "",
+        paymentMethodId: null,
+        variantId: null,
+        memo: ""
+      },
+
       createCustomerData: { user: {} },
       returnData: {}, //添加会员方法,异步,请求服务器,调用getData.js中createCustomer
       rules: {
-        // memberNum: [
-        //   {
-        //     required: true,
-        //     min: 4,
-        //     max: 11,
-        //     message: "长度在 4 到 11 个数字",
-        //     trigger: "blur"
-        //   },
-        //   { required: true, validator: checkmemberNum, trigger: "blur" }
-        // ],
-        paymentPassword: [
-          { required: true, message: "请输入密码", trigger: "blur" },
+        cardNumber: [
           {
-            required: true,
-            min: 6,
-            max: 11,
-            message: "长度在 6 到 8 个字符",
-            trigger: "blur"
-          }
-        ],
-        paymentPasswordConfirm: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          {
-            required: true,
-            min: 6,
-            max: 11,
-            message: "长度在 6 到 8 个字符",
-            trigger: "blur"
+             required: true,
+             min: 4,
+             max: 11,
+             message: "卡号为长度在 4 到 11 个数字和字母",
+             trigger: "blur"
           },
-          { validator: validatePassConfirm, trigger: "blur" }
+          //{ validator: checkmemberNum, trigger: "blur" }
         ],
+
         mobile: [
-          { required: true, message: "请输入电话号码", trigger: "blur" },
-          {
-            min: 4,
-            max: 11,
-            message: "长度在 8 到 12 个字符",
-            trigger: "blur"
-          },
-          { required: true, validator: validPhone, trigger: "blur" }
+          { type:"string", required: true, message: "请输入正确的电话号码", pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, trigger: "blur" },
+          { validator: validPhone, message: "电话号码已经注册过。", trigger: "blur" }
         ],
-        outTime: [
+        paymentPassword: [
           {
-            type: "date",
-            required: true,
-            message: "请选择日期",
-            trigger: "change"
+            min: 6,
+            max: 11,
+            message: "长度在 6 到 11 个字符",
+            trigger: "blur"
           }
-        ]
+        ],
+        paymentAmount: [
+          {  type:"integer",  required: true, message: "请输入充值金额", trigger: "blur" },
+          {
+            min: 0,
+            max: 1000000,
+            message: "请输入有效充值金额",
+            trigger: "blur"
+          }
+        ],
         // birth: [
         //   {
         //     type: "date",
@@ -224,48 +201,63 @@ export default {
       }
     };
   },
-  mounted: function() {
-    this.memberAddData.memberNum = this.inputNumber;
-    this.memberAddData.username = this.inputNumber;
-  },
   methods: {
     handleOpenDialog(){
+      this.$refs["memberFormData"].resetFields();
+      this.$refs["cardFormData"].resetFields();
+
       if( !this.paymentMethods ){
-        this.getPaymentMethods()
+        this.getPaymentMethods().then(()=>{
+          if( this.paymentMethods.length > 0){
+            this.cardFormData.paymentMethodId = this.paymentMethods[0].id
+          }
+        })
       }
-      if( !this.memberCardTypes ){
-        this.getMemberCardTypes()
+      if( !this.cardTypes ){
+        this.getCardTypes().then(()=>{
+          if( this.cardTypes.length > 0){
+            console.log(" this.cardTypes",  this.cardTypes )
+            this.cardFormData.variantId = this.cardTypes[0].id
+          }
+        })
       }
     },
 
     //提交
     addCustomer(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          let params = this.buildParams() //转换成SerVer需要的数据
-          createCustomer(params).then((result)=>{
-            this.returnData = result
-            //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
-            if ( this.returnData.id ) {
-              const customer = this.buildCustomer( this.returnData  )
-              this.$emit("customerCreatedEvent",customer);
-              this.handleCloseDialog()
-            } else {
-              //判读返回的数据中是否有错误
-                //如果返回数据中有错误
-                this.$alert(this.returnData.error, "错误提示", {
-                  confirmButtonText: "确定"
-                });
-                return false;
-            }
-          })
-        } else {
-          this.$alert("请仔细检测表格", "错误提示", {
-            confirmButtonText: "确定"
-          })
-          return false
-        }
+
+      let validations = [this.$refs["memberFormData"].validate()]
+      //如果创建会员卡，需要验证会员卡的表单
+      if( this.cardFormData.cardNumber.length > 0){
+        validations.push(this.$refs["cardFormData"].validate() )
+      }
+
+      Promise.all(validations).then((val)=>{
+        console.log( "promise all ->", val )
+        let params = this.buildParams() //转换成SerVer需要的数据
+        createCustomer(params).then((result)=>{
+          this.returnData = result
+          //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
+          if ( this.returnData.id ) {
+            const customer = this.buildCustomer( this.returnData  )
+            this.$emit("customerCreatedEvent",customer);
+            this.handleCloseDialog()
+          } else {
+            //判读返回的数据中是否有错误
+              //如果返回数据中有错误
+              this.$alert(this.returnData.error, "错误提示", {
+                confirmButtonText: "确定"
+              });
+              return false;
+          }
+        })
+      }).catch(error=>{
+        this.$alert("请仔细检测表格", "错误提示", {
+          confirmButtonText: "确定"
+        })
+        return false
       })
+
     },
 
     //重置
@@ -274,27 +266,27 @@ export default {
     },
     //转换成SerVer需要的数据
     buildParams() {
-      this.createCustomerData.user.username = this.memberAddData.username;
-      this.createCustomerData.user.mobile = this.memberAddData.mobile;
-      this.createCustomerData.user.payment_password = this.memberAddData.paymentPassword;
-      this.createCustomerData.user.address = this.memberAddData.address;
-      this.createCustomerData.user.birth = this.memberAddData.birth;
+      this.createCustomerData.user.username = this.memberFormData.username;
+      this.createCustomerData.user.mobile = this.memberFormData.mobile;
+      this.createCustomerData.user.payment_password = this.cardFormData.paymentPassword;
+      this.createCustomerData.user.address = this.memberFormData.address;
+      this.createCustomerData.user.birth = this.memberFormData.birth;
       let user = {
-        username:  this.memberAddData.username,
-        mobile:  this.memberAddData.mobile,
-        paymentPassword:  this.memberAddData.paymentPassword,
-        address:  this.memberAddData.address,
-        birth:  this.memberAddData.birth
+        username:  this.memberFormData.username,
+        mobile:  this.memberFormData.mobile,
+        paymentPassword:  this.memberFormData.paymentPassword,
+        address:  this.memberFormData.address,
+        birth:  this.memberFormData.birth
       }
 
       let order = null
       if( false ){
         order = {
           line_items: [
-            { variant_id: this.memberAddData.variantId, price: 2000, quantity: 1 }
+            { variant_id: this.cardFormData.variantId, price: 2000, quantity: 1 }
           ],
           payments:[
-            { payment_method_id: this.memberAddData.paymentMethodId, amount:this.memberAddData.paymentAmount }
+            { payment_method_id: this.cardFormData.paymentMethodId, amount:this.cardFormData.paymentAmount }
           ]
         }
       }
@@ -302,12 +294,11 @@ export default {
     },
 
     fillIn() {
-      this.memberAddData.memberNum = "9874556";
-      this.memberAddData.paymentPassword = "9874556";
-      this.memberAddData.paymentPasswordConfirm = "9874556";
-      this.memberAddData.mobile = "13000000000";
-      this.memberAddData.outTime = new Date();
-      this.memberAddData.birth = new Date();
+      this.memberFormData.memberNum = "9874556";
+      this.memberFormData.paymentPassword = "9874556";
+      this.memberFormData.paymentPasswordConfirm = "9874556";
+      this.memberFormData.mobile = "13000000000";
+      this.memberFormData.birth = new Date();
     }
   }
 };
@@ -319,6 +310,11 @@ export default {
   }
   .new-member-form{
     margin: 24px 0 0 0;
+  }
+  .actions{
+    margin: 16px auto;
+    text-align: center;
+
   }
 }
 </style>

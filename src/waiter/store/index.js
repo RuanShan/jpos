@@ -13,7 +13,7 @@ const state = {
     apiKey: ''
   },
   paymentMethods: null,
-  memberCardTypes: null
+  cardTypes: null
 }
 
 const mutations = {
@@ -24,7 +24,7 @@ const mutations = {
     state.paymentMethods = newPaymentMethods
   },
   saveMemberCardTypes( state, newMemberCardTypes){
-    state.memberCardTypes = newMemberCardTypes
+    state.cardTypes = newMemberCardTypes
   }
 }
 
@@ -62,7 +62,7 @@ const actions = {
     })
     commit('savePaymentMethods', list)
   },
-  async getMemberCardTypes({commit}){
+  async getCardTypes({commit}){
     const result = await getCardTypes()
     const list = []
     result.products.forEach((obj)=>{

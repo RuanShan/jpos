@@ -2,6 +2,12 @@ import fetch from '@/config/fetch'
 /**************************************************************************
  * jpos spree api
  **************************************************************************/
+ /**
+  * 检查电话号码是否存在
+  *
+  */
+ export const customerMobileValidate = mobile => fetch('/api/v1/customers/validate_mobile', {mobile} );
+
 /**
  * 登陆
  *
