@@ -204,10 +204,11 @@ export var apiResultMixin = {
                     className: 'Spree::Card',
                     id: cardResult.id,
                     name: cardResult.name,
+                    style: cardResult.style,   // prepaid 充值卡， counts 次卡
                     currentValue: parseInt(cardResult.current_value),
                     discountPercent: parseInt(cardResult.discount_percent),
                     discountAmount: parseInt(cardResult.discount_amount),
-                    status: cardResult.status,
+                    status: cardResult.status, //enable:可用， disable：不可用
                     code: (cardResult.code.length < 10 ? cardResult.code : cardResult.code.slice(0, 8)), // 显示前8位
                     productId: cardResult.product_id
                 }
