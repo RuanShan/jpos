@@ -136,17 +136,16 @@
       <el-row>
         <el-button @click="handleCloseDialog()">取消</el-button>
         <el-button type="success" @click="handlePlaceOrder()">确定</el-button>
-
       </el-row>
-
-
     </div>
   </el-dialog>
 </div>
 </template>
 
 <script>
-import { checkout, getPaymentMethods } from "@/api/getData"
+import { checkout } from "@/api/getData"
+import { orderDataMixin } from "@/components/mixin/commonDataMixin"
+
 import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
@@ -175,7 +174,7 @@ export default {
       payments: [], //支付被方式选择数字,返回已经被选择的lable,如""现金","微信"等
     };
   },
-  mixins: [DialogMixin],
+  mixins: [DialogMixin, orderDataMixin],
   computed: {
     ...mapState(["userInfo", "cartList"]),
     activePaymentMethods: function(){
@@ -230,7 +229,7 @@ export default {
       }
 
       let order =  { user_id: this.customer.id,  payments_attributes: paymentsAttributes }
-      order.line_items = this.orderList.map((item)=>{ return { quantity: 1, variant_id: item.variantId, group_position: item.groupPosition}})
+      order.line_items = this.orderList.map((item)=>{ return { quantity: 1, variant_id: item.variantId, cname: item.cname, group_position: item.groupPosition}})
 
       return { order: order, payment_source: paymentSource }
     },
@@ -246,14 +245,17 @@ export default {
   },
   methods: {
     async handleDialogOpened(){
-      const result = await getPaymentMethods()
-      result.payment_methods.forEach((pm)=>{
-          this.paymentMethodList.push({id:pm.id, name:pm.name, active: pm.active})
-      })
-
-      if( this.paymentMethodList.length>0){
-        this.selectPaymentMethodId = this.paymentMethodList[0].id
+console.log("getPaymentMethods start ")
+      if( !this.paymentMethods ){
+        this.getPaymentMethods().then(()=>{
+console.log("getPaymentMethods ", this.paymentMethods)
+          this.paymentMethodList = this.paymentMethods
+          if( this.paymentMethodList.length>0){
+            this.selectPaymentMethodId = this.paymentMethodList[0].id
+          }
+        })
       }
+
       console.log( "handleDialogOpened customer=",this.customer )
     },
     handleDialogClosed() {

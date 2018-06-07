@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {
-  getUserInfo
+  getUserInfo, getPaymentMethods, getCardTypes
 } from '@/api/getData'
 
 Vue.use(Vuex)
@@ -11,12 +11,20 @@ const state = {
     storeId: 0,
     avatar: 'default.jpg',
     apiKey: ''
-  }
+  },
+  paymentMethods: null,
+  cardTypes: null
 }
 
 const mutations = {
   saveAdminInfo(state, userInfo) {
     state.userInfo = userInfo
+  },
+  savePaymentMethods( state, newPaymentMethods){
+    state.paymentMethods = newPaymentMethods
+  },
+  saveMemberCardTypes( state, newMemberCardTypes){
+    state.cardTypes = newMemberCardTypes
   }
 }
 
@@ -45,6 +53,22 @@ const actions = {
     } catch (err) {
       console.log('您尚未登陆或者session失效')
     }
+  },
+  async getPaymentMethods({commit}){
+    const result = await getPaymentMethods()
+    const list = []
+    result.payment_methods.forEach((pm)=>{
+        list.push({id:pm.id, name:pm.name, active: pm.active})
+    })
+    commit('savePaymentMethods', list)
+  },
+  async getCardTypes({commit}){
+    const result = await getCardTypes()
+    const list = []
+    result.products.forEach((obj)=>{
+        list.push({id:obj.id, name:obj.name, price: obj.price})
+    })
+    commit('saveMemberCardTypes', list)
   }
 
 }

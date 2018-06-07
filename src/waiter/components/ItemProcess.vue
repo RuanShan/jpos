@@ -7,7 +7,7 @@
         top: 80px;
         bottom: 0;
         left: 0;
-        width: 30%;
+        width: 40%;
         border: 1px #efefef solid;
         .item-list{
           position: absolute;
@@ -22,11 +22,10 @@
             bottom: 16px;
             left: 0;
         }
-
     }
     .item-detail {
         position: absolute;
-        width: 70%;
+        width: 60%;
         top: 80px;
         bottom: 0;
         right: 0;
@@ -56,7 +55,6 @@
             background-color: #f5f7fa;
         }
     }
-
     .filters {
         margin: 0 0 20px;
         border: 1px #efefef solid;
@@ -76,7 +74,6 @@
             display: inline-block;
         }
     }
-
 }
 </style>
 
@@ -98,7 +95,6 @@
           <el-button type="primary" @click="handleSearch()">搜索</el-button>
         </div>
         <!-- filters end -->
-
         <div class="item-list-wrap">
           <div class="item-list">
             <el-table :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
@@ -110,6 +106,8 @@
               </el-table-column>
               <el-table-column label="物品状态" prop="displayState">
               </el-table-column>
+              <el-table-column label="订单时间" prop="displayCreatedAt">
+              </el-table-column>
             </el-table>
           </div>
           <div class="pagination" style="text-align: left;margin-top: 10px;">
@@ -117,7 +115,6 @@
             </el-pagination>
           </div>
         </div>
-
         <div class="item-detail">
           <div class="line-item-groups-container" v-if="currentItem">
             <table class="bitemed" style="width: 100%">
@@ -154,6 +151,8 @@
             </table>
 
             <div class="actions">
+              <el-button @click="ChangeCurrentItemState(false)">删除</el-button>
+              <el-button @click="ChangeCurrentItemState(false)">编辑</el-button>
               <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
               <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button>
             </div>
@@ -287,7 +286,7 @@ export default {
           state_eq: this.orderState
         }
       }
-    
+
       if (this.filters.keyword.length > 0) {
         // item.number || item.users.username
         queryParams["q[number_cont]"] = this.filters.keyword
