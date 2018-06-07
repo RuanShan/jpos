@@ -1,4 +1,5 @@
 import moment from 'moment'
+import _ from "lodash"
 
 export var apiResultMixin = {
     methods: {
@@ -37,34 +38,49 @@ export var apiResultMixin = {
             order.displayCreatedAt = order.createdAt.format('MM-DD HH:mm')
 
             orderResult.line_item_groups.forEach((groupResult, i) => {
-                let group = {
-                    id: groupResult.id,
-                    orderId: groupResult.order_id,
-                    order: order,
-                    number: groupResult.number,
-                    state: groupResult.state,
-                    lineItems: [],
-                    name: groupResult.name,
-                    price: parseInt(groupResult.price),
-                    createdAt: moment(groupResult.created_at),
-                }
-                group.displayCreatedAt = group.createdAt.format('MM-DD HH:mm')
-                group.displayState = this.getOrderStateText(group.state)
-                order.lineItemGroups.push(group)
-                let groupedlineItems = []
-                orderResult.line_items.forEach(function(lineItemResult) {
-                    const lineItem = { groupNumber: lineItemResult.group_number, name: lineItemResult.cname, price: lineItemResult.price }
-                    if (groupResult.number == lineItemResult.group_number) {
-                        groupedlineItems.push(lineItem)
+                    let group = {
+                        id: groupResult.id,
+                        orderId: groupResult.order_id,
+                        order: order,
+                        number: groupResult.number,
+                        state: groupResult.state,
+                        lineItems: [],
+                        name: groupResult.name,
+                        price: parseInt(groupResult.price),
+                        createdAt: moment(groupResult.created_at),
                     }
+                    group.displayCreatedAt = group.createdAt.format('MM-DD HH:mm')
+                    group.displayState = this.getOrderStateText(group.state)
+                    order.lineItemGroups.push(group)
+                    let groupedlineItems = []
+                    orderResult.line_items.forEach(function(lineItemResult) {
+                        const lineItem = {
+                            id: lineItemResult.id,
+                            orderId: lineItemResult.order_id,
+                            group: group,
+                            groupNumber: lineItemResult.group_number,
+                            name: lineItemResult.cname,
+                            price: lineItemResult.price,
+                            quantity: lineItemResult.quantity,
+                            saleUnitPrice: lineItemResult.sale_unit_price,
+                            discountPercent: lineItemResult.discount_percent,
+                            memo: lineItemResult.memo
+                        }
+                        if (groupResult.number == lineItemResult.group_number) {
+                            groupedlineItems.push(lineItem)
+                        }
+                    })
+                    group.lineItems = groupedlineItems
                 })
-                group.lineItems = groupedlineItems
+                // groupLineItems 当前订单的所有活
+            const items = order.lineItemGroups.map((group) => {
+                return group.lineItems
             })
-
-            // 其它子订单 如：购买商品订单，充值订单，购买打折卡订单
+            order.groupLineItems = _.flatten(items)
+                // 其它子订单 如：购买商品订单，充值订单，购买打折卡订单
             orderResult.line_items.forEach((lineItemResult) => {
                 if (!lineItemResult.group_number) {
-                    const lineItem = { name: lineItemResult.variant.name, price: lineItemResult.price }
+                    const lineItem = { name: lineItemResult.cname, price: lineItemResult.price }
                     order.extraLineItems.push(lineItem)
                 }
             })
