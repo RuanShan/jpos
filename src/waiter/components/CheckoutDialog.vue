@@ -48,7 +48,14 @@
         height: 40px;
         line-height: 40px;
     }
-    .checkout-form{
+    .checkout-form-wrap{
+      .checkout-form{
+        width: 400px;
+        margin: 0 auto;
+        .align-right input{
+          text-align: right;
+        }
+      }
       table{
         width: 440px;
         margin: 0 auto;
@@ -56,20 +63,20 @@
           width: 8em;
         }
       }
-      td.money{
-        text-align: right;
+      .money{
         span{
           display: inline-block;
           padding: 0 15px;
           line-height: 40px;
         }
+
       }
     }
 
     .payment{
 
       .el-select{
-        width: 6em;
+        width: 120px;
       }
       .el-input-group > .el-input__inner {
           text-align: right;
@@ -85,50 +92,31 @@
       <div> 结算</div>
     </div>
 
-    <div class="checkout-form">
-      <table>
-        <tr>
-          <th class="title">应收金额 </th>
-          <td class="money">
-            <span>{{totalMoney}}</span>
-          </td>
-          <td></td>
-        </tr>
-        <tr v-show="isShowPrepaidCard">
-          <th>会员卡支付 </th>
-          <td>
-            <el-input v-model="prepaidCardAmount" placeholder="" class="money"></el-input>
-          </td>
-          <td>
-          </td>
-        </tr>
-        <tr v-show="isShowPrepaidCard">
-          <th>会员支付密码 </th>
-          <td>
-            <el-input v-model="paymentPassword" placeholder="" class="money"></el-input>
-          </td>
-          <td>
-          </td>
-        </tr>
-        <tr class="payment">
-          <th>
-            支付方式
-          </th>
-          <td>
-            <el-input v-model="orderRemainder" placeholder="" class="money">
-              <el-select v-model="selectPaymentMethodId" placeholder=""  slot="prepend" >
-                <el-option v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id">
-                </el-option>
-              </el-select>
-            </el-input>
-          </td>
-          <td>
-          </td>
-        </tr>
-      </table>
+    <div class="checkout-form-wrap">
+      <el-form :model="formData" :rules="rules" ref="formData" status-icon label-width="100px" class="checkout-form">
+        <el-form-item label="应收金额">
+          <el-input v-model="totalMoney" readonly class="money align-right"></el-input>
+        </el-form-item>
 
-      <div class="">
-      </div>
+        <el-form-item label="会员卡支付" v-show="isShowPrepaidCard">
+          <el-input v-model="formData.prepaidCardAmount" placeholder="" class="money align-right"></el-input>
+        </el-form-item>
+
+        <el-form-item label="会员支付密码" v-show="isShowPrepaidCard">
+          <el-input v-model="formData.paymentPassword" placeholder="" class="money align-right" type="password"></el-input>
+        </el-form-item>
+
+        <el-form-item label="支付方式"  class="payment">
+          <el-input v-model="formData.paymentAmount" placeholder="" class="money">
+            <el-select v-model="selectPaymentMethodId" placeholder=""  slot="prepend" >
+              <el-option v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-input>
+        </el-form-item>
+
+      </el-form>
+
     </div>
 
 
@@ -155,7 +143,7 @@ import {
 } from "vuex"
 
 export default {
-  props: ["dialogVisible", "storeName", "orderList", "totalMoney", "customer"],
+  props: ["dialogVisible", "storeName", "orderItemList", "totalMoney", "customer"],
   components: {  },
   data() {
     return {
@@ -167,10 +155,18 @@ export default {
         type: "cash",
         amount: 0
       }],
-      prepaidCardAmount: 0,
-      paymentPassword: "",
-      enablePrepaidCard: true,
-      selectPaymentMethodId: null,
+      formData:{
+        prepaidCardAmount: 0,
+        paymentAmount: 0,
+        paymentPassword: null,
+        enablePrepaidCard: true,
+        selectPaymentMethodId: null,
+      },
+      rules:{
+        paymentAmount:[
+          { required: true, type: 'number', trigger: 'change' }
+        ]
+      },
       payments: [], //支付被方式选择数字,返回已经被选择的lable,如""现金","微信"等
     };
   },
@@ -192,7 +188,7 @@ export default {
     availablePrepaidCard: function(){
       let card = this.customer.cards.find((card)=>{
         // 充值卡 && 可用状态 && 余额>0
-        return card.style == 1 && card.status == 1 && card.currentValue > 0
+        return card.style == 'prepaid' && card.status == 'enabled' && card.currentValue > 0
       })
       return card
     },
@@ -236,24 +232,27 @@ export default {
     // 除了会员支付方式之外，其他支付方式余额
     orderRemainder() {
       let remainder = this.totalMoney
-      let card = this.availablePrepaidCard
-      if( card != null){
-        remainder = ( card.currentValue >= remainder ? 0 : remainder - card.currentValue)
-      }
-      return remainder ;
+      return remainder - this.prepaidCardAmount - this.paymentAmount
     }
   },
   methods: {
-    async handleDialogOpened(){
-console.log("getPaymentMethods start ")
+    handleDialogOpened(){
+
       if( !this.paymentMethods ){
         this.getPaymentMethods().then(()=>{
-console.log("getPaymentMethods ", this.paymentMethods)
           this.paymentMethodList = this.paymentMethods
           if( this.paymentMethodList.length>0){
             this.selectPaymentMethodId = this.paymentMethodList[0].id
           }
         })
+      }
+      let card = this.availablePrepaidCard
+      if( card != null){
+        //会员卡的余额是否够用
+        this.prepaidCardAmount = ( card.currentValue >= this.totalPrice ? this.totalPrice : (this.totalPrice - card.currentValue) )
+      }
+      if( this.orderRemainder>0){
+        this.paymentAmount = this.orderRemainder
       }
 
       console.log( "handleDialogOpened customer=",this.customer )

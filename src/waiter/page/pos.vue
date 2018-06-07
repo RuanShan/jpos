@@ -1,7 +1,7 @@
 <template>
 <div>
   <!-- 结账组件 Start-->
-  <CheckoutDialog :order-list="orderItemList" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible"></CheckoutDialog>
+  <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible"></CheckoutDialog>
   <!-- 结账组件 End-->
 
   <!-- 添加会员组件 Start-->
@@ -235,22 +235,25 @@ export default {
     //当前选择的客户
     currentCustomer: function(){
       let customer = this.defaultCustomer
-      if( this.customerId ){
+      let cid = this.customerId
+      if( cid ){
         customer = this.customerList.find((customer, index, arr) => {
-          return customer.id ==   this.customerId
+          return customer.id ==  cid
         })
         if( !customer ){
           customer = this.defaultCustomer
         }
       }
+
       return customer
     },
     currentCard: function(){
       let card = this.defaultCard
       let customer = this.currentCustomer
+      let cid =  this.cardId
       if( customer.cards.length > 0 ){
-        card = this.customer.cards.find((card, index, arr) => {
-          return card.id ==   this.cardId
+        card = customer.cards.find((card, index, arr) => {
+          return card.id ==  cid
         })
       }
       return card
@@ -487,7 +490,12 @@ export default {
     setCurrentCustomer( customer ){
       //
       this.customerList = [customer]
-      this.customerComboId = this.computedCustomerOptions[0].value
+      this.$nextTick( ()=> {
+        // DOM updated
+        console.log( " this.computedCustomerOptions=",  this.computedCustomerOptions)
+        this.customerComboId = this.computedCustomerOptions[0].value
+
+      })
     }
   },
   watch: {
