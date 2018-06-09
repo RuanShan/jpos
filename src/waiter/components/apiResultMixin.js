@@ -272,6 +272,7 @@ export var apiResultMixin = {
             customer.updatedAt = moment(customerResult.updated_at);
             customer.displayUpdatedAt = customer.updatedAt.format('YYYY-MM-DD , hh:mm:ss');
             customer.userName = customerResult.username;
+            customer.sex = customerResult.sex;
             return customer;
         },
 
