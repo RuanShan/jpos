@@ -43,8 +43,8 @@
                 <span>会员卡信息</span>
                 <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
               </div>
-                <el-form-item label="会员卡号" prop="cardNumber"  required>
-                  <el-input v-model="cardFormData.cardNumber" ></el-input>
+                <el-form-item label="会员卡号" prop="code"  required>
+                  <el-input v-model="cardFormData.code" ></el-input>
                 </el-form-item>
                 <el-form-item label="会员卡类型" prop="variantId"  required>
                   <el-select v-model="cardFormData.variantId" placeholder="" >
@@ -146,18 +146,16 @@ export default {
         address: "",
       },
       cardFormData: {
-        cardNumber: "",
+        code: "",
         paymentAmount: null,
         expireAt: "",
         paymentMethodId: null,
         variantId: null,
         memo: ""
       },
-
-      createCustomerData: { user: {} },
       returnData: {}, //添加会员方法,异步,请求服务器,调用getData.js中createCustomer
       rules: {
-        cardNumber: [
+        code: [
           {
              required: true,
              min: 4,
@@ -189,22 +187,16 @@ export default {
             trigger: "blur"
           }
         ],
-        // birth: [
-        //   {
-        //     type: "date",
-        //     required: true,
-        //     message: "请选择日期",
-        //     trigger: "change"
-        //   }
-        // ],
-        // desc: [{ required: true, message: "请填写备注内容", trigger: "blur" }]
       }
     };
   },
+  computed: {
+    isAddingCard: function(){
+      return this.cardFormData.code.length > 0
+    }
+  },
   methods: {
     handleOpenDialog(){
-      this.$refs["memberFormData"].resetFields();
-      this.$refs["cardFormData"].resetFields();
 
       if( !this.paymentMethods ){
         this.getPaymentMethods().then(()=>{
@@ -216,24 +208,26 @@ export default {
       if( !this.cardTypes ){
         this.getCardTypes().then(()=>{
           if( this.cardTypes.length > 0){
-            console.log(" this.cardTypes",  this.cardTypes )
             this.cardFormData.variantId = this.cardTypes[0].id
           }
         })
       }
+
+      this.$nextTick(function () {
+        this.$refs.memberFormData.resetFields();
+        this.$refs.cardFormData.resetFields();
+      })
     },
 
-    //提交
     addCustomer(formName) {
 
       let validations = [this.$refs["memberFormData"].validate()]
       //如果创建会员卡，需要验证会员卡的表单
-      if( this.cardFormData.cardNumber.length > 0){
+      if( this.isAddingCard ){
         validations.push(this.$refs["cardFormData"].validate() )
       }
 
       Promise.all(validations).then((val)=>{
-        console.log( "promise all ->", val )
         let params = this.buildParams() //转换成SerVer需要的数据
         createCustomer(params).then((result)=>{
           this.returnData = result
@@ -257,20 +251,13 @@ export default {
         })
         return false
       })
-
     },
-
     //重置
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
     //转换成SerVer需要的数据
     buildParams() {
-      this.createCustomerData.user.username = this.memberFormData.username;
-      this.createCustomerData.user.mobile = this.memberFormData.mobile;
-      this.createCustomerData.user.payment_password = this.cardFormData.paymentPassword;
-      this.createCustomerData.user.address = this.memberFormData.address;
-      this.createCustomerData.user.birth = this.memberFormData.birth;
       let user = {
         username:  this.memberFormData.username,
         mobile:  this.memberFormData.mobile,
@@ -280,10 +267,10 @@ export default {
       }
 
       let order = null
-      if( false ){
+      if( this.isAddingCard ){
         order = {
           line_items: [
-            { variant_id: this.cardFormData.variantId, price: 2000, quantity: 1 }
+            { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1, code: this.cardFormData.code }
           ],
           payments:[
             { payment_method_id: this.cardFormData.paymentMethodId, amount:this.cardFormData.paymentAmount }
@@ -292,12 +279,11 @@ export default {
       }
       return { user, order }
     },
-
     fillIn() {
-      this.memberFormData.memberNum = "9874556";
-      this.memberFormData.paymentPassword = "9874556";
-      this.memberFormData.paymentPasswordConfirm = "9874556";
-      this.memberFormData.mobile = "13000000000";
+      this.cardFormData.code = ((Math.random() + 1)*1000).toFixed()
+      this.cardFormData.paymentAmount = 250
+      this.cardFormData.paymentPassword = "123456"
+      this.memberFormData.mobile = "1300000"+this.cardFormData.code
       this.memberFormData.birth = new Date();
     }
   }
