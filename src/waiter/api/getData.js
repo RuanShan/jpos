@@ -226,10 +226,15 @@ export const findOrders = data => fetch('/api/v1/pos_orders/search', data, 'POST
 export const getOrderCount = data => fetch('/bos/orders/count', data);
 
 /**
- * 获取订单Detail
+ * 获取订单详细信息
  */
 
-export const getOrder = orderNumber => fetch('/api/v1/pos_orders/' + orderNumber)
+export const getOrder = id => fetch('/api/v1/pos_orders/' + id)
+/**
+ * 获取订单详细信息 通过订单number, 暂未实现
+ */
+
+export const getOrderByNumber = orderNumber => fetch('/api/v1/pos_orders/by_number/' + orderNumber)
 
 /**
  * 获取订单Detail

@@ -234,7 +234,7 @@ export default {
       }
 
       let order =  { user_id: this.customer.id,  payments: paymentsAttributes }
-      order.line_items = this.orderItemList.map((item)=>{ return { quantity: 1, variant_id: item.variantId, cname: item.cname, group_position: item.groupPosition}})
+      order.line_items = this.orderItemList.map((item)=>{ return { quantity: 1, variant_id: item.variantId, cname: item.cname, group_position: item.groupPosition, memo: item.memo}})
 console.log( " this.checkoutParams", order)
       return { order: order }
     },

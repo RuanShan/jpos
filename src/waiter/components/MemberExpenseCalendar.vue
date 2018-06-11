@@ -70,9 +70,9 @@
                   <div class="grid-content bg-purple-light">{{customerData.memo}}</div>
                 </el-col>
               </el-row>
-            </div> 
+            </div>
             <!-- 会员基本信息 END-->
-            
+
             <!-- 时间选择 START-->
             <fieldset>
               <legend>时间选择</legend>
@@ -83,13 +83,13 @@
             <!-- 时间选择 END-->
 
             <!-- 会员消费表格 START   -->
-            <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px" 
+            <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px"
                     @expand-change="expandChange"  :expand-row-keys="expendRow" :row-key="row => row.id" > -->
             <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px" @expand-change="expandChange" :expand-row-keys="expendRow" :row-key="row => row.id">
               <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px" @cell-mouse-enter="mouseEnter" :row-key="row => row.id"> -->
               <el-table-column type="expand">
                 <template slot-scope="props">
-                    <el-table :data="props.row.getOrderDataById.groupLineItems" :span-method="objectSpanMethod" 
+                    <el-table :data="props.row.getOrderDataById.groupLineItems" :span-method="objectSpanMethod"
                               border style="width: 60%;">
                       <el-table-column prop="groupNumber"  label="物品名称" width="180">
                       </el-table-column>
@@ -223,7 +223,7 @@ export default {
         console.log("得到了会员得订单数据了!");
         for (let [index, elem] of this.expenseTableData.entries()) {
           //  console.log(elem.number);
-          this.getOrderByNumber(elem.number).then(() => {
+          this.getOrderByNumber(elem.id).then(() => {
             this.getOrderDataById = this.buildOrderFromApiResult(this.orderDataByNumber);
             this.expenseTableData[index].getOrderDataById = this.getOrderDataById;
             this.getOrderDataById = {};
@@ -253,7 +253,7 @@ export default {
     //从服务器获取该number信息
     // getOrderFromSverVer(number) {
     //   console.log("getOrderFromSverVer ----------- " + number);
-    //   if (this.isGetOrederFlag.hasOwnProperty(number) === false) {  //说明没有提交过SerVer,下一步需要提交SerVer,getOrder 
+    //   if (this.isGetOrederFlag.hasOwnProperty(number) === false) {  //说明没有提交过SerVer,下一步需要提交SerVer,getOrder
     //     this.getOrderByNumber(number).then(() => {
     //       this.getOrderDataById = this.buildOrderFromApiResult(this.orderDataByNumber);
     //       let num = this.expenseTableData.findIndex(function (value, index, arr) {
@@ -282,7 +282,7 @@ export default {
         console.log("得到了会员得订单数据了!");
       });
     },
-    //鼠标进入表格时事件处理函数 
+    //鼠标进入表格时事件处理函数
     // mouseEnter(row, column, cell, event) {
     //   if (this.findIsOpenFlag(row.number) === false) {  //意思是没有找到,前一个状态时没有展开,刚刚被展开,故需要和SevVer交互
     //     this.isOpenFlag[row.number] = true; //展开了,打开了
@@ -299,7 +299,7 @@ export default {
       if (columnIndex === 0) {
         let group = row.group
         let i  = group.lineItems.findIndex( (item)=>{
-           return row.id == item.id 
+           return row.id == item.id
         } )
         // console.log("group",group,i)
         if ( i === 0) {

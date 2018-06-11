@@ -31,11 +31,26 @@
         right: 0;
         padding: 16px;
         border: 1px #efefef solid;
+        .head{
+          font-size: 15px;
+          padding:  6px;
+          border-bottom: 1px #efefef solid;
+        }
         .group-container {
             border-bottom: 1px solid #ebeef5;
         }
         table tr {
             vertical-align: top;
+        }
+
+        .item-image{
+          float: left;
+          width: 25%;
+          padding: 8px;
+          img{
+            width: 100%;
+            border-bottom: 1px #efefef solid;
+          }
         }
         .actions {
             position: absolute;
@@ -116,39 +131,43 @@
           </div>
         </div>
         <div class="item-detail">
-          <div class="line-item-groups-container" v-if="currentItem">
-            <table class="bitemed" style="width: 100%">
-              <tr>
-                <td> 客户姓名 </td>
-                <td> <span>{{ currentItem.userName }}</span></td>
-              </tr>
-              <tr>
-                <td> 店铺名称 </td>
-                <td> <span>{{ currentItem.storeName }}</span></td>
-              </tr>
-            </table>
-            <table style="width: 100%">
-              <tr>
-                <td> 物品编号 </td>
-                <td> {{currentItem.number}} </td>
-                <td> 状态 </td>
-                <td> {{currentItem.state}} </td>
-              </tr>
-              <tr>
-                <td> 服务项目 </td>
-                <td>
-                  <div v-for="lineItem in currentItem.lineItems">
-                    <span>{{ lineItem.cname }}</span>
-                    <span>{{ lineItem.price }}</span>
-                    <span>{{ lineItem.state }}</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>物品图片</td>
-                <td> line item group images </td>
-              </tr>
-            </table>
+          <div class="line-item-groups-container" v-if="orderDetail">
+
+            <div>
+              <div class="head"> 客户信息</div>
+              <div>
+                <table> <tr> <th>客户电话 </th><td> {{ currentItem.userName }} </td> </tr> </table>
+              </div>
+
+            </div>
+
+            <div>
+              <div class="head"> 订单信息 {{orderDetail.number}} </div>
+
+              <div>
+                <div class="head"> 物品  {{currentItem.number}} {{currentItem.state}}  </div>
+                <table style="width: 100%">
+                  <tr>
+                    <td>服务项目</td>
+                    <td>项目备注</td>
+                    <td>状态</td>
+                  </tr>
+                  <template v-for="lineItem in currentItem.lineItems">
+                    <tr>
+                          <td>{{ lineItem.cname }}</td>
+                          <td>{{ lineItem.memo }}</td>
+                          <td>{{ lineItem.state }}</td>
+                    </tr>
+                  </template>
+                </table>
+
+                <div class="head"> 物品图片</div>
+                <div>
+                  <div class="item-image"> <img src="../assets/img/activity.png" alt="图片1"/> </div>
+                  <div class="item-image"> <img src="../assets/img/activity.png" alt="图片2"/> </div>
+                </div>
+              </div>
+            </div>
 
             <div class="actions">
               <el-button @click="ChangeCurrentItemState(false)">删除</el-button>
@@ -166,6 +185,7 @@
 
 <script>
 import {
+  getOrder,
   findLineItemGroups,
   evolveLineItemGroups
 }
@@ -191,6 +211,7 @@ export default {
       /* 去除直接传 0 产生的 需要参数为string的警告 */
       itemList: [],
       currentItem: null,
+      orderDetail: null,
       itemDetailList: [],
       perPage: 12,
       count: 0,
@@ -296,16 +317,24 @@ export default {
       console.log("queryParams", queryParams, this.userInfo)
       const itemsResult = await findLineItemGroups(queryParams)
       this.count = itemsResult.total_count
-      this.itemList.splice(0, this.itemList.length, ...this.buildLineItemGroups(itemsResult))
+      this.itemList = this.buildLineItemGroups(itemsResult)
+      //this.itemList.splice(0, this.itemList.length, ...this.buildLineItemGroups(itemsResult))
 
     },
-    handleCurrentRowChange(row) {
+    async handleCurrentRowChange(row) {
       if (row) {
         this.currentItem = row
         console.log('handleCurrentRowChange', row, this.currentItem)
+        if( row.orderDetail == null){
+          const orderResult = await getOrder(row.orderId)
+          row.orderDetail = this.buildOrderFromApiResult( orderResult )
+
+          this.orderDetail = row.orderDetail
+        }
 
       } else {
         this.currentItem = null
+        this.orderDetail  = null
       }
     }
   }

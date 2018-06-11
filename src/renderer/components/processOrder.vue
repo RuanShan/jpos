@@ -299,7 +299,7 @@ export default {
                   if (detailIndex < 0) {
                       //const storeInfo = await getStore(row.store_id)
                       //const userInfo = await getUserInfo(row.user_id)
-                      const orderResult = await getOrder(row.number)
+                      const orderResult = await getOrder(row.id)
                       const orderDetail = this.buildOrderFromApiResult(orderResult)
                       this.currentOrder = orderDetail
                       this.$nextTick(() => {

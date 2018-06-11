@@ -174,7 +174,7 @@
           //如果当前行没有订单详细数据，则加载 lineItems
           if (!row.lineItemGroups ) {
             //const userInfo = await getUserInfo(row.user_id)
-            const orderResult = await getOrder(row.number)
+            const orderResult = await getOrder(row.id)
             const orderDetail = this.buildOrderFromApiResult( orderResult )
 
             let orderIndex = this.orderList.indexOf(row)
