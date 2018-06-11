@@ -16,11 +16,14 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-#app, .wrapper, body, html{
+#app,
+.wrapper,
+body,
+html {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -31,7 +34,7 @@ export default {
   background-color: #eff2f7;
   min-height: 100%;
 }
-.container{
+.container {
   padding: 6px;
 }
 .clearfix:before,
@@ -44,11 +47,17 @@ export default {
   clear: both;
 }
 
-#expensecalendartable td{
-  padding:  0;
+#expensecalendartable td {
+  padding: 0;
 }
 
-#expensecalendartable th{
-  padding:  0;
+#expensecalendartable th {
+  padding: 0;
+}
+
+#recharge .el-dialog__title {
+  font-size: 20px;
+  color: #ef0a6b;
+  font-weight: bold;
 }
 </style>

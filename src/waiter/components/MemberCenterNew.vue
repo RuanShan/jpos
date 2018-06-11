@@ -126,7 +126,7 @@
                                 <el-col :span="8">
                                   <div class="grid-content bg-purple-light" style="text-align:center;">
                                     <div>余&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额</div>
-                                    <div>¥ {{currentValue}}</div>
+                                    <div>¥ {{item.currentValue}}</div>
                                     <div>
                                       <el-button type="primary" size="mini" @click="cardRecharge">充&nbsp;&nbsp;值</el-button>
                                     </div>
@@ -161,29 +161,29 @@
                         <table border="1" cellspacing="0" width="100%" style="margin-top: 25px;">
                           <tr>
                             <td width="25%">会员卡类型</td>
-                            <td width="25%"></td>
+                            <td width="25%">{{item.cardType}}</td>
                             <td width="25%">会员卡级别</td>
-                            <td width="25%"></td>
+                            <td width="25%">{{item.cardGrade}}</td>
                           </tr>
                           <tr>
                             <td width="25%">会员卡当前状态</td>
-                            <td width="25%"></td>
+                            <td width="25%">{{item.cardStateNow}}</td>
                             <td width="25%">开卡日期</td>
-                            <td width="25%"></td>
+                            <td width="25%">{{item.createTime}}</td>
                           </tr>
                           <tr>
                             <td>有效期限</td>
-                            <td></td>
+                            <td>{{item.indate}}</td>
                             <td>到期时间</td>
-                            <td></td>
+                            <td>{{item.stopTime}}</td>
                           </tr>
                           <tr>
                             <td>开卡地址</td>
-                            <td colspan="3"></td>
+                            <td colspan="3">{{item.openCardSite}}</td>
                           </tr>
                           <tr>
                             <td>备注</td>
-                            <td colspan="3"></td>
+                            <td colspan="3">{{item.memo}}</td>
                           </tr>
                         </table>
                         <!-- 在tab中的卡详情表 END -->
@@ -225,7 +225,7 @@
 
       </el-dialog>
     </div>
-    <!-- <member-card-recharge  :member-card-recharge-window-visible="memberCardRechargeWindowVisible" @offCardRecharge="onOff($event)"></member-card-recharge> -->
+    <member-card-recharge v-if="displayRecharge" :member-card-recharge-window-visible="memberCardRechargeWindowVisible" :thisCardData="thisCardData" :customer-data="customerData" @onOff="onOff($event)"></member-card-recharge>
   </div>
 </template>
 
@@ -247,9 +247,10 @@ export default {
     return {
       top: "0", /* 去除直接传 0 产生的 需要参数为string的警告 */
       memberCardRechargeWindowVisible:false,
-      tabsNumber: "",
+      tabsNumber: "",//每次点击别的tab是tabsNumber动态变化
       currentValue: "", //每张卡的余额
       cards: [], //顾客会员卡数组
+      thisCardData:{},//选中的当前会员卡的数据
       displayRecharge:false,  //会员卡充值界面是否显示标志位
     };
   },
@@ -269,11 +270,21 @@ export default {
         let obj = new Object();
         obj.title = "卡号: " + index.code;
         obj.name = index.code;
+        obj.code = index.code;
+        obj.currentValue = index.current_value;
+        obj.cardGrade = index.card_grade;
+        obj.cardType = index.card_type;
+        obj.cardStateNow = index.card_state_now;
+        obj.createTime = index.create_time;
+        obj.indate = index.indate;
+        obj.stopTime = index.stop_time;
+        obj.openCardSite = index.open_card_site;
+        obj.memo = index.memo;
         obj.currentValue = index.current_value;
         this.cards.push(obj);
       }
       this.tabsNumber = this.cards[0].name;   //openWindos后选中第一个tabs,之后每次点击别的tab是tabsNumber动态变化
-      this.currentValue = this.cards[0].currentValue;  //卡余额,openWindos后显示第一张卡余额,之后每次在点击tab事件中改变
+      // this.currentValue = this.cards[0].currentValue;  //卡余额,openWindos后显示第一张卡余额,之后每次在点击tab事件中改变
     },
     //点击标签的事件处理函数-----
     tabHandleClick(tab, event) {
@@ -282,8 +293,12 @@ export default {
     //当前卡的充值按钮事件处理函数-----调到充值界面
     cardRecharge() {
       this.displayRecharge = true;
-       this.memberCardRechargeWindowVisible = true;
-      console.log("应该打开充值窗口了");
+      this.memberCardRechargeWindowVisible = true;
+      let which = this.cards.findIndex((values,index,arr) =>{ //找第几个对象中包含当前的tabsNumber,也就是当前是当前会员的哪一张会员卡
+        return values.code == this.tabsNumber;
+      });
+      this.thisCardData = this.cards[which];
+      // console.log("应该打开充值窗口了");
     },
     //当前卡的充值记录事件处理函数-----调到充值界面
     cardRechargeRecord() {
@@ -323,9 +338,10 @@ export default {
 
     },
     //会员卡充值组件传过来的发射事件
-    offCardRecharge(flage){
-      this.displayRecharge = false;
-      this.memberCardRechargeWindowVisible = false;
+    onOff(flage){
+      console.log("接收到了发射过来的消息了**********");
+      this.displayRecharge = flage;
+      this.memberCardRechargeWindowVisible = flage;
     }
   }
 };
