@@ -262,35 +262,36 @@ export var apiResultMixin = {
 
     //顾客数据整理
     buildCustomerInfo: function(customerResult) {
-      const customer = {
-        address: "",
-        birth: "",
-        displayBirth: "",
-        cards: [],
-        createdAt: "",
-        displayCreatedAt: "",
-        email: "",
-        id: 0,
-        memo: "",
-        mobile: "",
-        updatedAt: "",
-        displayUpdatedAt: "",
-        userName: ""
-      };
-      customer.address = customerResult.address;
-      customer.birth = moment(customerResult.birth);
-      customer.displayBirth = customer.birth.format('MM-DD');
-      customer.cards = customerResult.cards;
-      customer.createdAt = moment(customerResult.created_at);
-      customer.displayCreatedAt = customer.createdAt.format('YYYY-MM-DD , hh:mm:ss');
-      customer.email = customerResult.email;
-      customer.id = customerResult.id;
-      customer.memo = customerResult.memo;
-      customer.mobile = customerResult.mobile;
-      customer.updatedAt = moment(customerResult.updated_at);
-      customer.displayUpdatedAt = customer.updatedAt.format('YYYY-MM-DD , hh:mm:ss');
-      customer.userName = customerResult.username;
-      return customer;
+        const customer = {
+            address: "",
+            birth: "",
+            displayBirth: "",
+            cards: [],
+            createdAt: "",
+            displayCreatedAt: "",
+            email: "",
+            id: 0,
+            memo: "",
+            mobile: "",
+            updatedAt: "",
+            displayUpdatedAt: "",
+            userName: ""
+        };
+        customer.address = customerResult.address;
+        customer.birth = moment(customerResult.birth);
+        customer.displayBirth = customer.birth.format('MM-DD');
+        customer.cards = customerResult.cards;
+        customer.createdAt = moment(customerResult.created_at);
+        customer.displayCreatedAt = customer.createdAt.format('YYYY-MM-DD , hh:mm:ss');
+        customer.email = customerResult.email;
+        customer.id = customerResult.id;
+        customer.memo = customerResult.memo;
+        customer.mobile = customerResult.mobile;
+        customer.updatedAt = moment(customerResult.updated_at);
+        customer.displayUpdatedAt = customer.updatedAt.format('YYYY-MM-DD , hh:mm:ss');
+        customer.userName = customerResult.username;
+        customer.sex = customerResult.sex;
+        return customer;
     },
 
     buildCustomers: function(customersResult) {
