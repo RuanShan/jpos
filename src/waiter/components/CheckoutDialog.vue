@@ -55,6 +55,9 @@
         .align-right input{
           text-align: right;
         }
+        .el-form-item__content{
+          margin-right: 50px;
+        }
       }
       table{
         width: 440px;
@@ -63,20 +66,19 @@
           width: 8em;
         }
       }
-      .money{
-        span{
-          display: inline-block;
-          padding: 0 15px;
-          line-height: 40px;
-        }
-
+    }
+    .payment-card{
+      .el-input-group__prepend{
+        width: 110px;
+      }
+      .card-extra-info{
+        position: absolute;
+        right: 0;
       }
     }
-
     .payment{
-
       .el-select{
-        width: 120px;
+        width: 110px;
       }
       .el-input-group > .el-input__inner {
           text-align: right;
@@ -98,17 +100,26 @@
           <el-input v-model="totalMoney" readonly class="money align-right"></el-input>
         </el-form-item>
 
-        <el-form-item label="会员卡支付" v-show="isShowPrepaidCard">
-          <el-input v-model="formData.prepaidCardAmount" placeholder="" class="money align-right"></el-input>
+        <el-form-item label="会员卡支付" v-if="isShowPrepaidCard">
+
+          <el-input v-model="formData.prepaidCardAmount" placeholder="" class="payment-card money align-right">
+            <template slot="prepend">
+              <div>
+                <p>{{availablePrepaidCard.code}}</p>
+                <p>{{availablePrepaidCard.code}}</p>
+              </div>
+            </template>
+          </el-input>
+          <div class=" card-extra-info"> extra </div>
         </el-form-item>
 
-        <el-form-item label="会员支付密码" v-show="isShowPrepaidCard">
+        <el-form-item label="会员支付密码" v-if="false">
           <el-input v-model="formData.paymentPassword" placeholder="" class="money align-right" type="password"></el-input>
         </el-form-item>
 
         <el-form-item label="支付方式"  class="payment">
           <el-input v-model="formData.paymentAmount" placeholder="" class="money">
-            <el-select v-model="selectPaymentMethodId" placeholder=""  slot="prepend" >
+            <el-select v-model="formData.selectPaymentMethodId" placeholder=""  slot="prepend" >
               <el-option v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
@@ -175,7 +186,7 @@ export default {
     ...mapState(["userInfo", "cartList"]),
     activePaymentMethods: function(){
       return this.paymentMethodList.filter((pm)=>{
-        return pm.active
+        return pm.posable
       })
     },
     // 订单总价
@@ -188,7 +199,7 @@ export default {
     availablePrepaidCard: function(){
       let card = this.customer.cards.find((card)=>{
         // 充值卡 && 可用状态 && 余额>0
-        return card.style == 'prepaid' && card.status == 'enabled' && card.currentValue > 0
+        return card.style == 'prepaid' && card.status == 'enabled' && card.amountRemaining > 0
       })
       return card
     },
@@ -200,62 +211,60 @@ export default {
     },
     prepaidCardPaymentMethod: function(){
       return this.paymentMethodList.find((pm)=>{
-        return pm.name.include('PrepaidCard')
+        return (pm.name.indexOf('PrepaidCard') >= 0 )
       })
     },
     //结账请求参数
     checkoutParams: function(){
-      //"payment_source": {
+      //"payment_source": {this.availablePrepaidCard.id
       //  "1": {
       //    "number": "4111111111111111",
       //  }
       //}
-      let paymentSource = {}
       let paymentsAttributes = []
       if( this.availablePrepaidCard){
         if( this.prepaidCardPaymentMethod ){
-          paymentsAttributes.push( { payment_method_id: this.prepaidCardPaymentMethod.id } )
-          paymentSource[this.prepaidCardPaymentMethod.id] = { amount: 10 }
+          paymentsAttributes.push( { source_id: this.availablePrepaidCard.id, source_type: "Spree::Card",
+            amount: this.formData.prepaidCardAmount, payment_method_id: this.prepaidCardPaymentMethod.id } )
         }
       }
       //需要其他支付方式
       if( this.orderRemainder > 0 ){
         paymentsAttributes.push( { payment_method_id: this.selectPaymentMethodId } )
-        paymentSource[this.selectPaymentMethodId] = { amount: this.orderRemainder }
       }
 
-      let order =  { user_id: this.customer.id,  payments_attributes: paymentsAttributes }
-      order.line_items = this.orderList.map((item)=>{ return { quantity: 1, variant_id: item.variantId, cname: item.cname, group_position: item.groupPosition}})
-
-      return { order: order, payment_source: paymentSource }
+      let order =  { user_id: this.customer.id,  payments: paymentsAttributes }
+      order.line_items = this.orderItemList.map((item)=>{ return { quantity: 1, variant_id: item.variantId, cname: item.cname, group_position: item.groupPosition}})
+console.log( " this.checkoutParams", order)
+      return { order: order }
     },
     // 除了会员支付方式之外，其他支付方式余额
     orderRemainder() {
       let remainder = this.totalMoney
-      return remainder - this.prepaidCardAmount - this.paymentAmount
+      return remainder - this.formData.prepaidCardAmount - this.formData.paymentAmount
     }
   },
   methods: {
-    handleDialogOpened(){
+    async handleDialogOpened(){
+      await this.getPaymentMethods()
+      this.formData.paymentAmount = 0
+      this.formData.prepaidCardAmount = 0
 
-      if( !this.paymentMethods ){
-        this.getPaymentMethods().then(()=>{
-          this.paymentMethodList = this.paymentMethods
-          if( this.paymentMethodList.length>0){
-            this.selectPaymentMethodId = this.paymentMethodList[0].id
-          }
-        })
+      this.paymentMethodList = this.paymentMethods
+      if( this.paymentMethodList.length>0){
+        this.selectPaymentMethodId = this.paymentMethodList[0].id
       }
+
       let card = this.availablePrepaidCard
       if( card != null){
         //会员卡的余额是否够用
-        this.prepaidCardAmount = ( card.currentValue >= this.totalPrice ? this.totalPrice : (this.totalPrice - card.currentValue) )
+        this.formData.prepaidCardAmount = ( card.amountRemaining >= this.totalPrice ? this.totalPrice : (this.totalPrice - card.amountRemaining) )
       }
       if( this.orderRemainder>0){
-        this.paymentAmount = this.orderRemainder
+        this.formData.paymentAmount = this.orderRemainder
       }
 
-      console.log( "handleDialogOpened customer=",this.customer )
+      console.log( "handleDialogOpened customer=",this.customer, this.paymentMethodList,this.activePaymentMethods )
     },
     handleDialogClosed() {
       this.paymentList = [];

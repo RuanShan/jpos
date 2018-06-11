@@ -62,7 +62,7 @@
                 </el-form-item>
                 <el-form-item label="付款方式" prop="paymentMethodId" required>
                   <el-select v-model="cardFormData.paymentMethodId" placeholder="请选择支付方式" >
-                    <el-option v-for="item in paymentMethods" :key="item.id" :label="item.name" :value="item.id">
+                    <el-option v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -138,7 +138,7 @@ export default {
     };
 
     return {
-      top: '0', /* 去除直接传 0 产生的 需要参数为string的警告 */
+      paymentMethodList: [      ],
       memberFormData: {
         username: "",
         mobile: "",
@@ -193,24 +193,26 @@ export default {
   computed: {
     isAddingCard: function(){
       return this.cardFormData.code.length > 0
+    },
+    activePaymentMethods: function(){
+      return this.paymentMethodList.filter((pm)=>{
+        return pm.posable
+      })
     }
   },
   methods: {
-    handleOpenDialog(){
+    async handleOpenDialog(){
+      await this.getPaymentMethods()
 
-      if( !this.paymentMethods ){
-        this.getPaymentMethods().then(()=>{
-          if( this.paymentMethods.length > 0){
-            this.cardFormData.paymentMethodId = this.paymentMethods[0].id
-          }
-        })
+      this.paymentMethodList = this.paymentMethods
+      if( this.activePaymentMethods.length > 0){
+        this.cardFormData.paymentMethodId = this.activePaymentMethods[0].id
+
       }
-      if( !this.cardTypes ){
-        this.getCardTypes().then(()=>{
-          if( this.cardTypes.length > 0){
-            this.cardFormData.variantId = this.cardTypes[0].id
-          }
-        })
+      await this.getCardTypes()
+
+      if( this.cardTypes.length > 0){
+        this.cardFormData.variantId = this.cardTypes[0].id
       }
 
       this.$nextTick(function () {
@@ -263,15 +265,14 @@ export default {
         mobile:  this.memberFormData.mobile,
         paymentPassword:  this.memberFormData.paymentPassword,
         address:  this.memberFormData.address,
-        birth:  this.memberFormData.birth
+        birth:  this.memberFormData.birth,
       }
 
       let order = null
       if( this.isAddingCard ){
+        user.cards_attributes= [{ code: this.cardFormData.code, variant_id: this.cardFormData.variantId }]
+
         order = {
-          line_items: [
-            { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1, code: this.cardFormData.code }
-          ],
           payments:[
             { payment_method_id: this.cardFormData.paymentMethodId, amount:this.cardFormData.paymentAmount }
           ]

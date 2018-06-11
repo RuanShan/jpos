@@ -11,7 +11,7 @@
 <script>
 import leftNav from "@/components/LeftNav/LeftNav.vue"
 import headTop from "@/components/headTop.vue";
-import { userDataMixin } from "@/components/userDataMixin"
+import { userDataMixin } from "@/components/mixin/commonDataMixin"
 import { shopDetails } from "@/api/getData";
 
 export default {
@@ -27,18 +27,19 @@ export default {
     headTop
   },
   created() {
-    this.getAdminData().then(res => {
-      console.log("home page created", this.userInfo)
+    this.getCurrentUser()
+  },
+  methods: {
+    async getCurrentUser() {
+      await this.getAdminData()
       if (this.userInfo.id) {
         this.initData();
         this.$bus.$emit('UserInitializedEvent')
 
       } else {
-        this.$router.push("/");
+        this.$router.push("/login");
       }
-    })
-  },
-  methods: {
+    },
     async initData() {
       //获取商铺信息
       this.shopDetailData = await shopDetails(

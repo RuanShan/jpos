@@ -18,10 +18,26 @@ Vue.use(EventBus)
 Vue.config.productionTip = false;
 Vue.use(ElementUI)
 
-
 import VueXeditable from '@onekiloparsec/vue-xeditable'
 import '@onekiloparsec/vue-xeditable/dist/vue-xeditable.min.css'
 Vue.use(VueXeditable)
+
+router.beforeEach(function (to, from, next) {
+    const user = store.state.userInfo;
+    if ( to.name !== "login") {
+        //未登录
+        if (!user.id) {
+            router.push({name: 'login'})
+        }
+    }
+    //已登录的情况再去登录页，跳转至首页
+    if (to.name === 'login') {
+        if (user.id) {
+            router.push({name: 'home'});
+        }
+    }
+    next();
+});
 
 /* eslint-disable no-new */
 new Vue({

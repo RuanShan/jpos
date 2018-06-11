@@ -27,6 +27,18 @@
         .el-transfer-panel {
             width: 40%;
             height: 100%;
+            .el-transfer-panel__body{
+              position: absolute;
+              left: 0;
+              right: 0;
+              top: 40px;
+              bottom: 0;
+              height: auto;
+              overflow-y: auto;
+              .el-transfer-panel__list{
+                height: auto;
+              }
+            }
         }
     }
     .pagination {
@@ -161,7 +173,12 @@ export default {
       })
     },
     orderStateText: function(){
-      return this.getOrderStateText( this.orderState)
+      // '准备发工厂', 在 工厂接收 界面 显示 "工厂待接收"
+      if( this.orderState ==="ready_for_factory" ){
+        return "工厂待接收"
+      }else{
+        return this.getOrderStateText( this.orderState)
+      }
     },
     nextOrderStateText: function(){
       return this.getOrderStateText( this.nextOrderState)

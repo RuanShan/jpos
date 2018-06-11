@@ -29,10 +29,10 @@ const mutations = {
 }
 
 const actions = {
-  async getAdminData({
-    commit
-  }) {
+  async getAdminData(store) {
     try {
+      // 检查是否有cookies  _jpos_session,
+      // 如果没有，说明session过期
       const userResult = await getUserInfo()
 
       if (userResult.id) {
@@ -46,7 +46,7 @@ const actions = {
         user.avatar = userResult.avatar
         user.apiKey = userResult.api_key
         user.name = userResult.username
-        commit('saveAdminInfo', user)
+        store.commit('saveAdminInfo', user)
       } else {
         throw new Error(userResult)
       }
@@ -54,21 +54,30 @@ const actions = {
       console.log('您尚未登陆或者session失效')
     }
   },
-  async getPaymentMethods({commit}){
+  async getPaymentMethods( store ){
+    if( store.state.paymentMethods){
+      return store.state.paymentMethods
+    }
     const result = await getPaymentMethods()
     const list = []
     result.payment_methods.forEach((pm)=>{
-        list.push({id:pm.id, name:pm.name, active: pm.active})
+        list.push({id:pm.id, name:pm.name, active: pm.active, posable: pm.posable})
     })
-    commit('savePaymentMethods', list)
+    
+    store.commit('savePaymentMethods', list)
+    return store.state.paymentMethods
   },
-  async getCardTypes({commit}){
+  async getCardTypes( store ){
+    if( store.state.cardTypes){
+      return store.state.cardTypes
+    }
     const result = await getCardTypes()
     const list = []
     result.products.forEach((obj)=>{
         list.push({id:obj.id, name:obj.name, price: obj.price})
     })
-    commit('saveMemberCardTypes', list)
+    store.commit('saveMemberCardTypes', list)
+    return store.state.cardTypes
   }
 
 }

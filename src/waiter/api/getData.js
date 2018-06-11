@@ -229,7 +229,7 @@ export const getOrderCount = data => fetch('/bos/orders/count', data);
  * 获取订单Detail
  */
 
-export const getOrder = orderNumber => fetch('/api/v1/orders/' + orderNumber)
+export const getOrder = orderNumber => fetch('/api/v1/pos_orders/' + orderNumber)
 
 /**
  * 获取订单Detail

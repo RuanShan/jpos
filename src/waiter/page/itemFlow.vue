@@ -240,7 +240,7 @@
         <div class="step transfer2">
           <div class="linex"> </div>
           <div class="title">
-            <el-button @click="handleTransferProducts('ready_for_factory', 'none')"> 工厂待收货
+            <el-button @click="handleTransferProducts('ready_for_factory', 'processing')"> 工厂待收货
               <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
             </el-button>
           </div>
@@ -339,10 +339,8 @@ export default {
       console.log('on OrderCreatedEvent')
       this.initData()
     })
-    this.$bus.$on('UserInitializedEvent', () => {
-      console.log('on UserInitializedEvent')
-      this.initData()
-    })
+
+    this.initData()
   },
 
   methods: {

@@ -36,7 +36,7 @@
                       <th>消费金额</th><td>{{currentCustomer.normalOrderTotal}}元</td>
                     </tr>
                     <tr ><th>会员卡号</th><td>{{currentCard.code}}</td><th>会员卡类型</th><td>{{currentCard.name}}</td>
-                      <th>会员卡余额</th><td>{{currentCard.currentValue}}</td>
+                      <th>会员卡余额</th><td>{{currentCard.amountRemaining}}</td>
                     </tr>
                   </table>
                 </div>
@@ -149,7 +149,8 @@ import {
 import {
   foodMenu,
   getProducts,
-  findCustomers
+  findCustomers,
+  getCustomer
 } from "@/api/getData";
 import loading from "@/components/common/loading";
 import {
@@ -286,14 +287,14 @@ export default {
   },
   created() {
     this.initData();
-    // this.getAdminData().then(res => {
-    //   console.log("created");
-    //   if (this.userInfo.id) {
-    //     this.initData();
-    //   } else {
-    //     this.$router.push("/");
-    //   }
-    // });
+    //新订单创建以后，需要更新当前选择客户的会员卡余额数据
+    this.$bus.$on('OrderCreatedEvent', () => {
+      getCustomer( this.currentCustomer.id ).then(result=>{
+        const customer = this.buildCustomer( result )
+        this.setCurrentCustomer( customer )
+      })
+    })
+
   },
   mounted: function() {
     //let orderItemListHeight = document.body.clientHeight;

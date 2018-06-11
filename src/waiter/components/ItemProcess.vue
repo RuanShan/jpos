@@ -138,7 +138,7 @@
                 <td> 服务项目 </td>
                 <td>
                   <div v-for="lineItem in currentItem.lineItems">
-                    <span>{{ lineItem.name }}</span>
+                    <span>{{ lineItem.cname }}</span>
                     <span>{{ lineItem.price }}</span>
                     <span>{{ lineItem.state }}</span>
                   </div>
