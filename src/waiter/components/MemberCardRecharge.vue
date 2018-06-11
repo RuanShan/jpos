@@ -128,7 +128,7 @@
               </el-col>
               <el-col :span="6">
                 <div class="grid-content">
-                  <el-button type="info" style="width:100%">退出</el-button>
+                  <el-button type="info" style="width:100%" @click="quitTheWindow">退出</el-button>
                 </div>
               </el-col>
               <el-col :span="2">
@@ -161,17 +161,6 @@ export default {
   data() {
     return {
       top: "0", /* 去除直接传 0 产生的 需要参数为string的警告 */
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
-      formLabelWidth: '120px',
       displayOnOff: "", //显示标志位
       radio: '现金', //支付方式单选按钮默认选择,会根据用户选择动态变化
       inputMoney: "",  //输入充值金额
@@ -189,7 +178,7 @@ export default {
     }
   },
   methods: {
-    //打开窗口时事件处理函数-----把customerData.cards中的id转换成字符串给this.cards
+    //打开窗口时事件处理函数-----
     openWindow() {
       this.displayOnOff = this.memberCardRechargeWindowVisible;
     },
@@ -197,7 +186,7 @@ export default {
     closeTheWindows() {
       this.displayOnOff = false;
       this.$emit("onOff", false); //传给父组件自己被关闭的消息
-      console.log("子组件点击了关闭按钮!!!");
+      // console.log("子组件点击了关闭按钮!!!");
     },
     //改变打印选择状态时触发函数-----
     changePrint(){
@@ -206,6 +195,11 @@ export default {
     //改变支付方式触发函数-----
     changeRechargeWay(){
       console.log(this.radio);
+    },
+    //单价退出按钮时触发的函数-----
+    quitTheWindow(){
+      this.displayOnOff = false;
+      this.$emit("onOff", false); //传给父组件自己被关闭的消息
     }
   }
 };
