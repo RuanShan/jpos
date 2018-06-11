@@ -32,9 +32,7 @@
           <div class="grid-content ">
           </div>
         </el-col>
-
         <el-col :span="22">
-
           <div class="grid-content ">
             <!-- 会员基本信息 START-->
             <div id="basic" style="margin-top: 10px;">
@@ -72,8 +70,9 @@
                   <div class="grid-content bg-purple-light">{{customerData.memo}}</div>
                 </el-col>
               </el-row>
-            </div>
+            </div> 
             <!-- 会员基本信息 END-->
+            
             <!-- 时间选择 START-->
             <fieldset>
               <legend>时间选择</legend>
@@ -82,6 +81,7 @@
               </el-date-picker>
             </fieldset>
             <!-- 时间选择 END-->
+
             <!-- 会员消费表格 START   -->
             <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px" 
                     @expand-change="expandChange"  :expand-row-keys="expendRow" :row-key="row => row.id" > -->
@@ -105,9 +105,7 @@
                       </el-table-column>
                       <el-table-column prop="memo" label="备注">
                       </el-table-column>
-                      
                     </el-table>
-
                 </template>
               </el-table-column>
               <el-table-column label="订单编号" prop="number">
@@ -159,8 +157,6 @@ export default {
   data() {
     return {
       top: "0" /* 去除直接传 0 产生的 需要参数为string的警告 */,
-      memberInfo: "", //会员信息
-      customeBirthday: "",
       pickerOptions2: {
         shortcuts: [
           {
@@ -197,22 +193,10 @@ export default {
       orderDataByNumber: {},  //根据订单号number提交SerVer,返回对应的订单数据
       expenseTableData: [], //主表格数据
       expendRow: [],  //UI需要
-      rowData: {},    //展开的当前行数据
-      expendRowsArry: [],  //已经展开的多行数据
       totalPage: 0,  //分页器显示的总页数
-      number: "",  //订单号
       perPage: 12, //主表每页显示12行
       currentPage: 1,//根据分页器的选择,提交SerVer数据,表示当前是第几页
-      isOpenFlag: {},  //某行是否展开的标志位
-      isGetOrederFlag: {}, //某行是否被getOrder过,标志位
       getOrderDataById: {},  //某行展开后提交SerVer后得到的数据,这样做是为了把已经从SerVer得到的数据保存起来,下次不用再次提交SerVer,减少SerVer交互
-      getOrdersData: [], //凡是展开过的订单数据都存在这里,下次展开就在这里找
-      attachedTableData: [],
-      testrow: {},
-      testcolumn: {},
-      testcell: {},
-      testevent: {},
-
     };
   },
   methods: {
