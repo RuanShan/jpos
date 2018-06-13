@@ -14,8 +14,8 @@ const testPage = r => require.ensure([], () => r(require('@/page/functionalTest'
 const routes = [
   {
     path: '/',
-    name: 'login',
-    component: loginPage
+    name: 'home',
+    component: homePage
   },
   {
     path: '/login',
@@ -25,8 +25,8 @@ const routes = [
   {
     path: '/waiter',
     component: homePage,
-    name: '',
     children: [{
+      name: 'waiter',
       path: '',
       component: posPage,
       meta: []

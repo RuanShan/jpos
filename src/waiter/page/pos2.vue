@@ -108,7 +108,8 @@ import {
 } from "vuex";
 import {
   userDataMixin
-} from "@/components/userDataMixin";
+}
+from '@/components/mixin/commonDataMixin'
 import {
   apiResultMixin
 } from '@/components/apiResultMixin'
@@ -167,21 +168,13 @@ export default {
   },
   created() {
     this.initData();
-    // this.getAdminData().then(res => {
-    //   console.log("created");
-    //   if (this.userInfo.id) {
-    //     this.initData();
-    //   } else {
-    //     this.$router.push("/");
-    //   }
-    // });
+
   },
   mounted: function() {
     //let orderListHeight = document.body.clientHeight;
     //document.getElementById('orderList').style.minHeight = orderListHeight + 'px';
   },
   methods: {
-    ...mapActions(["getAdminData"]),
     async initData() {
 
       //获取商铺食品列表 //获取商铺食品列表

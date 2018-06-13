@@ -32,7 +32,7 @@ export default {
     }
   },
   created(){
-    //this.getAdminData().then(res=>{
+    //this.getCurrentUser().then(res=>{
     //  console.log('created',this.userInfo)
     //  if (!this.userInfo.id) {
     //    this.$router.push('/')
@@ -44,7 +44,7 @@ export default {
     ...mapState(['userInfo'])
   },
   methods: {
-    ...mapActions(['getAdminData']),
+    ...mapActions(['getCurrentUser']),
     async handleCommand (command) {
       if (command == 'home') {
         this.$router.push('/home')

@@ -275,7 +275,7 @@ from '@/api/getData'
 import {
   userDataMixin
 }
-from '@/components/userDataMixin'
+from '@/components/mixin/commonDataMixin'
 
 export default {
   data() {

@@ -87,7 +87,10 @@ export var apiResultMixin = {
           order.extraLineItems.push(lineItem)
         }
       })
-
+      // 订单详细信息里有customer
+      if (orderResult.customer) {
+        order.customer = this.buildCustomer(orderResult.customer)
+      }
       return order
     },
 
@@ -104,39 +107,45 @@ export var apiResultMixin = {
       })
       return orders
     },
+
     buildLineItemGroups: function(itemGroupsResult) {
       let itemGroups = []
       itemGroupsResult.line_item_groups.forEach((item, i) => {
-        let group = {
-          id: item.id,
-          orderId: item.order_id,
-          name: item.name,
-          number: item.number,
-          price: item.price,
-          state: item.state,
-          createdAt: moment(item.created_at),
-          lineItems: []
-        }
-        group.displayCreatedAt = group.createdAt.format('MM-DD HH:mm')
-        group.displayState = this.getOrderStateText(group.state)
-
-        item.line_items.forEach(function(lineItemResult) {
-          const lineItem = {
-            id: lineItemResult.id,
-            group: group,
-            groupNumber: lineItemResult.group_number,
-            worker_id: lineItemResult.worker_id,
-            cname: lineItemResult.cname,
-            price: lineItemResult.price,
-            state: lineItemResult.state,
-            memo: lineItemResult.memo
-          }
-          group.lineItems.push(lineItem)
-        })
-
+        const group = this.buildLineItemGroup( item )
         itemGroups.push(group)
       })
       return itemGroups
+    },
+
+    buildLineItemGroup: function(result) {
+      let item = result
+      let group = {
+        id: item.id,
+        orderId: item.order_id,
+        name: item.name,
+        number: item.number,
+        price: item.price,
+        state: item.state,
+        createdAt: moment(item.created_at),
+        lineItems: []
+      }
+      group.displayCreatedAt = group.createdAt.format('MM-DD HH:mm')
+      group.displayState = this.getOrderStateText(group.state)
+
+      item.line_items.forEach(function(lineItemResult) {
+        const lineItem = {
+          id: lineItemResult.id,
+          group: group,
+          groupNumber: lineItemResult.group_number,
+          worker_id: lineItemResult.worker_id,
+          cname: lineItemResult.cname,
+          price: lineItemResult.price,
+          state: lineItemResult.state,
+          memo: lineItemResult.memo
+        }
+        group.lineItems.push(lineItem)
+      })
+      return group
     },
 
     buildUser: function(userResult) {
@@ -145,8 +154,9 @@ export var apiResultMixin = {
         avatar: 'default.jpg',
         apiKey: ''
       }
+      user.id = userResult.id
       user.storeId = userResult.store_id
-      user.avatar = userResult.avatar
+      //user.avatar = userResult.avatar
       user.apiKey = userResult.api_key
       return user
     },
@@ -207,6 +217,7 @@ export var apiResultMixin = {
       })
       return variant
     },
+
     buildProducts: function(productsResult) {
       const products = productsResult.products.map((productResult) => {
         return this.buildProduct(productResult)
@@ -223,26 +234,31 @@ export var apiResultMixin = {
       user.id = userResult.id
       user.mobile = userResult.mobile
       user.name = userResult.name
+      user.gender = userResult.gender
       user.customerType = userResult.customer_type
       user.normalOrderTotal = parseInt(userResult.normal_order_total)
       user.normalOrderCount = userResult.normal_order_count
       user.cards = []
       // cards:[{"id":1,"user_id":8,"code":"7f9bd55a64254af48694723d4622eabfcd4f5197","current_value":"2000.0","name":"PrepaidCard1000 - Master","discount_percent":null,"discount_amount":null,"product_id":1]
-      userResult.cards.forEach(function(cardResult) {
-        const card = {
-          className: 'Spree::Card',
-          id: cardResult.id,
-          name: cardResult.name,
-          style: cardResult.style, // prepaid 充值卡， counts 次卡
-          amountRemaining: parseInt(cardResult.amount_remaining),
-          discountPercent: parseInt(cardResult.discount_percent),
-          discountAmount: parseInt(cardResult.discount_amount),
-          status: cardResult.status, //enable:可用， disable：不可用
-          code: (cardResult.code.length < 10 ? cardResult.code : cardResult.code.slice(0, 8)), // 显示前8位
-          productId: cardResult.product_id
-        }
-        user.cards.push(card)
-      })
+      // 客户详细信息里，有会员卡信息
+      if (userResult.cards) {
+        userResult.cards.forEach(function(cardResult) {
+          const card = {
+            className: 'Spree::Card',
+            id: cardResult.id,
+            name: cardResult.name,
+            style: cardResult.style, // prepaid 充值卡， counts 次卡
+            amountRemaining: parseInt(cardResult.amount_remaining),
+            discountPercent: parseInt(cardResult.discount_percent),
+            discountAmount: parseInt(cardResult.discount_amount),
+            status: cardResult.status, //enable:可用， disable：不可用
+            code: (cardResult.code.length < 10 ? cardResult.code : cardResult.code.slice(0, 8)), // 显示前8位
+            productId: cardResult.product_id
+          }
+          user.cards.push(card)
+        })
+      }
+      user.displayGender = this.getDisplayGender(user.gender)
 
       return user
     },
@@ -262,36 +278,36 @@ export var apiResultMixin = {
 
     //顾客数据整理
     buildCustomerInfo: function(customerResult) {
-        const customer = {
-            address: "",
-            birth: "",
-            displayBirth: "",
-            cards: [],
-            createdAt: "",
-            displayCreatedAt: "",
-            email: "",
-            id: 0,
-            memo: "",
-            mobile: "",
-            updatedAt: "",
-            displayUpdatedAt: "",
-            userName: ""
-        };
-        customer.address = customerResult.address;
-        customer.birth = moment(customerResult.birth);
-        customer.displayBirth = customer.birth.format('MM-DD');
-        customer.cards = customerResult.cards;
-        customer.createdAt = moment(customerResult.created_at);
-        customer.displayCreatedAt = customer.createdAt.format('YYYY-MM-DD , hh:mm:ss');
-        customer.email = customerResult.email;
-        customer.id = customerResult.id;
-        customer.memo = customerResult.memo;
-        customer.mobile = customerResult.mobile;
-        customer.updatedAt = moment(customerResult.updated_at);
-        customer.displayUpdatedAt = customer.updatedAt.format('YYYY-MM-DD , hh:mm:ss');
-        customer.userName = customerResult.username;
-        customer.sex = customerResult.sex;
-        return customer;
+      const customer = {
+        address: "",
+        birth: "",
+        displayBirth: "",
+        cards: [],
+        createdAt: "",
+        displayCreatedAt: "",
+        email: "",
+        id: 0,
+        memo: "",
+        mobile: "",
+        updatedAt: "",
+        displayUpdatedAt: "",
+        userName: ""
+      };
+      customer.address = customerResult.address;
+      customer.birth = moment(customerResult.birth);
+      customer.displayBirth = customer.birth.format('MM-DD');
+      customer.cards = customerResult.cards;
+      customer.createdAt = moment(customerResult.created_at);
+      customer.displayCreatedAt = customer.createdAt.format('YYYY-MM-DD , hh:mm:ss');
+      customer.email = customerResult.email;
+      customer.id = customerResult.id;
+      customer.memo = customerResult.memo;
+      customer.mobile = customerResult.mobile;
+      customer.updatedAt = moment(customerResult.updated_at);
+      customer.displayUpdatedAt = customer.updatedAt.format('YYYY-MM-DD , hh:mm:ss');
+      customer.userName = customerResult.username;
+      customer.sex = customerResult.sex;
+      return customer;
     },
 
     buildCustomers: function(customersResult) {
@@ -306,6 +322,11 @@ export var apiResultMixin = {
       let timestamp = moment().format("YYMMDDHHmmss")
       return timestamp
     },
+
+    getDisplayGender(gender) {
+      return gender == "male" ? "男" : "女"
+    },
+
     getOrderStateText(state) {
       if (state == "pending") {
         return "新订单"

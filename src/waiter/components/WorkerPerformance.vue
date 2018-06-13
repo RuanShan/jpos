@@ -5,36 +5,21 @@
     .order-list {
         position: absolute;
         top: 80px;
-        bottom: 0;
+        bottom: 50px;
         left: 10%;
         width: 80%;
         padding: 16px;
         border: 1px #efefef solid;
-        .actions {
+        .el-table{
+          height: 100%;
+          .el-table__body-wrapper{
             position: absolute;
-            bottom: 16px;
-            left: 16px;
-            right: 16px;
-            text-align: right;
-        }
-    }
-    .order-detail {
-        position: absolute;
-        width: 0;
-        top: 80px;
-        bottom: 0;
-        right: 0;
-        padding: 16px;
-        border: 1px #efefef solid;
-        .group-container {
-            border-bottom: 1px solid #ebeef5;
-        }
-        .actions {
-            position: absolute;
-            bottom: 16px;
-            left: 16px;
-            right: 16px;
-            text-align: right;
+            top: 50px;
+            bottom: 50px;
+            left: 0;
+            right: 0;
+            overflow-y: auto;
+          }
         }
     }
     table {
@@ -69,12 +54,20 @@
             display: inline-block;
         }
     }
-
+    .actions {
+        position: absolute;
+        bottom: 16px;
+        left: 10%;
+        right: 10%;
+        text-align: right;
+    }
 }
 </style>
 
 <template>
 <div class="worker-performance-container cel-window">
+  <item-scanner-dialog :dialog-visible.sync="scannerDialogVisible" @lineItemGroupsSelected="handleLineItemGroupsSelected"></item-scanner-dialog>
+
   <el-dialog  :visible="computedVisible" @open="handleDialogOpen" :show-close="false" :top="top" :modal="false">
     <div slot="title" class="title-wrap">
       <div class="left back"> <i class="el-icon-back" @click="handleCloseDialog()"></i> </div>
@@ -95,23 +88,21 @@
             <el-option v-for="item in productList" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
+          <el-button @click="handleOpenScannerDialog">开始扫码</el-button>
 
         </div>
-        <div class="filter" style="float:right;">
-          关键字:
-          <el-input label="Keyword" placeholder="请输入物品编号" v-model="filters.keyword" @change="handleKeywordChange"></el-input>
-        </div>
+
       </div>
       <!-- filters end -->
 
       <div class="order-list">
 
-        <el-table ref="lineItemGroupTable" :data="lineItemList" highlight-current-row @current-change="handleCurrentRowChange" @selection-change="handleSelectionChange" :row-key="row => row.number" style="width: 100%">
+        <el-table ref="lineItemsTable" :data="lineItems" highlight-current-row @current-change="handleCurrentRowChange" @selection-change="handleSelectionChange" :row-key="row => row.number" style="width: 100%">
           <el-table-column type="selection" width="55"> </el-table-column>
 
           <el-table-column label="物品编号" prop="groupNumber">
           </el-table-column>
-          <el-table-column label="工作内容" prop="name">
+          <el-table-column label="工作内容" prop="cname">
           </el-table-column>
           <el-table-column label="订单状态" prop="group.state">
           </el-table-column>
@@ -128,28 +119,25 @@
 
         </el-table>
 
-        <div class="actions" v-if="orderState=='pending'">
-          <el-button @click="ChangeCurrentGroupState(true)" type="primary">Receive</el-button>
-        </div>
 
-        <div class="actions" v-if="orderState=='processing'">
-
-          <el-button @click="handleCloseDialog()">关闭窗口</el-button>
-
-          <el-button type="primary" @click="handleFulfillLineItems()">确认工作量</el-button>
-        </div>
       </div>
-
+      <div class="actions" v-if="orderState=='pending'">
+        <el-button @click="ChangeCurrentGroupState(true)" type="primary">Receive</el-button>
+      </div>
+      <div class="actions" v-if="orderState=='processing'">
+        <el-button @click="handleCloseDialog()">关闭窗口</el-button>
+        <el-button type="primary" @click="handleFulfillLineItems()">确认工作量</el-button>
+      </div>
     </div>
   </el-dialog>
 </div>
+
 </template>
 
 <script>
 import {
-  getProducts,
+  getSellingServices,
   findUsers,
-  findLineItemGroups,
   fulfillLineItems,
   findOrderByGroupNumber
 }
@@ -167,6 +155,8 @@ import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
 
+import ItemScannerDialog  from '@/components/ItemScannerDialog.vue'
+
 import _ from 'lodash'
 
 export default {
@@ -178,8 +168,8 @@ export default {
       currentGroup: null, // a order may have several line_item_groups
       currentWorkerId: null,
       currentProductIds: [],
-      lineItemList: [],
-      lineItemGroupList: [],
+      lineItems: [],
+      lineItemGroups: [],
       workerList: [],
       productList: [],
       filters: {
@@ -188,9 +178,11 @@ export default {
         lineItemGroupState: '',
       },
       multipleSelection: [],
+      scannerDialogVisible: false
     }
   },
   mixins: [DialogMixin, userDataMixin, orderDataMixin, apiResultMixin],
+  components: { 'item-scanner-dialog': ItemScannerDialog},
   props: ['dialogVisible', 'orderState', 'orderCounts'],
   created() {
 
@@ -199,7 +191,6 @@ export default {
     computedVisible: function() {
       return this.dialogVisible
     }
-
   },
   methods: {
     initData() {
@@ -215,25 +206,17 @@ export default {
           this.currentWorkerId = this.workerList[0].id
         }
       })
-      getProducts().then((res) => {
+      getSellingServices().then((res) => {
         this.productList = res.products
       })
 
-      let groupQueryParams = {
-        q: {
-          state_eq: "processing"
-        }
-      }
-      findLineItemGroups(groupQueryParams).then((res) => {
-
-        this.count = res.total_count
-        this.lineItemGroupList.splice(0, 0, ...this.buildLineItemGroups(res))
-        console.log("computedLineItems", this.computedLineItems)
-        this.lineItemList = _.flatten(this.lineItemGroupList.map((item) => {
-          return item.lineItems
-        }))
-      })
-
+      //let groupQueryParams = {
+      //  q: {
+      //    state_eq: "processing"
+      //  }
+      //}
+      this.lineItemGroups = []
+      this.lineItems = []
     },
     handleFulfillLineItems(forward = true) {
       let lineItemIds = this.multipleSelection.map((lineItem) => lineItem.id)
@@ -268,7 +251,11 @@ export default {
       console.log('handleFulfillLineItems', queryParams)
       const response = await fulfillLineItems(queryParams)
       if (response.count > 0) {
-        this.handleDiscardSelection()
+        this.lineItems.forEach((item)=>{
+          item.worker_id = this.currentWorkerId
+        })
+        //this.handleDiscardSelection()
+
         this.$emit('order-state-changed')
       }
     },
@@ -279,7 +266,7 @@ export default {
     },
     handleDialogOpen() {
 
-      this.lineItemGroupList = []
+      this.lineItemGroups = []
       this.initData()
       console.log('handleDialogOpen yeah')
     },
@@ -295,11 +282,11 @@ export default {
     },
     handleDiscardSelection() {
       console.log("1handleDiscardSelection=", this.multipleSelection)
-      _.remove(this.lineItemList, (item) => {
+      _.remove(this.lineItems, (item) => {
         return this.multipleSelection.includes(item)
       })
-      this.$refs.lineItemGroupTable.clearSelection();
-      this.$refs.lineItemGroupTable.setCurrentRow();
+      this.$refs.lineItemsTable.clearSelection();
+      this.$refs.lineItemsTable.setCurrentRow();
       console.log("2handleDiscardSelection=", this.multipleSelection)
     },
     async handleCurrentRowChange(row) {
@@ -326,9 +313,9 @@ export default {
         this.currentGroup = this.currentOrder.lineItemGroups.find((group) => {
           return group.number == number
         })
-        // not find in this.lineItemGroupList, add it
-        if (!this.lineItemGroupList.includes(this.currentGroup)) {
-          this.lineItemGroupList.push(this.currentGroup)
+        // not find in this.lineItemGroups, add it
+        if (!this.lineItemGroups.includes(this.currentGroup)) {
+          this.lineItemGroups.push(this.currentGroup)
         }
 
       } else {
@@ -342,12 +329,19 @@ export default {
         //this.orderDetail.find
         this.$nextTick(() => {
           this.orderDetailList.push(this.currentOrder)
-          this.lineItemGroupList.push(this.currentGroup)
+          this.lineItemGroups.push(this.currentGroup)
         })
       }
-
+    },
+    handleOpenScannerDialog(){
+      this.scannerDialogVisible = true
+    },
+    handleLineItemGroupsSelected( lineItemGroups ){
+      this.lineItemGroups = lineItemGroups
+      this.lineItems = _.flatten(this.lineItemGroups.map((group) => {
+          return group.lineItems
+      }))
     }
-
   }
 }
 </script>

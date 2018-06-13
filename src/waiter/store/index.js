@@ -17,7 +17,14 @@ const state = {
 }
 
 const mutations = {
-  saveAdminInfo(state, userInfo) {
+  resetUser(state){
+    state.userInfo = {
+      storeId: 0,
+      avatar: 'default.jpg',
+      apiKey: ''
+    }
+  },
+  saveUser(state, userInfo) {
     state.userInfo = userInfo
   },
   savePaymentMethods( state, newPaymentMethods){
@@ -29,7 +36,7 @@ const mutations = {
 }
 
 const actions = {
-  async getAdminData(store) {
+  async getCurrentUser(store) {
     try {
       // 检查是否有cookies  _jpos_session,
       // 如果没有，说明session过期
@@ -46,7 +53,7 @@ const actions = {
         user.avatar = userResult.avatar
         user.apiKey = userResult.api_key
         user.name = userResult.username
-        store.commit('saveAdminInfo', user)
+        store.commit('saveUser', user)
       } else {
         throw new Error(userResult)
       }
@@ -63,7 +70,7 @@ const actions = {
     result.payment_methods.forEach((pm)=>{
         list.push({id:pm.id, name:pm.name, active: pm.active, posable: pm.posable})
     })
-    
+
     store.commit('savePaymentMethods', list)
     return store.state.paymentMethods
   },

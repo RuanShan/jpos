@@ -31,6 +31,14 @@
         right: 0;
         padding: 16px;
         border: 1px #efefef solid;
+        .line-item-groups-container{
+          position: absolute;
+          top: 0;
+          bottom: 50px;
+          left: 0;
+          right: 0;
+          overflow-y: auto;
+        }
         .head{
           font-size: 15px;
           padding:  6px;
@@ -136,7 +144,17 @@
             <div>
               <div class="head"> 客户信息</div>
               <div>
-                <table> <tr> <th>客户电话 </th><td> {{ currentItem.userName }} </td> </tr> </table>
+                <table> <tr>
+                  <th>客户电话 </th><td> {{ orderDetail.customer.mobile }} </td>
+                  <th>客户姓名 </th><td> {{ orderDetail.customer.name }} </td>
+                  <th>客户类型 </th><td> {{ orderDetail.customer.displayGender }} </td>
+                 </tr>
+                 <tr>
+                   <th>会员卡号 </th><td> {{ orderDetail.customer.mobile }} </td>
+                   <th>会员卡类型 </th><td> {{ orderDetail.customer.name }} </td>
+                   <th>会员卡余额 </th><td> {{ orderDetail.customer.displayGender }} </td>
+                  </tr>
+               </table>
               </div>
 
             </div>
@@ -148,13 +166,15 @@
                 <div class="head"> 物品  {{currentItem.number}} {{currentItem.state}}  </div>
                 <table style="width: 100%">
                   <tr>
+                    <td>序号</td>
                     <td>服务项目</td>
                     <td>项目备注</td>
                     <td>状态</td>
                   </tr>
-                  <template v-for="lineItem in currentItem.lineItems">
+                  <template v-for="(lineItem,index ) in currentItem.lineItems">
                     <tr>
-                          <td>{{ lineItem.cname }}</td>
+                      <td>{{ index+1 }}</td>
+                      <td>{{ lineItem.cname }}</td>
                           <td>{{ lineItem.memo }}</td>
                           <td>{{ lineItem.state }}</td>
                     </tr>
@@ -162,21 +182,20 @@
                 </table>
 
                 <div class="head"> 物品图片</div>
-                <div>
+                <div class="clear">
                   <div class="item-image"> <img src="../assets/img/activity.png" alt="图片1"/> </div>
                   <div class="item-image"> <img src="../assets/img/activity.png" alt="图片2"/> </div>
                 </div>
               </div>
             </div>
 
-            <div class="actions">
-              <el-button @click="ChangeCurrentItemState(false)">删除</el-button>
-              <el-button @click="ChangeCurrentItemState(false)">编辑</el-button>
-              <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
-              <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button>
-            </div>
           </div>
-
+          <div class="actions">
+            <el-button @click="ChangeCurrentItemState(false)">删除</el-button>
+            <el-button @click="ChangeCurrentItemState(false)">编辑</el-button>
+            <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
+            <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button>
+          </div>
         </div>
       </div>
     </el-dialog>

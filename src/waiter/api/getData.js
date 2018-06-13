@@ -158,10 +158,17 @@ export const updateResturant = data => fetch('/shopping/updateshop', data, 'POST
 
 export const deleteResturant = restaurant_id => fetch('/shopping/restaurant/' + restaurant_id, {}, 'DELETE');
 
+
 /**
  * 获取食品列表
  */
 export const getProducts = data => fetch('/api/v1/products', data);
+//export const getFoods = data => fetch('/shopping/v2/foods', data);
+
+/**
+ * 获取服务列表
+ */
+export const getSellingServices = data => fetch('/api/v1/selling_services', data);
 //export const getFoods = data => fetch('/shopping/v2/foods', data);
 
 /**
@@ -394,6 +401,11 @@ export const evolveLineItemGroups = (data) => fetch('/api/v1/line_item_groups/al
  */
 
 export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/' + number)
+/**
+ * 获取 LineItemGroup Detail
+ */
+
+export const getLineItemGroupByNumber = number => fetch('/api/v1/line_item_groups/' + number)
 
 /**
  * update LineItem worker_id列表

@@ -137,11 +137,11 @@ import _ from "lodash"
 
 import {
   mapState,
-  mapActions
 } from "vuex";
 import {
   userDataMixin
-} from "@/components/userDataMixin";
+}
+from '@/components/mixin/commonDataMixin'
 import {
   apiResultMixin
 } from '@/components/apiResultMixin'
@@ -301,7 +301,6 @@ export default {
     //document.getElementById('orderItemList').style.minHeight = orderItemListHeight + 'px';
   },
   methods: {
-    ...mapActions(["getAdminData"]),
     async initData() {
       //获取商铺食品列表 //获取商铺食品列表
       let taxonsData = await foodMenu(1);

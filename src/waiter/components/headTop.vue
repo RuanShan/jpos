@@ -42,6 +42,7 @@ export default {
     }
   },
   methods: {
+
     async handleCommand (command) {
       if (command == 'home') {
         this.$router.push('/manage')
@@ -52,7 +53,7 @@ export default {
             type: 'success',
             message: '退出成功'
           })
-          this.$router.push('/')
+          this.$store.commit("resetUser")
         } else {
           this.$message({
             type: 'error',

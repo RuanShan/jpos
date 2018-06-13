@@ -111,14 +111,14 @@ export default {
         mounted() {
             this.showLogin = true
             if (!this.userInfo.id) {
-                this.getAdminData()
+                this.getCurrentUser()
             }
         },
         computed: {
             ...mapState(['userInfo'])
         },
         methods: {
-            ...mapActions(['getAdminData']),
+            ...mapActions(['getCurrentUser']),
                 async submitForm(formName) {
                     this.$refs[formName].validate(async(valid) => {
                         if (valid) {

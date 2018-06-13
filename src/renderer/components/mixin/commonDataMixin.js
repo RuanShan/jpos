@@ -7,7 +7,7 @@ export var userDataMixin = {
     ]),
   },
   methods: {
-    ...mapActions(['getAdminData']),
+    ...mapActions(['getCurrentUser']),
 
   }
 }
