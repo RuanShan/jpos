@@ -29,10 +29,10 @@
         <!-- <el-button type="danger" @click="test()">主要按钮</el-button> -->
         <el-row>
           <el-col :span="1">
-            <div class="grid-content bg-purple-light"></div>
+            <div class="grid-content"></div>
           </el-col>
           <el-col :span="22">
-            <div class="grid-content bg-purple-light">
+            <div class="grid-content">
               <el-row>
                 <el-col :span="7">
                   <div class="grid-content bg-purple" style="margin-top: 10px;">
@@ -112,16 +112,16 @@
                   </div>
                 </el-col>
                 <el-col :span="17">
-                  <div class="grid-content bg-purple-light" style="margin-top: 10px;">
+                  <div class="grid-content " style="margin-top: 10px;">
                     <el-button type="danger" size="mini" @click="addCard" style="float: right;z-index: 999;position: relative;">添&nbsp;&nbsp;加&nbsp;&nbsp;会&nbsp;&nbsp;员&nbsp;&nbsp;卡</el-button>
                     <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick">
                       <el-tab-pane v-for="(item) in cards" :key="item.name" :label="item.title" :name="item.name">
                         <el-row>
                           <el-col :span="4">
-                            <div class="grid-content bg-purple"></div>
+                            <div class="grid-content "></div>
                           </el-col>
                           <el-col :span="16" id="basic">
-                            <div class="grid-content bg-purple-light">
+                            <div class="grid-content ">
                               <el-row>
                                 <el-col :span="8">
                                   <div class="grid-content bg-purple-light" style="text-align:center;">
@@ -154,7 +154,7 @@
                             </div>
                           </el-col>
                           <el-col :span="4">
-                            <div class="grid-content bg-purple"></div>
+                            <div class="grid-content "></div>
                           </el-col>
                         </el-row>
                         <!-- 在tab中的卡详情表 START -->
@@ -219,7 +219,7 @@
             </div>
           </el-col>
           <el-col :span="1">
-            <div class="grid-content bg-purple"></div>
+            <div class="grid-content "></div>
           </el-col>
         </el-row>
 

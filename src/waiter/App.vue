@@ -54,6 +54,13 @@ html {
 #expensecalendartable th {
   padding: 0;
 }
+#recharge-recored-table td {
+  padding: 0;
+}
+
+#recharge-recored-table th {
+  padding: 0;
+}
 
 #recharge .el-dialog__title {
   font-size: 20px;
