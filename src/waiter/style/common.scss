@@ -139,3 +139,11 @@ html,body{
 .animation_opactiy{
     animation: backOpacity 2s ease-in-out infinite;
 }
+.page-content{
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  right: 0px;
+  bottom: 0px;
+  border-top: 1px solid #d3dce6;
+}

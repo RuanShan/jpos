@@ -228,7 +228,8 @@ export var apiResultMixin = {
       const user = {
         storeId: 0,
         avatar: 'default.jpg',
-        apiKey: ''
+        apiKey: '',
+        defaultCard: {}
       }
       user.storeId = userResult.store_id
       user.id = userResult.id
@@ -242,7 +243,7 @@ export var apiResultMixin = {
       // cards:[{"id":1,"user_id":8,"code":"7f9bd55a64254af48694723d4622eabfcd4f5197","current_value":"2000.0","name":"PrepaidCard1000 - Master","discount_percent":null,"discount_amount":null,"product_id":1]
       // 客户详细信息里，有会员卡信息
       if (userResult.cards) {
-        userResult.cards.forEach(function(cardResult) {
+        userResult.cards.forEach((cardResult)=>{
           const card = {
             className: 'Spree::Card',
             id: cardResult.id,
@@ -251,13 +252,22 @@ export var apiResultMixin = {
             amountRemaining: parseInt(cardResult.amount_remaining),
             discountPercent: parseInt(cardResult.discount_percent),
             discountAmount: parseInt(cardResult.discount_amount),
-            status: cardResult.status, //enable:可用， disable：不可用
+            status: cardResult.status, //enabled:可用， disabled：不可用
             code: (cardResult.code.length < 10 ? cardResult.code : cardResult.code.slice(0, 8)), // 显示前8位
             productId: cardResult.product_id
           }
+          card.displayStyle = this.getCardDisplayStyle( card.style)
+          card.displayStatus = this.getCardDisplayStatus( card.status)
           user.cards.push(card)
         })
+        // 选择第一个可用的card作为 缺省会员卡
+        user.defaultCard = user.cards.find((card)=>{ return card.status == 'enabled'})
       }
+
+      if( ! user.defaultCard ){
+        user.defaultCard = {}
+      }
+      user.displayType = user.cards.length>0 ? "会员" : "散客"
       user.displayGender = this.getDisplayGender(user.gender)
 
       return user
@@ -326,7 +336,12 @@ export var apiResultMixin = {
     getDisplayGender(gender) {
       return gender == "male" ? "男" : "女"
     },
-
+    getCardDisplayStyle(style) {
+      return style == "prepaid" ? "充值卡" : "次卡" //prepaid 充值卡， counts 次卡
+    },
+    getCardDisplayStatus(status) {
+      return status == "enabled" ? "可用" : "不可用" //prepaid 充值卡， counts 次卡
+    },
     getOrderStateText(state) {
       if (state == "pending") {
         return "新订单"

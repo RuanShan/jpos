@@ -296,10 +296,6 @@ export default {
     })
 
   },
-  mounted: function() {
-    //let orderItemListHeight = document.body.clientHeight;
-    //document.getElementById('orderItemList').style.minHeight = orderItemListHeight + 'px';
-  },
   methods: {
     async initData() {
       //获取商铺食品列表 //获取商铺食品列表
@@ -497,6 +493,10 @@ export default {
 
       })
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    console.log( "pos -> beforeRouteEnter->")
+    next()
   },
   watch: {
     userInfo: function(newValue) {

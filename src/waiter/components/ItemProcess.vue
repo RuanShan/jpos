@@ -11,9 +11,10 @@
         border: 1px #efefef solid;
         .item-list{
           position: absolute;
-          top: 0;
+          top: 8px;
+          left: 8px;
+          right: 8px;
           bottom: 48px;
-          width: 100%;
           overflow-y: auto;
         }
         .pagination {
@@ -24,6 +25,8 @@
         }
     }
     .item-detail {
+        table{ width: 100%; }
+
         position: absolute;
         width: 60%;
         top: 80px;
@@ -33,10 +36,10 @@
         border: 1px #efefef solid;
         .line-item-groups-container{
           position: absolute;
-          top: 0;
+          top: 8px;
           bottom: 50px;
-          left: 0;
-          right: 0;
+          left: 8px;
+          right: 8px;
           overflow-y: auto;
         }
         .head{
@@ -66,6 +69,8 @@
             left: 16px;
             right: 16px;
             text-align: right;
+        }
+        .customer{
         }
     }
     table.bordered {
@@ -141,18 +146,18 @@
         <div class="item-detail">
           <div class="line-item-groups-container" v-if="orderDetail">
 
-            <div>
+            <div class="customer">
               <div class="head"> 客户信息</div>
               <div>
                 <table> <tr>
-                  <th>客户电话 </th><td> {{ orderDetail.customer.mobile }} </td>
-                  <th>客户姓名 </th><td> {{ orderDetail.customer.name }} </td>
-                  <th>客户类型 </th><td> {{ orderDetail.customer.displayGender }} </td>
+                  <th>客户电话 </th><td> {{ orderCustomer.mobile }} </td>
+                  <th>客户姓名 </th><td> {{ orderCustomer.name }} </td>
+                  <th>客户类型 </th><td> {{ orderCustomer.displayType }} </td>
                  </tr>
                  <tr>
-                   <th>会员卡号 </th><td> {{ orderDetail.customer.mobile }} </td>
-                   <th>会员卡类型 </th><td> {{ orderDetail.customer.name }} </td>
-                   <th>会员卡余额 </th><td> {{ orderDetail.customer.displayGender }} </td>
+                   <th>会员卡号 </th><td> {{ orderCustomer.defaultCard.code }} </td>
+                   <th>会员卡类型 </th><td> {{ orderCustomer.defaultCard.name }} </td>
+                   <th>会员卡余额 </th><td> {{ orderCustomer.defaultCard.amountRemaining }} </td>
                   </tr>
                </table>
               </div>
@@ -231,6 +236,7 @@ export default {
       itemList: [],
       currentItem: null,
       orderDetail: null,
+      orderCustomer: {},
       itemDetailList: [],
       perPage: 12,
       count: 0,
@@ -346,10 +352,12 @@ export default {
         console.log('handleCurrentRowChange', row, this.currentItem)
         if( row.orderDetail == null){
           const orderResult = await getOrder(row.orderId)
-          row.orderDetail = this.buildOrderFromApiResult( orderResult )
 
-          this.orderDetail = row.orderDetail
+          row.orderDetail = this.buildOrderFromApiResult( orderResult )
+          console.log('orderDetail', this.orderDetail)
         }
+          this.orderDetail = row.orderDetail
+          this.orderCustomer = this.orderDetail.customer
 
       } else {
         this.currentItem = null

@@ -1,3 +1,18 @@
+<style lang="scss" >
+.add-member-container{
+  .box-card{
+  }
+  .new-member-form{
+    margin: 24px 12px;
+  }
+  .actions{
+    margin: 16px auto;
+    text-align: center;
+
+  }
+}
+</style>
+
 <template>
   <div class="add-member-container cel-window">
     <!-- 会员添加窗口 -> START -->
@@ -7,7 +22,7 @@
         <div> 会员添加</div>
       </div>
 
-      <el-row :gutter="20" type="flex"  justify="center">
+      <el-row type="flex"  justify="center">
         <el-col :span="10">
           <el-form :model="memberFormData" :rules="rules" ref="memberFormData" status-icon label-width="100px" class="new-member-form">
             <el-card class="box-card">
@@ -48,7 +63,7 @@
                 </el-form-item>
                 <el-form-item label="会员卡类型" prop="variantId"  required>
                   <el-select v-model="cardFormData.variantId" placeholder="" >
-                    <el-option v-for="item in cardTypes" :key="item.id" :label="item.name" :value="item.id">
+                    <el-option v-for="item in cardTypeList" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -77,15 +92,15 @@
 
         </el-col>
       </el-row>
-        <el-row :gutter="20" type="flex"  justify="center">
-          <el-col :span="10">
-            <div class="actions">
-              <el-button type="primary" @click="addCustomer">立即创建</el-button>
-              <el-button @click="resetForm('memberFormData')">重置</el-button>
-              <el-button @click="fillIn()" type="danger">测试填入</el-button>
-            </div>
-          </el-col>
-        </el-row>
+      <el-row type="flex"  justify="center">
+        <el-col :span="10">
+          <div class="actions">
+            <el-button type="primary" @click="addCustomer">立即创建</el-button>
+            <el-button @click="resetForm('memberFormData')">重置</el-button>
+            <el-button @click="fillIn()" type="danger">测试填入</el-button>
+          </div>
+        </el-col>
+      </el-row>
 
     </el-dialog>
     <!-- 会员添加窗口 -> END -->
@@ -139,6 +154,7 @@ export default {
 
     return {
       paymentMethodList: [      ],
+      cardTypeList: [],
       memberFormData: {
         username: "",
         mobile: "",
@@ -202,23 +218,23 @@ export default {
   },
   methods: {
     async handleOpenDialog(){
-      await this.getPaymentMethods()
+      console.log( "MemberAdd handleOpenDialog start")
+      this.paymentMethodList = await this.getPaymentMethods()
 
-      this.paymentMethodList = this.paymentMethods
       if( this.activePaymentMethods.length > 0){
         this.cardFormData.paymentMethodId = this.activePaymentMethods[0].id
-
       }
-      await this.getCardTypes()
+      this.cardTypeList = await this.getCardTypes()
 
-      if( this.cardTypes.length > 0){
-        this.cardFormData.variantId = this.cardTypes[0].id
+      if( this.cardTypeList.length > 0){
+        this.cardFormData.variantId = this.cardTypeList[0].id
       }
 
       this.$nextTick(function () {
         this.$refs.memberFormData.resetFields();
         this.$refs.cardFormData.resetFields();
       })
+      console.log( "MemberAdd handleOpenDialog end")
     },
 
     addCustomer(formName) {
@@ -232,11 +248,15 @@ export default {
       Promise.all(validations).then((val)=>{
         let params = this.buildParams() //转换成SerVer需要的数据
         createCustomer(params).then((result)=>{
+          console.log(" created customer1 ",result)
           this.returnData = result
           //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
           if ( this.returnData.id ) {
+            console.log(" created customer2 ",result)
             const customer = this.buildCustomer( this.returnData  )
+            console.log(" created customer3 ",result)
             this.$emit("customerCreatedEvent",customer);
+            console.log(" created customer4 ",result)
             this.handleCloseDialog()
           } else {
             //判读返回的数据中是否有错误
@@ -290,18 +310,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" >
-.add-member-container{
-  .box-card{
-  }
-  .new-member-form{
-    margin: 24px 0 0 0;
-  }
-  .actions{
-    margin: 16px auto;
-    text-align: center;
-
-  }
-}
-</style>

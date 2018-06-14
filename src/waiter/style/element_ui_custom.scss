@@ -34,6 +34,34 @@
   }
 }
 
+/*ele 对话框 非全屏 样式 自定义*/
+.cel-dialog{
+
+  .el-dialog__header{
+    border-bottom: 1px solid #d3dce6;
+  }
+  .el-dialog__title {
+    font-size: 20px;
+    color: #ef0a6b;
+    font-weight: bold;
+  }
+  .el-dialog__footer{
+    border-top: 1px solid #d3dce6;
+  }
+}
+
+.cel-scrollable-table{
+  height: 100%;
+  .el-table__body-wrapper {
+      position: absolute;
+      top: 36px;
+      bottom: 0;
+      overflow-y: auto;
+  }
+  td {  padding: 6px;  }
+  th {  padding: 6px;  }
+}
+
 .el-icon-remove-outline, .el-icon-back, .el-icon-close{
   cursor: pointer;
 }

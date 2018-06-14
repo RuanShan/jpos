@@ -88,7 +88,7 @@
 </style>
 <template>
 <div class="checkout-container">
-  <el-dialog :visible="computedVisible" :show-close="false" @open="handleDialogOpened" @close="handleDialogClosed">
+  <el-dialog :visible="computedVisible" :show-close="false" @open="handleDialogOpened" @close="handleDialogClosed" class="cel-dialog">
     <div slot="title" class="dialog-title-wrap">
       <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
       <div> 结算</div>
