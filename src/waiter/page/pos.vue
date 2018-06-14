@@ -288,7 +288,7 @@ export default {
   created() {
     this.initData();
     //新订单创建以后，需要更新当前选择客户的会员卡余额数据
-    this.$bus.$on('OrderCreatedEvent', () => {
+    this.$bus.$on('order-created-gevent', () => {
       getCustomer( this.currentCustomer.id ).then(result=>{
         const customer = this.buildCustomer( result )
         this.setCurrentCustomer( customer )

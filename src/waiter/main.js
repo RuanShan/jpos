@@ -32,7 +32,6 @@ import {
 Vue.mixin( apiResultMixin )
 
 router.beforeEach(function (to, from, next) {
-    console.log(" to, from ", to, from)
     const user = store.state.userInfo;
     if ( to.name !== "login") {
         //未登录

@@ -1,47 +1,47 @@
 <template >
-  <div>
-    <el-dialog title="提示" :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true" center @close="closeWindow()">
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content bg-purple">
-            <div>
-              <h2>ID:&nbsp;&nbsp;&nbsp;{{memberCenterData.id}}</h2>
-            </div>
-            <div>
-              <h2>姓名:&nbsp;&nbsp;&nbsp;{{memberCenterData.username}}</h2>
-            </div>
-            <div>
-              <h2>电话:&nbsp;&nbsp;&nbsp;{{memberCenterData.mobile}}</h2>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="grid-content bg-purple-light">
-            sadfasdf
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+<div class="member-center-container">
+  <el-dialog title="提示" :visible.sync="dialogVisible" :close-on-press-escape="false" :fullscreen="true" center @close="closeWindow()">
+    <el-row>
+      <el-col :span="12">
+        <div class="grid-content bg-purple">
           <div>
-            124314
-            <el-table :data="tableDataA" style="width: 100%">
-              <el-table-column prop="date" label="日期" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="姓名" width="180">
-              </el-table-column>
-              <el-table-column prop="address" label="地址">
-              </el-table-column>
-            </el-table>
-            8979798
+            <h2>ID:&nbsp;&nbsp;&nbsp;{{memberCenterData.id}}</h2>
           </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="grid-content bg-purple"></div>
-        </el-col>
-      </el-row>
-    </el-dialog>
-  </div>
+          <div>
+            <h2>姓名:&nbsp;&nbsp;&nbsp;{{memberCenterData.username}}</h2>
+          </div>
+          <div>
+            <h2>电话:&nbsp;&nbsp;&nbsp;{{memberCenterData.mobile}}</h2>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="12">
+        <div class="grid-content bg-purple-light">
+          sadfasdf
+        </div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
+        <div>
+          124314
+          <el-table :data="tableDataA" style="width: 100%">
+            <el-table-column prop="date" label="日期" width="180">
+            </el-table-column>
+            <el-table-column prop="name" label="姓名" width="180">
+            </el-table-column>
+            <el-table-column prop="address" label="地址">
+            </el-table-column>
+          </el-table>
+          8979798
+        </div>
+      </el-col>
+      <el-col :span="12">
+        <div class="grid-content bg-purple"></div>
+      </el-col>
+    </el-row>
+  </el-dialog>
+</div>
 </template>
 
 
@@ -50,7 +50,9 @@
 import MemberEdit from "@/components/MemberEdit.vue";
 import MemberRecharge from "@/components/MemberRecharge.vue";
 import MemberTopUpRecord from "@/components/MemberTopUpRecord.vue";
-import { getCustomer } from "@/api/getData";
+import {
+  getCustomer
+} from "@/api/getData";
 
 export default {
   props: ["customerId"],
@@ -66,8 +68,7 @@ export default {
       memberRechargeWindow: false, //充值中心窗口显示标志位
       memberTopUpRecordWindow: false, //查询会员记录窗口标志位
       memberCenterData: {}, //会员中心的会员数据
-      tableDataA: [
-        {
+      tableDataA: [{
           name: "创建时间",
           data: ""
         },
@@ -171,9 +172,11 @@ export default {
 .center {
   text-align: center;
 }
+
 .el-form.MCenter-el-form {
   padding: 0 10%;
 }
+
 el-table__row {
   background-color: oldlace !important;
 }
@@ -181,19 +184,24 @@ el-table__row {
 .el-col {
   border-radius: 4px;
 }
+
 .bg-purple-dark {
   background: #99a9bf;
 }
+
 .bg-purple {
   background: #d3dce6;
 }
+
 .bg-purple-light {
   background: #e5e9f2;
 }
+
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
 }
+
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;

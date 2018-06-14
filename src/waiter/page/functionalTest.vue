@@ -103,16 +103,11 @@ body > .el-container {
 </style>
 
 <template>
-    <!-- <div class="wrap">
-        <div class="content">
-            <div class="center">
-                center，可以自适应浏览器宽度，高度固定。
-            </div>
-            <div class="left">left，宽度高度固定</div>
-            <div class="right">right，宽度高度固定</div>
-        </div>
-    </div> -->
+
     <div style="height:100%">
+      <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
+      <member-center-new :dialog-visible.sync="memberCenterNewWindowVisible" :customer-data="customerData"></member-center-new>
+      <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
         <el-container style="height:100%">
             <el-aside width="50px">Aside</el-aside>
             <el-container style="height:100%;">
@@ -143,17 +138,18 @@ body > .el-container {
                     <el-row>
                         <el-col :span="6">
                             <div class="grid-content bg-purple">
-                                <el-button type="primary" round>主要按钮</el-button>
+                              <el-button type="primary" @click="openExpenseCalendarButton">会员消费窗口</el-button>
+
                             </div>
                         </el-col>
                         <el-col :span="6">
                             <div class="grid-content bg-purple-light">
-                                <el-button type="success" round>成功按钮</el-button>
+                              <el-button type="primary" @click="openCenterNewButton">会员中心窗口</el-button>
                             </div>
                         </el-col>
                         <el-col :span="6">
                             <div class="grid-content bg-purple">
-                                <el-button type="warning" round>警告按钮</el-button>
+                              <el-button type="primary" @click="openRechargeRecordButton">会员充值记录窗口</el-button>
                             </div>
                         </el-col>
                         <el-col :span="6">
@@ -259,14 +255,54 @@ body > .el-container {
 </template>
 
 <script>
+import MemberExpenseCalendar from "@/components/MemberExpenseCalendar.vue";
+import MemberRechargeRecord from "@/components/MemberRechargeRecord.vue";
+import MemberCenterNew from "@/components/MemberCenterNew.vue";
+
  export default {
     data() {
       return {
-      };
+        memberExpCalWindowVisible: false,
+        memberCenterNewWindowVisible: false,
+        memberRechargeRecordWindowVisible: false,
+        returnServerCustomerData: {}, //调用接口,返回的数据
+        customerData: {}, //整理過的顧客數據
+      }
+    },
+    components: {
+      "member-expense-calendar": MemberExpenseCalendar,
+      "member-center-new": MemberCenterNew,
+      "member-recharge-record": MemberRechargeRecord
     },
     methods: {
         openCustomerButton(){
-            
+
+        },
+        openExpenseCalendarButton() {
+          // console.log("会员消费记录");
+          let id = 8;
+          this.getSverVerCustomer(id).then(() => {
+            this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
+            this.returnServerCustomerData = {};
+            this.memberExpCalWindowVisible = true;  //打開會員消費記錄窗口
+          });
+        },
+        openCenterNewButton() {
+          console.log("会员中心记录");
+          let id = 8;
+          this.getSverVerCustomer(id).then(() => {
+            this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
+            this.returnServerCustomerData = {};
+            this.memberCenterNewWindowVisible = true;  //打開會員中心窗口
+          });
+        },
+        openRechargeRecordButton() {
+          let id = 8;
+          this.getSverVerCustomer(id).then(() => {
+            this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
+            this.returnServerCustomerData = {};
+            this.memberRechargeRecordWindowVisible = true;
+          });
         }
     }
   };

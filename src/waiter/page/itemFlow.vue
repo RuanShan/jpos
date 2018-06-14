@@ -335,9 +335,15 @@ export default {
   },
   mixins: [userDataMixin],
   created() {
-    this.$bus.$on('OrderCreatedEvent', () => {
-      console.log('on OrderCreatedEvent')
-      this.initData()
+    this.$bus.$on({
+      'order-created-gevent': () => {
+        console.log('on order-created-gevent')
+        this.initData()
+      },
+      'order-changed-gevent': () => {
+        console.log('on order-changed-gevent')
+        this.initData()
+      }
     })
 
     this.initData()

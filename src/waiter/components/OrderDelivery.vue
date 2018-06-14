@@ -177,7 +177,7 @@ export default {
     //远程搜索输入框函数-----提示功能
     searchOrdersAsync: _.debounce((keyword, vm) => {
 
-      let q = { line_item_group_number_or_number_cont: keyword }
+      let q = { line_item_groups_number_or_number_cont: keyword }
       findOrders({ q }).then((ordersResult) => {
         vm.orderList = vm.buildOrders(ordersResult)
       })
@@ -236,6 +236,8 @@ export default {
         let ids = this.computedLineItemGroups.map((g)=>{ return g.id })
         completeLineItemGroups( { ids } ).then((result)=>{
           if( result.count == ids.length ){
+            this.$bus.$emit('order-changed-gevent')
+
             this.$message({
               message: '客户物品状态已成功更新！',
               type: 'success'

@@ -275,7 +275,7 @@ console.log( " this.checkoutParams", order)
 
         checkout( this.checkoutParams  ).then((res)=>{
           if( res.id> 0){
-            this.$bus.$emit('OrderCreatedEvent')
+            this.$bus.$emit('order-created-gevent')
 
             this.$emit('update:dialogVisible', false)
 
