@@ -1,0 +1,30 @@
+物品流程状态图
+================================================================================
+pending: 新订单
+ready_for_factory: 准备发工厂
+processing: 专业服务
+    每一个工序的完成后，都需要验收，同时
+
+
+processed: 完成出厂检验
+    如果一个物品的所有工序都已经验收，这个物品即为 “完成出厂检验” 状态
+
+ready_for_store: 工厂发货
+ready: 待交付
+shipped: 已交付客户
+
+
+
+pending
+   |
+ready_for_factory
+   |
+processing
+   |
+processed(  )
+   |
+ready_for_store
+   |
+ready
+   |
+shipped

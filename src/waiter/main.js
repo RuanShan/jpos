@@ -17,12 +17,22 @@ Vue.use(EventBus)
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI)
-
+// 点击编辑
 import VueXeditable from '@onekiloparsec/vue-xeditable'
 import '@onekiloparsec/vue-xeditable/dist/vue-xeditable.min.css'
 Vue.use(VueXeditable)
 
+// 自动获得焦点
+import AutoFocus from 'vue-auto-focus'
+Vue.use(AutoFocus)
+
+import {
+  apiResultMixin
+} from '@/components/apiResultMixin'
+Vue.mixin( apiResultMixin )
+
 router.beforeEach(function (to, from, next) {
+    console.log(" to, from ", to, from)
     const user = store.state.userInfo;
     if ( to.name !== "login") {
         //未登录

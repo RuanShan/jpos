@@ -30,12 +30,11 @@ export default {
     this.getCurrentUser()
   },
   methods: {
-    async getCurrentUser() {
-      await this.getAdminData()
+    getCurrentUser() {
+console.log( "home.created.getCurrentUser")
       if (this.userInfo.id) {
-        this.initData();
         this.$bus.$emit('UserInitializedEvent')
-
+        this.$router.push("/waiter");
       } else {
         this.$router.push("/login");
       }

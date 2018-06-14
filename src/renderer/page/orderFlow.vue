@@ -260,7 +260,7 @@ export default {
         },
         mixins: [userDataMixin],
         created() {
-            this.getAdminData().then(res => {
+            this.getCurrentUser().then(res => {
                 if (this.userInfo.id) {
                     this.initData()
                 } else {

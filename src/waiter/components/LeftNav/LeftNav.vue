@@ -20,8 +20,10 @@
           </router-link>
         </li>
         <li class="el-menu-item">
-          <i class="fa fa-bar-chart"></i>
-          <div class="text-sm">统计</div>
+          <router-link to="/waiter/statistics" >
+            <i class="fa fa-vcard"></i>
+            <div class="text-sm">统计</div>
+          </router-link>
         </li>
         <li class="el-menu-item">
           <i class="fa fa-gears"></i>

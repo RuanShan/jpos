@@ -128,9 +128,9 @@ import {
 }
 from '@/api/getData'
 import {
-    userDataMixin
+  userDataMixin
 }
-from '@/components/userDataMixin'
+from '@/components/mixin/commonDataMixin'
 
 export default {
     data() {

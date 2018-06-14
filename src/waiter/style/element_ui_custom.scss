@@ -1,59 +1,3 @@
-.el-custom
-{
-  .el-dialog__header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 80px;
-    padding: 0;
-    background-color: #1d8ce0;
-    div,i{
-      color: #fff;
-    }
-    .dialog-title-wrap{
-      line-height: 80px;
-      font-size: 36px;
-      text-align: center;
-      color: #ffffff;
-      .back{
-        position: absolute;
-        top: 0; left: 0;
-        color: #ffffff;
-        font-size: 40px;
-        padding: 0 40px;
-        cursor: pointer;
-      }
-    }
-  }
-  .el-dialog__body {
-    position: absolute;
-    padding: 0;
-    top: 80px;
-    bottom: 80px;
-    left: 0;
-    right: 0;
-    overflow-y: auto;
-  }
-  .el-dialog__footer {
-      position: absolute;
-      padding: 0;
-      bottom: 0;
-      height: 80px;
-      left: 0;
-      right: 0;
-  }
-  .el-dialog{
-    .el-transfer__buttons{
-      width: 20%;
-      .el-transfer__button:nth-child(2) {
-        margin: 0 auto;
-      }
-    }
-
-  }
-}
-
 /* 调整 el-dialog 样式，使全屏对话框露出 上部logo和左侧菜单区域 */
 .cel-window{
   .el-dialog__wrapper{
@@ -85,10 +29,11 @@
       right: 0;
       bottom: 0;
       padding: 0;
+      overflow-y: auto;
     }
   }
 }
 
-.el-icon-remove-outline, .el-icon-back{
+.el-icon-remove-outline, .el-icon-back, .el-icon-close{
   cursor: pointer;
 }

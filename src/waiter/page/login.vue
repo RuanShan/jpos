@@ -48,25 +48,33 @@
     },
     mounted () {
       this.showLogin = true
-      if (!this.userInfo.id) {
-        this.getAdminData()
-      }
+      this.getCurrentUser().then((()=>{
+        if (this.userInfo.id) {
+          this.$message({
+            type: 'success',
+            message: '检测到您之前登录过，将自动登录'
+          })
+          this.$router.push('waiter')
+        }
+      }))
     },
     computed: {
       ...mapState(['userInfo'])
     },
     methods: {
-      ...mapActions(['getAdminData']),
+      ...mapActions(['getCurrentUser']),
       async submitForm (formName) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            const res = await login({ user: { username: this.loginForm.username, password: this.loginForm.password}, admin:'waiter'})
+            const res = await login({ user: { username: this.loginForm.username, password: this.loginForm.password}})
             if (res.id) {
               this.$message({
                 type: 'success',
                 message: '登录成功'
               })
+              this.$store.commit("saveUser", this.buildUser( res))
               this.$router.push('waiter')
+
             } else {
               this.$message({
                 type: 'error',
@@ -86,13 +94,13 @@
     },
     watch: {
       userInfo: function (newValue) {
-        if (newValue.id) {
-          this.$message({
-            type: 'success',
-            message: '检测到您之前登录过，将自动登录'
-          })
-          this.$router.push('waiter')
-        }
+        // if (newValue.id) {
+        //   this.$message({
+        //     type: 'success',
+        //     message: '检测到您之前登录过，将自动登录'
+        //   })
+        //   this.$router.push('waiter')
+        // }
       }
     }
   }

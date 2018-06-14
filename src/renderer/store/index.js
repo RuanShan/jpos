@@ -19,7 +19,7 @@ const mutations = {
 }
 
 const actions = {
-  async getAdminData ({commit}) {
+  async getCurrentUser ({commit}) {
     try {
       const userResult = await getUserInfo()
 

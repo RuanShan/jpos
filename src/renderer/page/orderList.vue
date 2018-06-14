@@ -117,7 +117,7 @@
       },
       mixins: [userDataMixin, orderDataMixin, apiResultMixin],
       created(){
-        this.getAdminData().then(res=>{
+        this.getCurrentUser().then(res=>{
           if (this.userInfo.id) {
             this.storeId = this.userInfo.storeId
             this.initData()

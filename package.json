@@ -81,6 +81,7 @@
     "url-assembler": "^1.2.9",
     "usb-detection": "^2.1.0",
     "vue": "^2.5.2",
+    "vue-auto-focus": "^1.0.0",
     "vue-axios": "^2.0.2",
     "vue-electron": "^1.0.6",
     "vue-quill-editor": "^3.0.5",

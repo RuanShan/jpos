@@ -13,8 +13,19 @@ export var userDataMixin = {
     }
   },
   methods: {
-    ...mapActions(['getAdminData']),
+    //...mapActions(['getCurrentUser']),
 
+  },
+  watch: {
+    userInfo: function(newValue) {
+      if (!newValue.id) {
+        this.$message({
+          type: "error",
+          message: "检测到您的登录信息过期, 请重新登录"
+        });
+        this.$router.push("login");
+      }
+    }
   }
 }
 

@@ -110,7 +110,9 @@
         <!-- filters end -->
 
         <div class="order-list">
-          <el-transfer v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name'}" :titles="[orderStateText, nextOrderStateText]" @change="handleTransferItems"></el-transfer>
+          <el-transfer v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name'}" :titles="[orderStateText, nextOrderStateText]" @change="handleTransferItems">
+            <span slot-scope="{ option }">{{ option.number }} - {{ option.name }}</span>
+          </el-transfer>
         </div>
 
       </div>
