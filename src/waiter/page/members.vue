@@ -33,37 +33,37 @@
       <!-- 第一行     START -->
       <el-row style="margin-top:20px">
         <el-col :span="1">
-          <div class="grid-content bg-purple"></div>
+          <div class="grid-content"></div>
         </el-col>
         <el-col :span="5">
-          <div class="grid-content bg-purple"> 会员编号/会员电话/会员姓名</div>
+          <div class="grid-content"> 会员编号/会员电话/会员姓名</div>
         </el-col>
         <el-col :span="7">
-          <div class="grid-content bg-purple-light">
+          <div class="grid-content">
             <el-input placeholder="请输入内容" prefix-icon="el-icon-search" size="mini" v-model="inputValue">
             </el-input>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="grid-content bg-purple-light"></div>
+          <div class="grid-content"></div>
         </el-col>
         <el-col :span="4">
-          <div class="grid-content bg-purple">
+          <div class="grid-content" style="float: right;">
             <el-button type="danger" size="mini" @click="addCard">添&nbsp;&nbsp;加&nbsp;&nbsp;会&nbsp;&nbsp;员&nbsp;&nbsp;卡</el-button>
           </div>
         </el-col>
         <el-col :span="1">
-          <div class="grid-content bg-purple"></div>
+          <div class="grid-content"></div>
         </el-col>
       </el-row>
       <!-- 第一行     END -->
       <!-- 表格     END -->
       <el-row style="margin-top:20px">
         <el-col :span="1">
-          <div class="grid-content bg-purple"></div>
+          <div class="grid-content"></div>
         </el-col>
         <el-col :span="22">
-          <div class="grid-content bg-purple-light">
+          <div class="grid-content">
             <el-table id="recharge-recored-table" :data="tableData" style="width: 100%:" height="292" border>
               <el-table-column prop="code" label="卡号">
               </el-table-column>
@@ -87,7 +87,7 @@
           </div>
         </el-col>
         <el-col :span="1">
-          <div class="grid-content bg-purple"></div>
+          <div class="grid-content"></div>
         </el-col>
       </el-row>
       <!-- 表格     END -->
@@ -205,6 +205,13 @@ export default {
     //编辑按钮处理事件
     handleEdit(index, row) {
       console.log(index, row);
+      console.log("会员中心记录");
+      let id = 8;
+      this.getSverVerCustomer(id).then(() => {
+        this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
+        this.returnServerCustomerData = {};
+        this.memberCenterNewWindowVisible = true;  //打開會員中心窗口
+      });
     },
     //删除按钮处理事件
     handleDelete(index, row) {
