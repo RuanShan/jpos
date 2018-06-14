@@ -9644,7 +9644,7 @@ void-elements@^2.0.0:
 
 vue-auto-focus@^1.0.0:
   version "1.0.0"
-  resolved "http://registry.npm.taobao.org/vue-auto-focus/download/vue-auto-focus-1.0.0.tgz#e957878dcc5572034025064730c5d7289ac37aab"
+  resolved "https://registry.yarnpkg.com/vue-auto-focus/-/vue-auto-focus-1.0.0.tgz#e957878dcc5572034025064730c5d7289ac37aab"
 
 vue-axios@^2.0.2:
   version "2.0.2"
