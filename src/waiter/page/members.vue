@@ -195,6 +195,13 @@ export default {
     //编辑按钮处理事件
     handleEdit(index, row) {
       console.log(index, row);
+      console.log("会员中心记录");
+      let id = 8;
+      this.getSverVerCustomer(id).then(() => {
+        this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
+        this.returnServerCustomerData = {};
+        this.memberCenterNewWindowVisible = true;  //打開會員中心窗口
+      });
     },
     //删除按钮处理事件
     handleDelete(index, row) {
