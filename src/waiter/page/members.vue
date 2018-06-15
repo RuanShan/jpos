@@ -39,13 +39,8 @@
 
 <template>
 <div class="members-container page-content">
-  <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
   <member-center-new :dialog-visible.sync="memberCenterNewWindowVisible" :customer-data="customerData"></member-center-new>
-  <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
-  <!-- <el-button type="danger" @click="openExpenseCalendarButton">会员消费窗口</el-button>
-      <el-button type="danger" @click="openCenterNewButton">会员中心窗口</el-button>
-      <el-button type="danger" @click="openRechargeRecordButton">会员充值记录窗口</el-button> -->
-  <div>
+  <div class="members">
     <div class="title-wrap">
 
       <div>会&nbsp;&nbsp;&nbsp;员</div>
@@ -85,7 +80,7 @@
             </el-table-column>
             <el-table-column label="操作" width="160">
               <template slot-scope="scope">
-                  <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                  <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
                   <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -104,8 +99,6 @@
 </template>
 
 <script>
-import MemberExpenseCalendar from "@/components/MemberExpenseCalendar.vue";
-import MemberRechargeRecord from "@/components/MemberRechargeRecord.vue";
 import MemberCenterNew from "@/components/MemberCenterNew.vue";
 import {
   findCustomers
@@ -119,15 +112,11 @@ import {
 export default {
   mixins: [apiResultMixin],
   components: {
-    "member-expense-calendar": MemberExpenseCalendar,
-    "member-center-new": MemberCenterNew,
-    "member-recharge-record": MemberRechargeRecord
+    "member-center-new": MemberCenterNew
   },
   data() {
     return {
-      memberExpCalWindowVisible: false,
       memberCenterNewWindowVisible: false,
-      memberRechargeRecordWindowVisible: false,
       customerList: [],
       perPage: 12,
       count: 0, // 当前页有多少行
@@ -135,23 +124,7 @@ export default {
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
       totalPage: 0, //分页器显示的总页数
       inputValue: "", //输入框输入的值
-      customerData: {},
-      tableData: [{
-        code: "056",
-        mobile: "13812340005",
-        username: '刘德华',
-        card_type: "储值卡",
-        sex: "男",
-        card_grade: "8000-5折",
-        payDate: "18-05-18",
-        payWay: "现金",
-        payMoney: "2036",
-        payState: "青云街店",
-        stopDate: "22-09-05",
-        operator: "张三",
-        memo: "大家好",
-        cards: "3"
-      }], //表格数据
+      customerData: {}
     };
   },
   created: function(){
@@ -196,12 +169,9 @@ export default {
     handleEdit(index, row) {
       console.log(index, row);
       console.log("会员中心记录");
-      let id = 8;
-      this.getSverVerCustomer(id).then(() => {
-        this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
-        this.returnServerCustomerData = {};
-        this.memberCenterNewWindowVisible = true;  //打開會員中心窗口
-      });
+      this.customerData = row
+      this.memberCenterNewWindowVisible = true;  //打開會員中心窗口
+
     },
     //删除按钮处理事件
     handleDelete(index, row) {

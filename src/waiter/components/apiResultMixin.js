@@ -243,19 +243,33 @@ export var apiResultMixin = {
       // cards:[{"id":1,"user_id":8,"code":"7f9bd55a64254af48694723d4622eabfcd4f5197","current_value":"2000.0","name":"PrepaidCard1000 - Master","discount_percent":null,"discount_amount":null,"product_id":1]
       // 客户详细信息里，有会员卡信息
       if (userResult.cards) {
-        userResult.cards.forEach((cardResult)=>{
+        userResult.cards.forEach((model)=>{
           const card = {
             className: 'Spree::Card',
-            id: cardResult.id,
-            name: cardResult.name,
-            style: cardResult.style, // prepaid 充值卡， counts 次卡
-            amountRemaining: parseInt(cardResult.amount_remaining),
-            discountPercent: parseInt(cardResult.discount_percent),
-            discountAmount: parseInt(cardResult.discount_amount),
-            status: cardResult.status, //enabled:可用， disabled：不可用
-            code: (cardResult.code.length < 10 ? cardResult.code : cardResult.code.slice(0, 8)), // 显示前8位
-            productId: cardResult.product_id
+            id: model.id,
+            customer: user,
+            storeId: model.storeId,
+            name: model.name,
+            style: model.style, // prepaid 充值卡， counts 次卡
+            amountRemaining: parseInt(model.amount_remaining),
+            amount: parseInt(model.amount), // 充值钱数
+            amountUsed: parseInt(model.amount_used), // 使用钱数
+            discountPercent: parseInt(model.discount_percent),
+            discountAmount: parseInt(model.discount_amount),
+            status: model.status, //enabled:可用， disabled：不可用
+            code: (model.code.length < 10 ? model.code : model.code.slice(0, 8)), // 显示前8位
+            variantId: model.variant_id,
+            productId: model.product_id,
+            note: model.note,
+            expireAt: model.expire_at, //可能为空
+            createdAt: moment(model.created_at),
           }
+
+          if( card.expireAt){
+            card.expireAt =  moment(card.expireAt)
+            card.displayExpireAt = card.expireAt.format('MM-DD HH:mm')
+          }
+          card.displayCreatedAt = card.createdAt.format('MM-DD HH:mm')
           card.displayStyle = this.getCardDisplayStyle( card.style)
           card.displayStatus = this.getCardDisplayStatus( card.status)
           user.cards.push(card)
@@ -326,6 +340,15 @@ export var apiResultMixin = {
       })
       console.log("customersResult=", customersResult, "customers=", customers)
       return customers
+    },
+    //构造客户统计信息
+    buildCustomerStatis:  function(result) {
+      // normalOrderTotal：一般订单消费金额 cardOrderTotal：充值金额
+      const statis = { orderTotal: 0, normalOrderTotal: 0, cardOrderTotal: 0 }
+      statis.normalOrderTotal = parseInt(result.normal_order_total)
+      statis.cardOrderTotal = parseInt(result.card_order_total)
+console.log( "buildCustomerStatis=", result, statis)
+      return statis
     },
 
     generateGroupNumber: function() {

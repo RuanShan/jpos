@@ -262,6 +262,11 @@ export const getCustomer = user_id => fetch('/api/v1/customers/' + user_id);
 
 export const findCustomers = data => fetch('/api/v1/customers/search', data, 'POST');
 
+/**
+ * 获取Customer信息
+ */
+
+export const getCustomerStatis = user_id => fetch('/api/v1/customers/' + user_id+'/statis');
 
 /**
  * 获取所有客户信息

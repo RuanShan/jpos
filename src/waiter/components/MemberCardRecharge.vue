@@ -16,7 +16,7 @@
 </style>
 
 <template>
-  <div id="recharge">
+  <div class="recharge-container">
     <el-dialog title="会     员     卡     充     值" :visible.sync="displayOnOff" width="50%" center :close-on-click-modal="false" @close="closeTheWindows">
       <hr style="margin: -5px 15px;">
       <el-row>
@@ -30,19 +30,19 @@
               <table class="currenttable" cellspacing="0" width="100%" style="border: 1px solid #b7b7b7;border-width: 0 0 0 0;">
                 <tr>
                   <td style="width: 20%;">会员卡号</td>
-                  <td style="width: 30%">{{thisCardData.code}}</td>
+                  <td style="width: 30%">{{cardData.code}}</td>
                   <td style="width: 20%;color:#ff3cff;">卡内余额</td>
-                  <td style="width: 30%;color:#ff00ff;font-weight:bold;">{{thisCardData.currentValue}}</td>
+                  <td style="width: 30%;color:#ff00ff;font-weight:bold;">{{cardData.amountRemaining}}</td>
                 </tr>
                 <tr>
                   <td>会员卡类型</td>
-                  <td>{{thisCardData.cardType}}</td>
+                  <td>{{cardData.displayStyle}}</td>
                   <td>会员卡级别</td>
-                  <td>{{thisCardData.cardGrade}}</td>
+                  <td>{{cardData.name}}</td>
                 </tr>
                 <tr>
                   <td style="border-width: 0 0 0 0;">会员姓名</td>
-                  <td style="border-width: 0 0 0 0;">{{customerData.userName}}</td>
+                  <td style="border-width: 0 0 0 0;">{{customerData.name}}</td>
                   <td style="border-width: 0 0 0 0;">会员电话</td>
                   <td style="border-width: 0 0 0 0;">{{customerData.mobile}}</td>
                 </tr>
@@ -136,7 +136,7 @@
               </el-col>
               <el-col :span="6">
                 <div class="grid-content">
-                  <el-button type="danger" style="width:100%">确定</el-button>
+                  <el-button type="danger" @click="checkout" style="width:100%">确定</el-button>
                 </div>
               </el-col>
             </el-row>
@@ -153,25 +153,30 @@
 
 
 <script>
-// import { apiResultMixin } from '@/components/apiResultMixin';
+import { checkout } from "@/api/getData";
 
 export default {
-  props: ["memberCardRechargeWindowVisible", "thisCardData", "customerData"],
+  props: ["memberCardRechargeWindowVisible", "cardData", "customerData"],
   // mixins: [apiResultMixin],
   data() {
     return {
       top: "0", /* 去除直接传 0 产生的 需要参数为string的警告 */
       displayOnOff: "", //显示标志位
       radio: '现金', //支付方式单选按钮默认选择,会根据用户选择动态变化
-      inputMoney: "",  //输入充值金额
+      inputMoney: null,  //输入充值金额
       newCurrentValue: "",//输入后得余额
       inputMemo: "",//备注输入框
       checkedPrint: true,//是否打印标志位
     };
   },
+  computed:{
+    customerData: function(){
+      return this.cardData.customer
+    }
+  },
   watch:{
     inputMoney: function (newValue) {
-      this.newCurrentValue = parseInt(this.thisCardData.currentValue) + parseInt(this.inputMoney);
+      this.newCurrentValue = parseInt(this.cardData.amountRemaining) + parseInt(this.inputMoney);
       if (this.inputMoney == "") {
         this.newCurrentValue = "";
       }
@@ -200,6 +205,23 @@ export default {
     quitTheWindow(){
       this.displayOnOff = false;
       this.$emit("onOff", false); //传给父组件自己被关闭的消息
+    },
+    async checkout(){
+      const orderParams = {
+        user_id: this.customerData.id,
+        line_items: [
+          { variant_id: this.cardData.variantId, quantity: 1,  card_id: this.cardData.id, price: this.inputMoney, cname: "会员卡充值" }
+        ]
+      }
+      let result = await checkout( { order: orderParams })
+      console.log( "memberchard recharge checkout result=", result )
+      if( result.id ){
+        this.$message({
+          type: "success",
+          message: "充值成功！"
+        });
+
+      }
     }
   }
 };

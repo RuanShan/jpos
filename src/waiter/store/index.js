@@ -12,6 +12,10 @@ const state = {
     avatar: 'default.jpg',
     apiKey: ''
   },
+  storeInfo:{
+
+  },
+  storeId: 0,
   paymentMethods: null,
   cardTypes: null
 }
@@ -26,13 +30,17 @@ const mutations = {
   },
   saveUser(state, userInfo) {
     state.userInfo = userInfo
+    state.storeId = state.userInfo.storeId
   },
   savePaymentMethods( state, newPaymentMethods){
     state.paymentMethods = newPaymentMethods
   },
   saveMemberCardTypes( state, newMemberCardTypes){
     state.cardTypes = newMemberCardTypes
-  }
+  },
+  saveStore(state, storeInfo) {
+    state.storeInfo = storeInfo
+  },
 }
 
 const actions = {

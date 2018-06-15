@@ -1,12 +1,14 @@
-<style scoped>
-.grid-content {
-  min-height: 30px;
+<style lang="scss" scoped >
+.member-expense-container{
+  .customer-wrap{
+    padding: 18px 0;
+  }
+  .grid-content {
+    padding: 18px;
+  }
 }
 
-#basic .grid-content {
-  min-height: 30px;
-  border: 1px solid #b6dafe;
-}
+
 
 .bg-purple {
   background: #d3dce6;
@@ -29,115 +31,66 @@
     </div>
     <!-- <el-button type="danger" @click="test()">主要按钮</el-button> -->
 
-    <el-row>
-      <el-col :span="1">
-        <div class="grid-content ">
-        </div>
-      </el-col>
-      <el-col :span="22">
-        <div class="grid-content ">
-          <!-- 会员基本信息 START-->
-          <div id="basic" style="margin-top: 10px;">
-            <el-row>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">会员姓名</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.userName}}</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">会员性别</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.sex}}</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">会员生日</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.displayBirth}}</div>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">会员电话</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.mobile}}</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">地址</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.address}}</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">备注</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.memo}}</div>
-              </el-col>
-            </el-row>
-          </div>
-          <!-- 会员基本信息 END-->
+    <div class="grid-content ">
+      <!-- 会员基本信息 START-->
+      <div class="customer-wrap">
+        <customer-profile :customer-data="customerData"> </customer-profile>
+      </div>
+      <!-- 会员基本信息 END-->
 
-          <!-- 时间选择 START-->
-          <fieldset>
-            <legend>时间选择</legend>
-            日期区间选择
-            <el-date-picker v-model="dateSection" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
-            </el-date-picker>
-          </fieldset>
-          <!-- 时间选择 END-->
+      <!-- 时间选择 START-->
+      <fieldset>
+        <legend>时间选择</legend>
+        日期区间选择
+        <el-date-picker v-model="dateSection" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </fieldset>
+      <!-- 时间选择 END-->
 
-          <!-- 会员消费表格 START   -->
-          <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px"
-                    @expand-change="expandChange"  :expand-row-keys="expendRow" :row-key="row => row.id" > -->
-          <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px;" @expand-change="expandChange" :expand-row-keys="expendRow" :row-key="row => row.id">
-            <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px" @cell-mouse-enter="mouseEnter" :row-key="row => row.id"> -->
-            <el-table-column type="expand">
-              <template slot-scope="props">
-                  <el-table :data="props.row.getOrderDataById.groupLineItems" :span-method="objectSpanMethod" border style="width: 60%;">
-                    <el-table-column prop="groupNumber" label="物品名称" width="180">
-                    </el-table-column>
-                    <el-table-column prop="name" label="商品名称">
-                    </el-table-column>
-                    <el-table-column prop="saleUnitPrice" label="单价">
-                    </el-table-column>
-                    <el-table-column prop="quantity" label="数量">
-                    </el-table-column>
-                    <el-table-column prop="discountPercent" label="折扣">
-                    </el-table-column>
-                    <el-table-column prop="price" label="金额">
-                    </el-table-column>
-                    <el-table-column prop="memo" label="备注">
-                    </el-table-column>
-                  </el-table>
-                </template>
-            </el-table-column>
-            <el-table-column label="订单编号" prop="number">
-            </el-table-column>
-            <el-table-column label="消费日期" prop="displayCreatedAt">
-            </el-table-column>
-            <el-table-column label="店铺名称" prop="storeName">
-            </el-table-column>
-            <el-table-column label="应收金额" prop="totalAmount">
-            </el-table-column>
-            <el-table-column label="实收金额" prop="totalAmount">
-            </el-table-column>
-            <el-table-column label="操作员" prop="userName">
-            </el-table-column>
-            <el-table-column label="备注" prop="groupState">
-            </el-table-column>
-          </el-table>
-          <!-- 会员消费表格 END-->
+      <!-- 会员消费表格 START   -->
+      <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px"
+                @expand-change="expandChange"  :expand-row-keys="expendRow" :row-key="row => row.id" > -->
+      <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px;" @expand-change="expandChange" :expand-row-keys="expendRow" :row-key="row => row.id">
+        <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px" @cell-mouse-enter="mouseEnter" :row-key="row => row.id"> -->
+        <el-table-column type="expand">
+          <template slot-scope="props">
+              <el-table :data="props.row.getOrderDataById.groupLineItems" :span-method="objectSpanMethod" border style="width: 60%;">
+                <el-table-column prop="groupNumber" label="物品名称" width="180">
+                </el-table-column>
+                <el-table-column prop="name" label="商品名称">
+                </el-table-column>
+                <el-table-column prop="saleUnitPrice" label="单价">
+                </el-table-column>
+                <el-table-column prop="quantity" label="数量">
+                </el-table-column>
+                <el-table-column prop="discountPercent" label="折扣">
+                </el-table-column>
+                <el-table-column prop="price" label="金额">
+                </el-table-column>
+                <el-table-column prop="memo" label="备注">
+                </el-table-column>
+              </el-table>
+            </template>
+        </el-table-column>
+        <el-table-column label="订单编号" prop="number">
+        </el-table-column>
+        <el-table-column label="消费日期" prop="displayCreatedAt">
+        </el-table-column>
+        <el-table-column label="店铺名称" prop="storeName">
+        </el-table-column>
+        <el-table-column label="应收金额" prop="totalAmount">
+        </el-table-column>
+        <el-table-column label="实收金额" prop="totalAmount">
+        </el-table-column>
+        <el-table-column label="操作员" prop="userName">
+        </el-table-column>
+        <el-table-column label="备注" prop="groupState">
+        </el-table-column>
+      </el-table>
+      <!-- 会员消费表格 END-->
 
-        </div>
-      </el-col>
-      <el-col :span="1">
-        <div class="grid-content "></div>
-      </el-col>
-    </el-row>
+    </div>
+
     <!-- 分页器 START-->
     <div class="" style="position: absolute;bottom: 15px;right:4%;margin-top: 10px;">
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalPage">
@@ -154,20 +107,22 @@
 import {
   DialogMixin
 } from "@/components/mixin/DialogMixin";
+
 import {
   apiResultMixin
 } from '@/components/apiResultMixin';
 import {
-  findOrders
-} from "@/api/getData";
-import {
-  getOrder
+  findOrders, getOrder
 } from "@/api/getData";
 
+import customerProfile from "@/components/common/customerProfile.vue"
 
 export default {
   props: ["dialogVisible", "customerData"],
   mixins: [DialogMixin, apiResultMixin],
+  components: {
+    "customer-profile": customerProfile
+  },
   data() {
     return {
       pickerOptions2: {
