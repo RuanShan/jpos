@@ -176,13 +176,8 @@
 
 
 <script>
-import {
-  DialogMixin
-} from "@/components/mixin/DialogMixin";
-import {
-  apiResultMixin
-} from '@/components/apiResultMixin';
-
+import { DialogMixin } from "@/components/mixin/DialogMixin";
+import { apiResultMixin } from '@/components/apiResultMixin';
 
 export default {
   props: ["dialogVisible", "customerData"],
