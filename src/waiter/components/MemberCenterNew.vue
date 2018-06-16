@@ -1,15 +1,51 @@
 <style lang="scss">
-.member-container{
-  .main-content {
-    padding: 18px;
-  }
+.member-container {
+    .main-content {
+        padding: 18px;
+    }
+    .box-card {
+        border: 1px solid silver;
+        .member-profile {
+            padding: 0 16px;
+            .member-table{
+              th{ border: 1px solid silver;}
+              td{
+                width: 12.5%;
+                border: 1px solid silver;
+              }
+            }
+        }
+        .cards-wrap {
+            padding: 0 16px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 110px;
+            bottom: 16px;
+            .card-tabs {
+              .card-table{
+                th{ border: 1px solid silver;}
+                td{
+                  width: 12.5%;
+                  border: 1px solid silver;
+                }
+              }
+            }
+            .card-records-wrap {
+                position: absolute;
+                top: 150px;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        }
+    }
 }
-
 </style>
 
 <template>
 <div class="member-container ">
-  <card-form :dialog-visible.sync="cardFormVisible" :customer-data.sync="customerData" @card-created-event="handleCardCreated"></card-form >
+  <card-form :dialog-visible.sync="cardFormVisible" :customer-data.sync="customerData" @card-created-event="handleCardCreated"></card-form>
   <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
   <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
   <member-card-recharge v-if="displayRecharge" :cardData="cardData" :customer-data="customerData" @onOff="onOff($event)"></member-card-recharge>
@@ -20,192 +56,108 @@
         <div class="left back">
           <i class="el-icon-back" @click="handleCloseDialog()"></i>
         </div>
-        <div>会&nbsp;&nbsp;&nbsp;员&nbsp;&nbsp;&nbsp;中&nbsp;&nbsp;&nbsp;心</div>
+        <div>会员中心</div>
       </div>
       <!-- <el-button type="danger" @click="test()">主要按钮</el-button> -->
-      <div class="clear main-content">
-        <div style="width:35%;float:left;">
-          <div class="grid-content bg-purple" style="margin-top: 10px;">
-            <fieldset>
-              <legend>会员信息</legend>
-              <!-- 会员基本信息 START-->
-              <div id="basic" style="margin-top: 10px;">
-                <el-row>
-                  <el-col :span="10">
-                    <div class="grid-content bg-purple">会员姓名</div>
-                  </el-col>
-                  <el-col :span="14">
-                    <div class="grid-content bg-purple-light">{{customerData.userName}}</div>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="10">
-                    <div class="grid-content bg-purple">会员电话</div>
-                  </el-col>
-                  <el-col :span="14">
-                    <div class="grid-content bg-purple-light">{{customerData.mobile}}</div>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="10">
-                    <div class="grid-content bg-purple">会员性别</div>
-                  </el-col>
-                  <el-col :span="14">
-                    <div class="grid-content bg-purple-light">{{customerData.sex}}</div>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="10">
-                    <div class="grid-content bg-purple">会员生日</div>
-                  </el-col>
-                  <el-col :span="14">
-                    <div class="grid-content bg-purple-light">{{customerData.displayBirth}}</div>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="10">
-                    <div class="grid-content bg-purple">地址</div>
-                  </el-col>
-                  <el-col :span="14">
-                    <div class="grid-content bg-purple-light">{{customerData.address}}</div>
-                  </el-col>
-                </el-row>
+      <div class="box-card fillcontain">
+        <!-- 会员基本信息 START-->
+        <div class="member-profile">
+          <div class="head">
+            <span>会员信息 (消费 ¥{{statis.normalOrderTotal}}) </span>
+            <el-button type="info" size="mini" @click="curentEdit" class="right">会员编辑</el-button>
+          </div>
+          <table class="member-table" >
+            <tr>
+              <th> 会员姓名 </th>
+              <td> {{customerData.userName}} </td>
+              <th> 会员电话 </th>
+              <td> {{customerData.mobile}}</td>
+              <th> 会员性别</th>
+              <td> {{customerData.sex}}</td>
+              <th> 会员生日</th>
+              <td> {{customerData.displayBirth}}</td>
+            </tr>
+            <tr>
+              <th> 所属门店</th>
+              <td > {{customerData.address}}</td>
+              <th> 创建日期</th>
+              <td > {{customerData.address}}</td>
+              <th> 备注</th>
+              <td colspan="3"> {{customerData.address}}</td>
+
+            </tr>
+          </table>
+        </div>
+        <!-- 会员基本信息 END-->
+        <div class="cards-wrap" style="margin-top: 10px;">
+          <el-button type="danger" size="mini" @click="addCardButtonClicked" style="float: right;z-index: 999;position: relative;">添&nbsp;&nbsp;加&nbsp;&nbsp;会&nbsp;&nbsp;员&nbsp;&nbsp;卡</el-button>
+          <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick" class="card-tabs cel-scrollable-tabs">
+            <el-tab-pane v-for="(item) in cards" :key="item.name" :label="item.title" :name="item.name">
+              <div class="clear ">
+                <div class="left">
+                  <span>余额</span>
+                  <span>¥ {{item.amountRemaining}}</span>
+
+                </div>
+
+                <div class="left">
+                  <span>充值记录</span>
+                  <span>¥ {{item.amount}}</span>
+
+                </div>
+
+                <div class="left">
+                  <span>消费记录</span>
+                  <span>¥ {{item.amountUsed}}</span>
+
+                </div>
+
+                <div class="right">
+                  <el-button type="info" size="mini" @click="cardEdit">卡编辑</el-button>
+                  <el-button type="primary" size="mini" @click="cardRecharge">会员卡充值</el-button>
+                </div>
               </div>
-              <!-- 会员基本信息 END-->
-              <!-- 该会员的充值记录和消费记录 START-->
-              <table border="1" cellspacing="0" width="100%" style="margin-top:25px;">
+              <!-- 在tab中的卡详情表 START -->
+              <table class="card-table">
                 <tr>
-                  <td width="30%">充值记录</td>
-                  <td width="30%">{{statis.cardOrderTotal}}</td>
-                  <td width="30%">
-                    <el-button type="primary" size="mini" @click="openRechargeRecordWindow" class="right">查&nbsp;&nbsp;看</el-button>
-                  </td>
+                  <th>会员卡号</th>
+                  <td>{{item.code}}</td>
+                  <th>会员卡类型</th>
+                  <td>{{item.displayStyle}}</td>
+                  <th>会员卡级别</th>
+                  <td>{{item.name}}</td>
+                  <th>会员卡状态</th>
+                  <td>{{item.displayStatus}}</td>
                 </tr>
                 <tr>
-                  <td width="30%">消费记录</td>
-                  <td width="30%">{{statis.normalOrderTotal}}</td>
-                  <td width="30%">
-                    <el-button type="primary" size="mini" @click="openExpenseCalendarWindow" class="right">查&nbsp;&nbsp;看</el-button>
-                  </td>
+                  <th>开卡门店</th>
+                  <td>{{item.openCardSite}}</td>
+                  <th>开卡日期</th>
+                  <td>{{item.displayCreatedAt}}</td>
+                  <th>到期时间</th>
+                  <td>{{item.displayExpireAt}}</td>
+                  <th>备注</th>
+                  <td >{{item.memo}}</td>
+                </tr>
+                <tr>
                 </tr>
               </table>
-              <!-- 该会员的充值记录和消费记录 END-->
-              <el-row>
-                <el-col :span="24">
-                  <div class="grid-content bg-purple-dark" style="text-align:center;margin-top:25px;">
-                    <el-button type="info" @click="curentEdit">会员编辑</el-button>
-                  </div>
-                </el-col>
-              </el-row>
-            </fieldset>
+              <div class="card-records-wrap">
+                <el-tabs type="border-card" @tab-click="handleClick" class="card-records  cel-scrollable-tabs">
+                  <el-tab-pane label="消费记录" name="first">
+                    <card-order-list :customer-data="customerData"></card-order-list>
+                  </el-tab-pane>
+                  <el-tab-pane label="充值记录" name="second">
+                    <card-order-list :customer-data="customerData"></card-order-list>
+                  </el-tab-pane>
+                </el-tabs>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
 
-          </div>
-        </div>
-        <div style="width:65%;float:left;">
-          <div class="grid-content " style="margin-top: 10px;">
-            <el-button type="danger" size="mini" @click="addCardButtonClicked" style="float: right;z-index: 999;position: relative;">添&nbsp;&nbsp;加&nbsp;&nbsp;会&nbsp;&nbsp;员&nbsp;&nbsp;卡</el-button>
-            <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick">
-              <el-tab-pane v-for="(item) in cards" :key="item.name" :label="item.title" :name="item.name">
-                <el-row>
-                  <el-col :span="4">
-                    <div class="grid-content "></div>
-                  </el-col>
-                  <el-col :span="16" id="basic">
-                    <div class="grid-content ">
-                      <el-row>
-                        <el-col :span="8">
-                          <div class="grid-content bg-purple-light" style="text-align:center;">
-                            <div>余&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额</div>
-                            <div>¥ {{item.amountRemaining}}</div>
-                            <div>
-                              <el-button type="primary" size="mini" @click="cardRecharge">充&nbsp;&nbsp;值</el-button>
-                            </div>
-                          </div>
-                        </el-col>
-                        <el-col :span="8">
-                          <div class="grid-content bg-purple" style="text-align:center;">
-                            <div>充&nbsp;值&nbsp;记&nbsp;录</div>
-                            <div>¥ {{item.amount}}</div>
-                            <div>
-                              <el-button type="primary" size="mini" @click="openRechargeRecordWindow">查&nbsp;&nbsp;看</el-button>
-                            </div>
-                          </div>
-                        </el-col>
-                        <el-col :span="8">
-                          <div class="grid-content bg-purple-light" style="text-align:center;">
-                            <div>消&nbsp;费&nbsp;记&nbsp;录</div>
-                            <div>¥ {{item.amountUsed}}</div>
-                            <div>
-                              <el-button type="primary" size="mini" @click="openExpenseCalendarWindow">查&nbsp;&nbsp;看</el-button>
-                            </div>
-                          </div>
-                        </el-col>
-                      </el-row>
-                    </div>
-                  </el-col>
-                  <el-col :span="4">
-                    <div class="grid-content "></div>
-                  </el-col>
-                </el-row>
-                <!-- 在tab中的卡详情表 START -->
-                <table border="1" cellspacing="0" width="100%" style="margin-top: 25px;">
-                  <tr>
-                    <td width="25%">会员卡类型</td>
-                    <td width="25%">{{item.displayStyle}}</td>
-                    <td width="25%">会员卡级别</td>
-                    <td width="25%">{{item.name}}</td>
-                  </tr>
-                  <tr>
-                    <td width="25%">会员卡当前状态</td>
-                    <td width="25%">{{item.displayStatus}}</td>
-                    <td width="25%">开卡日期</td>
-                    <td width="25%">{{item.displayCreatedAt}}</td>
-                  </tr>
-                  <tr>
-                    <td>有效期限</td>
-                    <td>{{item.indate}}</td>
-                    <td>到期时间</td>
-                    <td>{{item.displayExpireAt}}</td>
-                  </tr>
-                  <tr>
-                    <td>开卡地址</td>
-                    <td colspan="3">{{item.openCardSite}}</td>
-                  </tr>
-                  <tr>
-                    <td>备注</td>
-                    <td colspan="3">{{item.memo}}</td>
-                  </tr>
-                </table>
-                <!-- 在tab中的卡详情表 END -->
-                <!-- 在tab中的下面的四个按钮 START -->
-                <el-row style="text-align:center; margin-top:28px">
-                  <el-col :span="6">
-                    <div>
-                      <el-button type="info" @click="returnWindow">返回</el-button>
-                    </div>
-                  </el-col>
-                  <el-col :span="6">
-                    <div>
-                      <el-button type="info" @click="cardEdit">卡编辑</el-button>
-                    </div>
-                  </el-col>
-                  <el-col :span="6">
-                    <div>
-                      <el-button type="primary" @click="cardRecharge">会员卡充值</el-button>
-                    </div>
-                  </el-col>
-                  <el-col :span="6">
-                    <div style="float:right;">
-                      <el-button type="danger" @click="selectCurrent">选中会员</el-button>
-                    </div>
-                  </el-col>
-                </el-row>
-                <!-- 在tab中的下面的四个按钮 END -->
-              </el-tab-pane>
-            </el-tabs>
-          </div>
-        </div>
       </div>
+
     </el-dialog>
   </div>
 </div>
@@ -227,6 +179,7 @@ import {
   getOrder
 } from "@/api/getData";
 import CardForm from "@/components/common/CardForm.vue";
+import CardOrderList from "@/components/common/CardOrderList.vue";
 import MemberCardRecharge from "@/components/MemberCardRecharge.vue";
 import MemberExpenseCalendar from "@/components/MemberExpenseCalendar.vue";
 import MemberRechargeRecord from "@/components/MemberRechargeRecord.vue";
@@ -238,7 +191,8 @@ export default {
     "card-form": CardForm,
     "member-card-recharge": MemberCardRecharge,
     "member-expense-calendar": MemberExpenseCalendar,
-    "member-recharge-record": MemberRechargeRecord
+    "member-recharge-record": MemberRechargeRecord,
+    "card-order-list": CardOrderList
   },
   data() {
     return {
@@ -282,7 +236,7 @@ export default {
     async openWindow() {
       this.initData()
     },
-    async initData(){
+    async initData() {
       const result = await getCustomerStatis(this.customerData.id)
       this.statis = this.buildCustomerStatis(result)
 
@@ -346,16 +300,12 @@ export default {
     cardEdit() {
 
     },
-    //选中会员按钮事件处理函数-----
-    selectCurrent() {
-
-    },
     //添加会员卡点击事件处理函数-----
     addCardButtonClicked() {
       console.log("--addCardButtonClicked--")
       this.cardFormVisible = true
     },
-    handleCardCreated(newCustomer){
+    handleCardCreated(newCustomer) {
       this.customerData = newCustomer
       console.log("--handleCardCreated--")
     },

@@ -19,7 +19,7 @@
     <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="'0'" :modal="false" @open="handleOpenDialog">
       <div slot="title" class="title-wrap">
         <div class="left back"> <i class="el-icon-back" @click="handleCloseDialog()"></i> </div>
-        <div> 会员添加</div>
+        <div> 会员添加storeId{{storeId}}</div>
       </div>
 
       <el-row type="flex"  justify="center">
@@ -115,8 +115,6 @@
 // **********
 
 import { createCustomer, customerMobileValidate } from "@/api/getData";
-import { orderDataMixin } from "@/components/mixin/commonDataMixin"
-import { apiResultMixin } from '@/components/apiResultMixin'
 
 import {
   DialogMixin
@@ -124,7 +122,7 @@ import {
 
 export default {
   props: ["inputNumber", 'dialogVisible'],
-  mixins: [DialogMixin, orderDataMixin, apiResultMixin],
+  mixins: [DialogMixin],
   data() {
     //验证卡号--1.不能空;2.必须是数字;3.四至十一个字符
     // var checkmemberNum = (rule, value, callback) => {
@@ -247,16 +245,16 @@ export default {
 
       Promise.all(validations).then((val)=>{
         let params = this.buildParams() //转换成SerVer需要的数据
+        console.log( "customer params =",params )
         createCustomer(params).then((result)=>{
           console.log(" created customer1 ",result)
           this.returnData = result
           //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
           if ( this.returnData.id ) {
-            console.log(" created customer2 ",result)
             const customer = this.buildCustomer( this.returnData  )
-            console.log(" created customer3 ",result)
-            this.$emit("customerCreatedEvent",customer);
-            console.log(" created customer4 ",result)
+            // POS选择刚创建的客户
+            this.$emit("customer-created-event",customer);
+            this.$bus.$emit("customer-created-gevent",customer);
             this.handleCloseDialog()
           } else {
             //判读返回的数据中是否有错误
@@ -286,6 +284,7 @@ export default {
         paymentPassword:  this.memberFormData.paymentPassword,
         address:  this.memberFormData.address,
         birth:  this.memberFormData.birth,
+        store_id: this.storeId
       }
 
       let order = null

@@ -1,19 +1,25 @@
 <style lang="scss" >
 @import '../style/mixin';
 .item-flow-container {
-    position: absolute;
-    top: 80px;
-    left: 80px;
-    right: 30px;
-    bottom: 30px;
-    border-top: 1px solid #d3dce6;
+  .item-flow>.title-wrap {
+    text-align: center;
+    line-height: 48px;
+    background-color: #f9fafc;
+    margin: 0 18px;
+    border-bottom: 1px solid #d3dce6;
+  }
+    .item-flow-control {
+        position: absolute;
+        top: 50px;
+        left: 18px;
+        right: 18px;
+        bottom: 50px;
+        background-color: #ffffff;
 
-    .steps {
-        height: 100%;
         .location {
             position: relative;
             float: left;
-            border: 2px dashed #c5c5c5;
+
             width: 45%;
             height: 100%;
             &.ship {
@@ -159,15 +165,19 @@
 # ready: 可以交给客户了
 # shipped: 已交付客户
 -->
-<div class="item-flow-container ">
+<div class="item-flow-container page-content">
   <product-scan :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </product-scan>
   <item-process :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </item-process>
   <product-transfer :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </product-transfer>
   <WorkerPerformance :order-state="currentOrderState" :dialog-visible.sync="workerPermormanceDialogVisible" @order-state-changed="orderStateChanged"> </WorkerPerformance>
 
 
-  <div class="fillcontain ">
-    <div class="steps clear">
+
+  <div class="item-flow ">
+    <div class="title-wrap">
+      <div>订单</div>
+    </div>
+    <div class="item-flow-control clear">
 
       <div class="location clear">
 
@@ -335,13 +345,13 @@ export default {
   },
   mixins: [userDataMixin],
   created() {
-    this.$bus.$on( 'order-created-gevent', () => {
-        console.log('on order-created-gevent')
-        this.initData()
+    this.$bus.$on('order-created-gevent', () => {
+      console.log('on order-created-gevent')
+      this.initData()
     })
-    this.$bus.$on( 'order-changed-gevent', () => {
-        console.log('on order-changed-gevent')
-        this.initData()
+    this.$bus.$on('order-changed-gevent', () => {
+      console.log('on order-changed-gevent')
+      this.initData()
     })
 
     this.initData()

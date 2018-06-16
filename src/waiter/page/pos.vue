@@ -5,7 +5,7 @@
   <!-- 结账组件 End-->
 
   <!-- 添加会员组件 Start-->
-  <member-add  v-on:customerCreatedEvent="handleCustomerCreatedEvent" :dialog-visible.sync="memberAddWindowVisible"></member-add>
+  <member-add  @customer-created-event="handleCustomerCreatedEvent" :dialog-visible.sync="memberAddWindowVisible"></member-add>
   <!-- 添加会员组件 End-->
 
   <div class="pos">
@@ -23,7 +23,7 @@
                   <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入会员/手机号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
                     <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
-                  </el-select> {{customerComboId}}
+                  </el-select> {{storeId}}
                 </el-form-item>
 
                 <el-button type="" size="mini" @click="handleNewCustomerButtonClicked" class="right">添加会员</el-button>
@@ -136,17 +136,6 @@ import OrderDelivery from "@/components/OrderDelivery.vue"
 import _ from "lodash"
 
 import {
-  mapState,
-} from "vuex";
-import {
-  userDataMixin
-}
-from '@/components/mixin/commonDataMixin'
-import {
-  apiResultMixin
-} from '@/components/apiResultMixin'
-
-import {
   foodMenu,
   getProducts,
   findCustomers,
@@ -196,9 +185,7 @@ export default {
     MemberAdd,
     OrderDelivery
   },
-  mixins: [userDataMixin, apiResultMixin],
   computed: {
-    ...mapState(["userInfo", "cartList"]),
     customerId: function(){
       return ( this.customerComboId ? this.customerComboId.split('_')[0] : null )
     },

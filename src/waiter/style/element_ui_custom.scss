@@ -61,6 +61,21 @@
   td {  padding: 6px;  }
   th {  padding: 6px;  }
 }
+.cel-scrollable-tabs{
+  position: relative;
+  height: 100%;
+  >.el-tabs__content{
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 0;
+    right:0;
+  }
+  .el-tab-pane{
+    position: relative;
+    height: 100%;
+  }
+}
 
 .el-icon-remove-outline, .el-icon-back, .el-icon-close{
   cursor: pointer;

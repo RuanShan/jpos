@@ -256,7 +256,7 @@ export var apiResultMixin = {
             className: 'Spree::Card',
             id: model.id,
             customer: user,
-            storeId: model.storeId,
+            storeId: model.store_id,
             name: model.name,
             style: model.style, // prepaid 充值卡， counts 次卡
             amountRemaining: parseInt(model.amount_remaining),
@@ -291,6 +291,10 @@ export var apiResultMixin = {
       }
       user.displayType = user.cards.length>0 ? "会员" : "散客"
       user.displayGender = this.getDisplayGender(user.gender)
+      if( this.stores &&  user.storeId){
+        let store = this.stores.find((s)=>{ return s.id == user.storeId })
+        user.storeName = store.name
+      }
 
       return user
     },

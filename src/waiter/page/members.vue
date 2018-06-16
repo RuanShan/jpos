@@ -1,8 +1,11 @@
 <style lang="scss">
 .members-container {
-  .title-wrap {
-    padding: 6px;
+  .members .title-wrap {
     text-align: center;
+    line-height: 48px;
+    background-color: #f9fafc;
+    margin: 0 18px;
+    border-bottom: 1px solid #d3dce6;
   }
   .filters {
     padding: 16px;
@@ -12,27 +15,27 @@
   }
   .member-list-wrap{
     position: absolute;
-    top: 100px;
+    top: 50px;
     left: 18px;
     right: 18px;
-    bottom: 100px;
-  }
-  .grid-content {
-    min-height: 30px;
+    bottom: 50px;
+    background-color: #ffffff;
+
+    .member-list{
+      position: absolute;
+      top: 80px;
+      left: 18px;
+      right: 18px;
+      bottom: 80px;
+    }
+    .pagination-wrap{
+       position: absolute;
+       bottom: 15px;right:4%;
+       margin-top: 10px;
+    }
   }
 
-  .bg-purple {
-    background: #d3dce6;
-  }
 
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .pagination-wrap{
-     position: absolute;
-     bottom: 15px;right:4%;
-     margin-top: 10px;
-  }
 }
 </style>
 
@@ -42,58 +45,61 @@
   <member-center-new :dialog-visible.sync="memberCenterNewWindowVisible" :customer-data="customerData"></member-center-new>
   <div class="members">
     <div class="title-wrap">
-
-      <div>会&nbsp;&nbsp;&nbsp;员</div>
+      <div>会员</div>
     </div>
-    <el-form :inline="true" class="demo-form-inline">
+    <div class="member-list-wrap">
+      <el-form :inline="true" class="demo-form-inline">
 
-      <div class="filters">
-        <div class="filter">
-          <el-form-item label="关键字">
-            <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="inputValue"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleSearch()" size="mini">搜索</el-button>
-          </el-form-item>
+        <div class="filters">
+          <div class="filter">
+            <el-form-item label="关键字">
+              <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="inputValue"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="handleSearch()" size="mini">搜索</el-button>
+            </el-form-item>
+          </div>
         </div>
-      </div>
-    </el-form>
-
-    <!-- 表格     END -->
-        <div class="member-list-wrap grid-content bg-purple-light">
-          <el-table class="cel-scrollable-table" :data="customerList" style="width:100%;" border>
-            <el-table-column prop="id" label="ID" width="80">
-            </el-table-column>
-            <el-table-column prop="username" label="会员姓名" width="140">
-            </el-table-column>
-            <el-table-column prop="mobile" label="电话" width="140">
-            </el-table-column>
-            <el-table-column prop="sex" label="性别" width="80">
-            </el-table-column>
-            <el-table-column  label="卡号">
-              <template slot-scope="scope">
-                <el-tag  v-for="(card, index) in scope.row.cards">{{card.code}}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column prop="memo" label="备注">
-            </el-table-column>
-            <el-table-column label="操作" width="160">
-              <template slot-scope="scope">
-                  <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-                  <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+      </el-form>
+      <!-- 表格     END -->
+      <div class="member-list grid-content">
+            <el-table class="cel-scrollable-table" :data="customerList" style="width:100%;" border>
+              <el-table-column prop="id" label="ID" width="80">
+              </el-table-column>
+              <el-table-column prop="storeName" label="所属门店" width="140">
+              </el-table-column>
+              <el-table-column prop="username" label="会员姓名" width="140">
+              </el-table-column>
+              <el-table-column prop="mobile" label="电话" width="140">
+              </el-table-column>
+              <el-table-column prop="displayGender" label="性别" width="80">
+              </el-table-column>
+              <el-table-column  label="卡号">
+                <template slot-scope="scope">
+                  <el-tag  v-for="(card, index) in scope.row.cards">{{card.code}}
+                  </el-tag>
                 </template>
-            </el-table-column>
-          </el-table>
-        </div>
+              </el-table-column>
+              <el-table-column prop="memo" label="备注">
+              </el-table-column>
+              <el-table-column label="操作" width="160">
+                <template slot-scope="scope">
+                    <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+                    <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                  </template>
+              </el-table-column>
+            </el-table>
+          </div>
+      <!-- 表格     END -->
 
-    <!-- 表格     END -->
-    <!-- 分页器 START-->
-    <div class="pagination-wrap">
-      <el-pagination @current-change="handlePageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total, prev, pager, next, jumper" :total="count">
-      </el-pagination>
+      <!-- 分页器 START-->
+      <div class="pagination-wrap">
+        <el-pagination @current-change="handlePageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total, prev, pager, next, jumper" :total="count">
+        </el-pagination>
+      </div>
+      <!-- 分页器 END-->
     </div>
-    <!-- 分页器 END-->
+
   </div>
 </div>
 </template>
@@ -136,30 +142,23 @@ export default {
   },
   methods: {
     async initData(){
-      let queryParams = {
+      let params = this.buildParams()
+      const result =  await findCustomers(params)
+      this.customerList = this.buildCustomers( result )
+      this.count = result.total_count
+    },
+    buildParams(){
+      let params = {
           page: this.currentPage,
           per_page: this.perPage,
           "q[store_id_eq]": this.storeId
       }
-      const result =  await findCustomers(queryParams)
-      this.customerList = this.buildCustomers( result )
-      this.count = result.total_count
+      return params
     },
-
     //分页器的改变选择时事件处理函数
     handlePageChange(val) {
-      console.log(`当前页: ${val}`);
-      this.currentPage = val;
-      console.log(this.currentPage);
-      let requestDataByUserId = { //查询条件
-        "page": this.currentPage, //分页器选择的当前页数
-        "per_page": this.perPage //每页显示12行数据
-
-      };
-      this.getOrdersByUserId(requestDataByUserId).then(() => {
-        this.expenseTableData = this.buildOrders(this.orderDatasByUserId);
-        console.log("得到了会员得订单数据了!");
-      });
+      this.currentPage = val
+      this.initData()
     },
     //添加会员卡点击事件处理函数-----
     addCard() {
@@ -179,7 +178,7 @@ export default {
     },
     //搜索按钮点击事件
     handleSearch(){
-      
+
     }
   }
 };

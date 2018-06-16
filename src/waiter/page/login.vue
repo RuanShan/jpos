@@ -95,6 +95,7 @@
         })
       },
       initializeApp(){
+        console.log( "..initializeApp..")
         this.getStores()
       }
     },
