@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {
-  getUserInfo, getPaymentMethods, getCardTypes
+  getUserInfo, getPaymentMethods, getCardTypes, getStores
 } from '@/api/getData'
 
 Vue.use(Vuex)
@@ -13,11 +13,11 @@ const state = {
     apiKey: ''
   },
   storeInfo:{
-
   },
   storeId: 0,
   paymentMethods: null,
-  cardTypes: null
+  cardTypes: null,
+  stores: null
 }
 
 const mutations = {
@@ -41,6 +41,10 @@ const mutations = {
   saveStore(state, storeInfo) {
     state.storeInfo = storeInfo
   },
+  saveStores(state, stores) {
+    state.stores = stores
+  }
+
 }
 
 const actions = {
@@ -93,6 +97,18 @@ const actions = {
     })
     store.commit('saveMemberCardTypes', list)
     return store.state.cardTypes
+  },
+  async getStores( store ){
+    if( store.state.stores){
+      return store.state.stores
+    }
+    const result = await getStores()
+    const list = []
+    result.stores.forEach((obj)=>{
+        list.push({id:obj.id, name:obj.name })
+    })
+    store.commit('saveStores', list)
+    return store.state.stores
   }
 
 }

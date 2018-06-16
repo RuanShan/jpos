@@ -300,7 +300,7 @@ export default {
                       //const storeInfo = await getStore(row.store_id)
                       //const userInfo = await getUserInfo(row.user_id)
                       const orderResult = await getOrder(row.id)
-                      const orderDetail = this.buildOrderFromApiResult(orderResult)
+                      const orderDetail = this.buildOrder(orderResult)
                       this.currentOrder = orderDetail
                       this.$nextTick(() => {
                           this.orderDetailList.push(orderDetail)

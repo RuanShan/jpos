@@ -132,13 +132,13 @@ export const foodCategory = (latitude, longitude) => fetch('/shopping/v2/restaur
  * 获取餐馆列表
  */
 
-export const getResturants = data => fetch('/shopping/restaurants', data);
+export const getStores = data => fetch('/api/v1/stores', data);
 
 /**
  * 获取餐馆详细信息
  */
 
-export const getStore = restaurant_id => fetch('/shopping/restaurant/' + restaurant_id);
+export const getStore = store_id => fetch('/api/v1/stores/' + store_id);
 
 /**
  * 获取餐馆数量

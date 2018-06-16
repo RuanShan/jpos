@@ -97,7 +97,7 @@
           <div class="actions">
             <el-button type="primary" @click="addCustomer">立即创建</el-button>
             <el-button @click="resetForm('memberFormData')">重置</el-button>
-            <el-button @click="fillIn()" type="danger">测试填入</el-button>
+            <el-button @click="fillIn" type="danger">测试填入</el-button>
           </div>
         </el-col>
       </el-row>
@@ -153,7 +153,7 @@ export default {
     };
 
     return {
-      paymentMethodList: [      ],
+      paymentMethodList: [],
       cardTypeList: [],
       memberFormData: {
         username: "",

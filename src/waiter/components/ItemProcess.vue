@@ -353,7 +353,7 @@ export default {
         if( row.orderDetail == null){
           const orderResult = await getOrder(row.orderId)
 
-          row.orderDetail = this.buildOrderFromApiResult( orderResult )
+          row.orderDetail = this.buildOrder( orderResult )
           console.log('orderDetail', this.orderDetail)
         }
           this.orderDetail = row.orderDetail

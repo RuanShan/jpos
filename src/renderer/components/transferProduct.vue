@@ -298,7 +298,7 @@ console.log( "this.currentOrder", this.currentOrder, "this.currentGroup ", this.
               }else{
                 // find by network
                 const orderResult = await findOrderByGroupNumber(number)
-                const orderDetail = this.buildOrderFromApiResult(orderResult)
+                const orderDetail = this.buildOrder(orderResult)
                 this.currentOrder = orderDetail
                 this.currentGroup = this.currentOrder.lineItemGroups.find(function( group, index){
                   return group.number == number

@@ -1,21 +1,25 @@
 <style scoped>
+.customer-wrap{
+  padding: 18px 0;
+}
 .grid-content {
-  min-height: 30px;
+  padding: 18px;
 }
-
-#basic .grid-content {
-  min-height: 30px;
-  border: 1px solid #b6dafe;
+.scrollable-table{
+  position: absolute;
+  top: 200px;
+  bottom: 100px;
+  left: 18px;
+  right: 18px;
+  background-color: purple;
 }
-
-.bg-purple {
-  background: #d3dce6;
+.search{
+  padding: 0 0 18px 0;
 }
-
-.bg-purple-light {
-  background: #e5e9f2;
+.search .part{
+  float: left;
+  width: 50%;
 }
-
 .fieldsethtight {
   height: 50px;
 }
@@ -31,139 +35,71 @@
       </div>
       <div>会&nbsp;&nbsp;&nbsp;员&nbsp;&nbsp;&nbsp;充&nbsp;&nbsp;&nbsp;值&nbsp;&nbsp;&nbsp;记&nbsp;&nbsp;&nbsp;录</div>
     </div>
-    <!-- <el-button type="danger" @click="test()">主要按钮</el-button> -->
+    <div class="grid-content ">
+      <!-- <el-button type="danger" @click="test()">主要按钮</el-button> -->
+      <div class="customer-wrap">
+        <customer-profile :customer-data="customerData"> </customer-profile>
+      </div>
 
-    <el-row>
-      <el-col :span="1">
-        <div class="grid-content ">
-        </div>
-      </el-col>
-      <el-col :span="22">
-        <div class="grid-content ">
-          <!-- 会员基本信息 START-->
-          <div id="basic" style="margin-top: 10px;">
-            <el-row>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">会员姓名</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.userName}}</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">会员性别</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.sex}}</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">会员生日</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.displayBirth}}</div>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">会员电话</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.mobile}}</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">地址</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.address}}</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple">备注</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="grid-content bg-purple-light">{{customerData.memo}}</div>
-              </el-col>
-            </el-row>
-          </div>
-          <!-- 会员基本信息 END-->
+      <div class="search clear">
+        <div class="part">
+           <!-- 时间选择 START-->
+           <fieldset class="fieldsethtight">
+             <legend>时间选择</legend>
+             日期区间
+             <el-date-picker v-model="dateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+             </el-date-picker>
+           </fieldset>
+           <!-- 时间选择 END-->
+         </div>
 
-          <el-row>
-            <el-col :span="12">
-              <div class="grid-content">
-                <!-- 时间选择 START-->
-                <fieldset class="fieldsethtight">
-                  <legend>时间选择</legend>
-                  日期区间
-                  <el-date-picker v-model="dateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
-                  </el-date-picker>
-                </fieldset>
-                <!-- 时间选择 END-->
-              </div>
-            </el-col>
-            <el-col :span="12">
-              <div class="grid-content">
-                <!-- 卡选择 START-->
-                <fieldset class="fieldsethtight">
-                  <legend>卡选择</legend>
-                  <el-row>
-                    <!-- 支付方式 START-->
-                    <el-col :span="12">
-                      <div class="grid-content ">
-                        <el-select v-model="payValue" placeholder="支付方式选择" @change="changeForPay" size="mini">
-                          <el-option v-for="item in payOptions" :key="item.value" :value="item.value">
-                          </el-option>
-                        </el-select>
-                      </div>
-                    </el-col>
-                    <!-- 支付方式 END-->
-                    <!-- 卡号选择 START-->
-                    <el-col :span="12">
-                      <div class="grid-content">
-                        <el-select v-model="cardCode" placeholder="会员卡号选择" @change="changeForCard" size="mini">
-                          <el-option v-for="item in cardsOptions" :key="item.value" :value="item.value">
-                          </el-option>
-                        </el-select>
-                      </div>
-                    </el-col>
-                    <!-- 卡号选择 END-->
-                  </el-row>
-                </fieldset>
-                <!-- 卡选择 END-->
-              </div>
-            </el-col>
-          </el-row>
+         <div class="part">
+           <!-- 卡选择 START-->
+           <fieldset class="fieldsethtight">
+             <legend>卡选择</legend>
+               <!-- 支付方式 START-->
+                   <el-select v-model="payValue" placeholder="支付方式选择" @change="changeForPay" size="mini">
+                     <el-option v-for="item in payOptions" :key="item.value" :value="item.value">
+                     </el-option>
+                   </el-select>
+               <!-- 支付方式 END-->
+               <!-- 卡号选择 START-->
+                   <el-select v-model="cardCode" placeholder="会员卡号选择" @change="changeForCard" size="mini">
+                     <el-option v-for="item in cardsOptions" :key="item.value" :value="item.value">
+                     </el-option>
+                   </el-select>
+           </fieldset>
+           <!-- 卡选择 END-->
+         </div>
+       </div>
 
-          <!-- 充值记录表格 START   -->
-          <el-table id="recharge-recored-table" :data="tableData" style="width: 100%:" height="292" border>
-            <el-table-column prop="code" label="卡号" width="50">
-            </el-table-column>
-            <el-table-column prop="username" label="会员姓名" width="78">
-            </el-table-column>
-            <el-table-column prop="card_type" label="会员类型" width="78">
-            </el-table-column>
-            <el-table-column prop="card_grade" label="会员类型" width="104">
-            </el-table-column>
-            <el-table-column prop="payDate" label="缴费日期" width="95">
-            </el-table-column>
-            <el-table-column prop="payWay" label="付款方式" width="78">
-            </el-table-column>
-            <el-table-column prop="payMoney" label="充值金额" width="78">
-            </el-table-column>
-            <el-table-column prop="payState" label="充值店铺" width="78">
-            </el-table-column>
-            <el-table-column prop="stopDate" label="到期时间" width="95">
-            </el-table-column>
-            <el-table-column prop="operator" label="操作员" width="70">
-            </el-table-column>
-            <el-table-column prop="memo" label="备注">
-            </el-table-column>
-          </el-table>
-          <!-- 充值记录表格 END-->
-
-        </div>
-      </el-col>
-      <el-col :span="1">
-        <div class="grid-content "></div>
-      </el-col>
-    </el-row>
+      <!-- 充值记录表格 START   -->
+      <div class="scrollable-table">
+        <el-table class="cel-scrollable-table" :data="tableData"  border>
+        <el-table-column prop="card.code" label="卡号" width="150">
+        </el-table-column>
+        <el-table-column prop="userName" label="会员姓名" width="100">
+        </el-table-column>
+        <el-table-column prop="card.displayStyle" label="会员类型" width="100">
+        </el-table-column>
+        <el-table-column prop="card.name" label="会员等级" width="100">
+        </el-table-column>
+        <el-table-column prop="displayCreatedAt" label="缴费日期" width="100">
+        </el-table-column>
+        <el-table-column prop="total" label="充值金额" width="100">
+        </el-table-column>
+        <el-table-column prop="storeName" label="充值店铺" width="100">
+        </el-table-column>
+        <el-table-column prop="card.displayExpireAt" label="到期时间" width="100">
+        </el-table-column>
+        <el-table-column prop="creatorName" label="操作员" width="80">
+        </el-table-column>
+        <el-table-column prop="memo" label="备注">
+        </el-table-column>
+        </el-table>
+      </div>
+      <!-- 充值记录表格 END-->
+    </div>
     <!-- 分页器 START-->
     <div class="" style="position: absolute;bottom: 15px;right:4%;margin-top: 10px;">
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalPage">
@@ -183,157 +119,22 @@ import {
   apiResultMixin
 } from '@/components/apiResultMixin';
 
+import {
+  findOrders
+} from "@/api/getData"
+
+import customerProfile from "@/components/common/customerProfile.vue"
 
 export default {
   props: ["dialogVisible", "customerData"],
   mixins: [DialogMixin, apiResultMixin],
+  components: {
+    "customer-profile": customerProfile
+  },
   data() {
     return {
       top: "0" /* 去除直接传 0 产生的 需要参数为string的警告 */ ,
-      tableData: [{
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-        {
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-        {
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-        {
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-        {
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-        {
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-        {
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-        {
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-        {
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-        {
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-        {
-          code: "056",
-          username: '刘德华',
-          card_type: "储值卡",
-          card_grade: "8000-5折",
-          payDate: "18-05-18",
-          payWay: "现金",
-          payMoney: "2036",
-          payState: "青云街店",
-          stopDate: "22-09-05",
-          operator: "张三",
-          memo: "大家好"
-        },
-      ],
+      tableData: [],
       pickerOptions2: {
         shortcuts: [{
             text: "最近三个月",
@@ -396,9 +197,34 @@ export default {
         codes.value = value.code;
         console.log("value.code = ", value.code);
         console.log("codes.value = ", codes.value);
-
         this.cardsOptions.push(codes);
       }
+      let queryParams = { //查询条件
+        page: this.currentPage, //分页器选择的当前页数
+        per_page: 12, //每页显示12行数据
+        q: {
+          order_type: 1,
+          user_id_eq: this.customerData.id //根据顾客的id
+        }
+      };
+      findOrders(queryParams).then((result) => {
+        const orders = this.buildOrders(result)
+        this.totalCount = result.total_count; //得到当前共计多少页
+        //充值订单，设置每个订单对应的会员卡
+        orders.forEach((order)=>{
+          order.lineItems.forEach((item)=>{
+            let card = this.customerData.cards.find((card)=>{
+              return card.id == item.cardId
+            })
+            item.card = card
+            order.card = card //对于充值订单，只有一个子订单，所有card是唯一
+          })
+        })
+        this.tableData = orders
+
+        console.log("得到了充值订单数据了!");
+      });
+
     },
     //分页器的改变选择时事件处理函数
     handleCurrentChange(val) {

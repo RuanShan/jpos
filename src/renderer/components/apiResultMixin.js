@@ -17,7 +17,7 @@ export var apiResultMixin = {
     //      "can_update": true
     //    }
     // }
-    buildOrderFromApiResult: function( orderResult ){
+    buildOrder: function( orderResult ){
       let order = { number: orderResult.number,
         total: orderResult.total,
         userName: orderResult.user_name,

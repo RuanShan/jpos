@@ -52,9 +52,9 @@
 
 .cel-scrollable-table{
   height: 100%;
-  .el-table__body-wrapper {
+  >.el-table__body-wrapper {
       position: absolute;
-      top: 36px;
+      top: 38px;
       bottom: 0;
       overflow-y: auto;
   }

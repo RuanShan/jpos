@@ -16,7 +16,7 @@ export var apiResultMixin = {
     //      "can_update": true
     //    }
     // }
-    buildOrderFromApiResult: function(orderResult) {
+    buildOrder: function(orderResult) {
       let order = {
         id: orderResult.id,
         number: orderResult.number,
@@ -25,12 +25,15 @@ export var apiResultMixin = {
         userName: orderResult.user_name,
         storeId: orderResult.store_id,
         storeName: orderResult.store_name,
+        creatorName: orderResult.creator_name,
+        createdById: orderResult.created_by_id,
         userId: orderResult.user_id,
         shipmentState: orderResult.shipment_state,
         groupState: orderResult.group_state,
         paymentState: orderResult.payment_state,
         payments: orderResult.payments,
         createdAt: moment(orderResult.created_at),
+        orderType: orderResult.order_type,
         lineItemGroups: [],
         extraLineItems: []
       }
@@ -65,6 +68,7 @@ export var apiResultMixin = {
               quantity: lineItemResult.quantity,
               saleUnitPrice: lineItemResult.sale_unit_price,
               discountPercent: lineItemResult.discount_percent,
+              cardId: lineItemResult.card_id,
               memo: lineItemResult.memo
             }
             groupedlineItems.push(lineItem)
@@ -81,12 +85,16 @@ export var apiResultMixin = {
       orderResult.line_items.forEach((lineItemResult) => {
         if (!lineItemResult.group_number) {
           const lineItem = {
-            name: lineItemResult.cname,
-            price: lineItemResult.price
+            cname: lineItemResult.cname,
+            price: lineItemResult.price,
+            cardId: lineItemResult.card_id,
+            memo: lineItemResult.memo
           }
           order.extraLineItems.push(lineItem)
         }
       })
+      // 子订单集合，客服消费列表显示
+      order.lineItems = _.concat( order.groupLineItems, order.extraLineItems )
       // 订单详细信息里有customer
       if (orderResult.customer) {
         order.customer = this.buildCustomer(orderResult.customer)
@@ -102,7 +110,7 @@ export var apiResultMixin = {
       let orders = []
       ordersResult.orders.forEach((item, i) => {
 
-        let order = this.buildOrderFromApiResult(item)
+        let order = this.buildOrder(item)
         orders.push(order)
       })
       return orders

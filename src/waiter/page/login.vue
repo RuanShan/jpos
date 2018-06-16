@@ -50,6 +50,7 @@
       this.showLogin = true
       this.getCurrentUser().then((()=>{
         if (this.userInfo.id) {
+          this.initializeApp()
           this.$message({
             type: 'success',
             message: '检测到您之前登录过，将自动登录'
@@ -62,7 +63,7 @@
       ...mapState(['userInfo'])
     },
     methods: {
-      ...mapActions(['getCurrentUser']),
+      ...mapActions(['getStores','getCurrentUser']),
       async submitForm (formName) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
@@ -73,6 +74,8 @@
                 message: '登录成功'
               })
               this.$store.commit("saveUser", this.buildUser( res))
+              // 取得所有店铺信息，保存在store中，
+              this.initializeApp()
               this.$router.push('waiter')
 
             } else {
@@ -90,6 +93,9 @@
             return false
           }
         })
+      },
+      initializeApp(){
+        this.getStores()
       }
     },
     watch: {

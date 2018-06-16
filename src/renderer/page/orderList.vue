@@ -175,7 +175,7 @@
           if (!row.lineItemGroups ) {
             //const userInfo = await getUserInfo(row.user_id)
             const orderResult = await getOrder(row.id)
-            const orderDetail = this.buildOrderFromApiResult( orderResult )
+            const orderDetail = this.buildOrder( orderResult )
 
             let orderIndex = this.orderList.indexOf(row)
             Object.assign( this.orderList[orderIndex], orderDetail )

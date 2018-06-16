@@ -20,7 +20,6 @@
 }
 
 .checkout-container {
-
     .el-col {
         border-radius: 4px;
     }

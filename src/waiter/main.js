@@ -31,6 +31,9 @@ import {
 } from '@/components/apiResultMixin'
 Vue.mixin( apiResultMixin )
 
+import { orderDataMixin, userDataMixin } from "@/components/mixin/commonDataMixin"
+Vue.mixin( orderDataMixin, userDataMixin )
+
 router.beforeEach(function (to, from, next) {
     const user = store.state.userInfo;
     if ( to.name !== "login") {
