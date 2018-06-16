@@ -176,6 +176,10 @@ export default {
     //删除按钮处理事件
     handleDelete(index, row) {
       console.log(index, row);
+    },
+    //搜索按钮点击事件
+    handleSearch(){
+      
     }
   }
 };
