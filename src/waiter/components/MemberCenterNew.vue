@@ -214,7 +214,7 @@ export default {
       statis: {},
       cardData: {}, //选中的当前会员卡的数据
       displayRecharge: false, //会员卡充值界面是否显示标志位
-      cardRecordTabName: 'orders'
+      cardRecordTabName: 'orders',
       memberEditWindowVisible: false  //会员编辑窗口是否打开标志位
     };
   },
