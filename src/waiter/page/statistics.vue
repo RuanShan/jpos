@@ -335,11 +335,9 @@
 
 <script>
 
-import tendency from '@/components/tendency'
-
 
 export default {
-  
+
   data() {
     return {
       returnServerCustomerData: {}, //调用接口,返回的数据
