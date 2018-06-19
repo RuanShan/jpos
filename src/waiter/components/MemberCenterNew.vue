@@ -143,7 +143,7 @@
                 </tr>
               </table>
               <div class="card-records-wrap">
-                <el-tabs type="border-card" @tab-click="handleClick" class="card-records  cel-scrollable-tabs">
+                <el-tabs type="border-card" class="card-records  cel-scrollable-tabs">
                   <el-tab-pane label="消费记录" name="first">
                     <card-order-list :customer-data="customerData"></card-order-list>
                   </el-tab-pane>
