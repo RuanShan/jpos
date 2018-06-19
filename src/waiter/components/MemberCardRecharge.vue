@@ -16,7 +16,7 @@
 </style>
 
 <template>
-  <div class="recharge-container">
+  <div class="">
     <el-dialog title="会     员     卡     充     值" :visible.sync="displayOnOff" width="50%" center :close-on-click-modal="false" @close="closeTheWindows">
       <hr style="margin: -5px 15px;">
       <el-row>

@@ -108,6 +108,7 @@ body > .el-container {
         <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
         <member-center-new :dialog-visible.sync="memberCenterNewWindowVisible" :customer-data="customerData"></member-center-new>
         <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
+        <member-edit :dialog-visible.sync="memberEditWindowVisible" :customer-data="customerData"></member-edit>
         <el-container style="height:100%">
             <el-aside width="50px">Aside</el-aside>
             <el-container style="height:100%;">
@@ -154,7 +155,7 @@ body > .el-container {
                         </el-col>
                         <el-col :span="6">
                             <div class="grid-content bg-purple-light">
-                                <el-button type="danger" round>危险按钮</el-button>
+                                <el-button type="danger" @click="openMemberEdit">会员编辑</el-button>
                             </div>
                         </el-col>
                     </el-row>
@@ -258,6 +259,7 @@ body > .el-container {
 import MemberExpenseCalendar from "@/components/MemberExpenseCalendar.vue";
 import MemberRechargeRecord from "@/components/MemberRechargeRecord.vue";
 import MemberCenterNew from "@/components/MemberCenterNew.vue";
+import MemberEdit from "@/components/MemberEdit.vue";
 import { getCustomer } from "@/api/getData";
 import { apiResultMixin } from '@/components/apiResultMixin';
 
@@ -266,13 +268,15 @@ export default {
     components: {
         "member-expense-calendar": MemberExpenseCalendar,
         "member-center-new": MemberCenterNew,
-        "member-recharge-record": MemberRechargeRecord
+        "member-recharge-record": MemberRechargeRecord,
+        "member-edit": MemberEdit
     },
     data() {
         return {
             memberExpCalWindowVisible: false,
             memberCenterNewWindowVisible: false,
             memberRechargeRecordWindowVisible: false,
+            memberEditWindowVisible: false,
             returnServerCustomerData: {}, //调用接口,返回的数据
             customerData: {}, //整理過的顧客數據
         }
@@ -310,6 +314,14 @@ export default {
                 this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
                 this.returnServerCustomerData = {};
                 this.memberRechargeRecordWindowVisible = true;
+            });
+        },
+        openMemberEdit() {
+            let id = 8;
+            this.getSverVerCustomer(id).then(() => {
+                this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
+                this.returnServerCustomerData = {};
+                this.memberEditWindowVisible = true;
             });
         }
     }
