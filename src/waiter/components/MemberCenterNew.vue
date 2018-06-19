@@ -157,9 +157,51 @@
                     </el-tab-pane>
                   </el-tabs>
                 </div>
+<<<<<<< HEAD
               </el-tab-pane>
             </el-tabs>
           </div>
+=======
+              </div>
+              <!-- 在tab中的卡详情表 START -->
+              <table class="card-table">
+                <tr>
+                  <th>会员卡号</th>
+                  <td>{{item.code}}</td>
+                  <th>会员卡类型</th>
+                  <td>{{item.displayStyle}}</td>
+                  <th>会员卡级别</th>
+                  <td>{{item.name}}</td>
+                  <th>会员卡状态</th>
+                  <td>{{item.displayStatus}}</td>
+                </tr>
+                <tr>
+                  <th>开卡门店</th>
+                  <td>{{item.openCardSite}}</td>
+                  <th>开卡日期</th>
+                  <td>{{item.displayCreatedAt}}</td>
+                  <th>到期时间</th>
+                  <td>{{item.displayExpireAt}}</td>
+                  <th>备注</th>
+                  <td >{{item.memo}}</td>
+                </tr>
+                <tr>
+                </tr>
+              </table>
+              <div class="card-records-wrap">
+                <el-tabs type="border-card" class="card-records  cel-scrollable-tabs">
+                  <el-tab-pane label="消费记录" name="first">
+                    <card-order-list :customer-data="customerData"></card-order-list>
+                  </el-tab-pane>
+                  <el-tab-pane label="充值记录" name="second">
+                    <card-order-list :customer-data="customerData"></card-order-list>
+                  </el-tab-pane>
+                </el-tabs>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+>>>>>>> 1da2b9f8e659703106582df51682d27af3b3ca5e
 
         </div>
 

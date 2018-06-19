@@ -167,7 +167,6 @@ export default {
     //编辑按钮处理事件
     handleEdit(index, row) {
       console.log(index, row);
-      console.log("会员中心记录");
       this.customerData = row
       this.memberCenterNewWindowVisible = true;  //打開會員中心窗口
 
