@@ -67,7 +67,7 @@
         <el-col :span="18">
           <div class="actions">
             <el-button type="primary" @click="updateCustomer">更新</el-button>
-            <el-button @click="resetForm('memberFormData')">关闭</el-button>
+            <el-button @click="closeWindow">关闭</el-button>
           </div>
         </el-col>
       </el-row>
@@ -285,8 +285,8 @@ export default {
     },
     //关闭窗口时事件处理函数-----
     closeWindow() {
-      this.displayMemberEditOnOff = false;
-      this.$emit("memberEditOnOff", false); //传给父组件自己被关闭的消息
+      this.resetForm('memberFormData')
+      this.handleCloseDialog()
     }
   }
 };
