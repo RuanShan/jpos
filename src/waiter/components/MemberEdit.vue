@@ -28,7 +28,7 @@
 <template>
   <div>
     <!-- 会员编辑窗口 -> START -->
-    <el-dialog class="edit-window" title="会     员     编     辑" :visible.sync="computedVisible" width="50%" center :close-on-click-modal="false" @close="closeTheWindows">
+    <el-dialog class="edit-window" title="会     员     编     辑" :visible.sync="displayMemberEditOnOff" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="closeTheWindows">
       <hr style="margin-top: -15px;">
       <el-row>
         <el-col :span="24">
@@ -87,7 +87,7 @@ import { createCustomer, customerMobileValidate } from "@/api/getData";
 import { DialogMixin } from '@/components/mixin/DialogMixin'
 
 export default {
-  props: ["inputNumber", 'dialogVisible'],
+  props: [],
   mixins: [DialogMixin],
   data() {
     //验证卡号--1.不能空;2.必须是数字;3.四至十一个字符
@@ -119,6 +119,7 @@ export default {
     return {
       paymentMethodList: [],
       cardTypeList: [],
+      displayMemberEditOnOff:"", // 本窗口显示标志位,没有初始值
       memberFormData: {
         username: "",
         mobile: "",
@@ -226,7 +227,8 @@ export default {
             // POS选择刚创建的客户
             this.$emit("customer-created-event", customer);
             this.$bus.$emit("customer-created-gevent", customer);
-            this.handleCloseDialog()
+            this.handleCloseDialog();
+            this.closeTheWindows();
           } else {
             //判读返回的数据中是否有错误
             //如果返回数据中有错误
@@ -280,8 +282,14 @@ export default {
       this.memberFormData.mobile = "1300000" + this.cardFormData.code
       this.memberFormData.birth = new Date();
     },
+    //打开窗口时事件处理函数-----
+    openWindow() {
+      this.displayMemberEditOnOff = true;
+    },
+    //关闭窗口时事件处理函数-----
     closeTheWindows() {
-      this.dialogVisible = false;
+      this.displayMemberEditOnOff = false;
+      this.$emit("memberEditOnOff", false); //传给父组件自己被关闭的消息
     }
   }
 };
