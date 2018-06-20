@@ -18,12 +18,14 @@ export default {
   mounted() {
     let chartBox = document.getElementById('chart-container')
     let myChart = document.getElementById('line1')
-
-    myChart.style.width = chartBox.style.width + 'px'
-    myChart.style.height = chartBox.style.height + 'px'
+    //console.log( "chartBox.style.width ", chartBox.style )
+    //myChart.style.width = chartBox.style.width + 'px'
+    //myChart.style.height = chartBox.style.height + 'px'
 
     this.myChart = echarts.init(myChart)
     this.initData()
+    this.$nextTick(() => {   this.myChart.resize() })
+
   },
   props: ['sevenDate', 'sevenDay'],
   methods: {

@@ -85,7 +85,8 @@
 </template>
 
 <script>
-import tendency from '@/components/statis/tendency'
+//https://blog.csdn.net/ling369523246/article/details/79398446
+import tendency from '@/components/statis/tendency.vue'
 import dtime from 'time-formater'
 import {
   selectedDaysCount,
@@ -111,7 +112,7 @@ export default {
       ]
     }
   },
-  components: {
+  components:{
     tendency
   },
   mounted() {

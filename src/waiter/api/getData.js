@@ -294,6 +294,12 @@ export const findUsers = data => fetch('/api/v1/users/search', data, 'POST')
 export const updateCustomer = (user_id, data) => fetch('/api/v1/customers/' + user_id, data, "PUT");
 
 /**
+ * 删除客户
+ */
+
+export const deleteCustomer = user_id => fetch('/api/v1/customers/' + user_id, {}, 'DELETE');
+
+/**
  * 获取地址信息
  */
 
