@@ -19,10 +19,9 @@ export default {
     let chartBox = document.getElementById('chart-container')
     let myChart = document.getElementById('line1')
 
-    function resizeCharts () {
-      myChart.style.width = chartBox.style.width + 'px'
-      myChart.style.height = chartBox.style.height + 'px'
-    }
+    myChart.style.width = chartBox.style.width + 'px'
+    myChart.style.height = chartBox.style.height + 'px'
+
     this.myChart = echarts.init(myChart)
     this.initData()
   },
