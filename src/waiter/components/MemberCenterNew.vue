@@ -53,7 +53,7 @@
     <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
     <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
     <member-card-recharge v-if="displayRecharge" :cardData="cardData" :customer-data="customerData" @onOff="onOff($event)"></member-card-recharge>
-    <member-edit :dialog-visible.sync="memberEditWindowVisible" :customer-data="customerData"></member-edit>
+    <member-edit v-if="displayMemberEdit" :customer-data="customerData"></member-edit>
     <div class="cel-window">
       <!-- 会员添加窗口 -> START -->
       <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="'0'" :modal="false" @open="openWindow()">
@@ -215,7 +215,7 @@ export default {
       cardData: {}, //选中的当前会员卡的数据
       displayRecharge: false, //会员卡充值界面是否显示标志位
       cardRecordTabName: 'orders',
-      memberEditWindowVisible: false  //会员编辑窗口是否打开标志位
+      displayMemberEdit: false  //会员编辑窗口是否打开标志位
     };
   },
   methods: {
@@ -301,7 +301,7 @@ export default {
     //会员编辑按钮单击事件处理函数-----
     curentEdit() {
       console.log("会员编辑 -- 按钮点击了!!!");
-      this.memberEditWindowVisible = true;
+      this.displayMemberEdit = true;
     },
     //返回按钮事件处理函数-----
     returnWindow() {
@@ -324,7 +324,10 @@ export default {
     onOff(flage) {
       console.log("接收到了发射过来的消息了**********");
       this.displayRecharge = flage;
-      this.memberCardRechargeWindowVisible = flage;
+      // this.memberCardRechargeWindowVisible = flage;
+    },
+    handleClick(){
+
     }
   }
 };

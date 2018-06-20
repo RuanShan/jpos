@@ -12,12 +12,13 @@
 }
 .edit-window {
   margin-top: -70px;
-  .el-form-item{
+  .el-form-item {
     margin-bottom: 14px;
   }
-  .member-edit-form{
+  .member-edit-form {
     padding: 10px 10px;
-    .el-card__body{
+    padding-bottom: 0;
+    .el-card__body {
       padding-bottom: 0;
     }
   }
@@ -28,41 +29,45 @@
   <div>
     <!-- 会员编辑窗口 -> START -->
     <el-dialog class="edit-window" title="会     员     编     辑" :visible.sync="computedVisible" width="50%" center :close-on-click-modal="false" @close="closeTheWindows">
+      <hr style="margin-top: -15px;">
       <el-row>
         <el-col :span="24">
-           <el-form :model="memberFormData" :rules="rules" ref="memberFormData" status-icon label-width="100px" class="member-edit-form">
-            <el-card class="box-card">
-              <div slot="header" class="clearfix">
-                <span>客户基本信息</span>
-                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-              </div>
-              <el-form-item label="电话" prop="mobile" required>
-                <el-input v-model="memberFormData.mobile"></el-input>
+          <el-form :model="memberFormData" :rules="rules" ref="memberFormData" status-icon label-width="100px" class="member-edit-form">
+            <!-- <el-card class="box-card"> -->
+            <div slot="header" class="clearfix">
+              <span>客户基本信息</span>
+              <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+            </div>
+            <el-form-item label="电话" prop="mobile" required>
+              <el-input v-model="memberFormData.mobile"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名" prop="username">
+              <el-input v-model="memberFormData.username"></el-input>
+            </el-form-item>
+            <el-form-item label="性别" prop="gender">
+              <el-select v-model="memberFormData.gender" placeholder="请选择" style="width:100%">
+                <el-option v-for="item in sex" :key="item.value" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="生日">
+              <el-form-item prop="birth">
+                <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
               </el-form-item>
-              <el-form-item label="姓名" prop="username">
-                <el-input v-model="memberFormData.username"></el-input>
-              </el-form-item>
-              <el-form-item label="性别" prop="gender">
-                <el-select v-model="memberFormData.gender" placeholder="请选择" style="width:100%">
-                  <el-option v-for="item in sex" :key="item.value" :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="生日">
-                <el-form-item prop="birth">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
-                </el-form-item>
-              </el-form-item>
-              <el-form-item label="联系地址" prop="address">
-                <el-input v-model="memberFormData.address"></el-input>
-              </el-form-item>
-              <el-form-item label="备注" prop="address">
-                <el-input type="textarea" v-model="memberFormData.memo"></el-input>
-              </el-form-item>
-            </el-card>
+            </el-form-item>
+            <el-form-item label="联系地址" prop="address">
+              <el-input v-model="memberFormData.address"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="address">
+              <el-input type="textarea" v-model="memberFormData.memo"></el-input>
+            </el-form-item>
+            <!-- </el-card> -->
           </el-form>
         </el-col>
-        </el-row>
+      </el-row>
+
+      <hr style="margin-top: 4px;">
+
       <el-row type="flex" justify="center">
         <el-col :span="18">
           <div class="actions">
@@ -79,7 +84,7 @@
 
 <script>
 import { createCustomer, customerMobileValidate } from "@/api/getData";
-import {  DialogMixin } from '@/components/mixin/DialogMixin'
+import { DialogMixin } from '@/components/mixin/DialogMixin'
 
 export default {
   props: ["inputNumber", 'dialogVisible'],

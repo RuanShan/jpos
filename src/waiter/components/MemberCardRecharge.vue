@@ -156,7 +156,7 @@
 import { checkout } from "@/api/getData";
 
 export default {
-  props: ["memberCardRechargeWindowVisible", "cardData", "customerData"],
+  props: ["cardData", "customerData"],
   // mixins: [apiResultMixin],
   data() {
     return {
@@ -170,9 +170,9 @@ export default {
     };
   },
   computed:{
-    customerData: function(){
-      return this.cardData.customer
-    }
+    // customerData: function(){
+    //   return this.cardData.customer
+    // }
   },
   watch:{
     inputMoney: function (newValue) {
@@ -185,7 +185,7 @@ export default {
   methods: {
     //打开窗口时事件处理函数-----
     openWindow() {
-      this.displayOnOff = this.memberCardRechargeWindowVisible;
+      // this.displayOnOff = this.memberCardRechargeWindowVisible;
     },
     //关闭窗口时事件处理函数-----
     closeTheWindows() {
