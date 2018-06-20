@@ -28,7 +28,7 @@
 <template>
   <div>
     <!-- 会员编辑窗口 -> START -->
-    <el-dialog class="edit-window" title="会     员     编     辑" :visible="computedVisible" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="closeWindow">
+    <el-dialog class="edit-window" title="会     员     编     辑" :visible="computedVisible" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="handleCloseDialog">
       <hr style="margin-top: -15px;">
       <el-row>
         <el-col :span="24">
@@ -243,6 +243,7 @@ export default {
     //重置
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.handleCloseDialog();
     },
     //转换成SerVer需要的数据
     buildParams() {
