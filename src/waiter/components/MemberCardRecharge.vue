@@ -17,7 +17,7 @@
 
 <template>
   <div class="">
-    <el-dialog title="会     员     卡     充     值" :visible.sync="displayOnOff" width="50%" center :close-on-click-modal="false" @close="closeTheWindows">
+    <el-dialog title="会     员     卡     充     值" :visible.sync="displayOnOff" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="closeTheWindows">
       <hr style="margin: -5px 15px;">
       <el-row>
         <el-col :span="1">
@@ -185,12 +185,12 @@ export default {
   methods: {
     //打开窗口时事件处理函数-----
     openWindow() {
-      // this.displayOnOff = this.memberCardRechargeWindowVisible;
+      this.displayOnOff = true;
     },
     //关闭窗口时事件处理函数-----
     closeTheWindows() {
       this.displayOnOff = false;
-      this.$emit("onOff", false); //传给父组件自己被关闭的消息
+      this.$emit("cardRechargeOnOff", false); //传给父组件自己被关闭的消息
       // console.log("子组件点击了关闭按钮!!!");
     },
     //改变打印选择状态时触发函数-----
@@ -204,7 +204,7 @@ export default {
     //单价退出按钮时触发的函数-----
     quitTheWindow(){
       this.displayOnOff = false;
-      this.$emit("onOff", false); //传给父组件自己被关闭的消息
+      this.$emit("cardRechargeOnOff", false); //传给父组件自己被关闭的消息
     },
     async checkout(){
       const orderParams = {
@@ -220,7 +220,6 @@ export default {
           type: "success",
           message: "充值成功！"
         });
-
       }
     }
   }

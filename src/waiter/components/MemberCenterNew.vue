@@ -52,8 +52,8 @@
     <card-form :dialog-visible.sync="cardFormVisible" :customer-data.sync="customerData" @card-created-event="handleCardCreated"></card-form>
     <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
     <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
-    <member-card-recharge v-if="displayRecharge" :cardData="cardData" :customer-data="customerData" @onOff="onOff($event)"></member-card-recharge>
-    <member-edit v-if="displayMemberEdit" :customer-data="customerData"></member-edit>
+    <member-card-recharge v-if="displayRecharge" :cardData="cardData" :customer-data="customerData" @cardRechargeOnOff="cardRechargeOnOff($event)"></member-card-recharge>
+    <member-edit v-if="displayMemberEdit"  :customer-data="customerData"  @memberEditOnOff="memberEditOnOff($event)"></member-edit>
     <div class="cel-window">
       <!-- 会员添加窗口 -> START -->
       <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="'0'" :modal="false" @open="openWindow()">
@@ -327,13 +327,16 @@ export default {
       console.log("--handleCardCreated--")
     },
     //会员卡充值组件传过来的发射事件
-    onOff(flage) {
+    cardRechargeOnOff() {
       console.log("接收到了发射过来的消息了**********");
-      this.displayRecharge = flage;
-      // this.memberCardRechargeWindowVisible = flage;
+      this.displayRecharge = false;
     },
     handleClick(){
 
+    },
+    //接收到会员编辑窗口子组件发射来的事件处理函数-----
+    memberEditOnOff(){
+      this.displayMemberEdit = false;
     }
   }
 };
