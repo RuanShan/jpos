@@ -28,16 +28,12 @@
 <template>
   <div>
     <!-- 会员编辑窗口 -> START -->
-    <el-dialog class="edit-window" title="会     员     编     辑" :visible.sync="displayMemberEditOnOff" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="closeTheWindows">
+    <el-dialog class="edit-window" title="会     员     编     辑" :visible="computedVisible" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="closeWindow">
       <hr style="margin-top: -15px;">
       <el-row>
         <el-col :span="24">
           <el-form :model="memberFormData" :rules="rules" ref="memberFormData" status-icon label-width="100px" class="member-edit-form">
-            <!-- <el-card class="box-card"> -->
-            <div slot="header" class="clearfix">
-              <span>客户基本信息</span>
-              <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-            </div>
+
             <el-form-item label="电话" prop="mobile" required>
               <el-input v-model="memberFormData.mobile"></el-input>
             </el-form-item>
@@ -46,7 +42,7 @@
             </el-form-item>
             <el-form-item label="性别" prop="gender">
               <el-select v-model="memberFormData.gender" placeholder="请选择" style="width:100%">
-                <el-option v-for="item in sex" :key="item.value" :value="item.value">
+                <el-option v-for="item in sex" :key="item.value" :value="item.value"  :label="item.label">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -61,7 +57,6 @@
             <el-form-item label="备注" prop="address">
               <el-input type="textarea" v-model="memberFormData.memo"></el-input>
             </el-form-item>
-            <!-- </el-card> -->
           </el-form>
         </el-col>
       </el-row>
@@ -71,9 +66,8 @@
       <el-row type="flex" justify="center">
         <el-col :span="18">
           <div class="actions">
-            <el-button type="primary" @click="addCustomer">立即创建</el-button>
-            <el-button @click="resetForm('memberFormData')">重置</el-button>
-            <el-button @click="fillIn" type="danger">测试填入</el-button>
+            <el-button type="primary" @click="updateCustomer">更新</el-button>
+            <el-button @click="resetForm('memberFormData')">关闭</el-button>
           </div>
         </el-col>
       </el-row>
@@ -83,11 +77,11 @@
 
 
 <script>
-import { createCustomer, customerMobileValidate } from "@/api/getData";
+import { updateCustomer, customerMobileValidate } from "@/api/getData";
 import { DialogMixin } from '@/components/mixin/DialogMixin'
 
 export default {
-  props: [],
+  props: ['dialogVisible','customerData'],
   mixins: [DialogMixin],
   data() {
     //验证卡号--1.不能空;2.必须是数字;3.四至十一个字符
@@ -128,9 +122,11 @@ export default {
         gender: "男"
       },
       sex: [{
-        value: '男',
+        value: 'male',
+        label: '男',
       }, {
-        value: '女',
+        value: 'female',
+        label: '女',
       }],
       cardFormData: {
         code: "",
@@ -179,7 +175,7 @@ export default {
   },
   computed: {
     isAddingCard: function () {
-      return this.cardFormData.code.length > 0
+      return false
     },
     activePaymentMethods: function () {
       return this.paymentMethodList.filter((pm) => {
@@ -208,7 +204,7 @@ export default {
       console.log("MemberAdd handleOpenDialog end")
     },
 
-    addCustomer(formName) {
+    updateCustomer(formName) {
       let validations = [this.$refs["memberFormData"].validate()]
       //如果创建会员卡，需要验证会员卡的表单
       if (this.isAddingCard) {
@@ -218,17 +214,15 @@ export default {
       Promise.all(validations).then((val) => {
         let params = this.buildParams() //转换成SerVer需要的数据
         console.log("customer params =", params)
-        createCustomer(params).then((result) => {
+        updateCustomer(params).then((result) => {
           console.log(" created customer1 ", result)
           this.returnData = result
           //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
           if (this.returnData.id) {
             const customer = this.buildCustomer(this.returnData)
             // POS选择刚创建的客户
-            this.$emit("customer-created-event", customer);
-            this.$bus.$emit("customer-created-gevent", customer);
+            this.$emit("customer-updated-event", customer);
             this.handleCloseDialog();
-            this.closeTheWindows();
           } else {
             //判读返回的数据中是否有错误
             //如果返回数据中有错误
@@ -285,9 +279,12 @@ export default {
     //打开窗口时事件处理函数-----
     openWindow() {
       this.displayMemberEditOnOff = true;
+      // 传入的当前选择客户数据
+      this.memberFormData = Object.assign({}, this.customerData )
+      console.log( "openWindow--this.memberFormData=", this.memberFormData )
     },
     //关闭窗口时事件处理函数-----
-    closeTheWindows() {
+    closeWindow() {
       this.displayMemberEditOnOff = false;
       this.$emit("memberEditOnOff", false); //传给父组件自己被关闭的消息
     }

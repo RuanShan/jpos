@@ -16,7 +16,7 @@ import 'echarts/lib/component/markPoint'
 import 'echarts/lib/component/tooltip'
 export default {
   mounted() {
-    let chartBox = document.getElementById('chart-container')
+    //let chartBox = document.getElementById('chart-container')
     let myChart = document.getElementById('line1')
     //console.log( "chartBox.style.width ", chartBox.style )
     //myChart.style.width = chartBox.style.width + 'px'

@@ -52,8 +52,8 @@
     <card-form :dialog-visible.sync="cardFormVisible" :customer-data.sync="customerData" @card-created-event="handleCardCreated"></card-form>
     <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
     <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
-    <member-card-recharge v-if="displayRecharge" :cardData="cardData" :customer-data="customerData" @cardRechargeOnOff="cardRechargeOnOff($event)"></member-card-recharge>
-    <member-edit v-if="displayMemberEdit" :customer-data="customerData" @memberEditOnOff="memberEditOnOff($event)"></member-edit>
+    <member-card-recharge v-if="displayRecharge" :card-data="cardData" :customer-data="customerData" @cardRechargeOnOff="cardRechargeOnOff($event)"></member-card-recharge>
+    <member-edit :dialog-visible.sync="displayMemberEdit" :customer-data="customerData" @memberEditOnOff="memberEditOnOff($event)"></member-edit>
     <member-card-edit v-if="displayMemberCardEdit" :customer-data="customerData" @memberCardEditOnOff="memberCardEditOnOff($event)"></member-card-edit>
     <div class="cel-window">
       <!-- 会员添加窗口 -> START -->
