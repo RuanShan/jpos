@@ -77,6 +77,9 @@ export default {
         variantId: null,
         memo: ""
       },
+      rules: {
+        
+      }
     }
   },
   computed: {

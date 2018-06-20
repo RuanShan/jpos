@@ -15,7 +15,7 @@
 <div class="card-order-container">
       <!-- 会员消费表格 START   -->
       <div class="scrollable-table">
-        <el-table class="cel-scrollable-table" :data="expenseTableData" border :expand-row-keys="expendRow" :row-key="row => row.id">
+        <el-table class="cel-scrollable-table" :data="expenseTableData" border :row-key="row => row.id">
           <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px" @cell-mouse-enter="mouseEnter" :row-key="row => row.id"> -->
           <el-table-column type="expand">
             <template slot-scope="props">
@@ -74,7 +74,7 @@ import {
 
 
 export default {
-  props: [ "customerData"],
+  props: [ "customerData", "cardData"],
   data() {
     return {
       dateSection: "", //选择的日期时间

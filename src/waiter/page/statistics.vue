@@ -86,10 +86,8 @@
         left: 10px;
         right: 10px;
         top: 90px;
+        bottom: 10px;
         .tubiao {
-            height: 300px;
-            background: #6acfff;
-            // float: left;
         }
     }
 }
@@ -133,7 +131,11 @@
         </div>
         <!-- 图表   START -->
         <div class="tubiao-ont-row">
-          <div class="tubiao">圖</div>
+          <div class="fillcontain">
+            <keep-alive>
+              <day-sale> </day-sale>
+            </keep-alive>
+          </div>
           <!-- 图表   END -->
         </div>
       </el-tab-pane>
@@ -334,10 +336,12 @@
 </template>
 
 <script>
-
+import DaySale from '@/components/statis/DaySale.vue'
 
 export default {
-
+  components: {
+    "day-sale": DaySale,
+  },
   data() {
     return {
       returnServerCustomerData: {}, //调用接口,返回的数据
