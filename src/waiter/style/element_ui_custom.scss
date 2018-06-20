@@ -57,6 +57,10 @@
       top: 38px;
       bottom: 0;
       overflow-y: auto;
+      &::-webkit-scrollbar{
+        width: 10px;
+        height: 10px;
+      }
   }
   td {  padding: 6px;  }
   th {  padding: 6px;  }

@@ -449,3 +449,30 @@ export const getUserCards = (userId) => fetch('/api/v1/users/' + userId + '/card
  */
 
 export const getCardTransactions = (cardId) => fetch('/api/v1/cards/' + cardId + '/transactions');
+
+/**************************************************************************
+ * jpos spree api for statis
+ **************************************************************************/
+
+/**
+ * 某一天 statis
+ */
+
+export const selectedDayCount = () => fetch('/api/v1/sale_days/selected_day')
+
+/**
+ * 某一天 statis
+ */
+
+export const selectedDaysCount = (data) => fetch('/api/v1/sale_days/selected_days', data, 'PUT')
+    /**
+     * 某一天 statis
+     */
+
+export const todayCount = () => fetch('/api/v1/sale_days/today')
+
+/**
+ * Life statis
+ */
+
+export const totalCount = () => fetch('/api/v1/sale_days/total')

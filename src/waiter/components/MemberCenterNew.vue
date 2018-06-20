@@ -148,12 +148,16 @@
                   </tr>
                 </table>
                 <div class="card-records-wrap">
-                  <el-tabs type="border-card" @tab-click="handleClick" class="card-records  cel-scrollable-tabs">
-                    <el-tab-pane label="消费记录" name="first">
+                  <el-tabs type="border-card" v-model="cardRecordTabName" class="card-records  cel-scrollable-tabs">
+                    <el-tab-pane label="消费记录" name="orders">
+                      <keep-alive>
                       <card-order-list :customer-data="customerData"></card-order-list>
+                    </keep-alive>
                     </el-tab-pane>
-                    <el-tab-pane label="充值记录" name="second">
-                      <card-order-list :customer-data="customerData"></card-order-list>
+                    <el-tab-pane label="充值记录" name="deposits">
+                      <keep-alive>
+                      <card-deposit-list :customer-data="customerData" :card-data="item"></card-deposit-list>
+                    </keep-alive>
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -185,6 +189,7 @@ import {
 } from "@/api/getData";
 import CardForm from "@/components/common/CardForm.vue";
 import CardOrderList from "@/components/common/CardOrderList.vue";
+import CardDepositList from "@/components/common/CardDepositList.vue";
 import MemberCardRecharge from "@/components/MemberCardRecharge.vue";
 import MemberExpenseCalendar from "@/components/MemberExpenseCalendar.vue";
 import MemberRechargeRecord from "@/components/MemberRechargeRecord.vue";
@@ -200,6 +205,7 @@ export default {
     "member-expense-calendar": MemberExpenseCalendar,
     "member-recharge-record": MemberRechargeRecord,
     "card-order-list": CardOrderList,
+    "card-deposit-list": CardDepositList,
     "member-edit": MemberEdit
   },
   data() {

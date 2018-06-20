@@ -99,6 +99,18 @@ export var apiResultMixin = {
       if (orderResult.customer) {
         order.customer = this.buildCustomer(orderResult.customer)
       }
+
+      //充值订单，有card_transactions
+      orderResult.card_transactions.forEach((result) => {
+         const model = {
+             id:  result.id,
+            cardId: result.card_id,
+            amount: result.amount,
+            amountLeft: result.amount_left,
+            createdAt: moment(result.created_at)
+          }
+          order.cardTransactions.push(model)
+      })
       return order
     },
 
