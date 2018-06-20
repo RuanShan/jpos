@@ -26,7 +26,7 @@
 <template>
   <!-- 会员卡编辑 START-->
   <div class="card-form">
-    <el-dialog class="card-edit-window" title="提示" :visible="displayMemberCardEditOnOff" :show-close="true" width="600px" @open="handleOpen" @close="closeTheWindows">
+    <el-dialog class="card-edit-window" title="提示" :visible="computedVisible" :show-close="true" width="600px" @open="handleOpen" @close="handleCloseDialog">
       <div slot="title" class="title-wrap">
         <!-- <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div> -->
         <div>会员卡信息</div>
@@ -79,7 +79,7 @@ import { apiResultMixin } from '@/components/apiResultMixin'
 import { checkout } from "@/api/getData";
 
 export default {
-  props: ["customerData"],
+  props: ['dialogVisible','customerData'],
   mixins: [DialogMixin, apiResultMixin],
   data() {
     return {
@@ -121,7 +121,7 @@ export default {
     handleClose() {
       this.resetForm()
       this.handleCloseDialog();
-      this.closeTheWindows();
+      // this.closeTheWindows();
     },
     submitForm() {
       this.$refs['cardForm'].validate((valid) => {

@@ -54,7 +54,7 @@
     <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
     <member-card-recharge v-if="displayRecharge" :card-data="cardData" :customer-data="customerData" @cardRechargeOnOff="cardRechargeOnOff($event)"></member-card-recharge>
     <member-edit :dialog-visible.sync="displayMemberEdit" :customer-data="customerData" @memberEditOnOff="memberEditOnOff($event)"></member-edit>
-    <member-card-edit v-if="displayMemberCardEdit" :customer-data="customerData" @memberCardEditOnOff="memberCardEditOnOff($event)"></member-card-edit>
+    <member-card-edit :dialog-visible.sync="displayMemberCardEdit" :customer-data="customerData" @memberCardEditOnOff="memberCardEditOnOff($event)"></member-card-edit>
     <div class="cel-window">
       <!-- 会员添加窗口 -> START -->
       <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="'0'" :modal="false" @open="openWindow()">
