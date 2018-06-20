@@ -53,7 +53,8 @@
     <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
     <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
     <member-card-recharge v-if="displayRecharge" :cardData="cardData" :customer-data="customerData" @cardRechargeOnOff="cardRechargeOnOff($event)"></member-card-recharge>
-    <member-edit v-if="displayMemberEdit"  :customer-data="customerData"  @memberEditOnOff="memberEditOnOff($event)"></member-edit>
+    <member-edit v-if="displayMemberEdit" :customer-data="customerData" @memberEditOnOff="memberEditOnOff($event)"></member-edit>
+    <member-card-edit v-if="displayMemberCardEdit" :customer-data="customerData" @memberCardEditOnOff="memberCardEditOnOff($event)"></member-card-edit>
     <div class="cel-window">
       <!-- 会员添加窗口 -> START -->
       <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="'0'" :modal="false" @open="openWindow()">
@@ -151,13 +152,13 @@
                   <el-tabs type="border-card" v-model="cardRecordTabName" class="card-records  cel-scrollable-tabs">
                     <el-tab-pane label="消费记录" name="orders">
                       <keep-alive>
-                      <card-order-list :customer-data="customerData"></card-order-list>
-                    </keep-alive>
+                        <card-order-list :customer-data="customerData"></card-order-list>
+                      </keep-alive>
                     </el-tab-pane>
                     <el-tab-pane label="充值记录" name="deposits">
                       <keep-alive>
-                      <card-deposit-list :customer-data="customerData" :card-data="item"></card-deposit-list>
-                    </keep-alive>
+                        <card-deposit-list :customer-data="customerData" :card-data="item"></card-deposit-list>
+                      </keep-alive>
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -174,19 +175,10 @@
 
 
 <script>
-import {
-  DialogMixin
-} from "@/components/mixin/DialogMixin";
-import {
-  apiResultMixin
-} from '@/components/apiResultMixin';
-import {
-  getCustomerStatis,
-  findOrders
-} from "@/api/getData";
-import {
-  getOrder
-} from "@/api/getData";
+import { DialogMixin } from "@/components/mixin/DialogMixin";
+import { apiResultMixin } from '@/components/apiResultMixin';
+import { getCustomerStatis, findOrders } from "@/api/getData";
+import { getOrder } from "@/api/getData";
 import CardForm from "@/components/common/CardForm.vue";
 import CardOrderList from "@/components/common/CardOrderList.vue";
 import CardDepositList from "@/components/common/CardDepositList.vue";
@@ -194,6 +186,7 @@ import MemberCardRecharge from "@/components/MemberCardRecharge.vue";
 import MemberExpenseCalendar from "@/components/MemberExpenseCalendar.vue";
 import MemberRechargeRecord from "@/components/MemberRechargeRecord.vue";
 import MemberEdit from "@/components/MemberEdit.vue";
+import MemberCardEdit from "@/components/MemberCardEdit.vue";
 
 
 export default {
@@ -206,7 +199,8 @@ export default {
     "member-recharge-record": MemberRechargeRecord,
     "card-order-list": CardOrderList,
     "card-deposit-list": CardDepositList,
-    "member-edit": MemberEdit
+    "member-edit": MemberEdit,
+    "member-card-edit": MemberCardEdit
   },
   data() {
     return {
@@ -221,7 +215,8 @@ export default {
       cardData: {}, //选中的当前会员卡的数据
       displayRecharge: false, //会员卡充值界面是否显示标志位
       cardRecordTabName: 'orders',
-      displayMemberEdit: false  //会员编辑窗口是否打开标志位
+      displayMemberEdit: false,  //会员编辑窗口是否打开标志位
+      displayMemberCardEdit: false, // 会员卡编辑窗口是否打开标志位
     };
   },
   methods: {
@@ -315,7 +310,7 @@ export default {
     },
     //当前会员卡编辑按钮单击事件处理函数-----
     cardEdit() {
-
+      this.displayMemberCardEdit = true;
     },
     //添加会员卡点击事件处理函数-----
     addCardButtonClicked() {
@@ -331,13 +326,18 @@ export default {
       console.log("接收到了发射过来的消息了**********");
       this.displayRecharge = false;
     },
-    handleClick(){
+    handleClick() {
 
     },
     //接收到会员编辑窗口子组件发射来的事件处理函数-----
-    memberEditOnOff(){
+    memberEditOnOff() {
       this.displayMemberEdit = false;
-    }
+    },
+    //接收到会员卡卡卡编辑窗口子组件发射来的事件处理函数-----
+    memberCardEditOnOff() {
+      this.displayMemberCardEdit = false;
+    },
+
   }
 };
 </script>
