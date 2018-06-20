@@ -4,9 +4,10 @@ import fetch from '@/config/fetch'
  **************************************************************************/
  /**
   * 检查电话号码是否存在
-  *
+  * mobile: 电话号码
+  * id: 除去当前用户id
   */
- export const customerMobileValidate = mobile => fetch('/api/v1/customers/validate_mobile', {mobile} );
+ export const customerMobileValidate = (mobile, id) => fetch('/api/v1/customers/validate_mobile', {mobile,id} );
 
 /**
  * 登陆

@@ -35,7 +35,8 @@ export var apiResultMixin = {
         createdAt: moment(orderResult.created_at),
         orderType: orderResult.order_type,
         lineItemGroups: [],
-        extraLineItems: []
+        extraLineItems: [],
+        cardTransactions: []
       }
       order.displayCreatedAt = order.createdAt.format('MM-DD HH:mm')
 
@@ -101,16 +102,18 @@ export var apiResultMixin = {
       }
 
       //充值订单，有card_transactions
-      orderResult.card_transactions.forEach((result) => {
-         const model = {
-             id:  result.id,
-            cardId: result.card_id,
-            amount: result.amount,
-            amountLeft: result.amount_left,
-            createdAt: moment(result.created_at)
-          }
-          order.cardTransactions.push(model)
-      })
+      if( orderResult.card_transactions ){
+        orderResult.card_transactions.forEach((result) => {
+           const model = {
+               id:  result.id,
+              cardId: result.card_id,
+              amount: result.amount,
+              amountLeft: result.amount_left,
+              createdAt: moment(result.created_at)
+            }
+            order.cardTransactions.push(model)
+        })
+      }
       return order
     },
 

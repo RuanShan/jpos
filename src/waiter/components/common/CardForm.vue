@@ -78,7 +78,7 @@ export default {
         memo: ""
       },
       rules: {
-        
+
       }
     }
   },
@@ -114,7 +114,7 @@ export default {
           let orderParams = {
             user_id: this.customerData.id,
             line_items: [
-              { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1 }
+              { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1, code: this.cardFormData.code  }
             ],
             payments: [{
                 payment_method_id:  this.cardFormData.paymentMethodId,
@@ -129,6 +129,7 @@ export default {
                 message: '恭喜你，会员卡创建成功',
                 type: 'success'
               });
+              this.handleClose()
             }
           })
 

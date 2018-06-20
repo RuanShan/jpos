@@ -1,184 +1,187 @@
 <style lang="scss">
 .member-container {
-  .main-content {
-    padding: 18px;
-  }
-  .box-card {
-    border: 1px solid silver;
-    .member-profile {
-      padding: 0 16px;
-      .member-table {
-        th {
-          border: 1px solid silver;
-        }
-        td {
-          width: 12.5%;
-          border: 1px solid silver;
-        }
-      }
+    .main-content {
+        padding: 18px;
     }
-    .cards-wrap {
-      padding: 0 16px;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 110px;
-      bottom: 16px;
-      .card-tabs {
-        .card-table {
-          th {
-            border: 1px solid silver;
-          }
-          td {
-            width: 12.5%;
-            border: 1px solid silver;
-          }
+    .box-card {
+        border: 1px solid silver;
+        .member-profile {
+            padding: 0 16px;
+            .member-table {
+                th {
+                    border: 1px solid silver;
+                }
+                td {
+                    width: 12.5%;
+                    border: 1px solid silver;
+                }
+            }
         }
-      }
-      .card-records-wrap {
-        position: absolute;
-        top: 150px;
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
+        .cards-wrap {
+            padding: 0 16px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 110px;
+            bottom: 16px;
+            .card-tabs {
+                .card-table {
+                    th {
+                        border: 1px solid silver;
+                    }
+                    td {
+                        width: 12.5%;
+                        border: 1px solid silver;
+                    }
+                }
+            }
+            .card-records-wrap {
+                position: absolute;
+                top: 150px;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        }
     }
-  }
 }
 </style>
 
 <template>
-  <div class="member-container ">
-    <card-form :dialog-visible.sync="cardFormVisible" :customer-data.sync="customerData" @card-created-event="handleCardCreated"></card-form>
-    <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
-    <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
-    <member-card-recharge v-if="displayRecharge" :card-data="cardData" :customer-data="customerData" @cardRechargeOnOff="cardRechargeOnOff($event)"></member-card-recharge>
-    <member-edit :dialog-visible.sync="displayMemberEdit" :customer-data="customerData" @memberEditOnOff="memberEditOnOff($event)"></member-edit>
-    <member-card-edit :dialog-visible.sync="displayMemberCardEdit" :customer-data="customerData" @memberCardEditOnOff="memberCardEditOnOff($event)"></member-card-edit>
-    <div class="cel-window">
-      <!-- 会员添加窗口 -> START -->
-      <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="'0'" :modal="false" @open="openWindow()">
-        <div slot="title" class="title-wrap">
-          <div class="left back">
-            <i class="el-icon-back" @click="handleCloseDialog()"></i>
-          </div>
-          <div>会员中心</div>
+<div class="member-container " v-if="customerData">
+  <card-form :dialog-visible.sync="cardFormVisible" :customer-data="customerData" @card-created-event="handleCustomerChanged"></card-form>
+  <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
+  <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
+  <member-card-recharge v-if="displayRecharge" :card-data="cardData" :customer-data="customerData" @cardRechargeOnOff="cardRechargeOnOff($event)"></member-card-recharge>
+  <member-edit :dialog-visible.sync="displayMemberEdit" :customer-data="customerData" @customer-changed-event="handleCustomerChanged"></member-edit>
+  <member-card-edit :dialog-visible.sync="displayMemberCardEdit" :customer-data="customerData" :card-data="cardData"></member-card-edit>
+  <div class="cel-window">
+    <!-- 会员添加窗口 -> START -->
+    <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="'0'" :modal="false" @open="openWindow()">
+      <div slot="title" class="title-wrap">
+        <div class="left back">
+          <i class="el-icon-back" @click="handleCloseDialog()"></i>
         </div>
-        <!-- <el-button type="danger" @click="test()">主要按钮</el-button> -->
-        <div class="box-card fillcontain">
-          <!-- 会员基本信息 START-->
-          <div class="member-profile">
-            <div class="head">
-              <span>会员信息 (消费 ¥{{statis.normalOrderTotal}}) </span>
-              <el-button type="info" size="mini" @click="curentEdit" class="right">会员编辑</el-button>
-            </div>
-            <table class="member-table">
-              <tr>
-                <th> 会员姓名 </th>
-                <td> {{customerData.userName}} </td>
-                <th> 会员电话 </th>
-                <td> {{customerData.mobile}}</td>
-                <th> 会员性别</th>
-                <td> {{customerData.sex}}</td>
-                <th> 会员生日</th>
-                <td> {{customerData.displayBirth}}</td>
-              </tr>
-              <tr>
-                <th> 所属门店</th>
-                <td> {{customerData.address}}</td>
-                <th> 创建日期</th>
-                <td> {{customerData.address}}</td>
-                <th> 备注</th>
-                <td colspan="3"> {{customerData.address}}</td>
-
-              </tr>
-            </table>
+        <div>会员中心</div>
+      </div>
+      <!-- <el-button type="danger" @click="test()">主要按钮</el-button> -->
+      <div class="box-card fillcontain">
+        <!-- 会员基本信息 START-->
+        <div class="member-profile">
+          <div class="head">
+            <span>会员信息 (消费 ¥{{statis.normalOrderTotal}}) </span>
+            <el-button type="info" size="mini" @click="curentEdit" class="right">会员编辑</el-button>
           </div>
-          <!-- 会员基本信息 END-->
-          <div class="cards-wrap" style="margin-top: 10px;">
-            <el-button type="danger" size="mini" @click="addCardButtonClicked" style="float: right;z-index: 999;position: relative;">添&nbsp;&nbsp;加&nbsp;&nbsp;会&nbsp;&nbsp;员&nbsp;&nbsp;卡</el-button>
-            <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick" class="card-tabs cel-scrollable-tabs">
-              <el-tab-pane v-for="(item) in cards" :key="item.name" :label="item.title" :name="item.name">
-                <div class="clear ">
-                  <div class="left">
-                    <span>余额</span>
-                    <span>¥ {{item.amountRemaining}}</span>
+          <table class="member-table">
+            <tr>
+              <th> 会员姓名 </th>
+              <td> {{customerData.userName}} </td>
+              <th> 会员电话 </th>
+              <td> {{customerData.mobile}}</td>
+              <th> 会员性别</th>
+              <td> {{customerData.displayGender}}</td>
+              <th> 会员生日</th>
+              <td> {{customerData.displayBirth}}</td>
+            </tr>
+            <tr>
+              <th> 所属门店</th>
+              <td> {{customerData.storeName}}</td>
+              <th> 注册日期</th>
+              <td> {{customerData.displayCreatedAt}}</td>
+              <th> 备注</th>
+              <td colspan="3"> {{customerData.memo}}</td>
 
-                  </div>
-
-                  <div class="left">
-                    <span>充值记录</span>
-                    <span>¥ {{item.amount}}</span>
-
-                  </div>
-
-                  <div class="left">
-                    <span>消费记录</span>
-                    <span>¥ {{item.amountUsed}}</span>
-
-                  </div>
-
-                  <div class="right">
-                    <el-button type="info" size="mini" @click="cardEdit">卡编辑</el-button>
-                    <el-button type="danger" plain size="mini" @click="cardRecharge">会员卡充值</el-button>
-                  </div>
+            </tr>
+          </table>
+        </div>
+        <!-- 会员基本信息 END-->
+        <div class="cards-wrap" style="margin-top: 10px;">
+          <el-button type="danger" size="mini" @click="addCardButtonClicked" style="float: right;z-index: 999;position: relative;">添&nbsp;&nbsp;加&nbsp;&nbsp;会&nbsp;&nbsp;员&nbsp;&nbsp;卡</el-button>
+          <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick" class="card-tabs cel-scrollable-tabs">
+            <el-tab-pane v-for="(item) in cards" :key="item.code" :label="item.title" :name="item.code">
+              <div class="clear ">
+                <div class="left">
+                  <span>余额</span>
+                  <span>¥ {{item.amountRemaining}}</span>
                 </div>
-                <!-- 在tab中的卡详情表 START -->
-                <table class="card-table">
-                  <tr>
-                    <th>会员卡号</th>
-                    <td>{{item.code}}</td>
-                    <th>会员卡类型</th>
-                    <td>{{item.displayStyle}}</td>
-                    <th>会员卡级别</th>
-                    <td>{{item.name}}</td>
-                    <th>会员卡状态</th>
-                    <td>{{item.displayStatus}}</td>
-                  </tr>
-                  <tr>
-                    <th>开卡门店</th>
-                    <td>{{item.openCardSite}}</td>
-                    <th>开卡日期</th>
-                    <td>{{item.displayCreatedAt}}</td>
-                    <th>到期时间</th>
-                    <td>{{item.displayExpireAt}}</td>
-                    <th>备注</th>
-                    <td>{{item.memo}}</td>
-                  </tr>
-                  <tr>
-                  </tr>
-                </table>
-                <div class="card-records-wrap">
-                  <el-tabs type="border-card" v-model="cardRecordTabName" class="card-records  cel-scrollable-tabs">
-                    <el-tab-pane label="消费记录" name="orders">
-                      <keep-alive>
-                        <card-order-list :customer-data="customerData"></card-order-list>
-                      </keep-alive>
-                    </el-tab-pane>
-                    <el-tab-pane label="充值记录" name="deposits">
-                      <keep-alive>
-                        <card-deposit-list :customer-data="customerData" :card-data="item"></card-deposit-list>
-                      </keep-alive>
-                    </el-tab-pane>
-                  </el-tabs>
+                <div class="left">
+                  <span>充值记录</span>
+                  <span>¥ {{item.amount}}</span>
                 </div>
-              </el-tab-pane>
-            </el-tabs>
-          </div>
-
+                <div class="left">
+                  <span>消费记录</span>
+                  <span>¥ {{item.amountUsed}}</span>
+                </div>
+                <div class="right">
+                  <el-button type="info" size="mini" @click="cardEdit(item)">卡编辑</el-button>
+                  <el-button type="danger" plain size="mini" @click="cardRecharge">会员卡充值</el-button>
+                </div>
+              </div>
+              <!-- 在tab中的卡详情表 START -->
+              <table class="card-table">
+                <tr>
+                  <th>会员卡号</th>
+                  <td>{{item.code}}</td>
+                  <th>会员卡类型</th>
+                  <td>{{item.displayStyle}}</td>
+                  <th>会员卡级别</th>
+                  <td>{{item.name}}</td>
+                  <th>会员卡状态</th>
+                  <td>{{item.displayStatus}}</td>
+                </tr>
+                <tr>
+                  <th>开卡门店</th>
+                  <td>{{item.openCardSite}}</td>
+                  <th>开卡日期</th>
+                  <td>{{item.displayCreatedAt}}</td>
+                  <th>到期时间</th>
+                  <td>{{item.displayExpireAt}}</td>
+                  <th>备注</th>
+                  <td>{{item.memo}}</td>
+                </tr>
+                <tr>
+                </tr>
+              </table>
+              <div class="card-records-wrap">
+                <el-tabs type="border-card" v-model="cardRecordTabName" class="card-records  cel-scrollable-tabs">
+                  <el-tab-pane label="消费记录" name="orders">
+                    <keep-alive>
+                      <card-order-list :customer-data="customerData"></card-order-list>
+                    </keep-alive>
+                  </el-tab-pane>
+                  <el-tab-pane label="充值记录" name="deposits">
+                    <keep-alive>
+                      <card-deposit-list :customer-data="customerData" :card-data="item"></card-deposit-list>
+                    </keep-alive>
+                  </el-tab-pane>
+                </el-tabs>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </div>
 
-      </el-dialog>
-    </div>
+      </div>
+
+    </el-dialog>
   </div>
+</div>
 </template>
 
 
 <script>
-import { DialogMixin } from "@/components/mixin/DialogMixin";
-import { apiResultMixin } from '@/components/apiResultMixin';
-import { getCustomerStatis, findOrders } from "@/api/getData";
-import { getOrder } from "@/api/getData";
+import {
+  DialogMixin
+} from "@/components/mixin/DialogMixin";
+import {
+  apiResultMixin
+} from '@/components/apiResultMixin';
+import {
+  getCustomerStatis,
+  findOrders
+} from "@/api/getData";
+import {
+  getOrder
+} from "@/api/getData";
 import CardForm from "@/components/common/CardForm.vue";
 import CardOrderList from "@/components/common/CardOrderList.vue";
 import CardDepositList from "@/components/common/CardDepositList.vue";
@@ -210,14 +213,31 @@ export default {
       memberRechargeRecordWindowVisible: false,
       tabsNumber: "", //每次点击别的tab是tabsNumber动态变化
       amountRemaining: "", //每张卡的余额
-      cards: [], //顾客会员卡数组
       statis: {},
       cardData: {}, //选中的当前会员卡的数据
       displayRecharge: false, //会员卡充值界面是否显示标志位
       cardRecordTabName: 'orders',
-      displayMemberEdit: false,  //会员编辑窗口是否打开标志位
+      displayMemberEdit: false, //会员编辑窗口是否打开标志位
       displayMemberCardEdit: false, // 会员卡编辑窗口是否打开标志位
     };
+  },
+  computed:{
+    cards: function(){
+      //顾客会员卡数组
+      let arr = []
+      if( this.customerData.cards ){
+        this.customerData.cards.forEach((card) => {
+          let obj = {};
+          obj.title = "卡号: " + card.code;
+          Object.assign(obj, card)
+          arr.push(obj);
+        })
+      }
+
+      const nocard = { title: "无卡消费", code: "0"   }
+      arr.push(nocard)
+      return arr
+    }
   },
   methods: {
     //根据会员ID得到该会员的所有订单
@@ -250,24 +270,7 @@ export default {
     async initData() {
       const result = await getCustomerStatis(this.customerData.id)
       this.statis = this.buildCustomerStatis(result)
-
-      this.cards = []
-      if (this.customerData.cards.length > 0) {
-        this.customerData.cards.forEach((card) => {
-          let obj = {};
-          obj.title = "卡号: " + card.code;
-          Object.assign(obj, card)
-          this.cards.push(obj);
-        })
-      } else {
-        const nocard = {
-          title: "无",
-          name: "无"
-        }
-        this.cards.push(nocard);
-      }
-
-      this.tabsNumber = this.cards[0].name; //openWindos后选中第一个tabs,之后每次点击别的tab是tabsNumber动态变化
+      this.tabsNumber = this.cards[0].code //openWindos后选中第一个tabs,之后每次点击别的tab是tabsNumber动态变化
     },
     //点击标签的事件处理函数-----
     tabHandleClick(tab, event) {
@@ -309,8 +312,9 @@ export default {
       this.dialogVisible = false;
     },
     //当前会员卡编辑按钮单击事件处理函数-----
-    cardEdit() {
-      this.displayMemberCardEdit = true;
+    cardEdit( item ) {
+      this.displayMemberCardEdit = true
+      console.log( "cardEdit", item )
     },
     //添加会员卡点击事件处理函数-----
     addCardButtonClicked() {
@@ -326,7 +330,12 @@ export default {
       console.log("接收到了发射过来的消息了**********");
       this.displayRecharge = false;
     },
-    handleClick() {
+    handleCustomerChanged(newCustomer) {
+      console.log("handleCustomerChanged", newCustomer)
+      //
+      this.$emit('update:customerData', newCustomer)
+      //上面的语句更新了customerData,但是会员列表页没有自动刷新
+      this.$emit("customer-changed-event", newCustomer);
 
     },
     //接收到会员编辑窗口子组件发射来的事件处理函数-----

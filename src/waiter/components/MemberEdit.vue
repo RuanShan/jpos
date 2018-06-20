@@ -99,7 +99,7 @@ export default {
     //验证规则---电话号码
     var validPhone = (rule, value, callback) => {
 
-      customerMobileValidate(value).then(function (response) {
+      customerMobileValidate(value, this.memberFormData.id).then(function (response) {
         if (response.result) {
           callback();
         } else {
@@ -214,15 +214,19 @@ export default {
       Promise.all(validations).then((val) => {
         let params = this.buildParams() //转换成SerVer需要的数据
         console.log("customer params =", params)
-        updateCustomer(params).then((result) => {
+        updateCustomer(this.memberFormData.id, params).then((result) => {
           console.log(" created customer1 ", result)
           this.returnData = result
           //判断返回的数据,Id不为空且不等于undefined时,提交Id数据给父组件
           if (this.returnData.id) {
             const customer = this.buildCustomer(this.returnData)
             // POS选择刚创建的客户
-            this.$emit("customer-updated-event", customer);
+            this.$emit("customer-changed-event", customer);
             this.handleCloseDialog();
+            this.$message({
+              message: '客户信息修改成功！',
+              type: 'success'
+            });
           } else {
             //判读返回的数据中是否有错误
             //如果返回数据中有错误
@@ -253,8 +257,8 @@ export default {
         paymentPassword: this.memberFormData.paymentPassword,
         address: this.memberFormData.address,
         birth: this.memberFormData.birth,
-        store_id: this.storeId
-
+        gender: this.memberFormData.gender,
+        memo: this.memberFormData.memo
       }
 
       let order = null

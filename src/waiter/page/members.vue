@@ -40,7 +40,7 @@
 
 <template>
 <div class="members-container page-content">
-  <member-center-new :dialog-visible.sync="memberCenterNewWindowVisible" :customer-data="customerData"></member-center-new>
+  <member-center-new :dialog-visible.sync="memberCenterNewWindowVisible" :customer-data.sync="customerData" @customer-changed-event="handleCustomerChanged"></member-center-new>
   <div class="members">
     <div class="title-wrap">
       <div>会员</div>
@@ -167,7 +167,12 @@ export default {
       console.log(index, row);
       this.customerData = row
       this.memberCenterNewWindowVisible = true;  //打開會員中心窗口
-
+    },
+    handleCustomerChanged( newCustomer ){
+      let i = this.customerList.findIndex((item)=>{
+        return item.id == newCustomer.id
+      })
+      this.customerList.splice(i,1, newCustomer)
     },
     //删除按钮处理事件
     handleDelete(index, row) {

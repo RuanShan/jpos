@@ -44,29 +44,20 @@
         </el-form-item>
         <el-form-item label="到期时间">
           <el-form-item prop="expireAt">
-            <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt" format="yyyy 年 MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-form-item>
         <el-form-item label="会员密码" prop="paymentPassword">
           <el-input v-model="cardFormData.paymentPassword"></el-input>
         </el-form-item>
-        <el-form-item label="付款方式" prop="paymentMethodId" required>
-          <el-select v-model="cardFormData.paymentMethodId" placeholder="请选择支付方式">
-            <el-option v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="充值金额" required>
-          <el-input v-model="cardFormData.paymentAmount"></el-input>
-        </el-form-item>
+
         <el-form-item label="备注" prop="address">
-          <el-input v-model="cardFormData.cardMemo"></el-input>
+          <el-input type="textarea" v-model="cardFormData.cardMemo"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="fillIn()" type="danger">测试填入</el-button>
       </div>
     </el-dialog>
   </div>
@@ -156,11 +147,7 @@ export default {
     resetForm() {
       this.$refs['cardForm'].resetFields();
     },
-    fillIn() {
-      this.cardFormData.code = ((Math.random() + 1) * 1000).toFixed()
-      this.cardFormData.paymentAmount = 250
-      this.cardFormData.paymentPassword = "123456"
-    },
+  
     //关闭窗口时事件处理函数-----
     closeTheWindows() {
       // console.log("为什么不关闭呢?");
