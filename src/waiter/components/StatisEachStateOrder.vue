@@ -192,7 +192,7 @@
 
         <el-form-item label="门店选择">
           <el-select class="select-options" v-model="form.stateValue" @change="changeForState" size="mini">
-            <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
+            <el-option v-for="item in form.stateOptions" :key="item.value" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
