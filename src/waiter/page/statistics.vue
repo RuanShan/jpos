@@ -133,9 +133,8 @@
         </el-tab-pane>
 
         <el-tab-pane label="各个门店会员统计">
-          <div class="line-one-row">
+          <!-- <div class="line-one-row">
             <div class="main-left">
-              <!-- 时间选择 START-->
               <fieldset>
                 <legend>时间选择</legend>
                 <div class="time-select-left">
@@ -148,10 +147,8 @@
                   </el-date-picker>
                 </div>
               </fieldset>
-              <!-- 时间选择 END-->
             </div>
             <div class="main-right">
-              <!-- 門店選擇 START-->
               <fieldset>
                 <legend>门店选择</legend>
                 <el-select v-model="stateValue" @change="changeForState" size="mini" style="width:100%;">
@@ -159,10 +156,8 @@
                   </el-option>
                 </el-select>
               </fieldset>
-              <!-- 門店選擇 END-->
             </div>
           </div>
-          <!-- 功能选择   START -->
           <div class="line-two-row">
             <fieldset>
               <legend>功能选择</legend>
@@ -170,8 +165,6 @@
               <el-button type="primary" size="mini">新增会员充值统计</el-button>
             </fieldset>
           </div>
-          <!-- 功能选择   END -->
-          <!-- 会员统计表   START -->
           <div class="line-three-row">
             <el-table :data="tableData" border style="width: 100%" height="292">
               <el-table-column prop="name" label="会员卡号" width="78">
@@ -193,14 +186,14 @@
               <el-table-column prop="name" label="备注">
               </el-table-column>
             </el-table>
-          </div>
+          </div> -->
           <!-- 会员统计表   END -->
+          <statis-each-state-member v-if="statisEachStateMemberVisible"></statis-each-state-member>
         </el-tab-pane>
 
         <el-tab-pane label="各个门店订单统计">
-          <div class="line-one-row">
+          <!-- <div class="line-one-row">
             <div class="main-left">
-              <!-- 时间选择 START-->
               <fieldset>
                 <legend>时间选择</legend>
                 <div class="time-select-left">
@@ -213,10 +206,8 @@
                   </el-date-picker>
                 </div>
               </fieldset>
-              <!-- 时间选择 END-->
             </div>
             <div class="main-right">
-              <!-- 門店選擇 START-->
               <fieldset>
                 <legend>门店选择</legend>
                 <el-select v-model="stateValue" @change="changeForState" size="mini" style="width:100%;">
@@ -224,11 +215,10 @@
                   </el-option>
                 </el-select>
               </fieldset>
-              <!-- 門店選擇 END-->
             </div>
-          </div>
+          </div> -->
           <!-- 功能选择   START -->
-          <div class="line-two-row">
+          <!-- <div class="line-two-row">
             <fieldset>
               <legend>功能选择</legend>
               <el-select v-model="payValue" @change="changeForState" size="mini" s>
@@ -236,10 +226,10 @@
                 </el-option>
               </el-select>
             </fieldset>
-          </div>
+          </div> -->
           <!-- 功能选择   END -->
           <!-- 订单统计表   START -->
-          <div class="line-three-row">
+          <!-- <div class="line-three-row">
             <el-table :data="tableData" border style="width: 100%" height="292">
               <el-table-column prop="name" label="会员卡号" width="78">
               </el-table-column>
@@ -262,61 +252,17 @@
               <el-table-column prop="name" label="备注" width="78">
               </el-table-column>
             </el-table>
-          </div>
+          </div> -->
           <!-- 订单统计表   END -->
+          <statis-each-state-order v-if="statisEachStateOrderVisible"></statis-each-state-order>
         </el-tab-pane>
 
         <el-tab-pane label="工厂统计">
-          <statis-pandect v-if="statisPandectVisible"></statis-pandect>
+          <statis-each-state-order v-if="statisEachStateOrderVisible"></statis-each-state-order>
         </el-tab-pane>
 
         <el-tab-pane label="会员情况统计">
-          <div class="line-one-row">
-            <div class="main-left">
-              <!-- 时间选择 START-->
-              <fieldset>
-                <legend>时间选择</legend>自定义时间
-                <el-date-picker class="date-picker" v-model="eachStoreMemberDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
-                </el-date-picker>
-              </fieldset>
-              <!-- 时间选择 END-->
-            </div>
-            <div class="main-right">
-              <!-- 門店選擇 START-->
-              <fieldset>
-                <legend>门店选择</legend>
-                <el-select v-model="stateValue" @change="changeForState" size="mini" style="width:100%;">
-                  <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
-                  </el-option>
-                </el-select>
-              </fieldset>
-              <!-- 門店選擇 END-->
-            </div>
-          </div>
-          <!-- 会员统计表   START -->
-          <div class="line-two-row">
-            <el-table :data="tableData" border style="width: 100%" height="292">
-              <el-table-column prop="name" label="会员卡号" width="78">
-              </el-table-column>
-              <el-table-column prop="name" label="加入时间" width="78">
-              </el-table-column>
-              <el-table-column prop="name" label="会员姓名" width="90">
-              </el-table-column>
-              <el-table-column prop="name" label="性别" width="90">
-              </el-table-column>
-              <el-table-column prop="name" label="会员卡类型" width="140">
-              </el-table-column>
-              <el-table-column prop="name" label="会员卡等级" width="140">
-              </el-table-column>
-              <el-table-column prop="name" label="卡内余额">
-              </el-table-column>
-              <el-table-column prop="name" label="累计消费" width="78">
-              </el-table-column>
-              <el-table-column prop="name" label="电话" width="90">
-              </el-table-column>
-            </el-table>
-          </div>
-          <!-- 会员统计表   END -->
+          
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -326,45 +272,52 @@
 <script>
 import DaySale from '@/components/statis/DaySale.vue'
 import StatisPandect from '../components/StatisPandect.vue';
+import StatisEachStateMember from '../components/StatisEachStateMember.vue';
+import StatisEachStateOrder from '../components/StatisEachStateOrder.vue';
 
 export default {
   components: {
     "day-sale": DaySale,
     "statis-pandect": StatisPandect,
+    "statis-each-state-member": StatisEachStateMember,
+    "statis-each-state-order": StatisEachStateOrder,
   },
   data() {
     return {
       //*********** UI需要的变量 ***************/
       statisPandectVisible: false, //统计总览组件显示标志位
+      statisEachStateMemberVisible: false, //各个门店会员统计组件显示标志位
+      statisEachStateOrderVisible: false,  //各个门店订单统计组件显示标志位
       theDialogVisible: true, //窗口显示标志位
       tabsNumber: 0, //每次点击别的tab是tabsNumber动态变化
-      stateValue: "", //門店選項
-      payValue: "", //支付方式选项
+      // stateValue: "", //門店選項
+      // payValue: "", //支付方式选项
       eachStoreMemberDateSection: "", //选择的日期时间
       totalPage: 0, //分页器显示的总页数
       perPage: 12, //主表每页显示12行
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
+
       //*********** 逻辑需要的变量 ***************/
       returnServerCustomerData: {}, //调用接口,返回的数据
       customerData: {}, //整理過的顧客數據
 
 
-      stateOptions: [{ //门店方式选项
-        value: '全部',
-      }],
-      payOptions: [{ //支付方式选项
-        value: '现金',
-      }, {
-        value: '微信',
-      }, {
-        value: '支付宝',
-      }, {
-        value: '银行卡',
-      },
-      {
-        value: '未付',
-      }
-      ],
+      // stateOptions: [{ //门店方式选项
+      //   value: '全部',
+      // }],
+      // payOptions: [{ //支付方式选项
+      //   value: '现金',
+      // }, {
+      //   value: '微信',
+      // }, {
+      //   value: '支付宝',
+      // }, {
+      //   value: '银行卡',
+      // },
+      // {
+      //   value: '未付',
+      // }
+      // ],
       pickerOptions2: {
         shortcuts: [{
           text: "最近三个月",
@@ -458,7 +411,7 @@ export default {
     };
   },
   mounted() {
-    this.stateValue = this.stateOptions[0].value;
+    // this.stateValue = this.stateOptions[0].value;
     this.statisPandectVisible = true;
   },
   methods: {
@@ -470,15 +423,22 @@ export default {
           this.statisPandectVisible = true;
           console.log("============0   了,请注意!!!!");
           break;
-        case "3":
-          this.statisPandectVisible = true;
-          console.log("============3   了,请注意!!!!");
-
+        case "1":
+          this.statisEachStateMemberVisible = true;
+          console.log("============1   了,请注意!!!!");
           break;
-        case 2:
+        case "2":
+          this.statisEachStateOrderVisible = true;
+          console.log("============2   了,请注意!!!!");
+          break;
+        case "3":
+          this.statisEachStateOrderVisible = true;
+          console.log("============3   了,请注意!!!!");
           break;
         default:
           this.statisPandectVisible = false;
+          this.statisEachStateMemberVisible = false;
+          this.statisEachStateOrderVisible = false;
           console.log("default");
 
       }
