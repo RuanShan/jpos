@@ -1,6 +1,7 @@
 
 <style lang="scss">
 @import "../../style/mixin";
+
 .data_section {
     padding: 20px;
     margin-bottom: 40px;
@@ -44,6 +45,7 @@
     right: 0;
 
 }
+
 </style>
 <template>
 <div class="fillcontain">
