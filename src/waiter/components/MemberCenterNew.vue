@@ -54,7 +54,7 @@
   <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
   <member-card-recharge v-if="displayRecharge" :card-data="cardData" :customer-data="customerData" @cardRechargeOnOff="cardRechargeOnOff($event)"></member-card-recharge>
   <member-edit :dialog-visible.sync="displayMemberEdit" :customer-data="customerData" @customer-changed-event="handleCustomerChanged"></member-edit>
-  <member-card-edit :dialog-visible.sync="displayMemberCardEdit" :customer-data="customerData" :card-data="cardData"></member-card-edit>
+  <member-card-edit :dialog-visible.sync="displayMemberCardEdit" :customer-data.sync="customerData" :card-data.sync="cardData" @card-changed-event="handleCardChanged"></member-card-edit>
   <div class="cel-window">
     <!-- 会员添加窗口 -> START -->
     <el-dialog :visible="computedVisible" :close-on-press-escape="false" :show-close="false" :top="'0'" :modal="false" @open="openWindow()">
@@ -145,14 +145,10 @@
               <div class="card-records-wrap">
                 <el-tabs type="border-card" v-model="cardRecordTabName" class="card-records  cel-scrollable-tabs">
                   <el-tab-pane label="消费记录" name="orders">
-                    <keep-alive>
-                      <card-order-list :customer-data="customerData"></card-order-list>
-                    </keep-alive>
+                      <card-order-list :customer-data="customerData" :card-data="item"></card-order-list>
                   </el-tab-pane>
                   <el-tab-pane label="充值记录" name="deposits">
-                    <keep-alive>
                       <card-deposit-list :customer-data="customerData" :card-data="item"></card-deposit-list>
-                    </keep-alive>
                   </el-tab-pane>
                 </el-tabs>
               </div>
@@ -233,8 +229,7 @@ export default {
           arr.push(obj);
         })
       }
-
-      const nocard = { title: "无卡消费", code: "0"   }
+      const nocard = { title: "无卡消费", code: ""   }
       arr.push(nocard)
       return arr
     }
@@ -285,15 +280,7 @@ export default {
       this.displayRecharge = true;
       // console.log("应该打开充值窗口了");
     },
-    //当前卡的充值记录事件处理函数-----调到充值界面
-    cardRechargeRecord() {
 
-
-    },
-    //当前卡的消费记录按钮事件处理函数-----调到充值界面
-    cardExpenseCalendar() {
-
-    },
     //当前顾客全部的充值记录按钮事件处理函数-----调到充值界面
     openRechargeRecordWindow() {
       this.memberRechargeRecordWindowVisible = true
@@ -314,16 +301,12 @@ export default {
     //当前会员卡编辑按钮单击事件处理函数-----
     cardEdit( item ) {
       this.displayMemberCardEdit = true
-      console.log( "cardEdit", item )
+      this.cardData = item
     },
     //添加会员卡点击事件处理函数-----
     addCardButtonClicked() {
       console.log("--addCardButtonClicked--")
       this.cardFormVisible = true
-    },
-    handleCardCreated(newCustomer) {
-      this.customerData = newCustomer
-      console.log("--handleCardCreated--")
     },
     //会员卡充值组件传过来的发射事件
     cardRechargeOnOff() {
@@ -332,11 +315,19 @@ export default {
     },
     handleCustomerChanged(newCustomer) {
       console.log("handleCustomerChanged", newCustomer)
-      //
+      //处理会员卡添加，会员信息更改
       this.$emit('update:customerData', newCustomer)
       //上面的语句更新了customerData,但是会员列表页没有自动刷新
       this.$emit("customer-changed-event", newCustomer);
-
+    },
+    handleCardChanged(changedCard){
+      //构造新的客户对象，
+      const newCustomer = Object.assign({}, this.customerData)
+      let index = newCustomer.cards.findIndex((card)=>{
+        return changedCard.id == card.id
+      })
+      newCustomer.cards.splice(index, 1, changedCard)
+      this.handleCustomerChanged( newCustomer )
     },
     //接收到会员编辑窗口子组件发射来的事件处理函数-----
     memberEditOnOff() {

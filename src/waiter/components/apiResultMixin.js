@@ -247,6 +247,7 @@ export var apiResultMixin = {
       })
       return products
     },
+
     buildCustomer: function(userResult) {
       const user = {
         storeId: 0,
@@ -267,34 +268,8 @@ export var apiResultMixin = {
       // 客户详细信息里，有会员卡信息
       if (userResult.cards) {
         userResult.cards.forEach((model)=>{
-          const card = {
-            className: 'Spree::Card',
-            id: model.id,
-            customer: user,
-            storeId: model.store_id,
-            name: model.name,
-            style: model.style, // prepaid 充值卡， counts 次卡
-            amountRemaining: parseInt(model.amount_remaining),
-            amount: parseInt(model.amount), // 充值钱数
-            amountUsed: parseInt(model.amount_used), // 使用钱数
-            discountPercent: parseInt(model.discount_percent),
-            discountAmount: parseInt(model.discount_amount),
-            status: model.status, //enabled:可用， disabled：不可用
-            code: (model.code.length < 10 ? model.code : model.code.slice(0, 8)), // 显示前8位
-            variantId: model.variant_id,
-            productId: model.product_id,
-            note: model.note,
-            expireAt: model.expire_at, //可能为空
-            createdAt: moment(model.created_at),
-          }
-
-          if( card.expireAt){
-            card.expireAt =  moment(card.expireAt)
-            card.displayExpireAt = card.expireAt.format('MM-DD HH:mm')
-          }
-          card.displayCreatedAt = card.createdAt.format('MM-DD HH:mm')
-          card.displayStyle = this.getCardDisplayStyle( card.style)
-          card.displayStatus = this.getCardDisplayStatus( card.status)
+          const card = this.buildCard( model )
+          card.customer = user
           user.cards.push(card)
         })
         // 选择第一个可用的card作为 缺省会员卡
@@ -368,6 +343,7 @@ export var apiResultMixin = {
       console.log("customersResult=", customersResult, "customers=", customers)
       return customers
     },
+
     //构造客户统计信息
     buildCustomerStatis:  function(result) {
       // normalOrderTotal：一般订单消费金额 cardOrderTotal：充值金额
@@ -376,6 +352,38 @@ export var apiResultMixin = {
       statis.cardOrderTotal = parseInt(result.card_order_total)
 console.log( "buildCustomerStatis=", result, statis)
       return statis
+    },
+
+    buildCard: function( model ){
+      const card = {
+        className: 'Spree::Card',
+        id: model.id,
+        storeId: model.store_id,
+        name: model.name,
+        style: model.style, // prepaid 充值卡， counts 次卡
+        amountRemaining: parseInt(model.amount_remaining),
+        amount: parseInt(model.amount), // 充值钱数
+        amountUsed: parseInt(model.amount_used), // 使用钱数
+        discountPercent: parseInt(model.discount_percent),
+        discountAmount: parseInt(model.discount_amount),
+        status: model.status, //enabled:可用， disabled：不可用
+        code: (model.code.length < 10 ? model.code : model.code.slice(0, 8)), // 显示前8位
+        variantId: model.variant_id,
+        productId: model.product_id,
+        memo: model.memo,
+        expireAt: model.expire_at, //可能为空
+        createdAt: moment(model.created_at),
+      }
+
+      if( card.expireAt){
+        card.expireAt =  moment(card.expireAt)
+        card.displayExpireAt = card.expireAt.format('MM-DD HH:mm')
+      }
+      card.displayCreatedAt = card.createdAt.format('MM-DD HH:mm')
+      card.displayStyle = this.getCardDisplayStyle( card.style)
+      card.displayStatus = this.getCardDisplayStatus( card.status)
+
+      return card
     },
 
     generateGroupNumber: function() {

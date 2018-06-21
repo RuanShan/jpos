@@ -34,13 +34,10 @@
 
       <el-form :model="cardFormData" ref="cardForm" status-icon label-width="100px" class="new-member-form">
         <el-form-item label="会员卡号" prop="code" required>
-          <el-input v-model="cardFormData.code"></el-input>
+          <el-input v-model="cardFormData.code" readonly ></el-input>
         </el-form-item>
         <el-form-item label="会员卡类型" prop="variantId" required>
-          <el-select v-model="cardFormData.variantId" placeholder="请选择会员卡类型">
-            <el-option v-for="item in cardTypeList" :key="item.id" :label="item.name" :value="item.id">
-            </el-option>
-          </el-select>
+          <el-input v-model="cardFormData.name"></el-input>
         </el-form-item>
         <el-form-item label="到期时间">
           <el-form-item prop="expireAt">
@@ -52,7 +49,7 @@
         </el-form-item>
 
         <el-form-item label="备注" prop="address">
-          <el-input type="textarea" v-model="cardFormData.cardMemo"></el-input>
+          <el-input type="textarea" v-model="cardFormData.memo"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -66,25 +63,16 @@
 
 <script>
 import { DialogMixin } from "@/components/mixin/DialogMixin"
-import { apiResultMixin } from '@/components/apiResultMixin'
-import { checkout } from "@/api/getData";
+import { updateCard } from "@/api/getData";
 
 export default {
-  props: ['dialogVisible','customerData'],
-  mixins: [DialogMixin, apiResultMixin],
+  props: ['dialogVisible','customerData','cardData'],
+  mixins: [DialogMixin],
   data() {
     return {
-      displayMemberCardEditOnOff: "",// 本窗口显示标志位,没有初始值
       paymentMethodList: [],
       cardTypeList: [],
-      cardFormData: {
-        code: "",
-        paymentAmount: null,
-        expireAt: "",
-        paymentMethodId: null,
-        variantId: null,
-        memo: ""
-      },
+      cardFormData: {}
     }
   },
   computed: {
@@ -95,46 +83,30 @@ export default {
     }
   },
   methods: {
-    async handleOpen() {
-      this.displayMemberCardEditOnOff = true;
-      console.log("CardForm..handleOpen")
-      this.paymentMethodList = await this.getPaymentMethods()
-
-      if (this.activePaymentMethods.length > 0) {
-        this.cardFormData.paymentMethodId = this.activePaymentMethods[0].id
-      }
-      this.cardTypeList = await this.getCardTypes()
-
-      if (this.cardTypeList.length > 0) {
-        this.cardFormData.variantId = this.cardTypeList[0].id
-      }
+    handleOpen() {
+      console.log("CardForm..handleOpen", this.cardData)
+      this.cardFormData = Object.assign({}, this.cardData )
     },
     handleClose() {
       this.resetForm()
       this.handleCloseDialog();
-      // this.closeTheWindows();
     },
     submitForm() {
       this.$refs['cardForm'].validate((valid) => {
         if (valid) {
-          let orderParams = {
-            user_id: this.customerData.id,
-            line_items: [
-              { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1 }
-            ],
-            payments: [{
-              payment_method_id: this.cardFormData.paymentMethodId,
-              amount: this.cardFormData.paymentAmount
-            }]
+          let params = {
+            card: { memo: this.cardFormData.memo, expire_at: this.cardFormData.expireAt  }
           }
-          checkout({ order: orderParams }).then((result) => {
+          updateCard( this.cardData.id, params ).then((result) => {
             if (result.id) {
-              let order = this.buildOrder(result)
-              this.$emit('card-created-event', order.customer)
+              let card = this.buildCard(result)
+              console.log( " updateCard =", card, "params=",params )
+              this.$emit('card-changed-event', card)
               this.$message({
-                message: '恭喜你，会员卡创建成功',
+                message: '恭喜你，会员卡更新成功',
                 type: 'success'
-              });
+              })
+              this.handleClose()
             }
           })
 
@@ -146,14 +118,8 @@ export default {
     },
     resetForm() {
       this.$refs['cardForm'].resetFields();
-    },
-  
-    //关闭窗口时事件处理函数-----
-    closeTheWindows() {
-      // console.log("为什么不关闭呢?");
-      this.displayMemberCardEditOnOff = false;
-      this.$emit("memberCardEditOnOff", false); //传给父组件自己被关闭的消息
     }
+
   }
 }
 </script>

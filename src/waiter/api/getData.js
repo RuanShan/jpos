@@ -452,10 +452,17 @@ export const completeLineItemGroups = data => fetch('/api/v1/line_item_groups/al
 export const getUserCards = (userId) => fetch('/api/v1/users/' + userId + '/cards');
 
 /**
+ * update card  修改会员卡信息，包括会员卡 到期时间，备注
+ */
+export const updateCard = (cardId, data ) => fetch('/api/v1/cards/' + cardId, data, 'PUT');
+
+
+/**
  * get card transactions 根据会员卡Id获取会员卡充值记录
  */
 
 export const getCardTransactions = (cardId) => fetch('/api/v1/cards/' + cardId + '/transactions');
+
 
 /**************************************************************************
  * jpos spree api for statis
