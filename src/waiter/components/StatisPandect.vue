@@ -181,11 +181,6 @@ export default {
     this.stateValue = this.stateOptions[0].value;
   },
   methods: {
-
-    //点击标签的事件处理函数-----
-    tabHandleClick(tab, event) {
-      console.log(this.tabsNumber);
-    },
     //門店選擇改變時的事件處理函數-----
     changeForState() {
 
