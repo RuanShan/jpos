@@ -470,18 +470,19 @@ export const getCardTransactions = (cardId) => fetch('/api/v1/cards/' + cardId +
 
 /**
  * 某一天 statis
+ *
  */
 
-export const selectedDayCount = () => fetch('/api/v1/sale_days/selected_day')
+export const selectedDayCount = ( data) => fetch('/api/v1/sale_days/day', data, 'POST')
 
 /**
  * 某一天 statis
  */
 
-export const selectedDaysCount = (data) => fetch('/api/v1/sale_days/selected_days', data, 'PUT')
-    /**
-     * 某一天 statis
-     */
+export const selectedDaysCount = (data) => fetch('/api/v1/sale_days/days', data, 'POST')
+/**
+ * 某一天 statis
+ */
 
 export const todayCount = () => fetch('/api/v1/sale_days/today')
 
@@ -489,4 +490,4 @@ export const todayCount = () => fetch('/api/v1/sale_days/today')
  * Life statis
  */
 
-export const totalCount = () => fetch('/api/v1/sale_days/total')
+export const totalCount = (data) => fetch('/api/v1/sale_days/total', data, 'POST')

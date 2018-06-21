@@ -104,7 +104,7 @@
             </el-form-item>
             <el-form-item label="店铺">
               <el-select v-model="selectedStoreId" @change="changeForState" size="mini">
-                <el-option v-for="item in storeOptions" :key="item.id" :value="item.value">
+                <el-option v-for="item in storeOptions" :key="item.id" :value="item.id" :label="item.name">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -153,7 +153,7 @@
             </el-row>
           </section>
           <div class="tendency-wrap">
-            <tendency :sevenDate='sevenDate' :sevenDay='sevenDay'></tendency>
+            <tendency :sevenDate.sync='sevenDate' :sevenDay.sync='compuatedDays'></tendency>
           </div>
 
       </div>
@@ -164,10 +164,11 @@
 
 <script>
 import tendency from '@/components/statis/tendency.vue'
-import dtime from 'time-formater'
+import moment from 'moment'
+//import dtime from 'time-formater'
 import {
   selectedDaysCount,
-  todayCount,
+  selectedDayCount,
   totalCount
 } from '@/api/getData'
 
@@ -179,7 +180,7 @@ export default {
     return {
       //*********** UI需要的变量 ***************/
       formData:{
-        fromTo: null, // [ "2018-06-04", "2018-06-14" ]
+        startEnd: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null
       },
       storeOptions: [{ //门店方式选项
@@ -228,7 +229,6 @@ export default {
       allUserCount: null,
       allOrderCount: null,
       allCardCount: null,
-      sevenDay: [],
       sevenDate: [
         [],
         [],
@@ -239,22 +239,55 @@ export default {
       customerData: {}, //整理過的顧客數據
     };
   },
-  mounted() {
+  created() {
     let stores = this.stores.map((item)=>{ return {id: item.id, name: item.name }})
     this.storeOptions = [ {id: null, name: "全部"}].concat(stores )
-
+    let start = moment().subtract(6,"days")
+    let end = moment()
+    this.pandectDateSelect = [ start.toDate(), end.toDate() ]
     this.initData()
-    for (let i = 6; i > -1; i--) {
-      const date = dtime(new Date().getTime() - 86400000 * i).format('YYYY-MM-DD')
-      this.sevenDay.push(date)
+
+
+
+
+  },
+  computed:{
+    computedStartAt: function(){
+      return this.formData.startEnd[0]
+    },
+    computedEndAt: function(){
+      return this.formData.startEnd[1]
+    },
+    computedDayParam: function(){
+      let params = {q:{day_eq: this.computedStartAt}}
+
+      return params
+    },
+    computedDaysParams(){
+      let params = {
+          q:{ day_gteq: this.computedStartAt,
+            day_lteq: this.computedEndAt
+          }
+        }
+      return params
+    },
+    compuatedDays(){
+      let days = []
+      let start = moment(this.computedStartAt)
+      let end = moment(this.computedEndAt)
+      while (start <= end) {
+        const day = start.format('YYYY-MM-DD')
+        days.push(day)
+        start = start.add( 1, "days")
+      }
+      return days
     }
-    this.getSevenData()
   },
   methods: {
-
     async initData() {
-      //const today = dtime().format('YYYY-MM-DD')
-      Promise.all([todayCount(), totalCount()])
+      this.formData.startEnd =this.pandectDateSelect
+      console.log( "this.formData.startEnd = ",this.formData.startEnd )
+      Promise.all([selectedDayCount(this.computedDayParam), totalCount(this.computedDaysParams)])
         .then(res => {
 
           this.statis.userCount = res[0].new_customers_count  //新增客户
@@ -266,34 +299,44 @@ export default {
         }).catch(err => {
           console.log(err)
         })
+      this.getSevenData()
     },
     async getSevenData() {
 
-      selectedDaysCount({
-        days: this.sevenDay
-      }).then(res => {
+      selectedDaysCount(this.computedDaysParams).then(res => {
         const resArr = [
           [],
           [],
           []
         ]
-        res.sale_days.forEach((item, index) => {
-          resArr[0].push(item.new_customers_count)
-          resArr[1].push(item.new_orders_count)
-          resArr[2].push(item.new_cards_count)
+        this.compuatedDays.forEach((day, i)=>{
+          let  sale_day = res.sale_days.find((item)=>{ return item.day ==day})
 
+          if( sale_day ){
+            resArr[0].push(sale_day.new_customers_count)
+            resArr[1].push(sale_day.new_orders_count)
+            resArr[2].push(sale_day.new_cards_count)
+          }else{
+            resArr[0].push(0)
+            resArr[1].push(0)
+            resArr[2].push(0)
+          }
         })
+console.log( "resArr=",resArr)
         this.sevenDate = resArr
       }).catch(err => {
         console.log(err)
       })
     },
+
+
     //門店選擇改變時的事件處理函數-----
     changeForState() {
 
     },
     onSubmit(){
-
+      this.formData.startEnd = this.pandectDateSelect
+      this.initData()
     }
   }
 };
