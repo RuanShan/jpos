@@ -258,12 +258,17 @@ export var apiResultMixin = {
       user.storeId = userResult.store_id
       user.id = userResult.id
       user.mobile = userResult.mobile
-      user.name = userResult.name
+      user.userName = userResult.username
       user.gender = userResult.gender
+      user.birth = userResult.birth
       user.customerType = userResult.customer_type
       user.normalOrderTotal = parseInt(userResult.normal_order_total)
       user.normalOrderCount = userResult.normal_order_count
       user.cards = []
+      if( user.birth ){
+        user.birth = moment( user.birth )
+        user.displayBirth = user.birth.format('YYYY-MM-DD')
+      }
       // cards:[{"id":1,"user_id":8,"code":"7f9bd55a64254af48694723d4622eabfcd4f5197","current_value":"2000.0","name":"PrepaidCard1000 - Master","discount_percent":null,"discount_amount":null,"product_id":1]
       // 客户详细信息里，有会员卡信息
       if (userResult.cards) {

@@ -65,6 +65,11 @@ export default {
   },
   created: function(){
     this.initData()
+    //当有新的充值数据时，重新加载数据
+    this.$bus.$on('card-transaction-created-gevent', () => {
+      this.initData()
+    })
+
   },
   methods: {
     //打开窗口时事件处理函数-----根据分页器,显示第一页数据
@@ -94,17 +99,7 @@ export default {
       console.log(`当前页: ${val}`);
       this.currentPage = val;
       console.log(this.currentPage);
-      let requestDataByUserId = { //查询条件
-        "page": this.currentPage, //分页器选择的当前页数
-        "per_page": 12, //每页显示12行数据
-        "q": {
-          "user_id_eq": this.customerData.id //根据顾客的id
-        }
-      }
-      this.getOrdersByUserId(requestDataByUserId).then(() => {
-        this.expenseTableData = this.buildOrders(this.orderDatasByUserId);
-        console.log("得到了会员得订单数据了!");
-      })
+      this.initData()
     }
   }
 };

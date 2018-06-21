@@ -50,9 +50,7 @@
 <template>
 <div class="member-container " v-if="customerData">
   <card-form :dialog-visible.sync="cardFormVisible" :customer-data="customerData" @card-created-event="handleCustomerChanged"></card-form>
-  <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar>
-  <member-recharge-record :dialog-visible.sync="memberRechargeRecordWindowVisible" :customer-data="customerData"></member-recharge-record>
-  <member-card-recharge v-if="displayRecharge" :card-data="cardData" :customer-data="customerData" @cardRechargeOnOff="cardRechargeOnOff($event)"></member-card-recharge>
+  <member-card-recharge :dialog-visible.sync="displayRecharge" :customer-data="customerData" :card-data="cardData"  @card-amount-changed-event="handleCardAmountChanged"></member-card-recharge>
   <member-edit :dialog-visible.sync="displayMemberEdit" :customer-data="customerData" @customer-changed-event="handleCustomerChanged"></member-edit>
   <member-card-edit :dialog-visible.sync="displayMemberCardEdit" :customer-data.sync="customerData" :card-data.sync="cardData" @card-changed-event="handleCardChanged"></member-card-edit>
   <div class="cel-window">
@@ -114,7 +112,7 @@
                 </div>
                 <div class="right">
                   <el-button type="info" size="mini" @click="cardEdit(item)">卡编辑</el-button>
-                  <el-button type="danger" plain size="mini" @click="cardRecharge">会员卡充值</el-button>
+                  <el-button type="danger" plain size="mini" @click="cardRecharge(item)">会员卡充值</el-button>
                 </div>
               </div>
               <!-- 在tab中的卡详情表 START -->
@@ -168,9 +166,7 @@
 import {
   DialogMixin
 } from "@/components/mixin/DialogMixin";
-import {
-  apiResultMixin
-} from '@/components/apiResultMixin';
+
 import {
   getCustomerStatis,
   findOrders
@@ -190,7 +186,7 @@ import MemberCardEdit from "@/components/MemberCardEdit.vue";
 
 export default {
   props: ["dialogVisible", "customerData"],
-  mixins: [DialogMixin, apiResultMixin],
+  mixins: [DialogMixin],
   components: {
     "card-form": CardForm,
     "member-card-recharge": MemberCardRecharge,
@@ -205,14 +201,12 @@ export default {
     return {
       customer: null,
       cardFormVisible: false,
-      memberExpCalWindowVisible: false,
-      memberRechargeRecordWindowVisible: false,
       tabsNumber: "", //每次点击别的tab是tabsNumber动态变化
       amountRemaining: "", //每张卡的余额
       statis: {},
       cardData: {}, //选中的当前会员卡的数据
-      displayRecharge: false, //会员卡充值界面是否显示标志位
       cardRecordTabName: 'orders',
+      displayRecharge: false, //会员卡充值界面是否显示标志位
       displayMemberEdit: false, //会员编辑窗口是否打开标志位
       displayMemberCardEdit: false, // 会员卡编辑窗口是否打开标志位
     };
@@ -272,22 +266,16 @@ export default {
       console.log(this.tabsNumber);
     },
     //当前卡的充值按钮事件处理函数-----调到充值界面
-    cardRecharge() {
-      let which = this.cards.findIndex((values, index, arr) => { //找第几个对象中包含当前的tabsNumber,也就是当前是当前会员的哪一张会员卡
-        return values.name == this.tabsNumber;
-      });
-      this.cardData = this.cards[which];
-      this.displayRecharge = true;
+    cardRecharge(item) {
+
+      this.cardData = item
+      this.displayRecharge = true
       // console.log("应该打开充值窗口了");
     },
 
-    //当前顾客全部的充值记录按钮事件处理函数-----调到充值界面
-    openRechargeRecordWindow() {
-      this.memberRechargeRecordWindowVisible = true
-    },
-    //当前顾客全部的消费记录按钮事件处理函数-----调到充值界面
-    openExpenseCalendarWindow() {
-      this.memberExpCalWindowVisible = true
+    //当前卡的消费记录按钮事件处理函数-----调到充值界面
+    cardExpenseCalendar() {
+
     },
     //会员编辑按钮单击事件处理函数-----
     curentEdit() {
@@ -328,6 +316,11 @@ export default {
       })
       newCustomer.cards.splice(index, 1, changedCard)
       this.handleCustomerChanged( newCustomer )
+    },
+    handleCardAmountChanged( changedCard){
+      console.log("handleCardAmountChanged", changedCard)
+      this.$bus.$emit('card-transaction-created-gevent')
+      this.handleCardChanged(changedCard)
     },
     //接收到会员编辑窗口子组件发射来的事件处理函数-----
     memberEditOnOff() {

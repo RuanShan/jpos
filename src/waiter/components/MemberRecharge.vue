@@ -51,6 +51,7 @@ import NumbersKeyborad from "@/components/NumbersKeyborad.vue";
 import { recharge } from "@/api/getData";
 
 export default {
+  mixins: [DialogMixin],
   props: ["memberCenterData"], //来自会员中心的会员数据
   components: {
     "number-keyboard": NumbersKeyborad
@@ -128,8 +129,6 @@ export default {
             typeof this.serverReturnData.Id != "undefined"
           ) {
             this.dialogVisible = false; //关闭当前窗口
-            this.$emit("saveRechargeButton", this.memberRechargeData.Id);
-
             console.log("充值返回的会员ID... = " + this.serverReturnData.Id);
           } else {
             //弹出提示

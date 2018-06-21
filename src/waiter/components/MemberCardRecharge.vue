@@ -17,7 +17,7 @@
 
 <template>
   <div class="">
-    <el-dialog title="会     员     卡     充     值" :visible.sync="displayOnOff" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="closeTheWindows">
+    <el-dialog title="会     员     卡     充     值" :visible.sync="computedVisible" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="closeWindow">
       <hr style="margin: -5px 15px;">
       <el-row>
         <el-col :span="1">
@@ -128,7 +128,7 @@
               </el-col>
               <el-col :span="6">
                 <div class="grid-content">
-                  <el-button type="info" style="width:100%" @click="quitTheWindow">退出</el-button>
+                  <el-button type="info" style="width:100%" @click="closeWindow">退出</el-button>
                 </div>
               </el-col>
               <el-col :span="2">
@@ -154,14 +154,16 @@
 
 <script>
 import { checkout } from "@/api/getData";
+import {
+  DialogMixin
+} from "@/components/mixin/DialogMixin";
 
 export default {
-  props: ["cardData", "customerData"],
-  // mixins: [apiResultMixin],
+  props: ['dialogVisible', "cardData", "customerData"],
+  mixins: [DialogMixin],
   data() {
     return {
       top: "0", /* 去除直接传 0 产生的 需要参数为string的警告 */
-      displayOnOff: "", //显示标志位
       radio: '现金', //支付方式单选按钮默认选择,会根据用户选择动态变化
       inputMoney: null,  //输入充值金额
       newCurrentValue: "",//输入后得余额
@@ -185,12 +187,11 @@ export default {
   methods: {
     //打开窗口时事件处理函数-----
     openWindow() {
-      this.displayOnOff = true;
+
     },
     //关闭窗口时事件处理函数-----
-    closeTheWindows() {
-      this.displayOnOff = false;
-      this.$emit("cardRechargeOnOff", false); //传给父组件自己被关闭的消息
+    closeWindow() {
+      this.handleCloseDialog()
       // console.log("子组件点击了关闭按钮!!!");
     },
     //改变打印选择状态时触发函数-----
@@ -201,11 +202,7 @@ export default {
     changeRechargeWay(){
       console.log(this.radio);
     },
-    //单价退出按钮时触发的函数-----
-    quitTheWindow(){
-      this.displayOnOff = false;
-      this.$emit("cardRechargeOnOff", false); //传给父组件自己被关闭的消息
-    },
+
     async checkout(){
       const orderParams = {
         user_id: this.customerData.id,
@@ -216,9 +213,13 @@ export default {
       let result = await checkout( { order: orderParams })
       console.log( "memberchard recharge checkout result=", result )
       if( result.id ){
+        let order = this.buildOrder( result )
+        let card = order.customer.cards.find((item)=>{ return item.id == this.cardData.id })
+        this.$emit( 'card-amount-changed-event', card )
+        this.closeWindow()
         this.$message({
           type: "success",
-          message: "充值成功！"
+          message: "恭喜你，会员卡充值成功！"
         });
       }
     }
