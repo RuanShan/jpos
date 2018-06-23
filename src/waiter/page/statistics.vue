@@ -113,6 +113,10 @@
         <el-tab-pane label="会员情况统计">
           <statis-member-case> </statis-member-case>
         </el-tab-pane>
+
+        <el-tab-pane label="员工打卡统计">
+          <statis-staff-clock-in></statis-staff-clock-in>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -124,6 +128,7 @@ import StatisPandect from '../components/StatisPandect.vue';
 import StatisEachStateMember from '../components/StatisEachStateMember.vue';
 import StatisEachStateOrder from '../components/StatisEachStateOrder.vue';
 import StatisMemberCase from '../components/StatisMemberCase.vue';
+import StatisStaffClockIn from '../components/StatisStaffClockIn.vue';
 
 export default {
   components: {
@@ -132,6 +137,7 @@ export default {
     "statis-each-state-member": StatisEachStateMember,
     "statis-each-state-order": StatisEachStateOrder,
     "statis-member-case": StatisMemberCase,
+    "statis-staff-clock-in": StatisStaffClockIn,
   },
   data() {
     return {
