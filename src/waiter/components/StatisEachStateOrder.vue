@@ -35,88 +35,21 @@
             margin: 0;
         }
     }
-    .tab-list-wrap {
-        position: absolute;
-        top: 55px;
-        left: 18px;
-        right: 18px;
-        bottom: 100px;
-        .tabs-height {
-            height: 100%;
-            .el-tabs__content {
-                position: absolute;
-                top: 40px;
-                left: 10px;
-                bottom: 0;
-                right: 10px;
-            }
-        }
-    }
-    .grid-content {
-        min-height: 30px;
-    }
 
-    .bg-purple {
-        background: #d3dce6;
-    }
-
-    .bg-purple-light {
-        background: #e5e9f2;
-    }
     .pagination-wrap {
         position: absolute;
         bottom: 15px;
         right: 4%;
         margin-top: 10px;
     }
-    .order-line-one-row {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        top: 10px;
-        .main-left {
-            // width: 70%;
-            float: left;
-            .time-select-left {
-                // width: 50%;
-                float: left;
-            }
-            .time-select-right {
-                width: 50%;
-                float: right;
-                .date-picker {
-                    width: 100%;
-                }
-            }
-        }
-        .main-right {
-            width: 30%;
-            float: right;
-        }
-    }
-    .line-two-row {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        top: 80px;
-        .form-item {
-            margin-bottom: 0;
-        }
-    }
+
+
     .order-line-three-row {
         position: absolute;
         left: 10px;
         right: 10px;
         top: 110px;
         bottom: 50px;
-    }
-    .tubiao-ont-row {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        top: 90px;
-        bottom: 10px;
-        .tubiao {}
     }
     .stati-sdata-order {
         display: inline-block;
@@ -173,7 +106,7 @@
   <!-- 订单统计表   START -->
 
   <div class="order-line-three-row">
-    <el-table class="cel-scrollable-table" :data="tableData" style="width: 100%">
+    <el-table class="cel-scrollable-table" :data="tableData"  border style="width: 100%">
 
         <el-table-column label="订单 ID" prop="number">
         </el-table-column>
