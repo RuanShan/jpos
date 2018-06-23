@@ -272,6 +272,7 @@ export var apiResultMixin = {
       user.gender = userResult.gender
       user.birth = userResult.birth
       user.customerType = userResult.customer_type
+      user.createdAt = moment(userResult.created_at),
       user.normalOrderTotal = parseInt(userResult.normal_order_total)
       user.normalOrderCount = userResult.normal_order_count
       user.cards = []
@@ -296,6 +297,8 @@ export var apiResultMixin = {
       }
       user.displayType = user.cards.length>0 ? "会员" : "散客"
       user.displayGender = this.getDisplayGender(user.gender)
+      user.displayCreatedAt = user.createdAt.format('MM-DD HH:mm')
+
       if( this.stores &&  user.storeId){
         let store = this.stores.find((s)=>{ return s.id == user.storeId })
         user.storeName = store.name
