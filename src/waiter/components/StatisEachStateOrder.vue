@@ -86,7 +86,7 @@
     <!-- 订单统计表   START -->
 
     <div class="order-line-three-row">
-      <el-table class="cel-scrollable-table" :data="tableData" style="width: 100%">
+      <el-table class="cel-scrollable-table" border  :data="tableData" style="width: 100%">
 
         <el-table-column label="订单 ID" prop="number">
         </el-table-column>
