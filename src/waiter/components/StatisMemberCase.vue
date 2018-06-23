@@ -1,23 +1,19 @@
 <style lang="scss">
-.statistics-container {
-  .member-time-select {
-    width: 230px;
-  }
-  .select-options {
-    width: 120px;
-  }
+.statis-member-case {
   .member-field-set {
     position: absolute;
     left: 10px;
     right: 10px;
     top: 5px;
   }
-  .member-line-three-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 108px;
-    bottom: 60px;
+  .member-form-item {
+    margin-bottom: 0;
+  }
+  .select-options {
+    width: 120px;
+  }
+  .member-time-select {
+    width: 230px;
   }
   .member-clear {
     position: absolute;
@@ -29,28 +25,13 @@
     top: 29px;
     right: 4px;
   }
-  .member-form-item {
-    margin-bottom: 0;
-  }
-  .title-wrap {
-    padding: 6px;
-    text-align: center;
-  }
-
-  .pagination-wrap {
-    position: absolute;
-    bottom: 15px;
-    right: 4%;
-    margin-top: 10px;
-  }
-
-  .line-two-row {
+  .member-line-three-row {
     position: absolute;
     left: 10px;
     right: 10px;
-    top: 80px;
+    top: 108px;
+    bottom: 60px;
   }
-
   .statisdatarecordnum {
     display: inline-block;
     position: absolute;
@@ -76,7 +57,7 @@
 </style>
 
 <template>
-  <div class="">
+  <div class="statis-member-case">
     <el-form ref="form" :model="form" label-width="70px" :inline="true">
       <fieldset class="member-field-set">
         <legend>功能选择</legend>
