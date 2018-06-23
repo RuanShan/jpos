@@ -1,16 +1,19 @@
 <style lang="scss">
-.statistics-container {
-  .member-time-select {
-    width: 230px;
-  }
-  .select-options {
-    width: 120px;
-  }
+.statis-each-member {
   .member-field-set {
     position: absolute;
     left: 10px;
     right: 10px;
     top: 5px;
+  }
+  .member-form-item {
+    margin-bottom: 0;
+  }
+  .member-time-select {
+    width: 230px;
+  }
+  .select-options {
+    width: 120px;
   }
   .member-clear {
     position: absolute;
@@ -22,42 +25,12 @@
     top: 29px;
     right: 4px;
   }
-  .member-form-item {
-    margin-bottom: 0;
-  }
-  .title-wrap {
-    padding: 6px;
-    text-align: center;
-  }
-  .filters {
-    padding: 16px;
-    .el-form-item {
-      margin: 0;
-    }
-  }
-
-  .pagination-wrap {
-    position: absolute;
-    bottom: 15px;
-    right: 4%;
-    margin-top: 10px;
-  }
-
   .member-line-three-row {
     position: absolute;
     left: 10px;
     right: 10px;
     top: 108px;
     bottom: 60px;
-  }
-  .tubiao-ont-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 90px;
-    bottom: 10px;
-    .tubiao {
-    }
   }
   .statisdatarecordnum {
     display: inline-block;
@@ -84,8 +57,7 @@
 </style>
 
 <template>
-  <div class="">
-
+  <div class="statis-each-member">
     <el-form ref="form" :model="formData" label-width="70px" :inline="true">
       <fieldset class="member-field-set">
         <legend>功能选择</legend>
@@ -108,7 +80,7 @@
 
     <!-- 会员统计表   START -->
     <div class="member-line-three-row ">
-      <el-table class="cel-scrollable-table" :data="tableData" border style="width: 100%" >
+      <el-table class="cel-scrollable-table" :data="tableData" border style="width: 100%">
         <el-table-column prop="cardTransaction.card.code" label="会员卡号" width="120">
 
         </el-table-column>
@@ -116,7 +88,7 @@
         </el-table-column>
         <el-table-column prop="cardTransaction.card.displayStyle" label="卡类型" width="90">
         </el-table-column>
-        <el-table-column prop="cardTransaction.card.name" label="会员卡等级" >
+        <el-table-column prop="cardTransaction.card.name" label="会员卡等级">
 
         </el-table-column>
         <el-table-column prop="cardTransaction.displayCreatedAt" label="缴费日期">
@@ -127,17 +99,19 @@
         </el-table-column>
         <el-table-column prop="cardTransaction.displayIsFirst" label="是否新增" width="90">
         </el-table-column>
-        <el-table-column prop="cardTransaction.card.memo" label="备注"  width="90">
+        <el-table-column prop="cardTransaction.card.memo" label="备注" width="90">
         </el-table-column>
       </el-table>
     </div>
 
     <!-- 统计数据  START -->
     <div class="statisdatarecordnum">
-      <h4 style="display: inline-block;">记录数:</h4> <h4 class="recordnum">{{totalCount}}</h4>
+      <h4 style="display: inline-block;">记录数:</h4>
+      <h4 class="recordnum">{{totalCount}}</h4>
     </div>
     <div class="statisdatarechargemoney">
-      <h4 style="display: inline-block;">合计充值金额:</h4> <h4 class="recordnum">{{totalSum}}</h4>
+      <h4 style="display: inline-block;">合计充值金额:</h4>
+      <h4 class="recordnum">{{totalSum}}</h4>
     </div>
     <!-- 统计数据  END -->
 
@@ -161,7 +135,7 @@ export default {
   data() {
     return {
       //*********** 过滤条件 ***************/
-      formData:{
+      formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null
       },
@@ -204,54 +178,54 @@ export default {
       //*********** 逻辑需要的变量 ***************/
       returnServerCustomerData: {}, //调用接口,返回的数据
       customerData: {}, //整理過的顧客數據
-      totalCount:0,  //统计数据之记录数
+      totalCount: 0,  //统计数据之记录数
       totalSum: 0 //统计数据之充值金额合计
 
     };
   },
   created() {
-    let stores = this.stores.map((item)=>{ return {id: item.id, name: item.name }})
-    this.storeOptions = [ {id: null, name: "全部"}].concat(stores )
-    let start = moment().subtract(6,"days")
+    let stores = this.stores.map((item) => { return { id: item.id, name: item.name } })
+    this.storeOptions = [{ id: null, name: "全部" }].concat(stores)
+    let start = moment().subtract(6, "days")
     let end = moment()
-    this.selectedDates = [ start.toDate(), end.toDate() ]
+    this.selectedDates = [start.toDate(), end.toDate()]
     this.initData()
     this.$bus.$on('deposit-order-created-gevent', () => {
       this.initData()
     })
 
   },
-  computed:{
-    computedStartAt: function(){
+  computed: {
+    computedStartAt: function () {
       return this.formData.selectedDates[0]
     },
-    computedEndAt: function(){
+    computedEndAt: function () {
       return this.formData.selectedDates[1]
     }
   },
   methods: {
     async initData() {
-      this.formData.selectedDates =this.selectedDates
+      this.formData.selectedDates = this.selectedDates
       let params = this.buildParams()
-      getOrderCount( params ).then((res)=>{
+      getOrderCount(params).then((res) => {
         this.totalCount = res.total_count
         this.totalSum = res.total_sum
       })
-      let result = await findOrders( params )
+      let result = await findOrders(params)
 
       this.totalPage = result.total_count
-      this.tableData = this.buildOrders( result )
-      console.log( "result=", result, "this.tableData = ", this.tableData )
+      this.tableData = this.buildOrders(result)
+      console.log("result=", result, "this.tableData = ", this.tableData)
     },
-    buildParams(){
-        let params = { //查询条件
-          page: this.currentPage, //分页器选择的当前页数
-          per_page: this.perPage, //每页显示12行数据
-          q: {
-            order_type_eq: 1
-          }
+    buildParams() {
+      let params = { //查询条件
+        page: this.currentPage, //分页器选择的当前页数
+        per_page: this.perPage, //每页显示12行数据
+        q: {
+          order_type_eq: 1
         }
-        return params
+      }
+      return params
     },
     //門店選擇改變時的事件處理函數-----
     changeForState() {
