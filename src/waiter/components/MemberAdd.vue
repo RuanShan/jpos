@@ -89,7 +89,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="充值金额" required>
-                <el-input v-model="cardFormData.paymentAmount"></el-input>
+                <el-input type="number" v-model="cardFormData.paymentAmount"></el-input>
               </el-form-item>
               <el-form-item label="备注" prop="address">
                 <el-input v-model="cardFormData.cardMemo"></el-input>
