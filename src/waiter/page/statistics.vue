@@ -106,163 +106,25 @@
       <el-tabs class="tabs-height" type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick">
 
         <el-tab-pane label="总览">
-          <!-- <div class="line-one-row">
-            <div class="main-left">
-              <fieldset>
-                <legend>时间选择</legend>
-              </fieldset>
-            </div>
-            <div class="main-right">
-              <fieldset>
-                <legend>门店选择</legend>
-                <el-select v-model="stateValue" @change="changeForState" size="mini" style="width:100%;">
-                  <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
-                  </el-option>
-                </el-select>
-              </fieldset>
-            </div>
-          </div>
-          <div class="tubiao-ont-row">
-            <div class="fillcontain">
-              <keep-alive>
-                <day-sale> </day-sale>
-              </keep-alive>
-            </div>
-          </div> -->
-          <statis-pandect v-if="statisPandectVisible"></statis-pandect>
+          <!-- <statis-pandect v-if="statisPandectVisible"></statis-pandect> -->
+          <statis-pandect></statis-pandect>
         </el-tab-pane>
 
         <el-tab-pane label="各个门店会员统计">
-          <!-- <div class="line-one-row">
-            <div class="main-left">
-              <fieldset>
-                <legend>时间选择</legend>
-                <div class="time-select-left">
-                  <el-button type="primary" size="mini">当月</el-button>
-                  <el-button type="primary" size="mini">当季度</el-button>
-                  <el-button type="primary" size="mini">当半年度</el-button>
-                </div>
-                <div class="time-select-right">
-                  <el-date-picker class="date-picker" v-model="eachStoreMemberDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
-                  </el-date-picker>
-                </div>
-              </fieldset>
-            </div>
-            <div class="main-right">
-              <fieldset>
-                <legend>门店选择</legend>
-                <el-select v-model="stateValue" @change="changeForState" size="mini" style="width:100%;">
-                  <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
-                  </el-option>
-                </el-select>
-              </fieldset>
-            </div>
-          </div>
-          <div class="line-two-row">
-            <fieldset>
-              <legend>功能选择</legend>
-              <el-button type="primary" size="mini">会员充值统计</el-button>
-              <el-button type="primary" size="mini">新增会员充值统计</el-button>
-            </fieldset>
-          </div>
-          <div class="line-three-row">
-            <el-table :data="tableData" border style="width: 100%" height="292">
-              <el-table-column prop="name" label="会员卡号" width="78">
-              </el-table-column>
-              <el-table-column prop="name" label="会员姓名" width="90">
-              </el-table-column>
-              <el-table-column prop="name" label="卡类型" width="90">
-              </el-table-column>
-              <el-table-column prop="name" label="会员卡等级" width="140">
-              </el-table-column>
-              <el-table-column prop="name" label="缴费日期" width="140">
-              </el-table-column>
-              <el-table-column prop="name" label="充值金额" width="78">
-              </el-table-column>
-              <el-table-column prop="name" label="操作员" width="90">
-              </el-table-column>
-              <el-table-column prop="name" label="是否新增">
-              </el-table-column>
-              <el-table-column prop="name" label="备注">
-              </el-table-column>
-            </el-table>
-          </div> -->
-          <!-- 会员统计表   END -->
-          <statis-each-state-member v-if="statisEachStateMemberVisible"></statis-each-state-member>
+          <!-- <statis-each-state-member v-if="statisEachStateMemberVisible"></statis-each-state-member> -->
+          <statis-each-state-member></statis-each-state-member>
         </el-tab-pane>
 
         <el-tab-pane label="各个门店订单统计">
-          <!-- <div class="line-one-row">
-            <div class="main-left">
-              <fieldset>
-                <legend>时间选择</legend>
-                <div class="time-select-left">
-                  <el-button type="primary" size="mini">当月</el-button>
-                  <el-button type="primary" size="mini">当季度</el-button>
-                  <el-button type="primary" size="mini">当半年度</el-button>
-                </div>
-                <div class="time-select-right">
-                  <el-date-picker class="date-picker" v-model="eachStoreMemberDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
-                  </el-date-picker>
-                </div>
-              </fieldset>
-            </div>
-            <div class="main-right">
-              <fieldset>
-                <legend>门店选择</legend>
-                <el-select v-model="stateValue" @change="changeForState" size="mini" style="width:100%;">
-                  <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
-                  </el-option>
-                </el-select>
-              </fieldset>
-            </div>
-          </div> -->
-          <!-- 功能选择   START -->
-          <!-- <div class="line-two-row">
-            <fieldset>
-              <legend>功能选择</legend>
-              <el-select v-model="payValue" @change="changeForState" size="mini" s>
-                <el-option v-for="item in payOptions" :key="item.value" :value="item.value">
-                </el-option>
-              </el-select>
-            </fieldset>
-          </div> -->
-          <!-- 功能选择   END -->
-          <!-- 订单统计表   START -->
-          <!-- <div class="line-three-row">
-            <el-table :data="tableData" border style="width: 100%" height="292">
-              <el-table-column prop="name" label="会员卡号" width="78">
-              </el-table-column>
-              <el-table-column prop="name" label="会员姓名" width="80">
-              </el-table-column>
-              <el-table-column prop="name" label="卡类型" width="80">
-              </el-table-column>
-              <el-table-column prop="name" label="会员卡等级" width="120">
-              </el-table-column>
-              <el-table-column prop="name" label="消费日期">
-              </el-table-column>
-              <el-table-column prop="name" label="消费金额">
-              </el-table-column>
-              <el-table-column prop="name" label="支付方式" width="80">
-              </el-table-column>
-              <el-table-column prop="name" label="其他店卡" width="80">
-              </el-table-column>
-              <el-table-column prop="name" label="操作员">
-              </el-table-column>
-              <el-table-column prop="name" label="备注" width="78">
-              </el-table-column>
-            </el-table>
-          </div> -->
-          <!-- 订单统计表   END -->
-          <statis-each-state-order v-if="statisEachStateOrderVisible"></statis-each-state-order>
+          <!-- <statis-each-state-order v-if="statisEachStateOrderVisible"></statis-each-state-order> -->
+          <statis-each-state-order></statis-each-state-order>
         </el-tab-pane>
 
         <el-tab-pane label="工厂统计">
-          <statis-each-state-order v-if="statisEachStateOrderVisible"></statis-each-state-order>
         </el-tab-pane>
 
         <el-tab-pane label="会员情况统计">
-          
+          <statis-member-case> </statis-member-case>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -274,6 +136,7 @@ import DaySale from '@/components/statis/DaySale.vue'
 import StatisPandect from '../components/StatisPandect.vue';
 import StatisEachStateMember from '../components/StatisEachStateMember.vue';
 import StatisEachStateOrder from '../components/StatisEachStateOrder.vue';
+import StatisMemberCase from '../components/StatisMemberCase.vue';
 
 export default {
   components: {
@@ -281,6 +144,7 @@ export default {
     "statis-pandect": StatisPandect,
     "statis-each-state-member": StatisEachStateMember,
     "statis-each-state-order": StatisEachStateOrder,
+    "statis-member-case": StatisMemberCase,
   },
   data() {
     return {
@@ -418,30 +282,30 @@ export default {
     //点击标签的事件处理函数-----
     tabHandleClick(tab, event) {
       console.log(this.tabsNumber);
-      switch (this.tabsNumber) {
-        case "0":
-          this.statisPandectVisible = true;
-          console.log("============0   了,请注意!!!!");
-          break;
-        case "1":
-          this.statisEachStateMemberVisible = true;
-          console.log("============1   了,请注意!!!!");
-          break;
-        case "2":
-          this.statisEachStateOrderVisible = true;
-          console.log("============2   了,请注意!!!!");
-          break;
-        case "3":
-          this.statisEachStateOrderVisible = true;
-          console.log("============3   了,请注意!!!!");
-          break;
-        default:
-          this.statisPandectVisible = false;
-          this.statisEachStateMemberVisible = false;
-          this.statisEachStateOrderVisible = false;
-          console.log("default");
+      // switch (this.tabsNumber) {
+      //   case "0":
+      //     this.statisPandectVisible = true;
+      //     console.log("============0   了,请注意!!!!");
+      //     break;
+      //   case "1":
+      //     this.statisEachStateMemberVisible = true;
+      //     console.log("============1   了,请注意!!!!");
+      //     break;
+      //   case "2":
+      //     this.statisEachStateOrderVisible = true;
+      //     console.log("============2   了,请注意!!!!");
+      //     break;
+      //   case "3":
+      //     this.statisEachStateOrderVisible = true;
+      //     console.log("============3   了,请注意!!!!");
+      //     break;
+      //   default:
+      //     this.statisPandectVisible = false;
+      //     this.statisEachStateMemberVisible = false;
+      //     this.statisEachStateOrderVisible = false;
+      //     console.log("default");
 
-      }
+      // }
     },
     //門店選擇改變時的事件處理函數-----
     changeForState() {

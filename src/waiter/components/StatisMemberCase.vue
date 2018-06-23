@@ -12,6 +12,13 @@
     right: 10px;
     top: 5px;
   }
+  .member-line-three-row {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 108px;
+    bottom: 60px;
+  }
   .member-clear {
     position: absolute;
     top: -4px;
@@ -100,13 +107,7 @@
     right: 10px;
     top: 80px;
   }
-  .member-line-three-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 108px;
-    bottom: 60px;
-  }
+
   .tubiao-ont-row {
     position: absolute;
     left: 10px;
@@ -142,46 +143,11 @@
 
 <template>
   <div class="">
-    <!-- <div class="line-one-row">
-      <div class="main-left">
-        <fieldset>
-          <legend>时间选择</legend>
-          <div class="time-select-left">
-            <el-button type="primary" size="mini">当月</el-button>
-            <el-button type="primary" size="mini">当季度</el-button>
-            <el-button type="primary" size="mini">当半年度</el-button>
-          </div>
-          <div class="time-select-right">
-            <el-date-picker class="date-picker" v-model="eachStoreMemberDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
-            </el-date-picker>
-          </div>
-        </fieldset>
-      </div>
-      <div class="main-right">
-        <fieldset>
-          <legend>门店选择</legend>
-          <el-select v-model="stateValue" @change="changeForState" size="mini" style="width:100%;">
-            <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
-            </el-option>
-          </el-select>
-        </fieldset>
-      </div>
-    </div> -->
-    <!-- 功能选择   START -->
-    <!-- <div class="line-two-row">
-      <fieldset>
-        <legend>功能选择</legend>
-        <el-button type="primary" size="mini">会员充值统计</el-button>
-        <el-button type="primary" size="mini">新增会员充值统计</el-button>
-      </fieldset>
-    </div> -->
-    <!-- 功能选择   END -->
-
     <el-form ref="form" :model="form" label-width="70px" :inline="true">
       <fieldset class="member-field-set">
         <legend>功能选择</legend>
         <el-form-item class="member-form-item" label="时间选择">
-          <el-date-picker class="member-time-select" v-model="form.eachStoreMemberDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+          <el-date-picker class="member-time-select" v-model="form.memberCaseDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
 
@@ -200,23 +166,23 @@
     <!-- 会员统计表   START -->
     <div class="member-line-three-row ">
       <el-table class="cel-scrollable-table" :data="tableData" border style="width: 100%">
-        <el-table-column prop="name" label="会员卡号" width="120">
+        <el-table-column prop="name" label="会员卡号" width="90">
+        </el-table-column>
+        <el-table-column prop="name" label="加入时间" width="90">
         </el-table-column>
         <el-table-column prop="name" label="会员姓名" width="90">
         </el-table-column>
-        <el-table-column prop="name" label="卡类型" width="90">
+        <el-table-column prop="name" label="性别" width="90">
+        </el-table-column>
+        <el-table-column prop="name" label="会员卡类型">
         </el-table-column>
         <el-table-column prop="name" label="会员卡等级">
         </el-table-column>
-        <el-table-column prop="name" label="缴费日期">
+        <el-table-column prop="name" label="卡内余额">
         </el-table-column>
-        <el-table-column prop="name" label="充值金额" width="90">
+        <el-table-column prop="name" label="累计消费" width="90">
         </el-table-column>
-        <el-table-column prop="name" label="操作员" width="90">
-        </el-table-column>
-        <el-table-column prop="name" label="是否新增" width="90">
-        </el-table-column>
-        <el-table-column prop="name" label="备注" width="90">
+        <el-table-column prop="name" label="电话">
         </el-table-column>
       </el-table>
     </div>
@@ -248,7 +214,7 @@ export default {
     return {
       //*********** UI需要的变量 ***************/
       form: {
-        eachStoreMemberDateSection: "", //选择的日期时间
+        memberCaseDateSection: "", //选择的日期时间
         stateValue: "", //門店選項
       },
       stateOptions: [{ //门店方式选项

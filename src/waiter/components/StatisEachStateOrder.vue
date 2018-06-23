@@ -145,54 +145,17 @@
 
 <template>
   <div class="">
-    <!-- <div class="order-line-one-row">
-      <div class="main-left">
-        <fieldset>
-          <legend>时间选择</legend>
-          <div class="time-select-left">
-            <el-date-picker class="date-picker" v-model="eachStoreMemberDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
-            </el-date-picker>
-          </div>
-          <div class="time-select-right">ffv
-            
-          </div>
-        </fieldset>
-      </div>
-      <div class="main-left">
-        <fieldset>
-          <legend>门店选择</legend>
-          <el-select v-model="stateValue" @change="changeForState" size="mini" style="width:100%;">
-            <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
-            </el-option>
-          </el-select>
-        </fieldset>
-      </div>
-    </div>
-    <div class="line-two-row">
-      <fieldset>
-        <legend>功能选择</legend>
-        <el-form>
-          <el-form-item class="form-item" label="支付方式选择">
-          <el-select v-model="payValue" @change="changeForState" size="mini">
-            <el-option v-for="item in payOptions" :key="item.value" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        </el-form>
-      </fieldset>
-    </div> -->
-
     <el-form ref="form" :model="form" label-width="70px" :inline="true">
       <fieldset class="order-field-set">
         <legend>功能选择</legend>
         <el-form-item class="oreder-form-item" label="时间选择">
-          <el-date-picker class="order-time-select" v-model="form.eachStoreMemberDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+          <el-date-picker class="order-time-select" v-model="form.eachStoreOrderDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
 
         <el-form-item label="门店选择">
           <el-select class="select-options" v-model="form.stateValue" @change="changeForState" size="mini">
-            <el-option v-for="item in form.stateOptions" :key="item.value" :value="item.value">
+            <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
@@ -261,7 +224,7 @@ export default {
     return {
       //*********** UI需要的变量 ***************/
       form: {
-        eachStoreMemberDateSection: "", //选择的日期时间
+        eachStoreOrderDateSection: "", //选择的日期时间
         stateValue: "", //門店選項
         payValue: "", //支付方式选项
       },
