@@ -199,23 +199,16 @@
 
     <!-- 会员统计表   START -->
     <div class="member-line-three-row ">
-<<<<<<< HEAD
       <el-table class="cel-scrollable-table" :data="tableData" border style="width: 100%" >
         <el-table-column prop="cardTransaction.card.code" label="会员卡号" width="120">
-=======
-      <el-table class="cel-scrollable-table" :data="tableData" border style="width: 100%">
-        <el-table-column prop="name" label="会员卡号" width="120">
->>>>>>> 1decb4d00688aa77864cb39d4f8ac6dba148c371
+
         </el-table-column>
         <el-table-column prop="cardTransaction.customer.username" label="会员姓名" width="90">
         </el-table-column>
         <el-table-column prop="cardTransaction.card.displayStyle" label="卡类型" width="90">
         </el-table-column>
-<<<<<<< HEAD
         <el-table-column prop="cardTransaction.card.name" label="会员卡等级" >
-=======
-        <el-table-column prop="name" label="会员卡等级">
->>>>>>> 1decb4d00688aa77864cb39d4f8ac6dba148c371
+
         </el-table-column>
         <el-table-column prop="cardTransaction.displayCreatedAt" label="缴费日期">
         </el-table-column>
@@ -225,30 +218,17 @@
         </el-table-column>
         <el-table-column prop="cardTransaction.displayIsFirst" label="是否新增" width="90">
         </el-table-column>
-<<<<<<< HEAD
         <el-table-column prop="cardTransaction.card.memo" label="备注"  width="90">
-=======
-        <el-table-column prop="name" label="备注" width="90">
->>>>>>> 1decb4d00688aa77864cb39d4f8ac6dba148c371
         </el-table-column>
       </el-table>
     </div>
 
     <!-- 统计数据  START -->
     <div class="statisdatarecordnum">
-<<<<<<< HEAD
       <h4 style="display: inline-block;">记录数:</h4> <h4 class="recordnum">{{totalCount}}</h4>
     </div>
     <div class="statisdatarechargemoney">
       <h4 style="display: inline-block;">合计充值金额:</h4> <h4 class="recordnum">{{totalSum}}</h4>
-=======
-      <h4 style="display: inline-block;">记录数:</h4>
-      <h4 class="recordnum">{{recordNumber}}</h4>
-    </div>
-    <div class="statisdatarechargemoney">
-      <h4 style="display: inline-block;">合计充值金额:</h4>
-      <h4 class="recordnum">{{rechargeMoneySum}}</h4>
->>>>>>> 1decb4d00688aa77864cb39d4f8ac6dba148c371
     </div>
     <!-- 统计数据  END -->
 
@@ -271,20 +251,13 @@ import {
 export default {
   data() {
     return {
-<<<<<<< HEAD
       //*********** 过滤条件 ***************/
       formData:{
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null
       },
       selectedDates: "", //选择的日期时间
-=======
-      //*********** UI需要的变量 ***************/
-      form: {
-        eachStoreMemberDateSection: "", //选择的日期时间
-        stateValue: "", //門店選項
-      },
->>>>>>> 1decb4d00688aa77864cb39d4f8ac6dba148c371
+
       stateOptions: [{ //门店方式选项
         value: '全部',
       }],
@@ -322,13 +295,9 @@ export default {
       //*********** 逻辑需要的变量 ***************/
       returnServerCustomerData: {}, //调用接口,返回的数据
       customerData: {}, //整理過的顧客數據
-<<<<<<< HEAD
       totalCount:0,  //统计数据之记录数
       totalSum: 0 //统计数据之充值金额合计
-=======
-      recordNumber: "xxxx",  //统计数据之记录数
-      rechargeMoneySum: "xxxx" //统计数据之充值金额合计
->>>>>>> 1decb4d00688aa77864cb39d4f8ac6dba148c371
+
     };
   },
   created() {
