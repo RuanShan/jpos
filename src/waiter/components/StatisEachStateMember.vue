@@ -1,18 +1,21 @@
 <style lang="scss">
-.statistics-container {
-  .member-time-select {
-    width: 230px;
-  }
-  .select-options {
-    width: 120px;
-  }
-  .member-field-set {
+.statis-each-member{
+.member-field-set {
     position: absolute;
     left: 10px;
     right: 10px;
     top: 5px;
   }
-  .member-clear {
+ .member-form-item {
+    margin-bottom: 0;
+  }
+.member-time-select {
+    width: 230px;
+  }
+.select-options {
+    width: 120px;
+  }
+.member-clear {
     position: absolute;
     top: -4px;
     right: 4px;
@@ -22,99 +25,12 @@
     top: 29px;
     right: 4px;
   }
-  .member-form-item {
-    margin-bottom: 0;
-  }
-  .title-wrap {
-    padding: 6px;
-    text-align: center;
-  }
-  .filters {
-    padding: 16px;
-    .el-form-item {
-      margin: 0;
-    }
-  }
-  .tab-list-wrap {
-    position: absolute;
-    top: 55px;
-    left: 18px;
-    right: 18px;
-    bottom: 100px;
-    .tabs-height {
-      height: 100%;
-      .el-tabs__content {
-        position: absolute;
-        top: 40px;
-        left: 10px;
-        bottom: 0;
-        right: 10px;
-      }
-    }
-  }
-  .grid-content {
-    min-height: 30px;
-  }
-
-  .bg-purple {
-    background: #d3dce6;
-  }
-
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .pagination-wrap {
-    position: absolute;
-    bottom: 15px;
-    right: 4%;
-    margin-top: 10px;
-  }
-  .line-one-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 10px;
-    .main-left {
-      width: 70%;
-      float: left;
-      .time-select-left {
-        width: 50%;
-        float: left;
-      }
-      .time-select-right {
-        width: 50%;
-        float: right;
-        .date-picker {
-          width: 100%;
-        }
-      }
-    }
-    .main-right {
-      width: 30%;
-      float: right;
-    }
-  }
-  .line-two-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 80px;
-  }
   .member-line-three-row {
     position: absolute;
     left: 10px;
     right: 10px;
     top: 108px;
     bottom: 60px;
-  }
-  .tubiao-ont-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 90px;
-    bottom: 10px;
-    .tubiao {
-    }
   }
   .statisdatarecordnum {
     display: inline-block;
@@ -126,7 +42,7 @@
       display: inline-block;
     }
   }
-  .statisdatarechargemoney {
+.statisdatarechargemoney {
     display: inline-block;
     position: absolute;
     bottom: 20px;
@@ -137,46 +53,12 @@
       display: inline-block;
     }
   }
+
 }
 </style>
 
 <template>
-  <div class="">
-    <!-- <div class="line-one-row">
-      <div class="main-left">
-        <fieldset>
-          <legend>时间选择</legend>
-          <div class="time-select-left">
-            <el-button type="primary" size="mini">当月</el-button>
-            <el-button type="primary" size="mini">当季度</el-button>
-            <el-button type="primary" size="mini">当半年度</el-button>
-          </div>
-          <div class="time-select-right">
-            <el-date-picker class="date-picker" v-model="selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
-            </el-date-picker>
-          </div>
-        </fieldset>
-      </div>
-      <div class="main-right">
-        <fieldset>
-          <legend>门店选择</legend>
-          <el-select v-model="stateValue" @change="changeForState" size="mini" style="width:100%;">
-            <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
-            </el-option>
-          </el-select>
-        </fieldset>
-      </div>
-    </div> -->
-    <!-- 功能选择   START -->
-    <!-- <div class="line-two-row">
-      <fieldset>
-        <legend>功能选择</legend>
-        <el-button type="primary" size="mini">会员充值统计</el-button>
-        <el-button type="primary" size="mini">新增会员充值统计</el-button>
-      </fieldset>
-    </div> -->
-    <!-- 功能选择   END -->
-
+  <div class="statis-each-member">
     <el-form ref="form" :model="formData" label-width="70px" :inline="true">
       <fieldset class="member-field-set">
         <legend>功能选择</legend>

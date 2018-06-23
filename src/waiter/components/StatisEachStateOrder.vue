@@ -1,185 +1,98 @@
 <style lang="scss">
-.statistics-container {
-    .order-time-select {
-        width: 230px;
+.statis-each-orders {
+  .order-field-set {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 5px;
+  }
+  .oreder-form-item {
+    margin-bottom: 0;
+  }
+.order-time-select {
+    width: 230px;
+  }
+ .select-options {
+    width: 120px;
+  }
+.order-clear {
+    position: absolute;
+    top: -4px;
+    right: 4px;
+  }
+.order-ok {
+    position: absolute;
+    top: 29px;
+    right: 4px;
+  }
+ .order-line-three-row {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 110px;
+    bottom: 50px;
+  }
+.stati-sdata-order {
+    display: inline-block;
+    position: absolute;
+    bottom: 20px;
+    border: solid 1px #939393;
+    .recordnum {
+      color: red;
+      display: inline-block;
     }
-    .select-options {
-        width: 120px;
+  }
+   .stati-sdata-ordermoney {
+    display: inline-block;
+    position: absolute;
+    bottom: 20px;
+    left: 200px;
+    border: solid 1px #939393;
+    .recordnum {
+      color: red;
+      display: inline-block;
     }
-    .order-field-set {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        top: 5px;
-    }
-    .order-clear {
-        position: absolute;
-        top: -4px;
-        right: 4px;
-    }
-    .order-ok {
-        position: absolute;
-        top: 29px;
-        right: 4px;
-    }
-    .oreder-form-item {
-        margin-bottom: 0;
-    }
-    .title-wrap {
-        padding: 6px;
-        text-align: center;
-    }
-    .filters {
-        padding: 16px;
-        .el-form-item {
-            margin: 0;
-        }
-    }
-    .tab-list-wrap {
-        position: absolute;
-        top: 55px;
-        left: 18px;
-        right: 18px;
-        bottom: 100px;
-        .tabs-height {
-            height: 100%;
-            .el-tabs__content {
-                position: absolute;
-                top: 40px;
-                left: 10px;
-                bottom: 0;
-                right: 10px;
-            }
-        }
-    }
-    .grid-content {
-        min-height: 30px;
-    }
-
-    .bg-purple {
-        background: #d3dce6;
-    }
-
-    .bg-purple-light {
-        background: #e5e9f2;
-    }
-    .pagination-wrap {
-        position: absolute;
-        bottom: 15px;
-        right: 4%;
-        margin-top: 10px;
-    }
-    .order-line-one-row {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        top: 10px;
-        .main-left {
-            // width: 70%;
-            float: left;
-            .time-select-left {
-                // width: 50%;
-                float: left;
-            }
-            .time-select-right {
-                width: 50%;
-                float: right;
-                .date-picker {
-                    width: 100%;
-                }
-            }
-        }
-        .main-right {
-            width: 30%;
-            float: right;
-        }
-    }
-    .line-two-row {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        top: 80px;
-        .form-item {
-            margin-bottom: 0;
-        }
-    }
-    .order-line-three-row {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        top: 110px;
-        bottom: 50px;
-    }
-    .tubiao-ont-row {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        top: 90px;
-        bottom: 10px;
-        .tubiao {}
-    }
-    .stati-sdata-order {
-        display: inline-block;
-        position: absolute;
-        bottom: 20px;
-        border: solid 1px #939393;
-        .recordnum {
-            color: red;
-            display: inline-block;
-        }
-    }
-    .stati-sdata-ordermoney {
-        display: inline-block;
-        position: absolute;
-        bottom: 20px;
-        left: 200px;
-        border: solid 1px #939393;
-        .recordnum {
-            color: red;
-            display: inline-block;
-        }
-    }
+  }
 }
 </style>
 
 <template>
-<div class="">
+  <div class="statis-each-orders">
+    <el-form ref="form" :model="formData" label-width="70px" :inline="true">
+      <fieldset class="order-field-set">
+        <legend>功能选择</legend>
+        <el-form-item class="oreder-form-item" label="时间选择">
+          <el-date-picker class="order-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+          </el-date-picker>
+        </el-form-item>
 
-  <el-form ref="form" :model="formData" label-width="70px" :inline="true">
-    <fieldset class="order-field-set">
-      <legend>功能选择</legend>
-      <el-form-item class="oreder-form-item" label="时间选择">
-        <el-date-picker class="order-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
-        </el-date-picker>
-      </el-form-item>
+        <el-form-item label="门店选择">
+          <el-select class="select-options" v-model="formData.storeId" @change="changeForState" size="mini">
+            <el-option v-for="item in formData.stateOptions" :key="item.value" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
 
-      <el-form-item label="门店选择">
-        <el-select class="select-options" v-model="formData.storeId" @change="changeForState" size="mini">
-          <el-option v-for="item in formData.stateOptions" :key="item.value" :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
+        <el-form-item label="支付方式">
+          <el-select class="select-options" v-model="formData.payValue" @change="changeForState" size="mini">
+            <el-option v-for="item in payOptions" :key="item.value" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-button class="order-clear" type="info" size="mini">清空</el-button>
+        <el-button class="order-ok" type="primary" size="mini">确定</el-button>
+      </fieldset>
+    </el-form>
+    <!-- 订单统计表   START -->
 
-      <el-form-item label="支付方式">
-        <el-select class="select-options" v-model="formData.payValue" @change="changeForState" size="mini">
-          <el-option v-for="item in payOptions" :key="item.value" :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-button class="order-clear" type="info" size="mini">清空</el-button>
-      <el-button class="order-ok" type="primary" size="mini">确定</el-button>
-    </fieldset>
-  </el-form>
-  <!-- 订单统计表   START -->
-
-  <div class="order-line-three-row">
-    <el-table class="cel-scrollable-table" :data="tableData" style="width: 100%">
+    <div class="order-line-three-row">
+      <el-table class="cel-scrollable-table" :data="tableData" style="width: 100%">
 
         <el-table-column label="订单 ID" prop="number">
         </el-table-column>
-        <el-table-column label="店铺"  prop="storeName">
+        <el-table-column label="店铺" prop="storeName">
         </el-table-column>
-        <el-table-column label="客户电话"  prop="customer.mobile">
+        <el-table-column label="客户电话" prop="customer.mobile">
         </el-table-column>
         <el-table-column label="消费日期" prop="displayCreatedAt">
         </el-table-column>
@@ -187,9 +100,9 @@
         </el-table-column>
         <el-table-column label="订单状态" prop="groupState">
         </el-table-column>
-        <el-table-column label="支付信息" >
+        <el-table-column label="支付信息">
           <template slot-scope="scope">
-            <el-tag v-for="item in scope.row.payments"  :key="item.id" size="mini">
+            <el-tag v-for="item in scope.row.payments" :key="item.id" size="mini">
               {{ item.description }}
             </el-tag>
           </template>
@@ -198,28 +111,28 @@
         <el-table-column label="操作员" prop="creatorName" width="90">
         </el-table-column>
 
-    </el-table>
-  </div>
-  <!-- 订单统计表   END -->
+      </el-table>
+    </div>
+    <!-- 订单统计表   END -->
 
-  <!-- 统计数据  START -->
-  <div class="stati-sdata-order">
-    <h4 style="display: inline-block;">记录数:</h4>
-    <h4 class="recordnum">{{totalCount}}</h4>
-  </div>
-  <div class="stati-sdata-ordermoney">
-    <h4 style="display: inline-block;">合计充值金额:</h4>
-    <h4 class="recordnum">{{totalSum}}</h4>
-  </div>
-  <!-- 统计数据  END -->
+    <!-- 统计数据  START -->
+    <div class="stati-sdata-order">
+      <h4 style="display: inline-block;">记录数:</h4>
+      <h4 class="recordnum">{{totalCount}}</h4>
+    </div>
+    <div class="stati-sdata-ordermoney">
+      <h4 style="display: inline-block;">合计充值金额:</h4>
+      <h4 class="recordnum">{{totalSum}}</h4>
+    </div>
+    <!-- 统计数据  END -->
 
-  <!-- 分页器 START-->
-  <div class="" style="position: absolute;bottom:2px;right:4%;margin-top: 10px;">
-    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalPage">
-    </el-pagination>
+    <!-- 分页器 START-->
+    <div class="" style="position: absolute;bottom:2px;right:4%;margin-top: 10px;">
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalPage">
+      </el-pagination>
+    </div>
+    <!-- 分页器 END-->
   </div>
-  <!-- 分页器 END-->
-</div>
 </template>
 
 <script>
@@ -232,7 +145,7 @@ export default {
   data() {
     return {
       //*********** 过滤条件 ***************/
-      formData:{
+      formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null,
         payValue: "", //支付方式选项
@@ -241,17 +154,17 @@ export default {
         value: '全部',
       }],
       payOptions: [{ //支付方式选项
-          value: '现金',
-        }, {
-          value: '微信',
-        }, {
-          value: '支付宝',
-        }, {
-          value: '银行卡',
-        },
-        {
-          value: '未付',
-        }
+        value: '现金',
+      }, {
+        value: '微信',
+      }, {
+        value: '支付宝',
+      }, {
+        value: '银行卡',
+      },
+      {
+        value: '未付',
+      }
       ],
       totalPage: 0, //分页器显示的总页数
       perPage: 12, //主表每页显示12行
@@ -284,64 +197,64 @@ export default {
         }]
       },
       tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      },
+      {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      },
+      {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      },
+      {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      },
+      {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      },
+      {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      },
+      {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      },
+      {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      },
+      {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      },
+      {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      },
+      {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }
       ],
       //*********** 逻辑需要的变量 ***************/
       returnServerCustomerData: {}, //调用接口,返回的数据
@@ -351,17 +264,17 @@ export default {
     };
   },
   mounted() {
-    let start = moment().subtract(6,"days")
+    let start = moment().subtract(6, "days")
     let end = moment()
-    this.formData.selectedDates = [ start.toDate(), end.toDate() ]
+    this.formData.selectedDates = [start.toDate(), end.toDate()]
     this.formData.storeId = this.stateOptions[0].value
     this.initData()
   },
-  computed:{
-    computedStartAt: function(){
+  computed: {
+    computedStartAt: function () {
       return this.formData.selectedDates[0]
     },
-    computedEndAt: function(){
+    computedEndAt: function () {
       return this.formData.selectedDates[1]
     }
   },
@@ -369,46 +282,46 @@ export default {
     async initData() {
       //this.formData.selectedDates =this.selectedDates
       let params = this.buildParams()
-      getOrderCount( params ).then((res)=>{
+      getOrderCount(params).then((res) => {
         this.totalCount = res.total_count
         this.totalSum = res.total_sum
       })
       await this.getPaymentMethods()
-      let result = await findOrders( params )
+      let result = await findOrders(params)
       this.totalPage = result.total_count
-      this.tableData = this.buildOrders( result )
+      this.tableData = this.buildOrders(result)
       this.addPaymentDescription()
-      console.log( "result=", result, "this.tableData = ", this.tableData )
+      console.log("result=", result, "this.tableData = ", this.tableData)
     },
-    buildParams(){
-        let params = { //查询条件
-          page: this.currentPage, //分页器选择的当前页数
-          per_page: this.perPage, //每页显示12行数据
-          q: {
-            created_at_gteq: this.computedStartAt,
-            created_at_lteq: this.computedEndAt,
-            order_type_eq: 0
-          }
+    buildParams() {
+      let params = { //查询条件
+        page: this.currentPage, //分页器选择的当前页数
+        per_page: this.perPage, //每页显示12行数据
+        q: {
+          created_at_gteq: this.computedStartAt,
+          created_at_lteq: this.computedEndAt,
+          order_type_eq: 0
         }
-        return params
+      }
+      return params
     },
     //門店選擇改變時的事件處理函數-----
     changeForState() {
 
     },
-    addPaymentDescription(){
-      this.tableData.forEach((order)=>{
-        order.payments.forEach((payment)=>{
+    addPaymentDescription() {
+      this.tableData.forEach((order) => {
+        order.payments.forEach((payment) => {
           //7000五折卡(#0001)支付 ¥500
           //微信 支付 ¥100
-          let method = this.paymentMethods.find( item=>{ return item.id == payment.paymentMethodId})
-          if( payment.paymentMethodId == this.prepaidPaymentMethodId){
-            let card = order.customer.cards.find( card=>{
+          let method = this.paymentMethods.find(item => { return item.id == payment.paymentMethodId })
+          if (payment.paymentMethodId == this.prepaidPaymentMethodId) {
+            let card = order.customer.cards.find(card => {
               return card.id == payment.sourceId
             })
-            payment.description = card.name + '('+card.code+')' +' 支付 ¥' + payment.amount
-          }else{
-            payment.description = method.name +' 支付 ¥' + payment.amount
+            payment.description = card.name + '(' + card.code + ')' + ' 支付 ¥' + payment.amount
+          } else {
+            payment.description = method.name + ' 支付 ¥' + payment.amount
           }
         })
       })
