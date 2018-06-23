@@ -41,11 +41,17 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
 
     try {
       const response = await fetch(url, requestConfig)
+      let responseJson = null
       // 401
       if( response.status ==401 ){
         store.commit('resetUser')
       }
-      const responseJson = await response.json()
+      if( type=='DELETE' &&  response.status == 204 ){
+        //删除成功时，没有返回内容
+        responseJson = { ret: 'success' }
+      }else{
+        responseJson = await response.json()
+      }
       return responseJson
     } catch (error) {
       console.log(error)

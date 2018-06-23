@@ -105,16 +105,16 @@
 <script>
 import MemberCenterNew from "@/components/MemberCenterNew.vue";
 import {
-  findCustomers
+  findCustomers, deleteCustomer
 } from "@/api/getData";
 // import { DialogMixin } from "@/components/mixin/DialogMixin";
 import {
-  apiResultMixin
-} from '@/components/apiResultMixin';
+  CelUIMixin
+} from '@/components/mixin/CelUIMixin';
 
 
 export default {
-  mixins: [apiResultMixin],
+  mixins: [CelUIMixin],
   components: {
     "member-center-new": MemberCenterNew
   },
@@ -176,6 +176,26 @@ export default {
     },
     //删除按钮处理事件
     handleDelete(index, row) {
+      // 删除当前条数据，更新数据列表，
+      // 如果是最后一条，返回上一页，
+      // 如果当前是第一页，更新当前页即可
+      let cid = row.id
+      this.confirm( ( )=>{
+        deleteCustomer( cid ).then((res)=>{
+          if( res.ret== 'success'){
+            if( this.customerList.length == 1 && this.currentPage > 1 ){
+              this.handlePageChange( this.currentPage -1 )
+            }else{
+              this.initData()
+            }
+            this.$message({
+              type: 'success',
+              message: "恭喜你，客户删除成功"
+            })
+          }
+        })
+      })
+
       console.log(index, row);
     },
     //搜索按钮点击事件

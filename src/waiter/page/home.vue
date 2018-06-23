@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <headTop :store-name="storeName"></headTop>
+    <headTop></headTop>
     <leftNav></leftNav>
     <keep-alive>
         <router-view></router-view>
@@ -11,7 +11,6 @@
 <script>
 import leftNav from "@/components/LeftNav/LeftNav.vue"
 import headTop from "@/components/headTop.vue";
-import { userDataMixin } from "@/components/mixin/commonDataMixin"
 import { shopDetails } from "@/api/getData";
 
 export default {
@@ -21,7 +20,6 @@ export default {
       storeName: "", //店铺名称
     }
   },
-  mixins: [userDataMixin],
   components: {
     leftNav,
     headTop
