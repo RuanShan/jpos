@@ -27,17 +27,7 @@
       }
     }
   }
-  .grid-content {
-    min-height: 30px;
-  }
 
-  .bg-purple {
-    background: #d3dce6;
-  }
-
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
   .pagination-wrap {
     position: absolute;
     bottom: 15px;

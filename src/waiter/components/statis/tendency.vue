@@ -48,7 +48,7 @@ export default {
           data: ['新注册用户', '新增订单', '新增管理员']
         },
         toolbox: {
-          show: true,
+          show: false,
           feature: {
             dataZoom: {
               yAxisIndex: 'none'

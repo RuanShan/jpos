@@ -9,6 +9,7 @@ const posPage = r => require.ensure([], () => r(require('@/page/pos')), 'pos')
 const itemGroupsPage = r => require.ensure([], () => r(require('@/page/itemFlow')), 'orders')
 const membersPage = r => require.ensure([], () => r(require('@/page/members')), 'members')
 const statisticsPage = r => require.ensure([], () => r(require('@/page/statistics')), 'statistics')
+const settingPage = r => require.ensure([], () => r(require('@/page/setting')), 'setting')
 const testPage = r => require.ensure([], () => r(require('@/page/functionalTest')), 'orders')
 
 
@@ -41,6 +42,10 @@ const routes = [{
         }, {
             path: 'statistics',
             component: statisticsPage,
+            meta: [],
+        }, {
+            path: 'setting',
+            component: settingPage,
             meta: [],
         }, {
             path: 'testGroups',

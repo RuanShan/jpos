@@ -242,8 +242,13 @@ export const getOrderStateCounts = data => fetch('/api/v1/pos_orders/state_count
 /**
  * 获取订单详细信息
  */
-
 export const getOrder = id => fetch('/api/v1/pos_orders/' + id)
+
+/**
+ * 取消订单
+ */
+export const cancelOrder = id => fetch('/api/v1/pos_orders/' + id+ '/cancel', {}, 'PUT')
+
 /**
  * 获取订单详细信息 通过订单number, 暂未实现
  */

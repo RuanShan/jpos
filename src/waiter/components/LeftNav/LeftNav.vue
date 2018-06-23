@@ -26,8 +26,10 @@
           </router-link>
         </li>
         <li class="el-menu-item">
-          <i class="fa fa-gears"></i>
-          <div class="text-sm">设置</div>
+          <router-link to="/waiter/setting" >
+            <i class="fa fa-gears"></i>
+            <div class="text-sm">设置</div>
+          </router-link>
         </li>
         <li class="el-menu-item">
           <router-link to="/waiter/testGroups" >

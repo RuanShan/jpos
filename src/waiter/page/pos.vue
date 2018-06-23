@@ -1,7 +1,7 @@
 <template>
 <div>
   <!-- 结账组件 Start-->
-  <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible"></CheckoutDialog>
+  <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible" @order-created-event="handleOrderCreated"></CheckoutDialog>
   <!-- 结账组件 End-->
 
   <!-- 添加会员组件 Start-->
@@ -90,8 +90,6 @@
         </el-tabs>
       </el-col>
       <el-col :span="11">
-        <div class="hot-goods">
-        </div>
         <div class="goods-type">
           <el-tabs>
             <el-tab-pane v-for="menu in menuList" :key="menu.id" v-bind:label="menu.name">
@@ -406,8 +404,6 @@ export default {
     searchCustomers(keyword) {
       this.searchCustomersAsync(keyword, this);
     },
-    //通过电话号码得从SerVer上获取用户数据,异步获取
-    async customerFromMobile(mobile) {},
     //远程搜索输入框函数-----提示功能
     searchCustomersAsync: _.debounce((keyword, vm) => {
       findCustomers({
@@ -432,6 +428,10 @@ export default {
         })
       }
     },
+    handleOrderCreated( newOrder ){
+      this.orderItemList = []
+      this.$bus.$emit('order-created-gevent')
+    },
     findProductByVariantId( variantId ){
       let product = this.productList.find((product)=>{
         let vids = product.variants.map((v)=>{ return v.id})
@@ -449,6 +449,7 @@ export default {
         this.setCurrentCustomer( customer )
       }
     },
+
     getDiscountOfVariant( variantId ){
       // 找到这个订单对应的商品
       let discount = 100
@@ -652,96 +653,64 @@ export default {
             border-color: #909399;
         }
     }
-}
-
-.order-sum {
-    height: 30px;
-    text-align: center;
-    background-color: #fff;
-    border-bottom: 1px solid #d3dce6;
-    i {
-        font-size: 12px;
-    }
-    span {}
-}
-
-.hot-goods {
-    .title {
-        padding: 10px;
-        line-height: 20px;
-        border-bottom: 1px solid #d3dce6;
-        background-color: #f9fafc;
-        font-size: 14px;
-        letter-spacing: 1px;
-    }
-    .hot-list {
-        margin: 0;
-        padding: 10px;
-        .hot-item {
-            margin: 5px 10px;
-            padding: 5px 10px;
-            border: 1px solid #e5e9f2;
-            font-size: 12px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            &:hover {
-                color: #58b7ff;
-                background-color: #f1f1f1;
-            }
-        }
-    }
-    .price {
-        color: #58b7ff;
-    }
-}
-.goods-type {
-    .el-tabs__item {
-        min-width: 80px;
+    .order-sum {
+        height: 30px;
         text-align: center;
-    }
-    .el-tabs__content {
-        position: absolute;
-        top: 40px;
-        bottom: 0;
-        overflow-y: auto;
-    }
-}
-.cook-list {
-    padding: 20px;
-    .cook-item {
-        height: auto;
-        padding: 2px;
-        overflow: hidden;
-
-        cursor: pointer;
-        transition: 0.5s;
-        &:hover {
-
-            transform: translate3d(0, -2px, 0);
-            border: none;
+        background-color: #fff;
+        border-bottom: 1px solid #d3dce6;
+        i {
+            font-size: 12px;
         }
-        .food-wrapper {
-            background-color: #fff;
-            .food-img {
-                width: 100%;
-            }
-            .good-info {
-                text-align: center;
-            }
-            .food-name {
-                color: brown;
-                font-size: 14px;
-                letter-spacing: 1px;
-            }
-            .food-price {
-                display: block;
-                font-size: 12px;
-                padding-top: 4px;
-            }
-        }
-
     }
+    .goods-type {
+        .el-tabs__item {
+            min-width: 80px;
+            text-align: center;
+        }
+        .el-tabs__content {
+            position: absolute;
+            top: 40px;
+            bottom: 0;
+            overflow-y: auto;
+        }
+    }
+    .cook-list {
+        padding: 20px;
+        .cook-item {
+            height: auto;
+            padding: 2px;
+            overflow: hidden;
+
+            cursor: pointer;
+            transition: 0.5s;
+            &:hover {
+
+                transform: translate3d(0, -2px, 0);
+                border: none;
+            }
+            .food-wrapper {
+                background-color: #fff;
+                .food-img {
+                    width: 100%;
+                }
+                .good-info {
+                    text-align: center;
+                }
+                .food-name {
+                    color: brown;
+                    font-size: 14px;
+                    letter-spacing: 1px;
+                }
+                .food-price {
+                    display: block;
+                    font-size: 12px;
+                    padding-top: 4px;
+                }
+            }
+
+        }
+    }
+
 }
+
 </style>

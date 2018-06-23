@@ -1,34 +1,6 @@
 <style lang="scss" >
-.checkout-form {
-    margin: 50px 0;
-    table {
-        width: 100%;
-    }
-    .input-with-select .el-select {
-        min-width: 100px;
-    }
-}
 .checkout-container {
-    .el-col {
-        border-radius: 4px;
-    }
-    .bg-purple-dark {
-        background: #99a9bf;
-    }
-    .bg-purple {
-        background: #d3dce6;
-    }
-    .bg-purple-light {
-        background: #e5e9f2;
-    }
-    .grid-content {
-        border-radius: 4px;
-        min-height: 36px;
-    }
-    .row-bg {
-        padding: 10px 0;
-        background-color: #f9fafc;
-    }
+
     .checkboxGroup {
         width: 100%;
     }
@@ -45,6 +17,9 @@
         }
         .el-form-item__content{
           margin-right: 50px;
+        }
+        .input-with-select .el-select {
+            min-width: 100px;
         }
       }
       table{
@@ -86,14 +61,9 @@
       <el-form :model="formData" :rules="rules" ref="formData" label-width="120px" class="checkout-form">
         <el-form-item label="应收金额">
           <el-input v-model="totalMoney" readonly class="money align-right">
-
-        </el-input>
-
+          </el-input>
         </el-form-item>
-
-
         <el-form-item label="会员卡支付" v-if="isShowPrepaidCard" required  prop="prepaidCardAmount">
-
           <el-input v-model="formData.prepaidCardAmount" placeholder="" class="payment-card money align-right">
             <template slot="prepend">
               <div>
@@ -103,7 +73,6 @@
             </template>
           </el-input>
           <el-checkbox label="使用会员卡" name="type"></el-checkbox>
-
         </el-form-item>
 
         <el-form-item label="会员支付密码" v-if="false">
@@ -266,14 +235,14 @@ console.log( " this.checkoutParams", order)
 
         checkout( this.checkoutParams  ).then((res)=>{
           if( res.id> 0){
-            this.$bus.$emit('order-created-gevent')
 
+            this.$emit('order-created-event', res )
             this.$emit('update:dialogVisible', false)
-
             this.$message({
-              title: "订单提交成功",
-              message: "这是虚拟的,假设的,实验用的,非真实的.请注意!!!!!"
+              type: 'success',
+              message: "恭喜你，订单提交成功"
             });
+
           }else{
             this.$message({
               title: "订单提交失败",
