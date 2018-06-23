@@ -31,13 +31,13 @@ export var apiResultMixin = {
         shipmentState: orderResult.shipment_state,
         groupState: orderResult.group_state,
         paymentState: orderResult.payment_state,
-        payments: orderResult.payments,
         createdAt: moment(orderResult.created_at),
         orderType: orderResult.order_type,
         lineItemGroups: [],
         extraLineItems: [],
         cardTransactions: []
       }
+      order.payments = this.buildPayments( orderResult.payments )
       order.displayCreatedAt = order.createdAt.format('MM-DD HH:mm')
 
       orderResult.line_item_groups.forEach((groupResult, i) => {
@@ -86,6 +86,7 @@ export var apiResultMixin = {
       orderResult.line_items.forEach((lineItemResult) => {
         if (!lineItemResult.group_number) {
           const lineItem = {
+            id: lineItemResult.id,
             cname: lineItemResult.cname,
             price: lineItemResult.price,
             cardId: lineItemResult.card_id,
@@ -103,16 +104,25 @@ export var apiResultMixin = {
 
       //充值订单，有card_transactions
       if( orderResult.card_transactions ){
-        orderResult.card_transactions.forEach((result) => {
+        orderResult.card_transactions.forEach((result, i) => {
            const model = {
-               id:  result.id,
+              id:  result.id,
               cardId: result.card_id,
               amount: result.amount,
               amountLeft: result.amount_left,
+              position: result.position,
               createdAt: moment(result.created_at)
             }
+            // 找出每一个订单对应的卡和客户
+            model.customer = order.customer
+            model.card = order.customer.cards.find((item)=>{ return item.id == model.cardId })
+            // 如果是第一条充值记录，我们认为这是一张新卡
+            model.displayIsFirst = model.position==1 ? "是": "否"
+            model.displayCreatedAt = model.createdAt.format('MM-DD HH:mm')
             order.cardTransactions.push(model)
         })
+        // 通常一个订单对应一条充值记录
+        order.cardTransaction = order.cardTransactions[0]
       }
       return order
     },
@@ -389,6 +399,26 @@ console.log( "buildCustomerStatis=", result, statis)
       card.displayStatus = this.getCardDisplayStatus( card.status)
 
       return card
+    },
+    buildPayments: function( result ){
+      //"id": 11,
+      //"source_id": null,
+      //"amount": "50.0",
+      //"display_amount": "¥50.00",
+      //"payment_method_id": 1,
+      //"state": "checkout",
+      //"created_at": "2018-06-22T14:57:05.000+08:00",
+      const payments = result.map((model)=>{
+        let payment = {
+          id: model.id,
+          sourceId: model.source_id,
+          amount: parseInt( model.amount ),
+          paymentMethodId: model.payment_method_id,
+          createdAt: moment(model.created_at),
+        }
+        return payment
+      })
+      return payments
     },
 
     generateGroupNumber: function() {

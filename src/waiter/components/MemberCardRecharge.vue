@@ -206,8 +206,12 @@ export default {
     async checkout(){
       const orderParams = {
         user_id: this.customerData.id,
+        order_type: 1,
         line_items: [
           { variant_id: this.cardData.variantId, quantity: 1,  card_id: this.cardData.id, price: this.inputMoney, cname: "会员卡充值" }
+        ],
+        payments:[
+
         ]
       }
       let result = await checkout( { order: orderParams })
@@ -215,7 +219,7 @@ export default {
       if( result.id ){
         let order = this.buildOrder( result )
         let card = order.customer.cards.find((item)=>{ return item.id == this.cardData.id })
-        this.$emit( 'card-amount-changed-event', card )
+        this.$emit( 'deposit-order-created-event', card )
         this.closeWindow()
         this.$message({
           type: "success",

@@ -74,7 +74,7 @@
               </el-table-column>
               <el-table-column  label="卡号">
                 <template slot-scope="scope">
-                  <el-tag  v-for="(card, index) in scope.row.cards">{{card.code}}
+                  <el-tag  v-for="(item, index) in scope.row.cards" :key="item.id">{{item.code}}
                   </el-tag>
                 </template>
               </el-table-column>

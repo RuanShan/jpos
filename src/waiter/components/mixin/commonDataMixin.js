@@ -6,7 +6,7 @@ import {
 export var userDataMixin = {
   computed: {
     ...mapState([
-      'userInfo', 'storeId'
+      'userInfo','storeInfo','storeId'
     ])
   },
   methods: {
@@ -30,10 +30,11 @@ export var userDataMixin = {
 export var orderDataMixin = {
   computed: {
     ...mapState([
-      'userInfo', 'storeId',
+      'userInfo', 'storeId','storeInfo',
       'paymentMethods',
       'cardTypes',
-      'stores'
+      'stores',
+      'prepaidPaymentMethodId'
     ])
 
   },

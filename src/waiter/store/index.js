@@ -17,7 +17,8 @@ const state = {
   storeId: 0,
   paymentMethods: null,
   cardTypes: null,
-  stores: null
+  stores: null,
+  prepaidPaymentMethodId: 1
 }
 
 const mutations = {
@@ -78,9 +79,9 @@ const actions = {
       return store.state.paymentMethods
     }
     const result = await getPaymentMethods()
-    const list = []
-    result.payment_methods.forEach((pm)=>{
-        list.push({id:pm.id, name:pm.name, active: pm.active, posable: pm.posable})
+
+    const list = result.payment_methods.map((pm)=>{
+        return {id:pm.id, name:pm.name, active: pm.active, posable: pm.posable}
     })
 
     store.commit('savePaymentMethods', list)
@@ -108,6 +109,7 @@ const actions = {
         list.push({id:obj.id, name:obj.name })
     })
     store.commit('saveStores', list)
+    store.commit('saveStore', list[0])
     return store.state.stores
   }
 

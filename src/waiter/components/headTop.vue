@@ -1,6 +1,6 @@
 <template>
   <div class="header_container">
-    <div class="title left"> {{storeName}} </div>
+    <div class="title left"> {{storeInfo.name}} </div>
     <div class="header-right ">
       <div class="header-user-con">
         <div> <img :src="userAvatarUrl" class="avator"></div>
@@ -9,7 +9,8 @@
             {{userInfo.name}}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="home">首页</el-dropdown-item>
+            <el-dropdown-item command="home">打卡</el-dropdown-item>
+            <el-dropdown-item command="home">我的</el-dropdown-item>
             <el-dropdown-item command="singout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -21,7 +22,6 @@
 <script>
 import {signout} from '@/api/getData'
 import {baseImgPath} from '@/config/env'
-import {mapState} from 'vuex'
 
 export default {
   data () {
@@ -29,15 +29,8 @@ export default {
       baseImgPath
     }
   },
-  props: ['storeName'],
-
-  created () {
-
-  },
   computed: {
-    ...mapState(['userInfo']),
     userAvatarUrl:function(){
-
       return baseImgPath + '/img/' + this.userInfo.avatar
     }
   },

@@ -128,7 +128,7 @@
             <el-button type="primary" size="mini">当半年度</el-button>
           </div>
           <div class="time-select-right">
-            <el-date-picker class="date-picker" v-model="eachStoreMemberDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+            <el-date-picker class="date-picker" v-model="selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
             </el-date-picker>
           </div>
         </fieldset>
@@ -158,33 +158,33 @@
     <!-- 会员统计表   START -->
     <div class="member-line-three-row ">
       <el-table class="cel-scrollable-table" :data="tableData" border style="width: 100%" >
-        <el-table-column prop="name" label="会员卡号" width="120">
+        <el-table-column prop="cardTransaction.card.code" label="会员卡号" width="120">
         </el-table-column>
-        <el-table-column prop="name" label="会员姓名" width="90">
+        <el-table-column prop="cardTransaction.customer.username" label="会员姓名" width="90">
         </el-table-column>
-        <el-table-column prop="name" label="卡类型" width="90">
+        <el-table-column prop="cardTransaction.card.displayStyle" label="卡类型" width="90">
         </el-table-column>
-        <el-table-column prop="name" label="会员卡等级" >
+        <el-table-column prop="cardTransaction.card.name" label="会员卡等级" >
         </el-table-column>
-        <el-table-column prop="name" label="缴费日期">
+        <el-table-column prop="cardTransaction.displayCreatedAt" label="缴费日期">
         </el-table-column>
-        <el-table-column prop="name" label="充值金额" width="90">
+        <el-table-column prop="cardTransaction.amount" label="充值金额" width="90">
         </el-table-column>
-        <el-table-column prop="name" label="操作员" width="90">
+        <el-table-column prop="creatorName" label="操作员" width="90">
         </el-table-column>
-        <el-table-column prop="name" label="是否新增" width="90">
+        <el-table-column prop="cardTransaction.displayIsFirst" label="是否新增" width="90">
         </el-table-column>
-        <el-table-column prop="name" label="备注"  width="90"> 
+        <el-table-column prop="cardTransaction.card.memo" label="备注"  width="90">
         </el-table-column>
       </el-table>
     </div>
 
     <!-- 统计数据  START -->
     <div class="statisdatarecordnum">
-      <h4 style="display: inline-block;">记录数:</h4> <h4 class="recordnum">{{recordNumber}}</h4>
+      <h4 style="display: inline-block;">记录数:</h4> <h4 class="recordnum">{{totalCount}}</h4>
     </div>
     <div class="statisdatarechargemoney">
-      <h4 style="display: inline-block;">合计充值金额:</h4> <h4 class="recordnum">{{rechargeMoneySum}}</h4>
+      <h4 style="display: inline-block;">合计充值金额:</h4> <h4 class="recordnum">{{totalSum}}</h4>
     </div>
     <!-- 统计数据  END -->
 
@@ -199,11 +199,20 @@
 </template>
 
 <script>
+import moment from 'moment'
+import {
+  findOrders, getOrderCount
+} from '@/api/getData'
+
 export default {
   data() {
     return {
-      //*********** UI需要的变量 ***************/
-      eachStoreMemberDateSection: "", //选择的日期时间
+      //*********** 过滤条件 ***************/
+      formData:{
+        selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
+        storeId: null
+      },
+      selectedDates: "", //选择的日期时间
       stateOptions: [{ //门店方式选项
         value: '全部',
       }],
@@ -238,86 +247,66 @@ export default {
           }
         }]
       },
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }
-      ],
+      tableData: [],
       //*********** 逻辑需要的变量 ***************/
       returnServerCustomerData: {}, //调用接口,返回的数据
       customerData: {}, //整理過的顧客數據
-      recordNumber:"xxxx",  //统计数据之记录数
-      rechargeMoneySum:"xxxx" //统计数据之充值金额合计
+      totalCount:0,  //统计数据之记录数
+      totalSum: 0 //统计数据之充值金额合计
     };
   },
-  mounted() {
-    this.stateValue = this.stateOptions[0].value;
+  created() {
+    let stores = this.stores.map((item)=>{ return {id: item.id, name: item.name }})
+    this.storeOptions = [ {id: null, name: "全部"}].concat(stores )
+    let start = moment().subtract(6,"days")
+    let end = moment()
+    this.selectedDates = [ start.toDate(), end.toDate() ]
+    this.initData()
+    this.$bus.$on('deposit-order-created-gevent', () => {
+      this.initData()
+    })
+
+  },
+  computed:{
+    computedStartAt: function(){
+      return this.formData.selectedDates[0]
+    },
+    computedEndAt: function(){
+      return this.formData.selectedDates[1]
+    }
   },
   methods: {
+    async initData() {
+      this.formData.selectedDates =this.selectedDates
+      let params = this.buildParams()
+      getOrderCount( params ).then((res)=>{
+        this.totalCount = res.total_count
+        this.totalSum = res.total_sum
+      })
+      let result = await findOrders( params )
+
+      this.totalPage = result.total_count
+      this.tableData = this.buildOrders( result )
+      console.log( "result=", result, "this.tableData = ", this.tableData )
+    },
+    buildParams(){
+        let params = { //查询条件
+          page: this.currentPage, //分页器选择的当前页数
+          per_page: this.perPage, //每页显示12行数据
+          q: {
+            order_type_eq: 1
+          }
+        }
+        return params
+    },
     //門店選擇改變時的事件處理函數-----
     changeForState() {
 
     },
      //分页器的改变选择时事件处理函数
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.currentPage = val;
-      console.log(this.currentPage);
+      this.currentPage = val
+      this.initData()
     },
   }
 };

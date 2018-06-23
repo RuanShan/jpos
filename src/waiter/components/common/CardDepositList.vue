@@ -66,7 +66,7 @@ export default {
   created: function(){
     this.initData()
     //当有新的充值数据时，重新加载数据
-    this.$bus.$on('card-transaction-created-gevent', () => {
+    this.$bus.$on('deposit-order-created-gevent', () => {
       this.initData()
     })
 

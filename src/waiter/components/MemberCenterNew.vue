@@ -50,7 +50,7 @@
 <template>
 <div class="member-container " v-if="customerData">
   <card-form :dialog-visible.sync="cardFormVisible" :customer-data="customerData" @card-created-event="handleCustomerChanged"></card-form>
-  <member-card-recharge :dialog-visible.sync="displayRecharge" :customer-data="customerData" :card-data="cardData"  @card-amount-changed-event="handleCardAmountChanged"></member-card-recharge>
+  <member-card-recharge :dialog-visible.sync="displayRecharge" :customer-data="customerData" :card-data="cardData"  @deposit-order-created-event="handleDepositOrderCreated"></member-card-recharge>
   <member-edit :dialog-visible.sync="displayMemberEdit" :customer-data="customerData" @customer-changed-event="handleCustomerChanged"></member-edit>
   <member-card-edit :dialog-visible.sync="displayMemberCardEdit" :customer-data.sync="customerData" :card-data.sync="cardData" @card-changed-event="handleCardChanged"></member-card-edit>
   <div class="cel-window">
@@ -317,9 +317,9 @@ export default {
       newCustomer.cards.splice(index, 1, changedCard)
       this.handleCustomerChanged( newCustomer )
     },
-    handleCardAmountChanged( changedCard){
-      console.log("handleCardAmountChanged", changedCard)
-      this.$bus.$emit('card-transaction-created-gevent')
+    handleDepositOrderCreated( changedCard){
+      console.log("handleDepositOrderCreated", changedCard)
+      this.$bus.$emit('deposit-order-created-gevent')
       this.handleCardChanged(changedCard)
     },
     //接收到会员编辑窗口子组件发射来的事件处理函数-----

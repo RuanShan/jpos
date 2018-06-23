@@ -82,8 +82,8 @@ export default {
       },
       orderList: [],    //按关键字搜索到订单列表
       customerList: [], //按关键字搜索到的客户列表
-      customerComboId: null,
-      orderComboId: null,
+      customerComboId: '',
+      orderComboId: '',
       currentOrders:[], // 当前选择的客户对应的订单列表, 按订单关键字搜索后，选择的订单列表
       currentCustomer: null,
     }
@@ -93,13 +93,13 @@ export default {
   },
   computed:{
     selectedCustomerId: function(){
-      return ( this.customerComboId ? this.customerComboId.split('_')[0] : null )
+      return ( this.customerComboId.length>0 ? this.customerComboId.split('_')[0] : null )
     },
     cardId: function(){
-      return ( this.customerComboId ? this.customerComboId.split('_')[1] : null )
+      return ( this.customerComboId.length>0 ? this.customerComboId.split('_')[1] : null )
     },
     orderId: function(){
-      return ( this.orderComboId ? this.orderComboId.split('_')[0] : null )
+      return ( this.orderComboId.length >0 ? this.orderComboId.split('_')[0] : null )
     },
     computedCustomerOptions: function() {
       let ops = this.customerList.map((customer) => {
@@ -137,8 +137,9 @@ export default {
     currentCard: function(){
       let card = this.defaultCard
       let customer = this.currentCustomer
+console.log( " this.currentCustomer ", this.currentCustomer)
       if( customer.cards.length > 0 ){
-        card = this.customer.cards.find((card, index, arr) => {
+        card = customer.cards.find((card, index, arr) => {
           return card.id ==   this.cardId
         })
       }
@@ -191,6 +192,7 @@ export default {
         //取得客户的最新订单，包括所有未完成的订单。
         this.findOrderByCustomer()
       }else{
+        this.currentCustomer = this.defaultCustomer
         this.orderList = []
         this.currentOrders = []
       }

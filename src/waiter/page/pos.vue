@@ -23,7 +23,7 @@
                   <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入会员/手机号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
                     <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
-                  </el-select> {{storeId}}
+                  </el-select>
                 </el-form-item>
 
                 <el-button type="" size="mini" @click="handleNewCustomerButtonClicked" class="right">添加会员</el-button>
@@ -35,7 +35,8 @@
                     <tr><th>客户类型</th><td>{{currentCustomer.customerType}}</td><th>移动电话</th><td>{{currentCustomer.mobile}}</td>
                       <th>消费金额</th><td>{{currentCustomer.normalOrderTotal}}元</td>
                     </tr>
-                    <tr ><th>会员卡号</th><td>{{currentCard.code}}</td><th>会员卡类型</th><td>{{currentCard.name}}</td>
+                    <tr ><th><i class="el-icon-circle-check-outline"></i>会员卡号</th>
+                      <td>{{currentCard.code}}</td><th>会员卡类型</th><td>{{currentCard.name}}</td>
                       <th>会员卡余额</th><td>{{currentCard.amountRemaining}}</td>
                     </tr>
                   </table>
@@ -43,13 +44,13 @@
               </div>
             </div>
             <el-table :data="sortedOrderItemList" border stripe style="width:100%;" class="order-item-list">
-              <el-table-column label="物品序号" width="100">
+              <el-table-column label="物品序号" :render-header="renderEditableTableHeader" width="100">
                 <template slot-scope="scope">
                  <vue-xeditable  :name="'groupPosition_'+scope.row.index+'_xeditable'" v-model="scope.row.groupPosition" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
                </template>
               </el-table-column>
               <el-table-column prop="cname" label="服务项目" width="160"></el-table-column>
-              <el-table-column prop="unitPrice" label="单价" width="80">
+              <el-table-column prop="unitPrice" label="单价" :render-header="renderEditableTableHeader" width="80">
                 <template slot-scope="scope">
                  <vue-xeditable  :name="'unitPrice_'+scope.row.index+'_xeditable'" v-model="scope.row.unitPrice" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
                </template>
@@ -57,7 +58,7 @@
               <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
               <el-table-column prop="discount" label="折扣" width="50">折扣</el-table-column>
               <el-table-column prop="price" label="金额" width="50">金额</el-table-column>
-              <el-table-column prop="memo" label="备注">
+              <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
                 <template slot-scope="scope">
                  <vue-xeditable  :name="'memo_'+scope.row.index+'_xeditable'" v-model="scope.row.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
                 </template>
@@ -73,11 +74,12 @@
                 <i>数量：</i>
                 <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
                 <i>金额：</i>
-                <span>{{totalMoney}}</span>&nbsp;
-                <i>元</i>
+                <span>¥{{totalMoney}}</span>&nbsp;
                 <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
               </div>
-              <div class="check-button" @click="openCheckoutDialog()" > 收款 ：&nbsp;￥&nbsp;{{totalMoney}} </div>
+              <div >
+                <el-button  class="check-button" @click="openCheckoutDialog()"> 收款 ：&nbsp;¥&nbsp;{{totalMoney}}</el-button>
+              </div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="取单" class="ready-order">
@@ -232,7 +234,6 @@ export default {
           customer = this.defaultCustomer
         }
       }
-
       return customer
     },
     currentCard: function(){
@@ -479,6 +480,10 @@ export default {
         this.customerComboId = this.computedCustomerOptions[0].value
 
       })
+    },
+    renderEditableTableHeader (h, { column }) {
+      //显示添加编辑图标的表头
+      return h('p',{}, [ column.label, h('i',{class:"el-icon-edit"})])
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -537,6 +542,20 @@ export default {
             bottom: 0;
             left: 0;
             right: 0;
+            .check-button {
+                padding: 0;
+                width: 100%;
+                line-height: 50px;
+                height: 50px;
+                text-align: center;
+                font-size: 21px;
+                background-color: #67c23a;
+                border-color: #67c23a;
+                span{
+                  color: #fff;
+                }
+            }
+
         }
     }
     .pos-order {

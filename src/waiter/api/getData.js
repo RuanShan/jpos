@@ -228,10 +228,16 @@ export const getUserCount = data => fetch('/v1/users/count', data);
 export const findOrders = data => fetch('/api/v1/pos_orders/search', data, 'POST');
 
 /**
- * 获取订单数量
+ * 获取订单数量和金额统计，
+ * 查询参数和findOrders一样
+ * 返回结果 total_count, total_sum
  */
+export const getOrderCount = data => fetch('/api/v1/pos_orders/count', data, 'POST');
 
-export const getOrderCount = data => fetch('/bos/orders/count', data);
+/**
+ * 获取订单各个状态的数量统计
+ */
+export const getOrderStateCounts = data => fetch('/api/v1/pos_orders/state_counts', data);
 
 /**
  * 获取订单详细信息

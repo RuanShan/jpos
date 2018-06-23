@@ -25,7 +25,10 @@ export default {
     this.myChart = echarts.init(myChart)
     this.initData()
     this.$nextTick(() => {   this.myChart.resize() })
-
+    window.onresize = ()=>{
+      console.log( " window.onresize ")
+      this.myChart.resize()
+    }
   },
   props: ['sevenDate', 'sevenDay'],
   methods: {

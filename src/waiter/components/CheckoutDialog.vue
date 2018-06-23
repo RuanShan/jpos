@@ -1,5 +1,4 @@
 <style lang="scss" >
-
 .checkout-form {
     margin: 50px 0;
     table {
@@ -9,16 +8,6 @@
         min-width: 100px;
     }
 }
-.check-button {
-    line-height: 50px;
-    height: 50px;
-    text-align: center;
-    font-size: 21px;
-    color: #fff;
-    background-color: #67c23a;
-    border-color: #67c23a;
-}
-
 .checkout-container {
     .el-col {
         border-radius: 4px;
@@ -49,7 +38,7 @@
     }
     .checkout-form-wrap{
       .checkout-form{
-        width: 400px;
+        width: 500px;
         margin: 0 auto;
         .align-right input{
           text-align: right;
@@ -94,22 +83,27 @@
     </div>
 
     <div class="checkout-form-wrap">
-      <el-form :model="formData" :rules="rules" ref="formData" status-icon label-width="100px" class="checkout-form">
+      <el-form :model="formData" :rules="rules" ref="formData" label-width="120px" class="checkout-form">
         <el-form-item label="应收金额">
-          <el-input v-model="totalMoney" readonly class="money align-right"></el-input>
+          <el-input v-model="totalMoney" readonly class="money align-right">
+
+        </el-input>
+
         </el-form-item>
 
-        <el-form-item label="会员卡支付" v-if="isShowPrepaidCard">
+
+        <el-form-item label="会员卡支付" v-if="isShowPrepaidCard" required  prop="prepaidCardAmount">
 
           <el-input v-model="formData.prepaidCardAmount" placeholder="" class="payment-card money align-right">
             <template slot="prepend">
               <div>
-                <p>{{availablePrepaidCard.code}}</p>
-                <p>{{availablePrepaidCard.code}}</p>
+                <p>{{availablePrepaidCard.name}}</p>
+                <p>卡号{{availablePrepaidCard.code}}余额{{availablePrepaidCard.amount}}</p>
               </div>
             </template>
           </el-input>
-          <div class=" card-extra-info"> extra </div>
+          <el-checkbox label="使用会员卡" name="type"></el-checkbox>
+
         </el-form-item>
 
         <el-form-item label="会员支付密码" v-if="false">
@@ -122,9 +116,12 @@
               <el-option v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
+
           </el-input>
         </el-form-item>
-
+        <el-form-item label="备注" prop="memo" >
+          <el-input type="textarea" v-model="formData.memo"></el-input>
+        </el-form-item>
       </el-form>
 
     </div>
@@ -147,10 +144,6 @@ import { orderDataMixin } from "@/components/mixin/commonDataMixin"
 import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
-
-import {
-  mapState
-} from "vuex"
 
 export default {
   props: ["dialogVisible", "storeName", "orderItemList", "totalMoney", "customer"],
@@ -182,7 +175,6 @@ export default {
   },
   mixins: [DialogMixin, orderDataMixin],
   computed: {
-    ...mapState(["userInfo", "cartList"]),
     activePaymentMethods: function(){
       return this.paymentMethodList.filter((pm)=>{
         return pm.posable
@@ -193,7 +185,7 @@ export default {
       let t = this.orderItemList.reduce((total, item)=>{
         return total += item.price
       }, 0)
-      return t.toFixed(2)
+      return t.toFixed(0)
     },
     availablePrepaidCard: function(){
       let card = this.customer.cards.find((card)=>{
@@ -307,50 +299,3 @@ console.log( " this.checkoutParams", order)
 
 };
 </script>
-<style lang="scss" >
-.checkout-form {
-    margin: 50px 0;
-    table {
-        width: 100%;
-    }
-}
-.check-button {
-    line-height: 50px;
-    height: 50px;
-    text-align: center;
-    font-size: 21px;
-    color: #fff;
-    background-color: #67c23a;
-    border-color: #67c23a;
-}
-
-.checkout-container {
-    .el-col {
-        border-radius: 4px;
-    }
-    .bg-purple-dark {
-        background: #99a9bf;
-    }
-    .bg-purple {
-        background: #d3dce6;
-    }
-    .bg-purple-light {
-        background: #e5e9f2;
-    }
-    .grid-content {
-        border-radius: 4px;
-        min-height: 36px;
-    }
-    .row-bg {
-        padding: 10px 0;
-        background-color: #f9fafc;
-    }
-    .checkboxGroup {
-        width: 100%;
-    }
-    .switchButtons {
-        height: 40px;
-        line-height: 40px;
-    }
-}
-</style>

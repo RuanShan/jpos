@@ -10,15 +10,6 @@
         min-width: 100px;
     }
 }
-.check-button {
-    line-height: 50px;
-    height: 50px;
-    text-align: center;
-    font-size: 21px;
-    color: #fff;
-    background-color: #67c23a;
-    border-color: #67c23a;
-}
 
 .checkout-container {
 

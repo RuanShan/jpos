@@ -99,7 +99,7 @@
           <legend>查询条件</legend>
           <el-form :inline="true" :model="formData" class="demo-form-inline">
             <el-form-item label="时间区间">
-              <el-date-picker class="date-picker" v-model="pandectDateSelect" type="daterange" align="right" size="mini" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+              <el-date-picker class="date-picker" v-model="selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="店铺">
@@ -165,7 +165,7 @@
 <script>
 import tendency from '@/components/statis/tendency.vue'
 import moment from 'moment'
-//import dtime from 'time-formater'
+
 import {
   selectedDaysCount,
   selectedDayCount,
@@ -178,15 +178,15 @@ export default {
   },
   data() {
     return {
-      //*********** UI需要的变量 ***************/
+      //*********** 过滤条件 ***************/
       formData:{
-        startEnd: [], // [ "2018-06-04", "2018-06-14" ]
+        selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null
       },
       storeOptions: [{ //门店方式选项
         value: '全部',
       }],
-      pandectDateSelect: "", //总览时间选择值
+      selectedDates: "", //总览时间选择值
       selectedStoreId: "", //門店選項
       pickerOptions2: {
         shortcuts: [{
@@ -223,20 +223,11 @@ export default {
         allOrderCount: null,
         allCardCount: null
       },
-      userCount: null,
-      orderCount: null,
-      cardCount: null,
-      allUserCount: null,
-      allOrderCount: null,
-      allCardCount: null,
       sevenDate: [
         [],
         [],
         []
       ],
-      //*********** 逻辑需要的变量 ***************/
-      returnServerCustomerData: {}, //调用接口,返回的数据
-      customerData: {}, //整理過的顧客數據
     };
   },
   created() {
@@ -244,19 +235,15 @@ export default {
     this.storeOptions = [ {id: null, name: "全部"}].concat(stores )
     let start = moment().subtract(6,"days")
     let end = moment()
-    this.pandectDateSelect = [ start.toDate(), end.toDate() ]
+    this.selectedDates = [ start.toDate(), end.toDate() ]
     this.initData()
-
-
-
-
   },
   computed:{
     computedStartAt: function(){
-      return this.formData.startEnd[0]
+      return this.formData.selectedDates[0]
     },
     computedEndAt: function(){
-      return this.formData.startEnd[1]
+      return this.formData.selectedDates[1]
     },
     computedDayParam: function(){
       let params = {q:{day_eq: this.computedStartAt}}
@@ -285,11 +272,10 @@ export default {
   },
   methods: {
     async initData() {
-      this.formData.startEnd =this.pandectDateSelect
-      console.log( "this.formData.startEnd = ",this.formData.startEnd )
+      this.formData.selectedDates =this.selectedDates
+      console.log( "this.formData.selectedDates = ",this.formData.selectedDates )
       Promise.all([selectedDayCount(this.computedDayParam), totalCount(this.computedDaysParams)])
         .then(res => {
-
           this.statis.userCount = res[0].new_customers_count  //新增客户
           this.statis.orderCount = res[0].new_orders_count    //新增订单
           this.statis.cardCount = res[0].new_cards_count      //新增会员卡
@@ -322,20 +308,18 @@ export default {
             resArr[2].push(0)
           }
         })
-console.log( "resArr=",resArr)
         this.sevenDate = resArr
       }).catch(err => {
         console.log(err)
       })
     },
 
-
     //門店選擇改變時的事件處理函數-----
     changeForState() {
 
     },
     onSubmit(){
-      this.formData.startEnd = this.pandectDateSelect
+      this.formData.selectedDates = this.selectedDates
       this.initData()
     }
   }

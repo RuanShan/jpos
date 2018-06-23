@@ -42,7 +42,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
     try {
       const response = await fetch(url, requestConfig)
       // 401
-      if( response.status >=400 ){
+      if( response.status ==401 ){
         store.commit('resetUser')
       }
       const responseJson = await response.json()
