@@ -143,6 +143,7 @@
 </style>
 
 <template>
+<<<<<<< HEAD
 <div class="">
 
   <el-form ref="form" :model="formData" label-width="70px" :inline="true">
@@ -159,6 +160,23 @@
           </el-option>
         </el-select>
       </el-form-item>
+=======
+  <div class="">
+    <el-form ref="form" :model="form" label-width="70px" :inline="true">
+      <fieldset class="order-field-set">
+        <legend>功能选择</legend>
+        <el-form-item class="oreder-form-item" label="时间选择">
+          <el-date-picker class="order-time-select" v-model="form.eachStoreOrderDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+          </el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="门店选择">
+          <el-select class="select-options" v-model="form.stateValue" @change="changeForState" size="mini">
+            <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+>>>>>>> 1decb4d00688aa77864cb39d4f8ac6dba148c371
 
       <el-form-item label="支付方式">
         <el-select class="select-options" v-model="formData.payValue" @change="changeForState" size="mini">
@@ -231,10 +249,17 @@ import {
 export default {
   data() {
     return {
+<<<<<<< HEAD
       //*********** 过滤条件 ***************/
       formData:{
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null,
+=======
+      //*********** UI需要的变量 ***************/
+      form: {
+        eachStoreOrderDateSection: "", //选择的日期时间
+        stateValue: "", //門店選項
+>>>>>>> 1decb4d00688aa77864cb39d4f8ac6dba148c371
         payValue: "", //支付方式选项
       },
       stateOptions: [{ //门店方式选项

@@ -118,11 +118,10 @@
         </el-tab-pane>
 
         <el-tab-pane label="工厂统计">
-          <statis-each-state-order v-if="statisEachStateOrderVisible"></statis-each-state-order>
         </el-tab-pane>
 
         <el-tab-pane label="会员情况统计">
-
+          <statis-member-case> </statis-member-case>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -134,6 +133,7 @@ import DaySale from '@/components/statis/DaySale.vue'
 import StatisPandect from '../components/StatisPandect.vue';
 import StatisEachStateMember from '../components/StatisEachStateMember.vue';
 import StatisEachStateOrder from '../components/StatisEachStateOrder.vue';
+import StatisMemberCase from '../components/StatisMemberCase.vue';
 
 export default {
   components: {
@@ -141,6 +141,7 @@ export default {
     "statis-pandect": StatisPandect,
     "statis-each-state-member": StatisEachStateMember,
     "statis-each-state-order": StatisEachStateOrder,
+    "statis-member-case": StatisMemberCase,
   },
   data() {
     return {
@@ -278,30 +279,30 @@ export default {
     //点击标签的事件处理函数-----
     tabHandleClick(tab, event) {
       console.log(this.tabsNumber);
-      switch (this.tabsNumber) {
-        case "0":
-          this.statisPandectVisible = true;
-          console.log("============0   了,请注意!!!!");
-          break;
-        case "1":
-          this.statisEachStateMemberVisible = true;
-          console.log("============1   了,请注意!!!!");
-          break;
-        case "2":
-          this.statisEachStateOrderVisible = true;
-          console.log("============2   了,请注意!!!!");
-          break;
-        case "3":
-          this.statisEachStateOrderVisible = true;
-          console.log("============3   了,请注意!!!!");
-          break;
-        default:
-          this.statisPandectVisible = false;
-          this.statisEachStateMemberVisible = false;
-          this.statisEachStateOrderVisible = false;
-          console.log("default");
+      // switch (this.tabsNumber) {
+      //   case "0":
+      //     this.statisPandectVisible = true;
+      //     console.log("============0   了,请注意!!!!");
+      //     break;
+      //   case "1":
+      //     this.statisEachStateMemberVisible = true;
+      //     console.log("============1   了,请注意!!!!");
+      //     break;
+      //   case "2":
+      //     this.statisEachStateOrderVisible = true;
+      //     console.log("============2   了,请注意!!!!");
+      //     break;
+      //   case "3":
+      //     this.statisEachStateOrderVisible = true;
+      //     console.log("============3   了,请注意!!!!");
+      //     break;
+      //   default:
+      //     this.statisPandectVisible = false;
+      //     this.statisEachStateMemberVisible = false;
+      //     this.statisEachStateOrderVisible = false;
+      //     console.log("default");
 
-      }
+      // }
     },
     //門店選擇改變時的事件處理函數-----
     changeForState() {
