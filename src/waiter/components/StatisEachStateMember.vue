@@ -177,16 +177,16 @@
     </div> -->
     <!-- 功能选择   END -->
 
-    <el-form ref="form" :model="form" label-width="70px" :inline="true">
+    <el-form ref="form" :model="formData" label-width="70px" :inline="true">
       <fieldset class="member-field-set">
         <legend>功能选择</legend>
         <el-form-item class="member-form-item" label="时间选择">
-          <el-date-picker class="member-time-select" v-model="form.eachStoreMemberDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+          <el-date-picker class="member-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
 
         <el-form-item label="门店选择">
-          <el-select class="select-options" v-model="form.stateValue" @change="changeForState" size="mini">
+          <el-select class="select-options" v-model="formData.storeId" @change="changeForState" size="mini">
             <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
             </el-option>
           </el-select>
