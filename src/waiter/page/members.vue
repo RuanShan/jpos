@@ -180,7 +180,7 @@ export default {
       // 如果是最后一条，返回上一页，
       // 如果当前是第一页，更新当前页即可
       let cid = row.id
-      this.confirm( ( )=>{
+      this.deleteConfirm( ( )=>{
         deleteCustomer( cid ).then((res)=>{
           if( res.ret== 'success'){
             if( this.customerList.length == 1 && this.currentPage > 1 ){
