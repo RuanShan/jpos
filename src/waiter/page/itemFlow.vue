@@ -273,7 +273,6 @@
 </template>
 
 <script>
-import headTop from '@/components/headTop'
 import ItemProcess from '@/components/ItemProcess'
 import ProductScan from '@/components/ProductScan'
 import ProductTransfer from '@/components/ProductTransfer'
@@ -337,7 +336,6 @@ export default {
     }
   },
   components: {
-    headTop,
     ItemProcess,
     ProductScan,
     ProductTransfer,
@@ -358,6 +356,9 @@ export default {
   },
 
   methods: {
+    beforeRouteEnter (to, from, next) {
+      console.log( "itemflows -> beforeRouteEnter->")
+    },
     async initData() {
       let queryParams = {
         q: {

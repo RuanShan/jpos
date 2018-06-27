@@ -26,7 +26,6 @@
 
 <script>
   import {login} from '@/api/getData'
-  import {mapActions, mapState} from 'vuex'
 
   export default {
     data () {
@@ -58,12 +57,9 @@
           this.$router.push('waiter')
         }
       }))
-    },
-    computed: {
-      ...mapState(['userInfo'])
-    },
+    },  
     methods: {
-      ...mapActions(['getStores','getCurrentUser']),
+
       async submitForm (formName) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {

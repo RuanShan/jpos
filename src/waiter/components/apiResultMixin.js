@@ -19,15 +19,15 @@ export var apiResultMixin = {
     buildOrder: function(orderResult) {
       let order = {
         id: orderResult.id,
+        createdById: orderResult.created_by_id,
+        userId: orderResult.user_id,
+        storeId: orderResult.store_id,
         number: orderResult.number,
         total: parseInt(orderResult.total), //实收价格
         saleTotal: parseInt(orderResult.sale_total), //应收价格
         userName: orderResult.user_name,
-        storeId: orderResult.store_id,
         storeName: orderResult.store_name,
         creatorName: orderResult.creator_name,
-        createdById: orderResult.created_by_id,
-        userId: orderResult.user_id,
         shipmentState: orderResult.shipment_state,
         groupState: orderResult.group_state,
         paymentState: orderResult.payment_state,
@@ -133,6 +133,7 @@ export var apiResultMixin = {
     //  ]
     buildOrders: function(ordersResult) {
       let orders = []
+console.log("ordersResult=",ordersResult )
       ordersResult.orders.forEach((item, i) => {
 
         let order = this.buildOrder(item)

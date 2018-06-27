@@ -1,5 +1,5 @@
 import { baseUrl } from './env'
-import store from '@/store'
+//import store from '@/store'
 
 var Promise = require('es6-promise').Promise;
 
@@ -44,7 +44,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       let responseJson = null
       // 401
       if( response.status ==401 ){
-        store.commit('resetUser')
+        //store.commit('resetUser')
       }
       if( type=='DELETE' &&  response.status == 204 ){
         //删除成功时，没有返回内容

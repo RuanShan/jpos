@@ -357,7 +357,7 @@ export default {
           const orderResult = await getOrder(row.orderId)
 
           row.orderDetail = this.buildOrder(orderResult)
-          console.log('orderDetail', this.orderDetail)
+          console.log('orderDetail', row.orderDetail)
         }
         this.orderDetail = row.orderDetail
         this.orderCustomer = this.orderDetail.customer

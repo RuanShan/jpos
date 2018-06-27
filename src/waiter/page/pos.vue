@@ -487,20 +487,16 @@ export default {
       return h('p',{}, [ column.label, h('i',{class:"el-icon-edit"})])
     }
   },
-  beforeRouteEnter (to, from, next) {
-    console.log( "pos -> beforeRouteEnter->")
-    next()
-  },
   watch: {
-    userInfo: function(newValue) {
-      if (!newValue.id) {
-        this.$message({
-          type: "error",
-          message: "检测到您 session expired, please login again"
-        });
-        this.$router.push("login");
-      }
-    }
+    // userInfo: function(newValue) {
+    //   if (!newValue.id) {
+    //     this.$message({
+    //       type: "error",
+    //       message: "检测到您的登录信息过期, 请重新登录"
+    //     });
+    //     this.$router.push("login");
+    //   }
+    // }
   }
 };
 </script>

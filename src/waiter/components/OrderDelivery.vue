@@ -6,7 +6,7 @@
           <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入手机/会员号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
             <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
-          </el-select> {{customerComboId}}
+          </el-select>
         </el-form-item>
 
         <el-form-item label="订单搜索">

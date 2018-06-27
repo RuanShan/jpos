@@ -4,11 +4,11 @@
     position: relative;
     .order-list {
         position: absolute;
-        top: 80px;
-        bottom: 50px;
+        top: 90px;
+        bottom: 70px;
         left: 10%;
         width: 80%;
-        padding: 16px;
+        padding: 0;
         border: 1px #efefef solid;
         .el-table{
           height: 100%;

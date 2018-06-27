@@ -20,7 +20,7 @@
         <div class="left back">
           <i class="el-icon-back" @click="handleCloseDialog()"></i>
         </div>
-        <div> 会员添加storeId{{storeId}}</div>
+        <div> 会员添加</div>
       </div>
 
       <el-row type="flex" justify="center">
@@ -102,8 +102,9 @@
       <el-row type="flex" justify="center">
         <el-col :span="10">
           <div class="actions">
-            <el-button type="primary" @click="addCustomer">立即创建</el-button>
             <el-button @click="resetForm('memberFormData')">重置</el-button>
+            <el-button type="primary" @click="addCustomer">立即创建</el-button>
+            <el-button @click="closeDialog">关闭</el-button>
             <el-button @click="fillIn" type="danger">测试填入</el-button>
           </div>
         </el-col>
@@ -247,7 +248,10 @@ export default {
       })
       console.log("MemberAdd handleOpenDialog end")
     },
-
+    closeDialog(){
+      this.resetForm('memberFormData')
+      this.handleCloseDialog()
+    },
     addCustomer(formName) {
       let validations = [this.$refs["memberFormData"].validate()]
       //如果创建会员卡，需要验证会员卡的表单

@@ -35,6 +35,7 @@ import { orderDataMixin, userDataMixin } from "@/components/mixin/commonDataMixi
 Vue.mixin( orderDataMixin, userDataMixin )
 
 router.beforeEach(function (to, from, next) {
+  //console.log( "beforeEach is working")
     const user = store.state.userInfo;
     if ( to.name !== "login") {
         //未登录
@@ -59,5 +60,17 @@ new Vue({
   template: '<App/>',
   components: {
     App
+  },
+  watch: {
+    // 导致错误，无法监控userInfo状态
+    userInfo: function(newValue) {
+      if (!newValue.id) {
+        this.$message({
+          type: "error",
+          message: "检测到您的登录信息过期, 请重新登录"
+        });
+        this.$router.push("login");
+      }
+    }
   }
 });

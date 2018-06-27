@@ -4,28 +4,8 @@ import {
 } from 'vuex'
 
 export var userDataMixin = {
-  computed: {
-    ...mapState([
-      'userInfo','storeInfo','storeId'
-    ])
-  },
-  methods: {
-    //...mapActions(['getCurrentUser']),
 
-  },
-  watch: {
-    userInfo: function(newValue) {
-      if (!newValue.id) {
-        this.$message({
-          type: "error",
-          message: "检测到您的登录信息过期, 请重新登录"
-        });
-        this.$router.push("login");
-      }
-    }
-  }
 }
-
 
 export var orderDataMixin = {
   computed: {
@@ -62,7 +42,7 @@ export var orderDataMixin = {
     }
   },
   methods: {
-    ...mapActions(['getPaymentMethods', 'getCardTypes']),
+    ...mapActions(['getStores','getCurrentUser', 'getPaymentMethods', 'getCardTypes']),
 
     getOrderStateText(state) {
       if (state == "pending") {
@@ -82,5 +62,17 @@ export var orderDataMixin = {
       }
       return "未知"
     }
+  },
+  watch: {
+    // 导致错误，无法监控userInfo状态
+    // userInfo: function(newValue) {
+    //   if (!newValue.id) {
+    //     this.$message({
+    //       type: "error",
+    //       message: "检测到您的登录信息过期, 请重新登录"
+    //     });
+    //     this.$router.push("login");
+    //   }
+    // }
   }
 }
