@@ -207,7 +207,7 @@
 
           </div>
           <div class="actions">
-            <el-button @click="ChangeCurrentItemState(false)">删除</el-button>
+            <el-button @click="cancelOrder()">取消订单</el-button>
             <el-button @click="ChangeCurrentItemState(false)">编辑</el-button>
             <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
             <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button>
@@ -222,18 +222,15 @@
 import {
   getOrder,
   findLineItemGroups,
-  evolveLineItemGroups
+  evolveLineItemGroups,
+  cancelOrder
 }
-  from '@/api/getData'
+from '@/api/getData'
+
 import {
-  userDataMixin,
-  orderDataMixin
-}
-  from '@/components/mixin/commonDataMixin'
-import {
-  apiResultMixin
-}
-  from '@/components/apiResultMixin'
+  CelUIMixin
+} from '@/components/mixin/CelUIMixin';
+
 import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
@@ -262,7 +259,7 @@ export default {
 
     }
   },
-  mixins: [DialogMixin, userDataMixin, orderDataMixin, apiResultMixin],
+  mixins: [DialogMixin, CelUIMixin],
   props: ['dialogVisible', 'orderState', 'itemCounts'],
   created() {
   },
@@ -270,7 +267,25 @@ export default {
   },
   methods: {
     async initData() {
-      this.getLineItemGroups()
+      let params = this.buildParams()
+      const itemsResult = await findLineItemGroups(params)
+      this.count = itemsResult.total_count
+      this.itemList = this.buildLineItemGroups(itemsResult)
+    },
+    buildParams(){
+      let params = {
+        page: this.currentPage,
+        per_page: this.perPage,
+        q:{
+          store_id_eq: this.storeId,
+          state_eq: this.orderState
+        }
+      }
+      if (this.filters.keyword.length > 0) {
+        // item.number || item.users.username
+        params["q[number_cont]"] = this.filters.keyword
+      }
+      return params
     },
     ChangeItemStates(forward = true) {
       let itemNumbers = this.multipleSelection.map((item) => item.number)
@@ -297,12 +312,12 @@ export default {
     },
 
     async MoveItemToNextState(itemNumbers = [], forward = true) {
-      let queryParams = {
+      let params = {
         numbers: itemNumbers,
         forward
       }
-      console.log('ChangeItemStates', queryParams)
-      const posItemsReturn = await evolveLineItemGroups(queryParams)
+      console.log('ChangeItemStates', params)
+      const posItemsReturn = await evolveLineItemGroups(params)
       if (posItemsReturn.count > 0) {
         let itemCount = this.itemList.length - posItemsReturn.count
         if (itemCount <= 0) {
@@ -310,7 +325,7 @@ export default {
             this.currentPage -= 1 // go previous page
           }
         }
-        this.getLineItemGroups()
+        this.initData()
         this.$emit('order-state-changed')
       }
     },
@@ -332,30 +347,7 @@ export default {
     handleCurrentPageChange(val) {
       this.currentPage = val
       this.offset = (val - 1) * this.limit
-      this.getLineItemGroups()
-    },
-    async getLineItemGroups() {
-      let queryParams = {
-        page: this.currentPage,
-        per_page: this.perPage,
-        q: {
-          store_id_eq: this.storeId,
-          state_eq: this.orderState
-        }
-      }
-
-      if (this.filters.keyword.length > 0) {
-        // item.number || item.users.username
-        queryParams["q[number_cont]"] = this.filters.keyword
-      }
-
-
-      console.log("queryParams", queryParams, this.userInfo)
-      const itemsResult = await findLineItemGroups(queryParams)
-      this.count = itemsResult.total_count
-      this.itemList = this.buildLineItemGroups(itemsResult)
-      //this.itemList.splice(0, this.itemList.length, ...this.buildLineItemGroups(itemsResult))
-
+      this.initData()
     },
     async handleCurrentRowChange(row) {
       if (row) {
@@ -374,6 +366,28 @@ export default {
         this.currentItem = null
         this.orderDetail = null
       }
+    },
+    cancelOrder(){
+      let id = this.orderDetail.id
+
+      this.cancelOrderConfirm( ( )=>{
+        cancelOrder( id ).then((res)=>{
+          if( res.id ){
+            this.$emit('order-state-changed')
+
+            if( this.itemList.length == 1 && this.currentPage > 1 ){
+              this.handlePageChange( this.currentPage -1 )
+            }else{
+              this.initData()
+            }
+            this.$message({
+              type: 'success',
+              message: "恭喜你，订单取消成功"
+            })
+          }
+        })
+      })
+
     }
   }
 }

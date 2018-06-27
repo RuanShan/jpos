@@ -196,17 +196,6 @@ export const getMenu = data => fetch('/shopping/v2/menu', data);
 
 export const getMenuById = category_id => fetch('/shopping/v2/menu/' + category_id);
 
-/**
- * 更新食品信息
- */
-
-export const updateFood = data => fetch('/shopping/v2/updatefood', data, 'POST');
-
-/**
- * 删除食品
- */
-
-export const deleteFood = food_id => fetch('/shopping/v2/food/' + food_id, {}, 'DELETE');
 
 /**
  * 获取用户列表
@@ -248,6 +237,11 @@ export const getOrder = id => fetch('/api/v1/pos_orders/' + id)
  * 取消订单
  */
 export const cancelOrder = id => fetch('/api/v1/pos_orders/' + id+ '/cancel', {}, 'PUT')
+
+/**
+ * 取消订单
+ */
+export const deleteOrder = id => fetch('/api/v1/pos_orders/' + id, {}, 'DELETE')
 
 /**
  * 获取订单详细信息 通过订单number, 暂未实现
