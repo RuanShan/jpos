@@ -22,7 +22,7 @@
             position: absolute;
             left: 0;
             right: 0;
-            top: 110px;
+            top: 90px;
             bottom: 16px;
             .card-tabs {
                 .card-table {
@@ -37,7 +37,7 @@
             }
             .card-records-wrap {
                 position: absolute;
-                top: 150px;
+                top: 114px;
                 bottom: 0;
                 left: 0;
                 right: 0;
@@ -103,11 +103,11 @@
                   <span>¥ {{item.amountRemaining}}</span>
                 </div>
                 <div class="left">
-                  <span>充值记录</span>
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充值记录</span>
                   <span>¥ {{item.amount}}</span>
                 </div>
                 <div class="left">
-                  <span>消费记录</span>
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消费记录</span>
                   <span>¥ {{item.amountUsed}}</span>
                 </div>
                 <div class="right">
