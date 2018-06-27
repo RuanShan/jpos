@@ -1,10 +1,11 @@
 <style lang="scss">
+@import "../style/mixin";
 .members-container {
   .members .title-wrap {
     text-align: center;
-    line-height: 48px;
-    background-color: #f9fafc;
-    margin: 0 18px;
+    line-height: 56px;
+    background-color: #cecece;
+    // margin: 0 18px;
     border-bottom: 1px solid #d3dce6;
   }
   .filters {
@@ -16,9 +17,9 @@
   .member-list-wrap{
     position: absolute;
     top: 50px;
-    left: 18px;
-    right: 18px;
-    bottom: 50px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
     background-color: #ffffff;
 
     .member-list{

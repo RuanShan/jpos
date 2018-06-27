@@ -1,116 +1,120 @@
 <style lang="scss">
-@import '../style/mixin';
+@import "../style/mixin";
 .process-item-container {
-    position: relative;
-    .item-list-wrap {
-        position: absolute;
-        top: 80px;
-        bottom: 0;
-        left: 0;
-        width: 40%;
-        border: 1px #efefef solid;
-        .item-list{
-          position: absolute;
-          top: 8px;
-          left: 8px;
-          right: 8px;
-          bottom: 48px;
-          overflow-y: auto;
-        }
-        .pagination {
-            position: absolute;
-            right: 16px;
-            bottom: 16px;
-            left: 0;
-        }
+  position: relative;
+  .item-list-wrap {
+    position: absolute;
+    top: 80px;
+    bottom: 0;
+    left: 0;
+    width: 40%;
+    border: 1px #efefef solid;
+    .item-list {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      bottom: 48px;
+      overflow-y: auto;
     }
-    .item-detail {
-        table{ width: 100%; }
-
-        position: absolute;
-        width: 60%;
-        top: 80px;
-        bottom: 0;
-        right: 0;
-        padding: 16px;
-        border: 1px #efefef solid;
-        .line-item-groups-container{
-          position: absolute;
-          top: 8px;
-          bottom: 50px;
-          left: 8px;
-          right: 8px;
-          overflow-y: auto;
-        }
-        .head{
-          font-size: 15px;
-          padding:  6px;
-          border-bottom: 1px #efefef solid;
-        }
-        .group-container {
-            border-bottom: 1px solid #ebeef5;
-        }
-        table tr {
-            vertical-align: top;
-        }
-
-        .item-image{
-          float: left;
-          width: 25%;
-          padding: 8px;
-          img{
-            width: 100%;
-            border-bottom: 1px #efefef solid;
-          }
-        }
-        .actions {
-            position: absolute;
-            bottom: 16px;
-            left: 16px;
-            right: 16px;
-            text-align: right;
-        }
-        .customer{
-        }
+    .pagination {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      left: 0;
     }
-    table.bordered {
+  }
+  .item-detail {
+    table {
+      width: 100%;
+    }
+
+    position: absolute;
+    width: 60%;
+    top: 80px;
+    bottom: 0;
+    right: 0;
+    padding: 16px;
+    border: 1px #efefef solid;
+    .line-item-groups-container {
+      position: absolute;
+      top: 8px;
+      bottom: 50px;
+      left: 8px;
+      right: 8px;
+      overflow-y: auto;
+    }
+    .head {
+      font-size: 15px;
+      padding: 6px;
+      border-bottom: 1px #efefef solid;
+    }
+    .group-container {
+      border-bottom: 1px solid #ebeef5;
+    }
+    table tr {
+      vertical-align: top;
+    }
+
+    .item-image {
+      float: left;
+      width: 25%;
+      padding: 8px;
+      img {
         width: 100%;
-        td {
-            vertical-align: top;
-            border-bottom: 1px solid #ebeef5;
-        }
-        tr:hover {
-            background-color: #f5f7fa;
-        }
+        border-bottom: 1px #efefef solid;
+      }
     }
-    .filters {
-        margin: 0 0 20px;
-        border: 1px #efefef solid;
-        padding: 10px;
-        background: #f9f9f9;
-        .filter {
-            display: inline-block;
-            width: auto;
-            padding: 10px;
-            border-radius: 5px;
-            .el-select {
-                display: inline-block;
-            }
-        }
-        .el-input {
-            width: 150px;
-            display: inline-block;
-        }
+    .actions {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      text-align: right;
     }
+    .customer {
+    }
+  }
+  table.bordered {
+    width: 100%;
+    td {
+      vertical-align: top;
+      border-bottom: 1px solid #ebeef5;
+    }
+    tr:hover {
+      background-color: #f5f7fa;
+    }
+  }
+  .filters {
+    margin: 0 0 20px;
+    border: 1px #efefef solid;
+    padding: 10px;
+    background: #f9f9f9;
+    .filter {
+      display: inline-block;
+      width: auto;
+      padding: 10px;
+      border-radius: 5px;
+      .el-select {
+        display: inline-block;
+      }
+    }
+    .el-input {
+      width: 150px;
+      display: inline-block;
+    }
+  }
 }
 </style>
 
 <template>
   <div class="process-item-container cel-window">
-    <el-dialog :visible="computedVisible" @open="handleDialogOpen"  :show-close="false" :top="top" :modal="false">
+    <el-dialog :visible="computedVisible" @open="handleDialogOpen" :show-close="false" :top="top" :modal="false">
       <div slot="title" class="title-wrap">
-        <div class="left back"> <i class="el-icon-back" @click="handleCloseDialog()"></i> </div>
-        <div> 订单处理</div>
+        <div class="left back">
+          <i class="el-icon-back" @click="handleCloseDialog()"></i>
+        </div>
+        <div> 订单处理</div>s
       </div>
 
       <div class=" fillcontain clear">
@@ -149,17 +153,24 @@
             <div class="customer">
               <div class="head"> 客户信息</div>
               <div>
-                <table> <tr>
-                  <th>客户电话 </th><td> {{ orderCustomer.mobile }} </td>
-                  <th>客户姓名 </th><td> {{ orderCustomer.name }} </td>
-                  <th>客户类型 </th><td> {{ orderCustomer.displayType }} </td>
-                 </tr>
-                 <tr>
-                   <th>会员卡号 </th><td> {{ orderCustomer.defaultCard.code }} </td>
-                   <th>会员卡类型 </th><td> {{ orderCustomer.defaultCard.name }} </td>
-                   <th>会员卡余额 </th><td> {{ orderCustomer.defaultCard.amountRemaining }} </td>
+                <table>
+                  <tr>
+                    <th>客户电话 </th>
+                    <td> {{ orderCustomer.mobile }} </td>
+                    <th>客户姓名 </th>
+                    <td> {{ orderCustomer.name }} </td>
+                    <th>客户类型 </th>
+                    <td> {{ orderCustomer.displayType }} </td>
                   </tr>
-               </table>
+                  <tr>
+                    <th>会员卡号 </th>
+                    <td> {{ orderCustomer.defaultCard.code }} </td>
+                    <th>会员卡类型 </th>
+                    <td> {{ orderCustomer.defaultCard.name }} </td>
+                    <th>会员卡余额 </th>
+                    <td> {{ orderCustomer.defaultCard.amountRemaining }} </td>
+                  </tr>
+                </table>
               </div>
 
             </div>
@@ -168,7 +179,7 @@
               <div class="head"> 订单信息 {{orderDetail.number}} </div>
 
               <div>
-                <div class="head"> 物品  {{currentItem.number}} {{currentItem.state}}  </div>
+                <div class="head"> 物品 {{currentItem.number}} {{currentItem.state}} </div>
                 <table style="width: 100%">
                   <tr>
                     <td>序号</td>
@@ -180,16 +191,16 @@
                     <tr>
                       <td>{{ index+1 }}</td>
                       <td>{{ lineItem.cname }}</td>
-                          <td>{{ lineItem.memo }}</td>
-                          <td>{{ lineItem.state }}</td>
+                      <td>{{ lineItem.memo }}</td>
+                      <td>{{ lineItem.state }}</td>
                     </tr>
                   </template>
                 </table>
 
                 <div class="head"> 物品图片</div>
                 <div class="clear">
-                  <div class="item-image"> <img src="../assets/img/activity.png" alt="图片1"/> </div>
-                  <div class="item-image"> <img src="../assets/img/activity.png" alt="图片2"/> </div>
+                  <div class="item-image"> <img src="../assets/img/activity.png" alt="图片1" /> </div>
+                  <div class="item-image"> <img src="../assets/img/activity.png" alt="图片2" /> </div>
                 </div>
               </div>
             </div>
@@ -213,16 +224,16 @@ import {
   findLineItemGroups,
   evolveLineItemGroups
 }
-from '@/api/getData'
+  from '@/api/getData'
 import {
   userDataMixin,
   orderDataMixin
 }
-from '@/components/mixin/commonDataMixin'
+  from '@/components/mixin/commonDataMixin'
 import {
   apiResultMixin
 }
-from '@/components/apiResultMixin'
+  from '@/components/apiResultMixin'
 import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
@@ -327,7 +338,7 @@ export default {
       let queryParams = {
         page: this.currentPage,
         per_page: this.perPage,
-        q:{
+        q: {
           store_id_eq: this.storeId,
           state_eq: this.orderState
         }
@@ -350,18 +361,18 @@ export default {
       if (row) {
         this.currentItem = row
         console.log('handleCurrentRowChange', row, this.currentItem)
-        if( row.orderDetail == null){
+        if (row.orderDetail == null) {
           const orderResult = await getOrder(row.orderId)
 
-          row.orderDetail = this.buildOrder( orderResult )
+          row.orderDetail = this.buildOrder(orderResult)
           console.log('orderDetail', this.orderDetail)
         }
-          this.orderDetail = row.orderDetail
-          this.orderCustomer = this.orderDetail.customer
+        this.orderDetail = row.orderDetail
+        this.orderCustomer = this.orderDetail.customer
 
       } else {
         this.currentItem = null
-        this.orderDetail  = null
+        this.orderDetail = null
       }
     }
   }

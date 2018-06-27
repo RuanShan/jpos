@@ -1,6 +1,8 @@
 <style lang="scss">
 .statistics-container {
   .title-wrap {
+    line-height: 42px;
+    background-color: #cecece;
     padding: 6px;
     text-align: center;
   }
@@ -12,10 +14,10 @@
   }
   .tab-list-wrap {
     position: absolute;
-    top: 55px;
+    top: 66px;
     left: 18px;
     right: 18px;
-    bottom: 100px;
+    bottom: 10px;
     .tabs-height {
       height: 100%;
       .el-tabs__content {
@@ -96,7 +98,7 @@
       <el-tabs class="tabs-height" type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick">
 
         <el-tab-pane label="总览">
-          <statis-pandect ></statis-pandect>
+          <statis-pandect></statis-pandect>
         </el-tab-pane>
 
         <el-tab-pane label="会员充值统计">
