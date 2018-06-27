@@ -51,7 +51,7 @@
         <span>{{totalMoney}}</span>&nbsp;
         <i>元</i>
       </div>
-      <div class="check-button" @click="completeOrders()" > 确认取单 ：&nbsp;￥&nbsp;{{totalMoney}} </div>
+      <div class="check-button font-color" @click="completeOrders()" > 确认取单 ：&nbsp;￥&nbsp;{{totalMoney}} </div>
     </div>
 
   </div>
@@ -254,5 +254,8 @@ console.log( " this.currentCustomer ", this.currentCustomer)
 </script>
 
 <style lang="scss">
+.font-color{
+  color: white;
+}
 
-</script>
+</style>
