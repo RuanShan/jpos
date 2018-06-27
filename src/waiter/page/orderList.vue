@@ -106,7 +106,7 @@
         <div class="collection-options">
           <el-button @click="ChangeOrderStates">Next Step</el-button>
           <el-button @click="ChangeOrderStates(false)">Draw Back</el-button>
-          <el-button >print</el-button>
+          <el-button >打印</el-button>
 
         </div>
         <div class="pagination-wrapper" >
