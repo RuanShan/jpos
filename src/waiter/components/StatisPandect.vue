@@ -7,7 +7,6 @@
     }
   }
 
-
   .pagination-wrap {
     position: absolute;
     bottom: 15px;
@@ -19,7 +18,11 @@
     left: 10px;
     right: 10px;
     top: 10px;
-
+    .order-ok {
+      position: absolute;
+      top: 7px;
+      right: -214px;
+    }
   }
   .line-two-row {
     position: absolute;
@@ -44,49 +47,45 @@
   }
 
   .data_section {
-      padding: 20px;
-      margin-bottom: 40px;
-      .section_title {
-          text-align: center;
-          font-size: 30px;
-          margin-bottom: 10px;
+    padding: 20px;
+    margin-bottom: 40px;
+    .section_title {
+      text-align: center;
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+    .data_list {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      border-radius: 6px;
+      background: #e5e9f2;
+      .data_num {
+        color: #333;
+        font-size: 26px;
       }
-      .data_list {
-          text-align: center;
-          font-size: 14px;
-          color: #666;
-          border-radius: 6px;
-          background: #E5E9F2;
-          .data_num {
-              color: #333;
-              font-size: 26px;
-
-          }
-          .head {
-              border-radius: 6px;
-              font-size: 22px;
-              padding: 4px 0;
-              color: #fff;
-              display: inline-block;
-          }
+      .head {
+        border-radius: 6px;
+        font-size: 22px;
+        padding: 4px 0;
+        color: #fff;
+        display: inline-block;
       }
-      .today_head {
-          background: #FF9800;
-      }
-      .all_head {
-          background: #20A0FF;
-      }
-
+    }
+    .today_head {
+      background: #ff9800;
+    }
+    .all_head {
+      background: #20a0ff;
+    }
   }
   .tendency-wrap {
-      position: absolute;
-      top: 160px;
-      bottom: 0;
-      left: 0;
-      right: 0;
-
+    position: absolute;
+    top: 160px;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
-
 }
 </style>
 
@@ -96,7 +95,7 @@
       <div class="">
         <!-- 門店選擇 START-->
         <fieldset>
-          <legend>查询条件</legend>
+          <legend>功能选择</legend>
           <el-form :inline="true" :model="formData" class="demo-form-inline">
             <el-form-item label="时间区间">
               <el-date-picker class="date-picker" v-model="selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
@@ -109,7 +108,7 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary"  size="mini"  @click="onSubmit">查询</el-button>
+              <el-button type="primary" class="order-ok" size="mini" @click="onSubmit">确定</el-button>
             </el-form-item>
           </el-form>
 
@@ -121,40 +120,50 @@
     <div class="tubiao-ont-row">
       <div class="fillcontain">
 
-          <section class="data_section">
-            <header class="section_title">数据统计</header>
-            <el-row :gutter="20" style="margin-bottom: 10px;">
-              <el-col :span="4">
-                <div class="data_list today_head"><span class="data_num head">当日数据：</span></div>
-              </el-col>
-              <el-col :span="4">
-                <div class="data_list"><span class="data_num">{{statis.userCount}}</span> 新增客户</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="data_list"><span class="data_num">{{statis.orderCount}}</span> 新增订单</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="data_list"><span class="data_num">{{statis.cardCount}}</span> 新增会员卡</div>
-              </el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="4">
-                <div class="data_list all_head"><span class="data_num head">总数据：</span></div>
-              </el-col>
-              <el-col :span="4">
-                <div class="data_list"><span class="data_num">{{statis.allUserCount}}</span> 注册客户</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="data_list"><span class="data_num">{{statis.allOrderCount}}</span> 订单</div>
-              </el-col>
-              <el-col :span="4">
-                <div class="data_list"><span class="data_num">{{statis.allCardCount}}</span> 会员卡</div>
-              </el-col>
-            </el-row>
-          </section>
-          <div class="tendency-wrap">
-            <tendency :sevenDate.sync='sevenDate' :sevenDay.sync='compuatedDays'></tendency>
-          </div>
+        <section class="data_section">
+          <header class="section_title"></header>
+          <el-row :gutter="20" style="margin-bottom: 10px;">
+            <el-col :span="4">
+              <div class="data_list today_head">
+                <span class="data_num head">当日数据：</span>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="data_list">
+                <span class="data_num">{{statis.userCount}}</span> 新增客户</div>
+            </el-col>
+            <el-col :span="4">
+              <div class="data_list">
+                <span class="data_num">{{statis.orderCount}}</span> 新增订单</div>
+            </el-col>
+            <el-col :span="4">
+              <div class="data_list">
+                <span class="data_num">{{statis.cardCount}}</span> 新增会员卡</div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="4">
+              <div class="data_list all_head">
+                <span class="data_num head">总数据：</span>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="data_list">
+                <span class="data_num">{{statis.allUserCount}}</span> 注册客户</div>
+            </el-col>
+            <el-col :span="4">
+              <div class="data_list">
+                <span class="data_num">{{statis.allOrderCount}}</span> 订单</div>
+            </el-col>
+            <el-col :span="4">
+              <div class="data_list">
+                <span class="data_num">{{statis.allCardCount}}</span> 会员卡</div>
+            </el-col>
+          </el-row>
+        </section>
+        <div class="tendency-wrap">
+          <tendency :sevenDate.sync='sevenDate' :sevenDay.sync='compuatedDays'></tendency>
+        </div>
 
       </div>
       <!-- 图表   END -->
@@ -179,7 +188,7 @@ export default {
   data() {
     return {
       //*********** 过滤条件 ***************/
-      formData:{
+      formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null
       },
@@ -215,7 +224,7 @@ export default {
           }
         }]
       },
-      statis:{
+      statis: {
         userCount: null,
         orderCount: null,
         cardCount: null,
@@ -231,49 +240,49 @@ export default {
     };
   },
   created() {
-    let stores = this.stores.map((item)=>{ return {id: item.id, name: item.name }})
-    this.storeOptions = [ {id: null, name: "全部"}].concat(stores )
-    let start = moment().subtract(6,"days")
+    let stores = this.stores.map((item) => { return { id: item.id, name: item.name } })
+    this.storeOptions = [{ id: null, name: "全部" }].concat(stores)
+    let start = moment().subtract(6, "days")
     let end = moment()
-    this.selectedDates = [ start.toDate(), end.toDate() ]
+    this.selectedDates = [start.toDate(), end.toDate()]
     this.initData()
   },
-  computed:{
-    computedStartAt: function(){
+  computed: {
+    computedStartAt: function () {
       return this.formData.selectedDates[0]
     },
-    computedEndAt: function(){
+    computedEndAt: function () {
       return this.formData.selectedDates[1]
     },
-    computedDayParam: function(){
-      let params = {q:{day_eq: this.computedStartAt}}
+    computedDayParam: function () {
+      let params = { q: { day_eq: this.computedStartAt } }
 
       return params
     },
-    computedDaysParams(){
+    computedDaysParams() {
       let params = {
-          q:{ day_gteq: this.computedStartAt,
-            day_lteq: this.computedEndAt
-          }
+        q: {          day_gteq: this.computedStartAt,
+          day_lteq: this.computedEndAt
         }
+      }
       return params
     },
-    compuatedDays(){
+    compuatedDays() {
       let days = []
       let start = moment(this.computedStartAt)
       let end = moment(this.computedEndAt)
       while (start <= end) {
         const day = start.format('YYYY-MM-DD')
         days.push(day)
-        start = start.add( 1, "days")
+        start = start.add(1, "days")
       }
       return days
     }
   },
   methods: {
     async initData() {
-      this.formData.selectedDates =this.selectedDates
-      console.log( "this.formData.selectedDates = ",this.formData.selectedDates )
+      this.formData.selectedDates = this.selectedDates
+      console.log("this.formData.selectedDates = ", this.formData.selectedDates)
       Promise.all([selectedDayCount(this.computedDayParam), totalCount(this.computedDaysParams)])
         .then(res => {
           this.statis.userCount = res[0].new_customers_count  //新增客户
@@ -295,14 +304,14 @@ export default {
           [],
           []
         ]
-        this.compuatedDays.forEach((day, i)=>{
-          let  sale_day = res.sale_days.find((item)=>{ return item.day ==day})
+        this.compuatedDays.forEach((day, i) => {
+          let sale_day = res.sale_days.find((item) => { return item.day == day })
 
-          if( sale_day ){
+          if (sale_day) {
             resArr[0].push(sale_day.new_customers_count)
             resArr[1].push(sale_day.new_orders_count)
             resArr[2].push(sale_day.new_cards_count)
-          }else{
+          } else {
             resArr[0].push(0)
             resArr[1].push(0)
             resArr[2].push(0)
@@ -318,7 +327,7 @@ export default {
     changeForState() {
 
     },
-    onSubmit(){
+    onSubmit() {
       this.formData.selectedDates = this.selectedDates
       this.initData()
     }

@@ -62,7 +62,7 @@
     <fieldset class="member-field-set">
       <legend>功能选择</legend>
       <el-form-item class="member-form-item" label="时间选择">
-        <el-date-picker class="member-time-select" v-model="form.memberCaseDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="T" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+        <el-date-picker class="member-time-select" v-model="form.memberCaseDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
 

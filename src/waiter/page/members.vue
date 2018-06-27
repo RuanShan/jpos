@@ -63,17 +63,17 @@
       <!-- 表格     END -->
       <div class="member-list grid-content">
             <el-table class="cel-scrollable-table" :data="customerList" style="width:100%;" border>
-              <el-table-column prop="id" label="ID" width="80">
+              <el-table-column prop="id" label="ID" width="50">
               </el-table-column>
-              <el-table-column prop="storeName" label="所属门店" width="140">
+              <el-table-column prop="storeName" label="所属门店">
               </el-table-column>
-              <el-table-column prop="username" label="会员姓名" width="140">
+              <el-table-column prop="username" label="会员姓名">
               </el-table-column>
-              <el-table-column prop="mobile" label="电话" width="140">
+              <el-table-column prop="mobile" label="电话" width="125">
               </el-table-column>
-              <el-table-column prop="displayGender" label="性别" width="80">
+              <el-table-column prop="displayGender" label="性别" width="70">
               </el-table-column>
-              <el-table-column  label="卡号">
+              <el-table-column  label="卡号" >
                 <template slot-scope="scope">
                   <el-tag  v-for="(item, index) in scope.row.cards" :key="item.id">{{item.code}}
                   </el-tag>

@@ -153,7 +153,7 @@
             <div class="customer">
               <div class="head"> 客户信息</div>
               <div>
-                <table>
+                <table border="1" cellspacing="0">
                   <tr>
                     <th>客户电话 </th>
                     <td> {{ orderCustomer.mobile }} </td>
@@ -180,7 +180,7 @@
 
               <div>
                 <div class="head"> 物品 {{currentItem.number}} {{currentItem.state}} </div>
-                <table style="width: 100%">
+                <table border="1" cellspacing="0" style="width: 100%">
                   <tr>
                     <td>序号</td>
                     <td>服务项目</td>
