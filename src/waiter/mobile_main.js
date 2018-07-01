@@ -1,0 +1,78 @@
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import Vue from 'vue'
+import App from './App'
+import router from './router/mindex'
+import store from './store'
+
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI)
+
+import Mint from 'mint-ui';
+import 'mint-ui/lib/style.css';
+
+import EventBus from './plugins/EventBus'
+Vue.use(EventBus)
+
+Vue.config.productionTip = false;
+Vue.use(Mint);
+
+// 点击编辑
+import VueXeditable from '@onekiloparsec/vue-xeditable'
+import '@onekiloparsec/vue-xeditable/dist/vue-xeditable.min.css'
+Vue.use(VueXeditable)
+
+import '@/plugins/flexible'
+
+// 自动获得焦点
+import AutoFocus from 'vue-auto-focus'
+Vue.use(AutoFocus)
+
+import {
+  apiResultMixin
+} from '@/components/apiResultMixin'
+Vue.mixin( apiResultMixin )
+
+import { orderDataMixin, userDataMixin } from "@/components/mixin/commonDataMixin"
+Vue.mixin( orderDataMixin, userDataMixin )
+
+router.beforeEach(function (to, from, next) {
+  //console.log( "beforeEach is working")
+    const user = store.state.userInfo;
+    if ( to.name !== "login") {
+        //未登录
+        if (!user.id) {
+            router.push({name: 'login'})
+        }
+    }
+    //已登录的情况再去登录页，跳转至首页
+    if (to.name === 'login') {
+        if (user.id) {
+            router.push({name: 'home'});
+        }
+    }
+    next();
+});
+
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  store,
+  template: '<App/>',
+  components: {
+    App
+  },
+  watch: {
+    userInfo: function(newValue) {
+      if (!newValue.id) {
+        this.$message({
+          type: "error",
+          message: "检测到您的登录信息过期, 请重新登录"
+        });
+        this.$router.push("login");
+      }
+    }
+  }
+});
