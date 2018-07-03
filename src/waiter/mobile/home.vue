@@ -8,13 +8,13 @@
     <keep-alive>
         <router-view></router-view>
     </keep-alive>
-    <FooterView/>
+    <footer-bar class="footer"></footer-bar>
 
   </div>
 </template>
 
 <script>
-import FooterView from '@/components/mobile/footer/footerView';
+import FooterBar from '@/components/mobile/footer/FooterBar';
 
 import leftNav from "@/components/LeftNav/LeftNav.vue"
 import headTop from "@/components/headTop.vue";
@@ -30,7 +30,7 @@ export default {
   components: {
     leftNav,
     headTop,
-    FooterView
+    'footer-bar': FooterBar
   },
   created() {
     this.getCurrentUser()
@@ -58,6 +58,9 @@ console.log( "home.created.getCurrentUser")
 }
 </script>
 <style lang="scss">
-  @import '~@assets/mobile/css/theme.scss';
   @import '~@assets/mobile/css/normalize.css';
+
+  .footer{
+    max-width: 750px;
+  }
 </style>

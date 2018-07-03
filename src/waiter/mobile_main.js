@@ -23,8 +23,6 @@ import VueXeditable from '@onekiloparsec/vue-xeditable'
 import '@onekiloparsec/vue-xeditable/dist/vue-xeditable.min.css'
 Vue.use(VueXeditable)
 
-import '@/plugins/flexible'
-
 // 自动获得焦点
 import AutoFocus from 'vue-auto-focus'
 Vue.use(AutoFocus)

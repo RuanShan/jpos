@@ -88,12 +88,13 @@ html,
 body,
 #app {
   height: 100%;
-  width: 100%; // background-color: #F5F5F5;
+  max-width: 750px; // background-color: #F5F5F5;
+  
 }
 
 #app {
-  min-width: 10rem;
-  max-width: 10rem;
+  /*min-width: 10rem;
+  max-width: 10rem;*/
   margin: 0 auto;
   position: relative;
   background: #f0f3f5;

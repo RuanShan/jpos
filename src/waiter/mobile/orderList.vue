@@ -35,7 +35,6 @@
 <template>
 
 <div class="orders-container main">
-    <leftNav></leftNav>
     <div class="container">
         <h3> order list </h3>
         <!-- filters start -->
