@@ -255,6 +255,11 @@ export const getOrderByNumber = orderNumber => fetch('/api/v1/pos_orders/by_numb
 
 export const findOrderByGroupNumber = groupNumber => fetch('/api/v1/pos_orders/find_by_group_number/' + groupNumber)
 
+/**
+ * 订单后付款，添加支付
+ */
+
+export const addPayments = id => fetch('/api/v1/pos_orders/' + id +'/add_payments')
 
 /**
  * 获取Customer信息

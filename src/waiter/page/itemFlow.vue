@@ -165,114 +165,120 @@
 # ready: 可以交给客户了
 # shipped: 已交付客户
 -->
-<div class="item-flow-container page-content">
-  <product-scan :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </product-scan>
-  <item-process :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </item-process>
-  <product-transfer :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </product-transfer>
-  <WorkerPerformance :order-state="currentOrderState" :dialog-visible.sync="workerPermormanceDialogVisible" @order-state-changed="orderStateChanged"> </WorkerPerformance>
+<div>
+  <headTop></headTop>
+  <leftNav></leftNav>
+  <div class="item-flow-container page-content">
 
+    <product-scan :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </product-scan>
+    <item-process :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </item-process>
+    <product-transfer :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </product-transfer>
+    <WorkerPerformance :order-state="currentOrderState" :dialog-visible.sync="workerPermormanceDialogVisible" @order-state-changed="orderStateChanged"> </WorkerPerformance>
 
+    <div class="item-flow ">
+      <div class="title-wrap">
+        <div>订单</div>
+      </div>
+      <div class="item-flow-control clear">
 
-  <div class="item-flow ">
-    <div class="title-wrap">
-      <div>订单</div>
-    </div>
-    <div class="item-flow-control clear">
+        <div class="location clear">
 
-      <div class="location clear">
+          <div class="step step1">
+            <div class="head"> 门店 </div>
+            <div class="pending part-top">
+              <div class="title">
+                <el-button @click="processItems('pending')">
+                  客户物品
+                  <div class="badge"> <sup> {{itemCounts.pending}} </sup> </div>
+                </el-button>
 
-        <div class="step step1">
-          <div class="head"> 门店 </div>
-          <div class="pending part-top">
+              </div>
+            </div>
+
+            <div class="ready part-bottom">
+              <div class="title">
+                <el-button @click="processItems('ready')"> 等待交付
+                  <div class="badge"> <sup> {{itemCounts.ready}} </sup> </div>
+                </el-button>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="step transfer1">
+            <div class="linex "> </div>
             <div class="title">
-              <el-button @click="processItems('pending')">
-                客户物品
-                <div class="badge"> <sup> {{itemCounts.pending}} </sup> </div>
+              <el-button @click="handleTransferProducts('pending', 'ready_for_factory')">门店发货
+                <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
               </el-button>
-
             </div>
           </div>
 
-          <div class="ready part-bottom">
+
+          <div class="step transfer1" style="top:50%;">
+            <div class="linex " style=""> </div>
             <div class="title">
-              <el-button @click="processItems('ready')"> 等待交付
-                <div class="badge"> <sup> {{itemCounts.ready}} </sup> </div>
+              <el-button @click="handleTransferProducts('ready_for_store', 'ready')">
+                门店待验收
+                <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
+              </el-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="location ship">
+          <div class="step step0" style="width:100%;">
+            <div class="title"> 运输 </div>
+          </div>
+          <div class="step step0" style="width:100%;">
+            <div class="title"> 运输 </div>
+          </div>
+        </div>
+
+        <div class="location clear">
+          <div class="overlayx"></div>
+          <div class="step step2">
+            <div class="head"> 工厂 </div>
+            <div class="title">
+              <el-button @click="processItems('processing')">
+                <div class="badge"> <sup> {{itemCounts.processing}} </sup> </div> 专业服务
+                <div class="badge"> <sup> {{itemCounts.processed}} </sup> </div>
+              </el-button>
+            </div>
+            <div class="actions">
+              <el-button @click="handleWorkerPerformance('processing')">工作量录入</el-button>
+            </div>
+          </div>
+          <div class="step transfer2">
+            <div class="linex"> </div>
+            <div class="title">
+              <el-button @click="handleTransferProducts('ready_for_factory', 'processing')"> 工厂待收货
+                <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
               </el-button>
             </div>
           </div>
 
-        </div>
-
-        <div class="step transfer1">
-          <div class="linex "> </div>
-          <div class="title">
-            <el-button @click="handleTransferProducts('pending', 'ready_for_factory')">门店发货
-              <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
-            </el-button>
+          <div class="step transfer2" style="top:50%;">
+            <div class="linex"> </div>
+            <div class="title">
+              <el-button @click="handleTransferProducts('processed', 'ready_for_store')" size="small"> 工厂发货
+                <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
+              </el-button>
+            </div>
           </div>
         </div>
 
 
-        <div class="step transfer1" style="top:50%;">
-          <div class="linex " style=""> </div>
-          <div class="title">
-            <el-button @click="handleTransferProducts('ready_for_store', 'ready')">
-              门店待验收
-              <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
-            </el-button>
-          </div>
-        </div>
       </div>
-
-      <div class="location ship">
-        <div class="step step0" style="width:100%;">
-          <div class="title"> 运输 </div>
-        </div>
-        <div class="step step0" style="width:100%;">
-          <div class="title"> 运输 </div>
-        </div>
-      </div>
-
-      <div class="location clear">
-        <div class="overlayx"></div>
-        <div class="step step2">
-          <div class="head"> 工厂 </div>
-          <div class="title">
-            <el-button @click="processItems('processing')">
-              <div class="badge"> <sup> {{itemCounts.processing}} </sup> </div> 专业服务
-              <div class="badge"> <sup> {{itemCounts.processed}} </sup> </div>
-            </el-button>
-          </div>
-          <div class="actions">
-            <el-button @click="handleWorkerPerformance('processing')">工作量录入</el-button>
-          </div>
-        </div>
-        <div class="step transfer2">
-          <div class="linex"> </div>
-          <div class="title">
-            <el-button @click="handleTransferProducts('ready_for_factory', 'processing')"> 工厂待收货
-              <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
-            </el-button>
-          </div>
-        </div>
-
-        <div class="step transfer2" style="top:50%;">
-          <div class="linex"> </div>
-          <div class="title">
-            <el-button @click="handleTransferProducts('processed', 'ready_for_store')" size="small"> 工厂发货
-              <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
-            </el-button>
-          </div>
-        </div>
-      </div>
-
-
     </div>
   </div>
 </div>
 </template>
 
 <script>
+import leftNav from "@/components/LeftNav/LeftNav.vue"
+import headTop from "@/components/headTop.vue";
+
 import ItemProcess from '@/components/ItemProcess'
 import ProductScan from '@/components/ProductScan'
 import ProductTransfer from '@/components/ProductTransfer'
@@ -336,6 +342,8 @@ export default {
     }
   },
   components: {
+    leftNav,
+    headTop,
     ItemProcess,
     ProductScan,
     ProductTransfer,

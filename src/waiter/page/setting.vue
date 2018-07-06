@@ -26,41 +26,49 @@
 </style>
 
 <template>
-  <div class="setting-container page-content">
-    <div>
-      <div class="title-wrap">
-        <div>设&nbsp;&nbsp;&nbsp;置</div>
+  <div class="">
+    <headTop></headTop>
+    <leftNav></leftNav>
+
+    <div class="setting-container page-content">
+      <div>
+        <div class="title-wrap">
+          <div>设&nbsp;&nbsp;&nbsp;置</div>
+        </div>
       </div>
-    </div>
-    <div class="tab-list-wrap">
-      <el-tabs class="tabs-height" type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick">
+      <div class="tab-list-wrap">
+        <el-tabs class="tabs-height" type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick">
 
-        <el-tab-pane label="基本设置">
-          <setting-base></setting-base>
-        </el-tab-pane>
+          <el-tab-pane label="基本设置">
+            <setting-base></setting-base>
+          </el-tab-pane>
 
-        <el-tab-pane label="打印设置">
-          <setting-printer></setting-printer>
-        </el-tab-pane>
+          <el-tab-pane label="打印设置">
+            <setting-printer></setting-printer>
+          </el-tab-pane>
 
-        <el-tab-pane label="微信设置">
-        </el-tab-pane>
+          <el-tab-pane label="微信设置">
+          </el-tab-pane>
 
-        <el-tab-pane label="短信设置">
-        </el-tab-pane>
+          <el-tab-pane label="短信设置">
+          </el-tab-pane>
 
-      </el-tabs>
+        </el-tabs>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
+import leftNav from "@/components/LeftNav/LeftNav.vue"
+import headTop from "@/components/headTop.vue";
 import SettingBase from '../components/SettingBase.vue';
 import SettingPrinter from '../components/SettingPrinter.vue';
 
 export default {
    components: {
+     leftNav,
+     headTop,
     "setting-base": SettingBase,
     "setting-printer": SettingPrinter,
 

@@ -1,5 +1,7 @@
 <template>
 <div>
+  <headTop></headTop>
+  <leftNav></leftNav>
   <!-- 结账组件 Start-->
   <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible" @order-created-event="handleOrderCreated"></CheckoutDialog>
   <!-- 结账组件 End-->
@@ -129,6 +131,9 @@
 </template>
 
 <script>
+import leftNav from "@/components/LeftNav/LeftNav.vue"
+import headTop from "@/components/headTop.vue";
+
 import CustomerButton from "@/components/CustomerButton.vue"
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
 import MemberAdd from "@/components/MemberAdd.vue"
@@ -180,6 +185,8 @@ export default {
   },
   components: {
     loading,
+    leftNav,
+    headTop,
     CustomerButton,
     CheckoutDialog,
     MemberAdd,

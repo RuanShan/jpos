@@ -37,8 +37,8 @@
             <el-form-item label="电话" prop="mobile" required>
               <el-input v-model="memberFormData.mobile"></el-input>
             </el-form-item>
-            <el-form-item label="姓名" prop="username">
-              <el-input v-model="memberFormData.username"></el-input>
+            <el-form-item label="姓名" prop="userName">
+              <el-input v-model="memberFormData.userName"></el-input>
             </el-form-item>
             <el-form-item label="性别" prop="gender">
               <el-select v-model="memberFormData.gender" placeholder="请选择" style="width:100%">
@@ -46,15 +46,13 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="生日">
-              <el-form-item prop="birth">
-                <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
-              </el-form-item>
+            <el-form-item label="生日" prop="birth">
+              <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="MM 月 dd 日" style="width: 100%;"></el-date-picker>
             </el-form-item>
             <el-form-item label="联系地址" prop="address">
               <el-input v-model="memberFormData.address"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="address">
+            <el-form-item label="备注" prop="memo">
               <el-input type="textarea" v-model="memberFormData.memo"></el-input>
             </el-form-item>
           </el-form>
@@ -113,7 +111,6 @@ export default {
     return {
       paymentMethodList: [],
       cardTypeList: [],
-      displayMemberEditOnOff:"", // 本窗口显示标志位,没有初始值
       memberFormData: {
         username: "",
         mobile: "",
@@ -283,7 +280,6 @@ export default {
     },
     //打开窗口时事件处理函数-----
     openWindow() {
-      this.displayMemberEditOnOff = true;
       // 传入的当前选择客户数据
       this.memberFormData = Object.assign({}, this.customerData )
       console.log( "openWindow--this.memberFormData=", this.memberFormData )

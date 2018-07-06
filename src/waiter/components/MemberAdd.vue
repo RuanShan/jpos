@@ -89,10 +89,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="充值金额" required>
-                <el-input type="number" v-model="cardFormData.paymentAmount"></el-input>
+                <el-input type="number" v-model="cardFormData.amount"></el-input>
               </el-form-item>
               <el-form-item label="备注" prop="address">
-                <el-input v-model="cardFormData.cardMemo"></el-input>
+                <el-input v-model="cardFormData.memo"></el-input>
               </el-form-item>
             </el-card>
           </el-form>
@@ -166,7 +166,8 @@ export default {
         mobile: "",
         birth: "",
         address: "",
-        gender: "男"
+        gender: "男",
+        memo: ''
       },
       sex: [{
         value: '男',
@@ -175,7 +176,7 @@ export default {
       }],
       cardFormData: {
         code: "",
-        paymentAmount: null,
+        amount: null,
         expireAt: "",
         paymentMethodId: null,
         variantId: null,
@@ -206,7 +207,7 @@ export default {
             trigger: "blur"
           }
         ],
-        paymentAmount: [
+        amount: [
           { type: "integer", required: true, message: "请输入充值金额", trigger: "blur" },
           {
             min: 0,
@@ -311,7 +312,7 @@ export default {
 
         order = {
           payments: [
-            { payment_method_id: this.cardFormData.paymentMethodId, amount: this.cardFormData.paymentAmount }
+            { payment_method_id: this.cardFormData.paymentMethodId, amount: this.cardFormData.amount }
           ]
         }
       }
@@ -320,7 +321,7 @@ export default {
 
     fillIn() {
       this.cardFormData.code = ((Math.random() + 1) * 1000).toFixed()
-      this.cardFormData.paymentAmount = 250
+      this.cardFormData.amount = 250
       this.cardFormData.paymentPassword = "123456"
       this.memberFormData.mobile = "1300000" + this.cardFormData.code
       this.memberFormData.birth = new Date();

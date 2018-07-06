@@ -2,6 +2,12 @@ import moment from 'moment'
 import _ from "lodash"
 
 export var apiResultMixin = {
+  data: function(){
+    return {
+      LineItemGroupPaymentStateEnum: { paid: 'paid', balance_due: 'balance_due'},
+      CardStyleEnum:{ prepaid: 'prepaid', counts:'counts' }// prepaid 充值卡， counts 次卡
+    }
+  },
   methods: {
     // order = {
     //    "total": "100.0",
@@ -47,6 +53,7 @@ export var apiResultMixin = {
           order: order,
           number: groupResult.number,
           state: groupResult.state,
+          paymentState: groupResult.payment_state,
           lineItems: [],
           name: groupResult.name,
           price: parseInt(groupResult.price),
@@ -133,7 +140,6 @@ export var apiResultMixin = {
     //  ]
     buildOrders: function(ordersResult) {
       let orders = []
-console.log("ordersResult=",ordersResult )
       ordersResult.orders.forEach((item, i) => {
 
         let order = this.buildOrder(item)
@@ -160,6 +166,7 @@ console.log("ordersResult=",ordersResult )
         number: item.number,
         price: item.price,
         state: item.state,
+        paymentState: item.payment_state,
         createdAt: moment(item.created_at),
         lineItems: []
       }
@@ -264,7 +271,7 @@ console.log("ordersResult=",ordersResult )
         storeId: 0,
         avatar: 'default.jpg',
         apiKey: '',
-        defaultCard: {}
+        prepaidCard: {}
       }
       user.storeId = userResult.store_id
       user.id = userResult.id
@@ -274,6 +281,7 @@ console.log("ordersResult=",ordersResult )
       user.birth = userResult.birth
       user.customerType = userResult.customer_type
       user.createdAt = moment(userResult.created_at),
+      user.memo = userResult.memo
       user.normalOrderTotal = parseInt(userResult.normal_order_total)
       user.normalOrderCount = userResult.normal_order_count
       user.cards = []
@@ -290,15 +298,16 @@ console.log("ordersResult=",ordersResult )
           user.cards.push(card)
         })
         // 选择第一个可用的card作为 缺省会员卡
-        user.defaultCard = user.cards.find((card)=>{ return card.status == 'enabled'})
+        user.prepaidCard = user.cards.find((card)=>{ return (card.status == 'enabled' && card.style== this.CardStyleEnum.prepaid)})
       }
 
-      if( ! user.defaultCard ){
-        user.defaultCard = {}
+      if( ! user.prepaidCard ){
+        user.prepaidCard = {}
       }
       user.displayType = user.cards.length>0 ? "会员" : "散客"
       user.displayGender = this.getDisplayGender(user.gender)
       user.displayCreatedAt = user.createdAt.format('MM-DD HH:mm')
+      user.displayCreatedAtDate = user.createdAt.format('YYYY-MM-DD')
 
       if( this.stores &&  user.storeId){
         let store = this.stores.find((s)=>{ return s.id == user.storeId })

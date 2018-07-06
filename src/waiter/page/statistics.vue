@@ -86,45 +86,53 @@
 </style>
 
 <template>
-  <div class="statistics-container page-content">
-    <!-- <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar> -->
+  <div>
+    <headTop></headTop>
+    <leftNav></leftNav>
 
-    <div>
-      <div class="title-wrap">
-        <div>统&nbsp;&nbsp;&nbsp;计</div>
+    <div class="statistics-container page-content">
+      <!-- <member-expense-calendar :dialog-visible.sync="memberExpCalWindowVisible" :customer-data="customerData"></member-expense-calendar> -->
+
+      <div>
+        <div class="title-wrap">
+          <div>统&nbsp;&nbsp;&nbsp;计</div>
+        </div>
       </div>
-    </div>
-    <div class="tab-list-wrap grid-content bg-purple-light">
-      <el-tabs class="tabs-height" type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick">
+      <div class="tab-list-wrap grid-content bg-purple-light">
+        <el-tabs class="tabs-height" type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick">
 
-        <el-tab-pane label="总览">
-          <statis-pandect></statis-pandect>
-        </el-tab-pane>
+          <el-tab-pane label="总览">
+            <statis-pandect></statis-pandect>
+          </el-tab-pane>
 
-        <el-tab-pane label="会员充值统计">
-          <statis-each-state-member></statis-each-state-member>
-        </el-tab-pane>
+          <el-tab-pane label="会员充值统计">
+            <statis-each-state-member></statis-each-state-member>
+          </el-tab-pane>
 
-        <el-tab-pane label="订单统计">
-          <statis-each-state-order></statis-each-state-order>
-        </el-tab-pane>
+          <el-tab-pane label="订单统计">
+            <statis-each-state-order></statis-each-state-order>
+          </el-tab-pane>
 
-        <el-tab-pane label="工厂统计">
-        </el-tab-pane>
+          <el-tab-pane label="工厂统计">
+          </el-tab-pane>
 
-        <el-tab-pane label="会员情况统计">
-          <statis-member-case> </statis-member-case>
-        </el-tab-pane>
+          <el-tab-pane label="会员情况统计">
+            <statis-member-case> </statis-member-case>
+          </el-tab-pane>
 
-        <el-tab-pane label="员工打卡统计">
-          <statis-staff-clock-in></statis-staff-clock-in>
-        </el-tab-pane>
-      </el-tabs>
+          <el-tab-pane label="员工打卡统计">
+            <statis-staff-clock-in></statis-staff-clock-in>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import leftNav from "@/components/LeftNav/LeftNav.vue"
+import headTop from "@/components/headTop.vue";
+
 import DaySale from '@/components/statis/DaySale.vue'
 import StatisPandect from '../components/StatisPandect.vue';
 import StatisEachStateMember from '../components/StatisEachStateMember.vue';
@@ -134,6 +142,8 @@ import StatisStaffClockIn from '../components/StatisStaffClockIn.vue';
 
 export default {
   components: {
+    leftNav,
+    headTop,
     "day-sale": DaySale,
     "statis-pandect": StatisPandect,
     "statis-each-state-member": StatisEachStateMember,

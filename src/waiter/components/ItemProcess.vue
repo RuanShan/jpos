@@ -164,11 +164,11 @@
                   </tr>
                   <tr>
                     <th>会员卡号 </th>
-                    <td> {{ orderCustomer.defaultCard.code }} </td>
+                    <td> {{ orderCustomer.prepaidCard.code }} </td>
                     <th>会员卡类型 </th>
-                    <td> {{ orderCustomer.defaultCard.name }} </td>
+                    <td> {{ orderCustomer.prepaidCard.name }} </td>
                     <th>会员卡余额 </th>
-                    <td> {{ orderCustomer.defaultCard.amountRemaining }} </td>
+                    <td> {{ orderCustomer.prepaidCard.amountRemaining }} </td>
                   </tr>
                 </table>
               </div>

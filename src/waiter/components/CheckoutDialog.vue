@@ -91,23 +91,26 @@
         <el-form-item label="备注" prop="memo" >
           <el-input type="textarea" v-model="formData.memo"></el-input>
         </el-form-item>
+        <el-form-item>
+          <el-button type="warning" @click="handleCreateOrderWithoutPayment()" v-show="existedOrderId==false">取单时结账</el-button>
+          <div class="right">
+            <el-button type="success" @click="handleCreateOrderAndPayment()">结账</el-button>
+            <el-button @click="handleCloseDialog()">取消</el-button>
+          </div>
+
+        </el-form-item>
+
       </el-form>
 
     </div>
 
 
-    <div slot="footer" class="dialog-footer">
-      <el-row>
-        <el-button @click="handleCloseDialog()">取消</el-button>
-        <el-button type="success" @click="handlePlaceOrder()">确定</el-button>
-      </el-row>
-    </div>
   </el-dialog>
 </div>
 </template>
 
 <script>
-import { checkout } from "@/api/getData"
+import { checkout, addPayments } from "@/api/getData"
 import { orderDataMixin } from "@/components/mixin/commonDataMixin"
 
 import {
@@ -115,7 +118,7 @@ import {
 } from '@/components/mixin/DialogMixin'
 
 export default {
-  props: ["dialogVisible", "storeName", "orderItemList", "totalMoney", "customer"],
+  props: ["dialogVisible", "orderItemList", "totalMoney", "customer", "disableCheckoutWidthoutPayment"],
   components: {  },
   data() {
     return {
@@ -174,6 +177,13 @@ export default {
         return (pm.name.indexOf('PrepaidCard') >= 0 )
       })
     },
+    //检查订单ID是否存在，如果存在结账时，只需要付款，无需创建订单
+    existedOrderId: function(){
+      let item = this.orderItemList.find( (item)=>{
+        return item.orderId != null
+      })
+      return ( item != null ? item.orderId : null )
+    },
     //结账请求参数
     checkoutParams: function(){
       //"payment_source": {this.availablePrepaidCard.id
@@ -230,10 +240,9 @@ export default {
       this.paymentList = [];
     },
 
-    //确认按钮单击事件处理函数-----
-    handlePlaceOrder() {
-
-        checkout( this.checkoutParams  ).then((res)=>{
+    //创建订单
+    CreateOrder( params ) {
+        checkout( params ).then((res)=>{
           if( res.id> 0){
 
             this.$emit('order-created-event', res )
@@ -249,9 +258,46 @@ export default {
               message: res.error
             });
           }
+        })
+    },
+    //创建支付，客户领取物品时付款
+    CreatePayment( orderId, payments ) {
+        addPayments( orderId, payments ).then((res)=>{
+          if( res.count> 0){
+            //发送支付创建时间
+            this.$emit('payment-created-event', res )
+            this.$emit('update:dialogVisible', false)
+            this.$message({
+              type: 'success',
+              message: "恭喜你，订单支付成功"
+            });
 
+          }else{
+            this.$message({
+              title: "订单支付失败",
+              message: res.error
+            });
+          }
         })
 
+    },
+    handleCreateOrderAndPayment(){
+      let params = this.checkoutParams
+console.log( "handleCreateOrderAndPayment", this.existedOrderId )      
+      if( this.existedOrderId != null){
+        let payments = params.order.payments
+
+        this.CreatePayment( this.existedOrderId, payments )
+
+      }else{
+        this.CreateOrder( params )
+
+      }
+    },
+    handleCreateOrderWithoutPayment(){
+      let params = this.checkoutParams
+      params.order.payments = null
+      this.CreateOrder( params )
     },
     messageBox(string1, string2) {
       this.$alert(string1, string2, {

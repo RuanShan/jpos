@@ -40,70 +40,77 @@
 
 
 <template>
-<div class="members-container page-content">
-  <member-center-new :dialog-visible.sync="memberCenterNewWindowVisible" :customer-data.sync="customerData" @customer-changed-event="handleCustomerChanged"></member-center-new>
-  <div class="members">
-    <div class="title-wrap">
-      <div>会员</div>
-    </div>
-    <div class="member-list-wrap">
-      <el-form :inline="true" class="demo-form-inline">
-
-        <div class="filters">
-          <div class="filter">
-            <el-form-item label="关键字">
-              <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="inputValue"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="handleSearch()" size="mini">搜索</el-button>
-            </el-form-item>
-          </div>
-        </div>
-      </el-form>
-      <!-- 表格     END -->
-      <div class="member-list grid-content">
-            <el-table class="cel-scrollable-table" :data="customerList" style="width:100%;" border>
-              <el-table-column prop="id" label="ID" width="50">
-              </el-table-column>
-              <el-table-column prop="storeName" label="所属门店">
-              </el-table-column>
-              <el-table-column prop="username" label="会员姓名">
-              </el-table-column>
-              <el-table-column prop="mobile" label="电话" width="125">
-              </el-table-column>
-              <el-table-column prop="displayGender" label="性别" width="70">
-              </el-table-column>
-              <el-table-column  label="卡号" >
-                <template slot-scope="scope">
-                  <el-tag  v-for="(item, index) in scope.row.cards" :key="item.id">{{item.code}}
-                  </el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column prop="memo" label="备注">
-              </el-table-column>
-              <el-table-column label="操作" width="160">
-                <template slot-scope="scope">
-                    <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-                    <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                  </template>
-              </el-table-column>
-            </el-table>
-          </div>
-      <!-- 表格     END -->
-
-      <!-- 分页器 START-->
-      <div class="pagination-wrap">
-        <el-pagination @current-change="handlePageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total, prev, pager, next, jumper" :total="count">
-        </el-pagination>
+<div class="">
+  <headTop></headTop>
+  <leftNav></leftNav>
+  <div class="members-container page-content">
+    <member-center-new :dialog-visible.sync="memberCenterNewWindowVisible" :customer-data.sync="customerData" @customer-changed-event="handleCustomerChanged"></member-center-new>
+    <div class="members">
+      <div class="title-wrap">
+        <div>会员</div>
       </div>
-      <!-- 分页器 END-->
-    </div>
+      <div class="member-list-wrap">
+        <el-form :inline="true" class="demo-form-inline">
 
+          <div class="filters">
+            <div class="filter">
+              <el-form-item label="关键字">
+                <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="inputValue"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="handleSearch()" size="mini">搜索</el-button>
+              </el-form-item>
+            </div>
+          </div>
+        </el-form>
+        <!-- 表格     END -->
+        <div class="member-list grid-content">
+              <el-table class="cel-scrollable-table" :data="customerList" style="width:100%;" border>
+                <el-table-column prop="id" label="ID" width="50">
+                </el-table-column>
+                <el-table-column prop="storeName" label="所属门店">
+                </el-table-column>
+                <el-table-column prop="username" label="会员姓名">
+                </el-table-column>
+                <el-table-column prop="mobile" label="电话" width="125">
+                </el-table-column>
+                <el-table-column prop="displayGender" label="性别" width="70">
+                </el-table-column>
+                <el-table-column  label="卡号" >
+                  <template slot-scope="scope">
+                    <el-tag  v-for="(item, index) in scope.row.cards" :key="item.id">{{item.code}}
+                    </el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="displayCreatedAtDate" label="注册时间">
+                </el-table-column>
+                <el-table-column label="操作" width="160">
+                  <template slot-scope="scope">
+                      <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+                      <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+              </el-table>
+            </div>
+        <!-- 表格     END -->
+
+        <!-- 分页器 START-->
+        <div class="pagination-wrap">
+          <el-pagination @current-change="handlePageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total, prev, pager, next, jumper" :total="count">
+          </el-pagination>
+        </div>
+        <!-- 分页器 END-->
+      </div>
+
+    </div>
   </div>
 </div>
 </template>
 
 <script>
+import leftNav from "@/components/LeftNav/LeftNav.vue"
+import headTop from "@/components/headTop.vue";
+
 import MemberCenterNew from "@/components/MemberCenterNew.vue";
 import {
   findCustomers, deleteCustomer
@@ -117,6 +124,8 @@ import {
 export default {
   mixins: [CelUIMixin],
   components: {
+    leftNav,
+    headTop,
     "member-center-new": MemberCenterNew
   },
   data() {

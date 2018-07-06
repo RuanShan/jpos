@@ -29,10 +29,9 @@ export default {
   },
   methods: {
     getCurrentUser() {
-console.log( "home.created.getCurrentUser")
       if (this.userInfo.id) {
         this.$bus.$emit('UserInitializedEvent')
-        this.$router.push("/waiter");
+        this.$router.push("/pos");
       } else {
         this.$router.push("/login");
       }

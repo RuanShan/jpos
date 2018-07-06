@@ -1,5 +1,9 @@
 <template>
   <div class="order-delivery-container">
+    <!-- 结账组件 Start-->
+    <CheckoutDialog :order-item-list="checkoutRequiredLineItems" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible" @payment-created-event="handlePaymentCreated"></CheckoutDialog>
+    <!-- 结账组件 End-->
+
     <div class="customer-container clear">
       <el-form ref="customerForm" size="mini"  :inline="true" class="search-form">
         <el-form-item label="会员搜索">
@@ -35,7 +39,8 @@
       <el-table-column prop="number" label="物品条码"> </el-table-column>
       <el-table-column prop="order.number" label="订单号"></el-table-column>
       <el-table-column prop="name" label="服务项目"></el-table-column>
-      <el-table-column prop="displayState" label="状态"></el-table-column>
+      <el-table-column prop="displayState" label="工作状态"></el-table-column>
+      <el-table-column prop="paymentState" label="支付状态"></el-table-column>
       <el-table-column prop="price" label="金额">金额</el-table-column>
       <el-table-column label="操作" width="50">
         <template slot-scope="scope">
@@ -51,7 +56,7 @@
         <span>{{totalMoney}}</span>&nbsp;
         <i>元</i>
       </div>
-      <div class="check-button font-color" @click="completeOrders()" > 确认取单 ：&nbsp;￥&nbsp;{{totalMoney}} </div>
+      <div class="check-button font-color" @click="handleDeliverOrders()" > 确认取单 ：&nbsp;￥&nbsp;{{totalMoney}} </div>
     </div>
 
   </div>
@@ -64,11 +69,16 @@ import {
   findCustomers, findOrders, completeLineItemGroups
 } from "@/api/getData"
 import {
-  apiResultMixin
-} from '@/components/apiResultMixin'
+  DialogMixin
+} from '@/components/mixin/DialogMixin'
+
+import CheckoutDialog from "@/components/CheckoutDialog.vue"
 
 export default {
-  mixins: [apiResultMixin],
+  mixins: [DialogMixin],
+  components: {
+    CheckoutDialog,
+  },
   data() {
     return {
       defaultCustomer: {
@@ -77,19 +87,19 @@ export default {
         balance: 0,
         cards: []
       }, //改变当前选择会员，显示会员相关信息
-      defaultCard:{
-        code: "无"
-      },
       orderList: [],    //按关键字搜索到订单列表
       customerList: [], //按关键字搜索到的客户列表
       customerComboId: '',
       orderComboId: '',
       currentOrders:[], // 当前选择的客户对应的订单列表, 按订单关键字搜索后，选择的订单列表
       currentCustomer: null,
+      currentCard: null,
+      checkoutDialogVisible: false
     }
   },
   created: function(){
     this.currentCustomer = this.defaultCustomer
+    this.currentCard = {}
   },
   computed:{
     selectedCustomerId: function(){
@@ -134,26 +144,38 @@ export default {
       let ops = this.currentOrders.map((order) => { return order.lineItemGroups } )
       return _.flatten( ops )
     },
-    currentCard: function(){
-      let card = this.defaultCard
-      let customer = this.currentCustomer
-console.log( " this.currentCustomer ", this.currentCustomer)
-      if( customer.cards.length > 0 ){
-        card = customer.cards.find((card, index, arr) => {
-          return card.id ==   this.cardId
-        })
-      }
-      return card
+    computedLineItems: function(){
+      let ops = this.currentOrders.map((order) => { return order.lineItems } )
+      return _.flatten( ops )
     },
+    //物品数量
     totalCount: function(){
-      return this.orderList.length
+      return this.computedLineItemGroups.length
     },
+    //物品价格
     totalMoney: function(){
-      let t = this.currentOrders.reduce((total, item)=>{
-        return total += item.total
+      let t = this.computedLineItemGroups.reduce((total, item)=>{
+        return total += item.price
       }, 0)
       return Number(t).toFixed(2)
     },
+    checkoutRequiredLineItems: function(){
+      let items = this.checkoutRequiredLineItemGroups.map((group) => { return group.lineItems } )
+      return _.flatten( items )
+    },
+    //需要付款的物品
+    checkoutRequiredLineItemGroups: function(){
+      return this.computedLineItemGroups.filter( (item)=>{
+        return item.paymentState== this.LineItemGroupPaymentStateEnum.balance_due
+      })
+    },
+    //需要付款的金额
+    checkoutTotal: function(){
+      let t = this.checkoutRequiredLineItemGroups.reduce((total, item)=>{
+        return total += item.price
+      }, 0)
+      return Number(t).toFixed(2)
+    }
   },
   methods:{
     //根据关键字查找客户
@@ -189,22 +211,31 @@ console.log( " this.currentCustomer ", this.currentCustomer)
         this.currentCustomer = this.customerList.find((customer, index, arr) => {
           return customer.id ==   this.selectedCustomerId
         })
+        if( this.currentCustomer.cards.length > 0 ){
+          this.currentCard = this.currentCustomer.cards.find((card, index, arr) => {
+            return card.id ==   this.cardId
+          })
+        }else{
+          this.currentCard = {}
+        }
         //取得客户的最新订单，包括所有未完成的订单。
         this.findOrderByCustomer()
       }else{
         this.currentCustomer = this.defaultCustomer
-        this.orderList = []
+        this.currentCard = {}
         this.currentOrders = []
       }
     },
     handleOrderChanged(selectedId){
+      console.log( " handleOrderChanged ->", selectedId)
       if( selectedId ){
         this.currentOrders = this.orderList.filter((o)=>{ return (o.id == this.orderId) })
-
         //取得客户的最新订单，包括所有未完成的订单。
         this.findCustomerByOrder()
       }else{
-        this.orderList = []
+        this.currentCustomer = this.defaultCustomer
+        this.currentCard = {}
+        this.currentOrders = []
       }
     },
     async findOrderByCustomer(){
@@ -220,8 +251,11 @@ console.log( " this.currentCustomer ", this.currentCustomer)
       if(ids.length > 0){
         let q = { id_in: ids }
         const customersResult = await findCustomers({q})
+        console.log( "findCustomers=>", customersResult )
         this.customerList = this.buildCustomers(customersResult)
+
         this.currentCustomer = this.customerList[0]
+        this.currentCard = this.currentCustomer.prepaidCard
       }
     },
     discardLineItemGroup( row ){
@@ -232,23 +266,34 @@ console.log( " this.currentCustomer ", this.currentCustomer)
         order.lineItemGroups.splice( i, 1)
       }
     },
-    completeOrders(){
-      //$confirm(message, title, options)
-      this.$confirm("确定交付客户以上物品吗？").then(()=>{
-        let ids = this.computedLineItemGroups.map((g)=>{ return g.id })
-        completeLineItemGroups( { ids } ).then((result)=>{
-          if( result.count == ids.length ){
-            this.$bus.$emit('order-changed-gevent')
 
-            this.$message({
-              message: '客户物品状态已成功更新！',
-              type: 'success'
-            });
-          }
+    handlePaymentCreated(){
+      completeOrders()
+    },
+    handleDeliverOrders(){
+      //检查每件物品对应的Order用户是否付款， 如果没有，弹出结账对话框,
+      if( this.checkoutTotal > 0){
+        this.checkoutDialogVisible = true
+      }else{
+        //$confirm(message, title, options)
+        this.$confirm("确定交付客户以上物品吗？").then(()=>{
+          completeOrders()
         })
+      }
+    },
+    completeOrders(){
+      let ids = this.computedLineItemGroups.map((g)=>{ return g.id })
+      completeLineItemGroups( { ids } ).then((result)=>{
+        if( result.count == ids.length ){
+          this.$bus.$emit('order-changed-gevent')
 
+          this.$message({
+            message: '客户物品状态已成功更新！',
+            type: 'success'
+          });
+        }
       })
-    }
+    },
   }
 }
 </script>

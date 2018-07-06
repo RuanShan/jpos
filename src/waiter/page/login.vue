@@ -54,10 +54,10 @@
             type: 'success',
             message: '检测到您之前登录过，将自动登录'
           })
-          this.$router.push('waiter')
+          this.$router.push({ name: 'first' })
         }
       }))
-    },  
+    },
     methods: {
 
       async submitForm (formName) {
@@ -72,7 +72,8 @@
               this.$store.commit("saveUser", this.buildUser( res))
               // 取得所有店铺信息，保存在store中，
               this.initializeApp()
-              this.$router.push('waiter')
+              // 缺省是收银界面
+              this.$router.push({ name: 'first' })
 
             } else {
               this.$message({
@@ -102,7 +103,7 @@
         //     type: 'success',
         //     message: '检测到您之前登录过，将自动登录'
         //   })
-        //   this.$router.push('waiter')
+        //   this.$router.push('first')
         // }
       }
     }

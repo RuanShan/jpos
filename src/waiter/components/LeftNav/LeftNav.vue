@@ -3,36 +3,36 @@
       <div class="logo">LOGO</div>
       <ul class="nav">
         <li class="el-menu-item">
-          <router-link to="/waiter/" >
+          <router-link to="/pos" >
             <div class="text-sm"> 收银  </div>
           </router-link>
         </li>
         <li class="el-menu-item">
-          <router-link to="/waiter/itemGroups" >
+          <router-link to="/itemGroups" >
             <i class="fa fa-bars"></i>
             <div class="text-sm"> 订单 </div>
           </router-link>
         </li>
         <li class="el-menu-item">
-          <router-link to="/waiter/members" >
+          <router-link to="/members" >
             <i class="fa fa-vcard"></i>
             <div class="text-sm">会员</div>
           </router-link>
         </li>
         <li class="el-menu-item">
-          <router-link to="/waiter/statistics" >
+          <router-link to="/statistics" >
             <i class="fa fa-vcard"></i>
             <div class="text-sm">统计</div>
           </router-link>
         </li>
         <li class="el-menu-item">
-          <router-link to="/waiter/setting" >
+          <router-link to="/setting" >
             <i class="fa fa-gears"></i>
             <div class="text-sm">设置</div>
           </router-link>
         </li>
         <li class="el-menu-item">
-          <router-link to="/waiter/testGroups" >
+          <router-link to="/testGroups" >
             <i class="fa fa-bars"></i>
             <div class="text-sm"> 测试 </div>
           </router-link>
