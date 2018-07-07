@@ -95,7 +95,7 @@
 </template>
 
 <script>
-    import headTop from '@/components/headTop'
+    import headTop from '@/components/layout/headTop'
     import {findOrders, getOrder} from '@/api/getData'
     import {userDataMixin, orderDataMixin} from '@/components/mixin/commonDataMixin'
     import { apiResultMixin } from '@/components/apiResultMixin'

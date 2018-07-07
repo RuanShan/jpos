@@ -35,21 +35,24 @@ import { orderDataMixin, userDataMixin } from "@/components/mixin/commonDataMixi
 Vue.mixin( orderDataMixin, userDataMixin )
 
 router.beforeEach(function (to, from, next) {
-  //console.log( "beforeEach is working")
+  console.log( "beforeEach is working", to)
+  // 保存路径信息
+  store.commit('saveTitle', to.meta.title)
+  //处理用户F5刷新时
     const user = store.state.userInfo;
     if ( to.name !== "login") {
         //未登录
         if (!user.id) {
-            router.push({name: 'login'})
+          next({
+            path: '/login',
+            query: { redirect: to.fullPath }
+          })
+        }else{
+           next()
         }
+    }else{  //已登录的情况再去登录页，跳转至首页
+        next()
     }
-    //已登录的情况再去登录页，跳转至首页
-    if (to.name === 'login') {
-        if (user.id) {
-            router.push({name: 'home'});
-        }
-    }
-    next();
 });
 
 /* eslint-disable no-new */

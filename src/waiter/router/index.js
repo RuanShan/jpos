@@ -16,35 +16,38 @@ const testPage = r => require.ensure([], () => r(require('@/page/functionalTest'
 const routes = [{
         path: '/',
         name: 'home',
-        component: homePage
+        component: homePage,
+        meta: { title: '缺省'},
     }, {
         path: '/login',
         name: 'login',
-        component: loginPage
+        component: loginPage,
+        meta: {  },
     }, {
           path: '/pos',
           name: 'first',
-          component: posPage
+          component: posPage,
+          meta: { title: '收银' },
     }, {
         path: '/itemGroups',
         component: itemGroupsPage,
-        meta: [],
+        meta: { title: '订单' },
     }, {
         path: '/members',
         component: membersPage,
-        meta: [],
+        meta: { title: '会员' },
     }, {
         path: '/statistics',
         component: statisticsPage,
-        meta: [],
+        meta: { title: '统计' },
     }, {
         path: '/setting',
         component: settingPage,
-        meta: [],
+        meta: { title: '设置' },
     }, {
         path: 'testGroups',
         component: testPage,
-        meta: [],
+        meta: { title: '测试' },
     }
 ]
 

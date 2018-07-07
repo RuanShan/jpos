@@ -39,7 +39,7 @@
 </template>
 
 <script>
-    import headTop from '@/components/headTop'
+    import headTop from '@/components/layout/headTop'
     import {adminList, adminCount} from '@/api/getData'
     export default {
       data () {

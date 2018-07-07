@@ -158,7 +158,7 @@
 </template>
 
 <script>
-    import headTop from '@/components/headTop'
+    import headTop from '@/components/layout/headTop'
     import {baseUrl, baseImgPath} from '@/config/env'
     import {getProducts, getMenu, updateFood, deleteFood, getStore, getMenuById} from '@/api/getData'
     export default {

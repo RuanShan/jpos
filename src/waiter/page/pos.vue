@@ -1,6 +1,6 @@
 <template>
 <div>
-  <headTop></headTop>
+  <headTop ></headTop>
   <leftNav></leftNav>
   <!-- 结账组件 Start-->
   <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible" @order-created-event="handleOrderCreated"></CheckoutDialog>
@@ -131,8 +131,8 @@
 </template>
 
 <script>
-import leftNav from "@/components/LeftNav/LeftNav.vue"
-import headTop from "@/components/headTop.vue";
+import leftNav from "@/components/layout/LeftNav.vue"
+import headTop from "@/components/layout/headTop.vue";
 
 import CustomerButton from "@/components/CustomerButton.vue"
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
@@ -155,7 +155,6 @@ export default {
   name: "pos",
   data() {
     return {
-      storeName: "", //店铺名称
       showLoading: true, //显示加载动画
       shopDetailData: null, //商铺详情
       menuList: [], //食品列表

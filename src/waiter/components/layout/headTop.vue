@@ -1,6 +1,13 @@
 <template>
   <div class="header_container">
-    <div class="title left"> {{storeInfo.name}} </div>
+    <div class="title left">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">{{storeInfo.name}}</el-breadcrumb-item>
+        <el-breadcrumb-item> {{$store.state.title}}</el-breadcrumb-item>
+
+      </el-breadcrumb>
+
+    </div>
     <div class="header-right ">
       <div class="header-user-con">
         <div> <img :src="userAvatarUrl" class="avator"></div>
@@ -60,7 +67,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../style/mixin';
+  @import '~@/style/mixin';
   .header_container{
     background-color: #EFF2F7;
     border-top: 1px solid #d3dce6;

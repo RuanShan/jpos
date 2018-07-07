@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import headTop from '@/components/headTop'
+import headTop from '@/components/layout/headTop'
 import leftSide from '@/components/leftSide'
 
 export default {

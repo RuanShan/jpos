@@ -120,8 +120,8 @@
 
 <script>
 
-import leftNav from '@/components/LeftNav/LeftNav.vue'
-import headTop from '../components/headTop'
+import leftNav from '@/components/layout/LeftNav.vue'
+import headTop from '@/components/layout/headTop'
 import {
     findOrders, evolvePosOrders, getStore, getUserInfo, getAddressById
 }

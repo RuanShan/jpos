@@ -94,7 +94,8 @@ export default {
       currentOrders:[], // 当前选择的客户对应的订单列表, 按订单关键字搜索后，选择的订单列表
       currentCustomer: null,
       currentCard: null,
-      checkoutDialogVisible: false
+      checkoutDialogVisible: false,
+      imageDialogVisible: false
     }
   },
   created: function(){

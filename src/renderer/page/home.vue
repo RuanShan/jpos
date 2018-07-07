@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  import headTop from '@/components/headTop'
+  import headTop from '@/components/layout/headTop'
   import tendency from '@/components/tendency'
   import dtime from 'time-formater'
   import {selectedDaysCount, todayCount, totalCount} from '@/api/getData'

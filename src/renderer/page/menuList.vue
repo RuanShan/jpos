@@ -113,7 +113,7 @@
 </template>
 
 <script>
-    import headTop from '@/components/headTop'
+    import headTop from '@/components/layout/headTop'
     import {baseUrl, baseImgPath} from '@/config/env'
     import {mapState} from 'vuex'
     import {getFoods, getMenu, getMenusCount, updateMenu,  deleteFood} from '@/api/getData'

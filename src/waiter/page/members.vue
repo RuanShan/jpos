@@ -108,8 +108,8 @@
 </template>
 
 <script>
-import leftNav from "@/components/LeftNav/LeftNav.vue"
-import headTop from "@/components/headTop.vue";
+import leftNav from "@/components/layout/LeftNav.vue"
+import headTop from "@/components/layout/headTop.vue";
 
 import MemberCenterNew from "@/components/MemberCenterNew.vue";
 import {

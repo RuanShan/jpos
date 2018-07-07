@@ -130,8 +130,8 @@
 </template>
 
 <script>
-import leftNav from "@/components/LeftNav/LeftNav.vue"
-import headTop from "@/components/headTop.vue";
+import leftNav from "@/components/layout/LeftNav.vue"
+import headTop from "@/components/layout/headTop.vue";
 
 import DaySale from '@/components/statis/DaySale.vue'
 import StatisPandect from '../components/StatisPandect.vue';

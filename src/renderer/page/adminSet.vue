@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import headTop from '@/components/headTop'
+  import headTop from '@/components/layout/headTop'
 import {mapState} from 'vuex'
 import {baseUrl, baseImgPath} from '@/config/env'
 

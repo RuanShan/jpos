@@ -191,7 +191,7 @@
 
 <script>
 
-import headTop from '@/components/headTop'
+import headTop from '@/components/layout/headTop'
 import processOrder from '@/components/processOrder'
 import processItem from '@/components/processItem'
 import scanProduct from '@/components/scanProduct'
