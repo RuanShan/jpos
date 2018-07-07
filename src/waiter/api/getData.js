@@ -1,13 +1,17 @@
 import fetch from '@/config/fetch'
+import { baseUrl } from '@/config/env'
+
 /**************************************************************************
  * jpos spree api
  **************************************************************************/
- /**
-  * 检查电话号码是否存在
-  * mobile: 电话号码
-  * id: 除去当前用户id
-  */
- export const customerMobileValidate = (mobile, id) => fetch('/api/v1/customers/validate_mobile', {mobile,id} );
+export const getLineItemGroupImageUploadPath=( id ) => { return baseUrl+'/api/v1/line_item_groups/'+id+'/images'; }
+
+/**
+ * 检查电话号码是否存在
+ * mobile: 电话号码
+ * id: 除去当前用户id
+ */
+export const customerMobileValidate = (mobile, id) => fetch('/api/v1/customers/validate_mobile', {mobile,id} );
 
 /**
  * 登陆
@@ -421,12 +425,11 @@ export const evolveLineItemGroups = (data) => fetch('/api/v1/line_item_groups/al
 /**
  * 获取 LineItemGroup Detail
  */
-
 export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/' + number)
+
 /**
  * 获取 LineItemGroup Detail
  */
-
 export const getLineItemGroupByNumber = number => fetch('/api/v1/line_item_groups/' + number)
 
 /**
@@ -434,7 +437,6 @@ export const getLineItemGroupByNumber = number => fetch('/api/v1/line_item_group
  * data: worker_id,
  *       ids - line_item.id
  */
-
 export const fulfillLineItems = data => fetch('/api/v1/line_items/fulfill', data, 'PUT')
 
 
@@ -442,8 +444,13 @@ export const fulfillLineItems = data => fetch('/api/v1/line_items/fulfill', data
  * 交付订单物品
  * data - { ids: [x,y,z...] }
  */
-
 export const completeLineItemGroups = data => fetch('/api/v1/line_item_groups/all_complete', data, 'PUT' )
+
+/**
+ * 删除物品图片
+ */
+export const deleteGroupImage = (groupId, groupImageId) => fetch('/api/v1/line_item_groups/' + groupId+'/images/'+groupImageId, {}, 'DELETE');
+
 
 /**
  * get cards 获取会员持有的会员卡信息
@@ -458,7 +465,6 @@ export const completeLineItemGroups = data => fetch('/api/v1/line_item_groups/al
  *                   serialNum: 流水号
  *                   status:    状态
  */
-
 export const getUserCards = (userId) => fetch('/api/v1/users/' + userId + '/cards');
 
 /**

@@ -55,9 +55,11 @@ export var apiResultMixin = {
           state: groupResult.state,
           paymentState: groupResult.payment_state,
           lineItems: [],
+          images: [],
           name: groupResult.name,
           price: parseInt(groupResult.price),
           createdAt: moment(groupResult.created_at),
+
         }
         group.displayCreatedAt = group.createdAt.format('MM-DD HH:mm')
         group.displayState = this.getOrderStateText(group.state)
@@ -82,6 +84,22 @@ export var apiResultMixin = {
             groupedlineItems.push(lineItem)
           }
         })
+        // 如果图片存在
+        if( groupResult.images ){
+          groupResult.images.forEach(function(imageResult) {
+            const image = {
+              type: "GroupImage",
+              id: imageResult.id,
+              position: imageResult.position,
+              group: group,
+              groupId: imageResult.viewable_id,
+              miniUrl: imageResult.mini_url,
+              bigUrl: imageResult.big_url,
+              originalUrl: imageResult.original_url
+            }
+            group.images.push(image)
+          })
+        }
         group.lineItems = groupedlineItems
       })
       // groupLineItems 当前订单的所有活

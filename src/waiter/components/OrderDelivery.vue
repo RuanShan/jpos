@@ -268,7 +268,7 @@ export default {
     },
 
     handlePaymentCreated(){
-      completeOrders()
+      this.completeOrders()
     },
     handleDeliverOrders(){
       //检查每件物品对应的Order用户是否付款， 如果没有，弹出结账对话框,
@@ -277,7 +277,7 @@ export default {
       }else{
         //$confirm(message, title, options)
         this.$confirm("确定交付客户以上物品吗？").then(()=>{
-          completeOrders()
+          this.completeOrders()
         })
       }
     },

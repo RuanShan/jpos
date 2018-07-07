@@ -36,7 +36,7 @@
     right: 0;
     padding: 16px;
     border: 1px #efefef solid;
-    .line-item-groups-container {
+    .order-detail-container {
       position: absolute;
       top: 8px;
       bottom: 50px;
@@ -49,8 +49,8 @@
       padding: 6px;
       border-bottom: 1px #efefef solid;
     }
-    .group-container {
-      border-bottom: 1px solid #ebeef5;
+    .line-item-group {
+      border: 1px solid #ebeef5;
     }
     table tr {
       vertical-align: top;
@@ -148,7 +148,7 @@
           </div>
         </div>
         <div class="item-detail">
-          <div class="line-item-groups-container" v-if="orderDetail">
+          <div class="order-detail-container" v-if="orderDetail">
 
             <div class="customer">
               <div class="head"> 客户信息</div>
@@ -178,8 +178,8 @@
             <div>
               <div class="head"> 订单信息 {{orderDetail.number}} </div>
 
-              <div>
-                <div class="head"> 物品 {{currentItem.number}} {{currentItem.state}} </div>
+              <div v-for="group in orderDetail.lineItemGroups" class="line-item-group">
+                <div class="head"> 物品 {{group.number}} {{group.state}} </div>
                 <table border="1" cellspacing="0" style="width: 100%">
                   <tr>
                     <td>序号</td>
@@ -187,7 +187,7 @@
                     <td>项目备注</td>
                     <td>状态</td>
                   </tr>
-                  <template v-for="(lineItem,index ) in currentItem.lineItems">
+                  <template v-for="(lineItem,index ) in group.lineItems">
                     <tr>
                       <td>{{ index+1 }}</td>
                       <td>{{ lineItem.cname }}</td>
@@ -197,10 +197,23 @@
                   </template>
                 </table>
 
-                <div class="head"> 物品图片</div>
+                <div class="head"> 物品图片
+
+                </div>
                 <div class="clear">
-                  <div class="item-image"> <img src="../assets/img/activity.png" alt="图片1" /> </div>
-                  <div class="item-image"> <img src="../assets/img/activity.png" alt="图片2" /> </div>
+                  <div v-show="group.images.length==0"> 没有图片 </div>
+
+                  <el-upload
+                    :file-list="group.uploadedImages"
+                    :action="group.imageUploadPath"
+                    name="image[attachment]"
+                    list-type="picture-card"
+                    :with-credentials="true"
+                    :on-preview="handlePictureCardPreview"
+                    :on-remove="handleRemove">
+                    <i class="el-icon-plus"></i>
+                  </el-upload>
+
                 </div>
               </div>
             </div>
@@ -215,6 +228,13 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="imageDialogVisible">
+      <el-carousel :initial-index="0"	 arrow="always" :autoplay="false">
+        <el-carousel-item v-for="item in 4" :key="item">
+          <h3>{{ item }}</h3>
+        </el-carousel-item>
+      </el-carousel>
+    </el-dialog>
   </div>
 </template>
 
@@ -223,7 +243,9 @@ import {
   getOrder,
   findLineItemGroups,
   evolveLineItemGroups,
-  cancelOrder
+  cancelOrder,
+  deleteGroupImage,
+  getLineItemGroupImageUploadPath
 }
 from '@/api/getData'
 
@@ -256,15 +278,15 @@ export default {
         storeId: 0
       },
       multipleSelection: [],
+      imageUploadPath: null
 
     }
   },
   mixins: [DialogMixin, CelUIMixin],
   props: ['dialogVisible', 'orderState', 'itemCounts'],
-  created() {
-  },
-  computed: {
-  },
+  components:{  },
+  created() {  },
+  computed: {  },
   methods: {
     async initData() {
       let params = this.buildParams()
@@ -361,6 +383,14 @@ export default {
         }
         this.orderDetail = row.orderDetail
         this.orderCustomer = this.orderDetail.customer
+        this.orderDetail.lineItemGroups.forEach((group)=>{
+          group.imageUploadPath = getLineItemGroupImageUploadPath( group.id)
+
+          group.uploadedImages = group.images.map((img)=>{
+            return Object.assign( img, {name: img.attachmentFileName, url: img.bigUrl}  )
+          })
+        })
+
 
       } else {
         this.currentItem = null
@@ -387,7 +417,20 @@ export default {
           }
         })
       })
-
+    },
+    imageuploaded(res) {
+      if (res.errcode == 0) {
+        this.src = 'http://img1.vued.vanthink.cn/vued751d13a9cb5376b89cb6719e86f591f3.png';
+      }
+    },
+    handleRemove(file, fileList) {
+      deleteGroupImage( file.groupId, file.id ).then(()=>{
+        console.log(file, fileList);
+      })
+    },
+    handlePictureCardPreview(file) {
+      //this.dialogImageUrl = file.originalUrl;
+      //this.imageDialogVisible = true;
     }
   }
 }
