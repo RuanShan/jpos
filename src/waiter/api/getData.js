@@ -31,7 +31,23 @@ export const signout = () => fetch('/users/sign_out', {}, 'DELETE');
  */
 
 export const getUserInfo = () => fetch('/users/info', {}, 'GET');
-//export const getUserInfo = () => fetch('/admin/info');
+
+/**
+ * 获取用户打卡信息列表
+ */
+
+export const searchUserEntries = data => fetch('/api/v1/user_entries/search', data, 'POST');
+
+/**
+ * 添加用户打卡信息,这时用户可能没有登录
+ * data
+ *  user_entry[state]： checkin, checkout
+ *  user_entry[store_id]
+ *  user[username]
+ *  user[password]
+ */
+
+export const addUserEntry = data => fetch('/user_entries/', data, 'POST');
 
 /**
  * api请求量

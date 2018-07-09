@@ -93,11 +93,12 @@
       },
       initializeApp(){
         console.log( "..initializeApp..")
+        //初始化 localstorage storeId
         this.getStores()
       }
     },
     watch: {
-      userInfo: function (newValue) {
+      //userInfo: function (newValue) {
         // if (newValue.id) {
         //   this.$message({
         //     type: 'success',
@@ -105,7 +106,7 @@
         //   })
         //   this.$router.push('first')
         // }
-      }
+      //}
     }
   }
 </script>

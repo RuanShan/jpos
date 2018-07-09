@@ -42,8 +42,8 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
     try {
       const response = await fetch(url, requestConfig)
       let responseJson = null
-      // 401
-      if( response.status ==401 ){
+      // session expired
+      if( response.status ==401 &&  response.ret== 'expired'){
         store.commit('resetUser')
       }
       if( type=='DELETE' &&  response.status == 204 ){

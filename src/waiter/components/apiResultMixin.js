@@ -5,7 +5,8 @@ export var apiResultMixin = {
   data: function(){
     return {
       LineItemGroupPaymentStateEnum: { paid: 'paid', balance_due: 'balance_due'},
-      CardStyleEnum:{ prepaid: 'prepaid', counts:'counts' }// prepaid 充值卡， counts 次卡
+      CardStyleEnum:{ prepaid: 'prepaid', counts:'counts' }, // prepaid 充值卡， counts 次卡
+      UserEntryStateEnum:{ checkin: 'checkin', checkout:'checkout' } // 打卡 登入， 登出
     }
   },
   methods: {
@@ -44,7 +45,7 @@ export var apiResultMixin = {
         cardTransactions: []
       }
       order.payments = this.buildPayments( orderResult.payments )
-      order.displayCreatedAt = order.createdAt.format('MM-DD HH:mm')
+      order.displayCreatedAt = this.getDisplayDateTime(order.createdAt)
 
       orderResult.line_item_groups.forEach((groupResult, i) => {
         let group = {
@@ -61,7 +62,7 @@ export var apiResultMixin = {
           createdAt: moment(groupResult.created_at),
 
         }
-        group.displayCreatedAt = group.createdAt.format('MM-DD HH:mm')
+        group.displayCreatedAt = this.getDisplayDateTime(group.createdAt)
         group.displayState = this.getOrderStateText(group.state)
         order.lineItemGroups.push(group)
         let groupedlineItems = []
@@ -143,7 +144,7 @@ export var apiResultMixin = {
             model.card = order.customer.cards.find((item)=>{ return item.id == model.cardId })
             // 如果是第一条充值记录，我们认为这是一张新卡
             model.displayIsFirst = model.position==1 ? "是": "否"
-            model.displayCreatedAt = model.createdAt.format('MM-DD HH:mm')
+            model.displayCreatedAt =this.getDisplayDateTime( model.createdAt )
             order.cardTransactions.push(model)
         })
         // 通常一个订单对应一条充值记录
@@ -188,7 +189,7 @@ export var apiResultMixin = {
         createdAt: moment(item.created_at),
         lineItems: []
       }
-      group.displayCreatedAt = group.createdAt.format('MM-DD HH:mm')
+      group.displayCreatedAt = this.getDisplayDateTime( group.createdAt )
       group.displayState = this.getOrderStateText(group.state)
 
       item.line_items.forEach(function(lineItemResult) {
@@ -209,13 +210,11 @@ export var apiResultMixin = {
 
     buildUser: function(userResult) {
       const user = {
-        storeId: 0,
         avatar: 'default.jpg',
         apiKey: ''
       }
       user.id = userResult.id
-      user.storeId = userResult.store_id
-      //user.avatar = userResult.avatar
+      user.name = userResult.username
       user.apiKey = userResult.api_key
       return user
     },
@@ -324,7 +323,7 @@ export var apiResultMixin = {
       }
       user.displayType = user.cards.length>0 ? "会员" : "散客"
       user.displayGender = this.getDisplayGender(user.gender)
-      user.displayCreatedAt = user.createdAt.format('MM-DD HH:mm')
+      user.displayCreatedAt = this.getDisplayDateTime( user.createdAt)
       user.displayCreatedAtDate = user.createdAt.format('YYYY-MM-DD')
 
       if( this.stores &&  user.storeId){
@@ -451,7 +450,26 @@ console.log( "buildCustomerStatis=", result, statis)
       })
       return payments
     },
-
+    buildUserEntries( result ){
+      const entries = result.map((model)=>{
+        return this.buildUserEntry( model )
+      })
+      return entries
+    },
+    buildUserEntry( model ){
+        let entry = {
+          id: model.id,
+          userId: model.user_id,
+          storeId: parseInt( model.store_id ),
+          state: model.state,
+          username:  model.username,
+          day: moment(model.day),
+          createdAt: moment(model.created_at),
+        }
+        entry.displayCreatedAtTime = this.getDisplayTime( entry.createdAt )
+        entry.displayState = this.getUserEntryDisplayState( entry.state )
+        return entry
+    },
     generateGroupNumber: function() {
       let timestamp = moment().format("YYMMDDHHmmss")
       return timestamp
@@ -483,6 +501,22 @@ console.log( "buildCustomerStatis=", result, statis)
         return "已交付客户"
       }
       return "未知"
+    },
+    getUserEntryDisplayState(state) {
+      return state == "checkin" ? "登入" : "登出" //prepaid 充值卡， counts 次卡
+    },
+    getDisplayTime( datetime){ // datetime is instance moment
+      return datetime.format('HH:mm')
+    },
+    getDisplayDateTime( datetime){ // datetime is instance moment
+      return datetime.format('MM-DD HH:mm')
+    },
+    getDisplayDate( datetime){ // datetime is instance moment
+      return datetime.format('YYYY-MM-DD')
+    },
+    getQueryParamToday(){
+      let today = moment()
+      return today.format('YYYY-MM-DD')
     }
   }
 }

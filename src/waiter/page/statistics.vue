@@ -1,6 +1,7 @@
 <style lang="scss">
 .statistics-container {
   .title-wrap {
+    display: none;
     line-height: 42px;
     background-color: #cecece;
     padding: 6px;
@@ -14,7 +15,7 @@
   }
   .tab-list-wrap {
     position: absolute;
-    top: 66px;
+    top: 18px;
     left: 18px;
     right: 18px;
     bottom: 10px;
