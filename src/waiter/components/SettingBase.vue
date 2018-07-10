@@ -53,7 +53,7 @@ export default {
 
       //*********** UI需要的变量 ***************/
       form: {
-        storeId: "", //門店選項
+        storeId: null, //門店選項
       },
       stateOptions: [{ //门店方式选项
         value: '全部',
@@ -64,7 +64,7 @@ export default {
     };
   },
   mounted() {
-    this.form.storeId = getStore('storeId')
+    this.form.storeId = parseInt( getStore('storeId') )
   },
   computed: {
     computedStoreOptions(){
@@ -91,10 +91,9 @@ export default {
         setStore('storeId', storeId)
         this.$store.commit('saveStore', selectedStore)
 
-
         this.$message({
           type: 'success',
-          message: "恭喜你，订单提交成功"
+          message: "恭喜你，配置提交成功"
         });
       }
 

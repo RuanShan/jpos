@@ -150,28 +150,26 @@ export const addFood = data => fetch('/shopping/addfood', data, 'POST');
 export const foodCategory = (latitude, longitude) => fetch('/shopping/v2/restaurant/category');
 
 /**
- * 获取餐馆列表
+ * 获取店铺列表
  */
-
 export const getStores = data => fetch('/api/v1/stores', data);
 
 /**
- * 获取餐馆详细信息
+ * 获取店铺详细信息
  */
-
 export const getStore = store_id => fetch('/api/v1/stores/' + store_id);
+
+/**
+ * 更新店铺信息
+ */
+export const updateStore = (store_id, data) => fetch('/api/v1/stores/' + store_id, data, 'PUT');
+
 
 /**
  * 获取餐馆数量
  */
 
 export const getResturantsCount = () => fetch('/shopping/restaurants/count');
-
-/**
- * 更新餐馆信息
- */
-
-export const updateResturant = data => fetch('/shopping/updateshop', data, 'POST');
 
 /**
  * 删除餐馆
