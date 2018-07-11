@@ -8,7 +8,7 @@ let getPrintersFunction = function(){
       return printers
     }
   }else{
-    return function(){  console.warn("please run in electron, now is web."); return {}  }
+    return function(){  console.warn("please run in electron, now is web."); return []  }
   }
 }
 

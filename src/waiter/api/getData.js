@@ -35,19 +35,27 @@ export const getUserInfo = () => fetch('/users/info', {}, 'GET');
 /**
  * 获取用户打卡信息列表
  */
-
-export const searchUserEntries = data => fetch('/api/v1/user_entries/search', data, 'POST');
+export const findUserEntries = data => fetch('/api/v1/user_entries/search', data, 'POST');
 
 /**
  * 添加用户打卡信息,这时用户可能没有登录
  * data
- *  user_entry[state]： checkin, checkout
+ *  user_entry[state]： clockin, clockout
  *  user_entry[store_id]
  *  user[username]
  *  user[password]
  */
 
 export const addUserEntry = data => fetch('/user_entries/', data, 'POST');
+
+/**
+ * 获取用户和打卡信息，以用户列表分页，
+ * data - user_entries 的查询条件， { eq:{ day_gteq: '2018-07-01', day_lteq: '2018-07-01'}}
+ *      - page 用户列表分页条件
+ *      - per_page 用户列表每页记录数
+ * API适用 一个用户在一天内在多个店铺登录时，返回一个user的情况
+ */
+export const findUserAndEntries = data => fetch('/api/v1/users/entries', data, 'POST');
 
 /**
  * api请求量

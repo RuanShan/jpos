@@ -62,7 +62,7 @@
     <fieldset class="member-field-set">
       <legend>功能选择</legend>
       <el-form-item class="member-form-item" label="时间选择">
-        <el-date-picker class="member-time-select" v-model="form.memberCaseDateSection" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+        <el-date-picker class="member-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
 
@@ -73,47 +73,37 @@
         </el-select>
       </el-form-item>
 
-      <el-button class="member-clear" type="info" size="mini">清空</el-button>
-      <el-button class="order-ok" type="primary" size="mini">确定</el-button>
+      <el-button class="member-clear" type="info" size="mini" @click="onReset">清空</el-button>
+      <el-button class="order-ok" type="primary" size="mini" @click="onSubmit">确定</el-button>
     </fieldset>
   </el-form>
 
   <!-- 会员统计表   START -->
   <div class="member-line-three-row ">
     <el-table class="cel-scrollable-table" :data="tableData"  border>
-      <el-table-column prop="name" label="序号" width="80">
+      <el-table-column prop="id" label="编号" width="100">
       </el-table-column>
-      <el-table-column prop="name" label="日期" >
+      <el-table-column prop="name" label="姓名" width="100">
       </el-table-column>
-      <el-table-column prop="name" label="时间">
+      <el-table-column prop="userEntries.length" label="打卡次数"  width="100" >
       </el-table-column>
-      <el-table-column prop="name" label="店铺名称">
+      <el-table-column   label="打卡记录详细"  >
+        <template slot-scope="scope">
+          <el-tag size="medium" v-for="entry in scope.row.userEntries">{{ entry.displayCreatedAt }} - {{ entry.storeName }} - {{ entry.displayState }}</el-tag>
+         </template>
       </el-table-column>
-      <el-table-column prop="name" label="员工编号">
-      </el-table-column>
-      <el-table-column prop="name" label="员工姓名">
-      </el-table-column>
-      <el-table-column prop="name" label="打卡状态">
-      </el-table-column>
+
     </el-table>
 
   </div>
 
   <!-- 统计数据  START -->
-  <div class="statisdatarecordnum">
-    <h4 style="display: inline-block;">记录数:</h4>
-    <h4 class="recordnum">{{recordNumber}}</h4>
-  </div>
-  <div class="statisdatarechargemoney">
-    <h4 style="display: inline-block;">合计充值金额:</h4>
-    <h4 class="recordnum">{{rechargeMoneySum}}</h4>
-  </div>
   <!-- 统计数据  END -->
 
   <!-- 会员统计表   END -->
   <!-- 分页器 START-->
   <div class="" style="position: absolute;bottom:2px;right:4%;margin-top: 10px;">
-    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalPage">
+    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="total">
     </el-pagination>
   </div>
   <!-- 分页器 END-->
@@ -122,7 +112,7 @@
 
 <script>
 import moment from 'moment'
-import { findCustomers } from '@/api/getData'
+import { findUserAndEntries } from '@/api/getData'
 
 export default {
   data() {
@@ -142,7 +132,7 @@ export default {
       stateOptions: [{ //门店方式选项
         value: '全部',
       }],
-      totalPage: 0, //分页器显示的总页数
+      total: 0, //总记录数
       perPage: 12, //主表每页显示12行
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
       pickerOptions2: {
@@ -190,10 +180,6 @@ export default {
             address: '上海市普陀区金沙江路 1516 弄'
           }],
       //*********** 逻辑需要的变量 ***************/
-      returnServerCustomerData: {}, //调用接口,返回的数据
-      customerData: {}, //整理過的顧客數據
-      recordNumber: "0", //统计数据之记录数
-      rechargeMoneySum: "0" //统计数据之充值金额合计
     };
   },
   mounted() {
@@ -205,27 +191,25 @@ export default {
     this.initData()
   },
   computed: {
-    computedStartAt: function() {
-      return this.formData.selectedDates[0]
-    },
-    computedEndAt: function() {
-      return this.formData.selectedDates[1]
-    }
   },
   methods: {
-    async initData() {
-      this.formData.selectedDates = this.selectedDates
+    initData() {
       let params = this.buildParams()
-      let result = await findCustomers(params)
-
-      this.totalPage = result.total_count
-      this.tableData = this.buildCustomers(result)
-      console.log("result=", result, "this.tableData = ", this.tableData)
+      findUserAndEntries(params).then((result)=>{
+        this.total = result.total_count
+        this.tableData = this.buildUsers(result)
+        //添加
+        console.log("result=", result, "this.tableData = ", this.tableData)
+      })
     },
     buildParams() {
       let params = { //查询条件
         page: this.currentPage, //分页器选择的当前页数
-        per_page: this.perPage //每页显示12行数据
+        per_page: this.perPage, //每页显示12行数据
+        eq: {
+          day_gteq: this.formData.selectedDates[0],
+          day_lteq: this.formData.selectedDates[1]
+        }
       }
       return params
     },
@@ -238,6 +222,13 @@ export default {
       this.currentPage = val;
       this.initData()
     },
+    onSubmit() {
+      this.initData()
+    },
+    onReset(){
+      this.$refs['form'].resetFields()
+      this.onSubmit()
+    }
   }
 };
 </script>

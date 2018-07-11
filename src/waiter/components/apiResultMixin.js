@@ -6,7 +6,7 @@ export var apiResultMixin = {
     return {
       LineItemGroupPaymentStateEnum: { paid: 'paid', balance_due: 'balance_due'},
       CardStyleEnum:{ prepaid: 'prepaid', counts:'counts' }, // prepaid 充值卡， counts 次卡
-      UserEntryStateEnum:{ checkin: 'checkin', checkout:'checkout' } // 打卡 登入， 登出
+      UserEntryStateEnum:{ clockin: 'clockin', clockout:'clockout' } // 打卡 登入， 登出
     }
   },
   methods: {
@@ -207,7 +207,14 @@ export var apiResultMixin = {
       })
       return group
     },
+    buildUsers: function(result) {
 
+      const entities = result.users.map((item) => {
+        const user = this.buildUser( item )
+        return user
+      })
+      return entities
+    },
     buildUser: function(userResult) {
       const user = {
         avatar: 'default.jpg',
@@ -216,6 +223,14 @@ export var apiResultMixin = {
       user.id = userResult.id
       user.name = userResult.username
       user.apiKey = userResult.api_key
+      //对于按条件搜索用户和打卡记录时， 打卡记录存在 searched_entries 中
+      let entries =  userResult.searched_entries ? userResult.searched_entries: userResult.user_entries
+      if( entries ){
+        const userEntries = entries.map((model)=>{
+          return this.buildUserEntry(model)
+        })
+        user.userEntries = userEntries
+      }
       return user
     },
     // id, name, description, price, has_variants
@@ -451,7 +466,7 @@ console.log( "buildCustomerStatis=", result, statis)
       return payments
     },
     buildUserEntries( result ){
-      const entries = result.map((model)=>{
+      const entries = result.user_entries.map((model)=>{
         return this.buildUserEntry( model )
       })
       return entries
@@ -463,9 +478,11 @@ console.log( "buildCustomerStatis=", result, statis)
           storeId: parseInt( model.store_id ),
           state: model.state,
           username:  model.username,
+          storeName: model.store_name,
           day: moment(model.day),
           createdAt: moment(model.created_at),
         }
+        entry.displayCreatedAt = this.getDisplayDateTime( entry.createdAt )
         entry.displayCreatedAtTime = this.getDisplayTime( entry.createdAt )
         entry.displayState = this.getUserEntryDisplayState( entry.state )
         return entry
@@ -503,7 +520,7 @@ console.log( "buildCustomerStatis=", result, statis)
       return "未知"
     },
     getUserEntryDisplayState(state) {
-      return state == "checkin" ? "登入" : "登出" //prepaid 充值卡， counts 次卡
+      return state == "clockin" ? "登入" : "登出" //prepaid 充值卡， counts 次卡
     },
     getDisplayTime( datetime){ // datetime is instance moment
       return datetime.format('HH:mm')

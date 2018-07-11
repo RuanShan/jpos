@@ -256,7 +256,6 @@ export default {
     },
     computedDayParam: function () {
       let params = { q: { day_eq: this.computedStartAt } }
-
       return params
     },
     computedDaysParams() {
@@ -280,7 +279,7 @@ export default {
     }
   },
   methods: {
-    async initData() {
+    initData() {
       this.formData.selectedDates = this.selectedDates
       console.log("this.formData.selectedDates = ", this.formData.selectedDates)
       Promise.all([selectedDayCount(this.computedDayParam), totalCount(this.computedDaysParams)])
@@ -296,7 +295,7 @@ export default {
         })
       this.getSevenData()
     },
-    async getSevenData() {
+    getSevenData() {
 
       selectedDaysCount(this.computedDaysParams).then(res => {
         const resArr = [

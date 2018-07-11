@@ -127,19 +127,9 @@ import {
   evolveLineItemGroups
 }
 from '@/api/getData'
-import {
-  userDataMixin,
-  orderDataMixin
-}
-from '@/components/mixin/commonDataMixin'
 
 import {
-  apiResultMixin
-}
-from '@/components/apiResultMixin'
-
-import {
-  printMixin
+  PrintUtil
 } from '@/components/mixin/print'
 import {
   DialogMixin
@@ -164,7 +154,7 @@ export default {
       multipleSelection: [],
     }
   },
-  mixins: [DialogMixin, userDataMixin, orderDataMixin, apiResultMixin, printMixin],
+  mixins: [DialogMixin],
   props: ['dialogVisible', 'dialogTitle', 'orderState', 'nextOrderState', 'orderCounts'],
   created() {},
   computed: {
@@ -338,7 +328,7 @@ export default {
     },
     handlePrint() {
       //console.log("printableData", this.printableData)
-      console.log("getPrinters", this.getPrinters())
+      console.log("getPrinters", PrintUtil.getPrinters())
 
       //var printWin = window.open('','','left=0,top=0,width=1,height=1,toolbar=0,scrollbars=0,status  =0')
       //printWin.focus()

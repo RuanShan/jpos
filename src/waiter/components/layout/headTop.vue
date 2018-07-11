@@ -20,7 +20,7 @@
           display: flex;
           align-items: center;
         }
-        .header-checkin-con{
+        .header-clockin-con{
           float: right;
           display: flex;
           align-items: center;
@@ -39,15 +39,13 @@
 
 <template>
   <div class="header_container">
-    <UserCheckin :dialog-visible.sync="userCheckinDialogVisible" @user-entry-created="handleUserEntryCreated" ></UserCheckin>
+    <UserClockin :dialog-visible.sync="userCheckinDialogVisible" @user-entry-created="handleUserEntryCreated" ></UserClockin>
 
     <div class="title left">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">{{storeInfo.name}}</el-breadcrumb-item>
         <el-breadcrumb-item> {{$store.state.title}}</el-breadcrumb-item>
-
       </el-breadcrumb>
-
     </div>
     <div class="header-right ">
       <div class="header-user-con">
@@ -56,11 +54,10 @@
             打卡<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="user in computedUserAndEntries">
+            <el-dropdown-item v-for="user in computedUserAndEntries" key="user.id">
               <p>{{user.name}} </p>
               <p v-for="entry in user.entries">{{entry.displayCreatedAtTime}} - {{entry.displayState}} </p>
             </el-dropdown-item>
-
             <el-dropdown-item divided command="new">添加</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -76,7 +73,7 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-      <div class="header-checkin-con">
+      <div class="header-clockin-con">
       </div>
     </div>
   </div>
@@ -85,14 +82,14 @@
 <script>
 import _ from "lodash"
 
-import {signout, searchUserEntries} from '@/api/getData'
+import {signout, findUserEntries} from '@/api/getData'
 import {baseImgPath} from '@/config/env'
 
-import UserCheckin from "@/components/dialog/UserCheckin.vue"
+import UserClockin from "@/components/dialog/UserClockin.vue"
 
 export default {
   components:{
-    UserCheckin
+    UserClockin
   },
   data () {
     return {
@@ -120,12 +117,12 @@ export default {
     this.initDate()
   },
   methods: {
-    async initDate(){
+    initDate(){
       let params = {q: { store_id_eq: this.storeId, day_eq: this.getQueryParamToday() }}
-      const result = await searchUserEntries( params )
-      console.log( "headTop storeId =", this.storeId, result )
-
-      this.userEntries = this.buildUserEntries( result.user_entries )
+      findUserEntries( params ).then((result)=>{
+        console.log( "headTop storeId =", this.storeId )
+        this.userEntries = this.buildUserEntries( result )
+      })
     },
 
     async handleCommand (command) {

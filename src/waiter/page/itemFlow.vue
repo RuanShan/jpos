@@ -287,12 +287,16 @@ import {
   getLineItemGroupCounts
 }
 from '@/api/getData'
-import {
-  userDataMixin
-}
-from '@/components/mixin/commonDataMixin'
 
 export default {
+  components: {
+    leftNav,
+    headTop,
+    ItemProcess,
+    ProductScan,
+    ProductTransfer,
+    WorkerPerformance
+  },
   data() {
     return {
       processItemDialogVisible: false,
@@ -341,15 +345,7 @@ export default {
 
     }
   },
-  components: {
-    leftNav,
-    headTop,
-    ItemProcess,
-    ProductScan,
-    ProductTransfer,
-    WorkerPerformance
-  },
-  mixins: [userDataMixin],
+
   created() {
     this.$bus.$on('order-created-gevent', () => {
       console.log('on order-created-gevent')

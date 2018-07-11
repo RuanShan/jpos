@@ -18,7 +18,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       url = url + '?' + dataStr
     }
   }
-
+  //console.log("fetch->", url, data, type)
   if (window.fetch && method == 'fetch') {
     let requestConfig = {
       credentials: 'include',

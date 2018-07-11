@@ -1,5 +1,5 @@
 <style lang="scss">
-.checkin_container {
+.clockin_container {
 
     .form_contianer {
       max-width: 320px;
@@ -25,18 +25,18 @@
         <div> 打卡</div>
       </div>
 
-      <div class="dialog-content-wrap checkin_container"  >
+      <div class="dialog-content-wrap clockin_container"  >
         <section class="form_contianer">
 
-          <el-form :model="checkinForm" :rules="rules" ref="checkinForm">
+          <el-form :model="clockinForm" :rules="rules" ref="clockinForm">
             <el-form-item prop="username">
-              <el-input v-model="checkinForm.username" placeholder="用户名"><span>dsfsf</span></el-input>
+              <el-input v-model="clockinForm.username" placeholder="用户名"><span>dsfsf</span></el-input>
             </el-form-item>
             <el-form-item prop="password">
-              <el-input type="password" placeholder="密码" v-model="checkinForm.password"></el-input>
+              <el-input type="password" placeholder="密码" v-model="clockinForm.password"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('checkinForm')" class="submit_btn">打卡</el-button>
+              <el-button type="primary" @click="submitForm('clockinForm')" class="submit_btn">打卡</el-button>
             </el-form-item>
           </el-form>
           <p class="tip"> </p>
@@ -64,7 +64,7 @@ import {
 export default {
   data() {
     return {
-      checkinForm: {
+      clockinForm: {
         username: '',
         password: ''
       },
@@ -103,8 +103,8 @@ export default {
             if (valid) {
               let params = {
                 user: {
-                  username: this.checkinForm.username,
-                  password: this.checkinForm.password
+                  username: this.clockinForm.username,
+                  password: this.clockinForm.password
                 },
                 user_entry:{
                   store_id: this.storeId
