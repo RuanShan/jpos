@@ -61,6 +61,13 @@ export var orderDataMixin = {
         return "已交付客户"
       }
       return "未知"
+    },
+    //权限判断
+    authorizeCreate(){
+      return false
+    },
+    authorizeMultiStore(){
+      return this.userInfo.roleNames.indexOf('admin') >= 0
     }
   }
 

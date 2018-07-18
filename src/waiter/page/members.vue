@@ -51,16 +51,17 @@
       </div>
       <div class="member-list-wrap">
         <el-form :inline="true" class="demo-form-inline">
-
           <div class="filters">
-            <div class="filter">
+            <el-form ref="form" :model="formData" label-width="70px" :inline="true">
+              <store-select v-bind:value.sync="formData.storeId" />
+
               <el-form-item label="关键字">
-                <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="inputValue"></el-input>
+                <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="handleSearch()" size="mini">搜索</el-button>
               </el-form-item>
-            </div>
+            </el-form>
           </div>
         </el-form>
         <!-- 表格     END -->
@@ -70,7 +71,7 @@
                 </el-table-column>
                 <el-table-column prop="storeName" label="所属门店">
                 </el-table-column>
-                <el-table-column prop="username" label="会员姓名">
+                <el-table-column prop="userName" label="会员姓名">
                 </el-table-column>
                 <el-table-column prop="mobile" label="电话" width="125">
                 </el-table-column>
@@ -111,6 +112,7 @@
 import leftNav from "@/components/layout/LeftNav.vue"
 import headTop from "@/components/layout/headTop.vue";
 
+import StoreSelect from '@/components/common/StoreSelect.vue'
 import MemberCenterNew from "@/components/MemberCenterNew.vue";
 import {
   findCustomers, deleteCustomer
@@ -126,6 +128,7 @@ export default {
   components: {
     leftNav,
     headTop,
+    StoreSelect,
     "member-center-new": MemberCenterNew
   },
   data() {
@@ -138,6 +141,10 @@ export default {
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
       totalPage: 0, //分页器显示的总页数
       inputValue: "", //输入框输入的值
+      formData: {
+        keyword: '',
+        storeId: null
+      },
       customerData: {}
     };
   },
@@ -159,7 +166,14 @@ export default {
       let params = {
           page: this.currentPage,
           per_page: this.perPage,
-          "q[store_id_eq]": this.storeId
+      }
+      // storeId可能为空
+      if( this.formData.storeId ){
+        params["q[store_id_eq]"] = this.formData.storeId //查询说有店铺的客户信息
+      }
+      // 会员 电话号码或卡号 关键字
+      if( this.formData.keyword.length>0){
+        params['q[mobile_or_cards_code_cont]'] = this.formData.keyword
       }
       return params
     },
@@ -210,7 +224,7 @@ export default {
     },
     //搜索按钮点击事件
     handleSearch(){
-
+      this.initData()
     }
   }
 };

@@ -1,6 +1,5 @@
 <style lang="scss" >
 .checkout-container {
-
     .checkboxGroup {
         width: 100%;
     }
@@ -10,7 +9,7 @@
     }
     .checkout-form-wrap{
       .checkout-form{
-        width: 500px;
+        width: 600px;
         margin: 0 auto;
         .align-right input{
           text-align: right;
@@ -20,6 +19,9 @@
         }
         .input-with-select .el-select {
             min-width: 100px;
+        }
+        .el-checkbox+.el-checkbox {
+            margin-left: 20px;
         }
       }
       table{
@@ -58,7 +60,7 @@
     </div>
 
     <div class="checkout-form-wrap">
-      <el-form :model="formData" :rules="rules" ref="formData" label-width="120px" class="checkout-form">
+      <el-form :model="formData" :rules="rules" ref="formData" label-width="100px" class="checkout-form">
         <el-form-item label="应收金额">
           <el-input v-model="totalMoney" readonly class="money align-right">
           </el-input>
@@ -92,26 +94,32 @@
           <el-input type="textarea" v-model="formData.memo"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="warning" @click="handleCreateOrderWithoutPayment()" v-show="existedOrderId==false">取单时结账</el-button>
-          <div class="right">
-            <el-button type="success" @click="handleCreateOrderAndPayment()">结账</el-button>
-            <el-button @click="handleCloseDialog()">取消</el-button>
-          </div>
-
+            <el-checkbox label="打印条码" v-model="formData.isPrintLabel"></el-checkbox>
+            <el-checkbox label="打印小票" v-model="formData.isPrintReciept"></el-checkbox>
+            <el-checkbox label="公众号电子小票" v-model="formData.enableMpMsg"></el-checkbox>
+            <el-checkbox label="短信息" v-model="formData.enableSms"></el-checkbox>
         </el-form-item>
-
+        <el-form-item>
+          <el-button type="warning" @click="handleCreateOrderWithoutPayment" v-show="existedOrderId==false">取单时结账</el-button>
+          <div class="right">
+            <el-button type="success" @click="handleCreateOrderAndPayment" :disabled="disableCheckoutButton">结账</el-button>
+            <el-button @click="handleCloseDialog()">取消</el-button>
+            <el-button @click="testPrint()">打印测试</el-button>
+          </div>
+        </el-form-item>
       </el-form>
-
     </div>
-
-
   </el-dialog>
 </div>
 </template>
 
 <script>
+import _ from "lodash"
+
 import { checkout, addPayments } from "@/api/getData"
-import { orderDataMixin } from "@/components/mixin/commonDataMixin"
+import {
+  PrintUtil
+} from '@/utils/ipcService'
 
 import {
   DialogMixin
@@ -125,7 +133,6 @@ export default {
       //微信,支付宝
       //支付方式
       paymentMethodList: [      ],
-
       paymentList: [{
         type: "cash",
         amount: 0
@@ -136,16 +143,22 @@ export default {
         paymentPassword: null,
         enablePrepaidCard: true,
         selectPaymentMethodId: null,
+        checkList:[],
+        isPrintLabel: true,
+        isPrintReciept: false,
+        enableSms: false,
+        enableMpMsg: true,
       },
       rules:{
         paymentAmount:[
           { required: true, type: 'number', trigger: 'change' }
         ]
       },
+      disableCheckoutButton: false,
       payments: [], //支付被方式选择数字,返回已经被选择的lable,如""现金","微信"等
     };
   },
-  mixins: [DialogMixin, orderDataMixin],
+  mixins: [DialogMixin],
   computed: {
     activePaymentMethods: function(){
       return this.paymentMethodList.filter((pm)=>{
@@ -198,12 +211,14 @@ export default {
             amount: this.formData.prepaidCardAmount, payment_method_id: this.prepaidCardPaymentMethod.id } )
         }
       }
+console.log( "this.orderRemainder=",this.orderRemainder)
+      let remain = this.formData.prepaidCardAmount - this.totalMoney
       //需要其他支付方式
-      if( this.orderRemainder > 0 ){
-        paymentsAttributes.push( { payment_method_id: this.selectPaymentMethodId } )
+      if( remain < 0 ){
+        paymentsAttributes.push( { payment_method_id: this.selectPaymentMethodId, amount: this.orderRemainder } )
       }
 
-      let order =  { user_id: this.customer.id,  payments: paymentsAttributes }
+      let order =  { user_id: this.customer.id,  payments: paymentsAttributes, enable_sms: this.formData.enableSms, enable_mp_msg: this.formData.enableMpMsg }
       order.line_items = this.orderItemList.map((item)=>{ return { quantity: 1, variant_id: item.variantId, cname: item.cname, group_position: item.groupPosition, memo: item.memo}})
 
       return { order: order }
@@ -244,7 +259,7 @@ export default {
     CreateOrder( params ) {
         checkout( params ).then((res)=>{
           if( res.id> 0){
-
+            console.log("checkout dialog res->",params, res)
             this.$emit('order-created-event', res )
             this.$emit('update:dialogVisible', false)
             this.$message({
@@ -282,23 +297,35 @@ export default {
 
     },
     handleCreateOrderAndPayment(){
-      let params = this.checkoutParams
-console.log( "handleCreateOrderAndPayment", this.existedOrderId )      
-      if( this.existedOrderId != null){
-        let payments = params.order.payments
-
-        this.CreatePayment( this.existedOrderId, payments )
-
-      }else{
-        this.CreateOrder( params )
-
-      }
+      //250毫秒以后才可以调用，以防鼠标多次点击
+      this.handleCreateOrderAndPaymentAsync(this)
     },
     handleCreateOrderWithoutPayment(){
+      if( this.orderRemainder > 0){
+        this.$message({
+          type: "error",
+          message: '请输入正确金额！'
+        });
+        return
+      }
       let params = this.checkoutParams
       params.order.payments = null
       this.CreateOrder( params )
     },
+    handleCreateOrderAndPaymentAsync:_.debounce(( vm) => {
+      let that = vm
+      that.disableCheckoutButton = true
+      let params = that.checkoutParams
+      console.log( "handleCreateOrderAndPayment", that.existedOrderId )
+      if( that.existedOrderId != null){
+        let payments = params.order.payments
+        that.CreatePayment( that.existedOrderId, payments )
+      }else{
+        that.CreateOrder( params )
+      }
+      that.disableCheckoutButton = false
+    }, 250),
+
     messageBox(string1, string2) {
       this.$alert(string1, string2, {
         confirmButtonText: "确定",
@@ -309,6 +336,9 @@ console.log( "handleCreateOrderAndPayment", this.existedOrderId )
           });
         }
       });
+    },
+    testPrint(){
+      PrintUtil.printReceipt()
     }
   },
 

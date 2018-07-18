@@ -18,7 +18,7 @@
     top: 18px;
     left: 18px;
     right: 18px;
-    bottom: 10px;
+    bottom: 18px;
     .tabs-height {
       height: 100%;
       .el-tabs__content {

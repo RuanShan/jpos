@@ -1,12 +1,10 @@
 import { ipcMain }  from  'electron'
 import { getPrinters, getDefaultPrinterName } from 'printer'
 
-import { EscPrint }  from  './esc_print'
-import { TsplPrint }  from  './tspl_print'
+import { printReceipt }  from  './receiptPrint'
+import { printLabel }  from  './labelPrint'
 
 export function bindIpcPrinter(){
-
-
 
   ipcMain.on('get-printers', function(event, arg) {
     //EscPrint()
@@ -28,18 +26,17 @@ export function bindIpcPrinter(){
     console.log("end get-printers", printers)
   });
 
-  ipcMain.on('print-esc', function(event, arg) {
+  ipcMain.on('print-receipt', function(event, arg) {
 
     console.log(arg);
-    EscPrint()
+    printReceipt()
     //TsplPrint()
     console.log("end print-esc")
   });
 
-  ipcMain.on('print-tspl', function(event, arg) {
-
+  ipcMain.on('print-label', function(event, arg) {
     console.log(arg);
-    TsplPrint()
+    printLabel(arg)
     console.log("end print-tspl")
   });
 

@@ -19,9 +19,7 @@
     right: 10px;
     top: 10px;
     .order-ok {
-      position: absolute;
-      top: 7px;
-      right: -214px;
+
     }
   }
   .line-two-row {
@@ -101,7 +99,9 @@
               <el-date-picker class="date-picker" v-model="selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="店铺">
+
+            <store-select v-model="formData.storeId" />
+            <el-form-item label="店铺" v-if="authorizeMultiStore()">
               <el-select v-model="selectedStoreId" @change="changeForState" size="mini">
                 <el-option v-for="item in storeOptions" :key="item.id" :value="item.id" :label="item.name">
                 </el-option>
@@ -123,7 +123,7 @@
         <section class="data_section">
           <header class="section_title"></header>
           <el-row :gutter="20" style="margin-bottom: 10px;">
-            <el-col :span="4">
+            <el-col :span="4" :offset="4">
               <div class="data_list today_head">
                 <span class="data_num head">当日数据：</span>
               </div>
@@ -142,7 +142,7 @@
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="4">
+            <el-col :span="4" :offset="4">
               <div class="data_list all_head">
                 <span class="data_num head">总数据：</span>
               </div>
@@ -173,6 +173,7 @@
 
 <script>
 import tendency from '@/components/statis/tendency.vue'
+import StoreSelect from '@/components/common/StoreSelect.vue'
 import moment from 'moment'
 
 import {
@@ -183,7 +184,8 @@ import {
 
 export default {
   components: {
-    "tendency": tendency
+    tendency,
+    StoreSelect
   },
   data() {
     return {

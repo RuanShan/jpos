@@ -31,8 +31,8 @@ import {
 } from '@/components/apiResultMixin'
 Vue.mixin( apiResultMixin )
 
-import { orderDataMixin, userDataMixin } from "@/components/mixin/commonDataMixin"
-Vue.mixin( orderDataMixin, userDataMixin )
+import { orderDataMixin } from "@/components/mixin/commonDataMixin"
+Vue.mixin( orderDataMixin )
 
 router.beforeEach(function (to, from, next) {
   console.log( "beforeEach is working", to)

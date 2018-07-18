@@ -41,15 +41,13 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import {setStore, getStore } from "@/config/mUtils"
 
 export default {
   data() {
     return {
       //*********** 过滤条件 ***************/
-      formData: {
-
-      },
 
       //*********** UI需要的变量 ***************/
       form: {
@@ -64,11 +62,17 @@ export default {
     };
   },
   mounted() {
-    this.form.storeId = parseInt( getStore('storeId') )
+    let storeId = _.toInteger( getStore('storeId') )
+    if(storeId > 0){
+      this.form.storeId = storeId      
+    }
   },
   computed: {
     computedStoreOptions(){
-      return this.stores
+      let options = this.stores.map((store)=>{
+        return {id: store.id, name: store.name}
+      })
+      return options
     }
   },
   methods: {

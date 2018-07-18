@@ -7,10 +7,10 @@
 
   .tab-list-wrap {
     position: absolute;
-    top: 55px;
+    top: 18px;
     left: 18px;
     right: 18px;
-    bottom: 100px;
+    bottom: 18px;
     .tabs-height {
       height: 100%;
       .el-tabs__content {
@@ -32,9 +32,7 @@
 
     <div class="setting-container page-content">
       <div>
-        <div class="title-wrap">
-          <div>设&nbsp;&nbsp;&nbsp;置</div>
-        </div>
+
       </div>
       <div class="tab-list-wrap">
         <el-tabs class="tabs-height" type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick">

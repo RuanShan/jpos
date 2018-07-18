@@ -37,7 +37,8 @@ export var apiResultMixin = {
         creatorName: orderResult.creator_name,
         shipmentState: orderResult.shipment_state,
         groupState: orderResult.group_state,
-        paymentState: orderResult.payment_state,
+        paymentState: orderResult.payment_state, // 支付状态 balance_due:欠款， paid:已经支付
+        paymentTotal: orderResult.payment_total, // 一共支付了多少
         createdAt: moment(orderResult.created_at),
         orderType: orderResult.order_type,
         lineItemGroups: [],
@@ -223,6 +224,7 @@ export var apiResultMixin = {
       user.id = userResult.id
       user.name = userResult.username
       user.apiKey = userResult.api_key
+      user.roleNames = userResult.spree_role_names
       //对于按条件搜索用户和打卡记录时， 打卡记录存在 searched_entries 中
       let entries =  userResult.searched_entries ? userResult.searched_entries: userResult.user_entries
       if( entries ){
