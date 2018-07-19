@@ -42,6 +42,7 @@ const routes = [{
         meta: { title: '统计' },
     }, {
         path: '/setting',
+        name: 'setting',        
         component: settingPage,
         meta: { title: '设置' },
     }, {

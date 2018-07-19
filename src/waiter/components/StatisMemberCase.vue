@@ -15,15 +15,9 @@
     .member-time-select {
         width: 230px;
     }
-    .member-clear {
-        position: absolute;
-        top: -4px;
-        right: 4px;
-    }
+
     .order-ok {
-        position: absolute;
-        top: 29px;
-        right: 4px;
+
     }
     .member-line-three-row {
         position: absolute;
@@ -73,8 +67,9 @@
         </el-select>
       </el-form-item>
 
-      <el-button class="member-clear" type="info" size="mini">清空</el-button>
-      <el-button class="order-ok" type="primary" size="mini">确定</el-button>
+      <el-form-item>
+        <el-button class="order-ok" type="primary" size="mini">确定</el-button>
+      </el-form-item>
     </fieldset>
   </el-form>
 

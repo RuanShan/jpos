@@ -25,7 +25,9 @@
 </template>
 
 <script>
+  import _ from 'lodash'
   import {login} from '@/api/getData'
+  import { getStore } from "@/config/mUtils"
 
   export default {
     data () {
@@ -70,10 +72,16 @@
                 message: '登录成功'
               })
               this.$store.commit("saveUser", this.buildUser( res))
-              // 取得所有店铺信息，保存在store中，
-              this.initializeApp()
-              // 缺省是收银界面
-              this.$router.push({ name: 'first' })
+              console.log( " current localstorage=", getStore('storeId'))
+              let storeId = _.toInteger( getStore('storeId') )
+              if( storeId > 0 ){
+                // 取得所有店铺信息，保存在store中，
+                this.initializeApp()
+                // 缺省是收银界面
+                this.$router.push({ name: 'first' })
+              }else{
+                this.$router.push({ name: 'setting' })
+              }
 
             } else {
               this.$message({

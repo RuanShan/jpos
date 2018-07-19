@@ -1,10 +1,10 @@
 import { getPrinters, printDirect } from 'printer'
 import fs from 'fs'
+import _ from 'lodash'
 
-export function TsplPrint ( ){
+export function printLabel ( ){
   // Select the adapter based on your printer type
-
-
+  // {title, code, memo}
   let path = __dirname + '/templates/39-5mm_30-0mm_barcode_data.tspl'
   console.log('path', path)
 
@@ -21,6 +21,8 @@ export function TsplPrint ( ){
      })
      //Append linebreak (\r) to all commands
      data = data + "\r" //Use double quotes to interpolate
+     var compiled = _.template( data );
+     compiled({ 'user': 'fred' });
 
      console.log("raw data", data, printer)
      if( printer ){
@@ -39,9 +41,5 @@ export function TsplPrint ( ){
     console.log(data);
    }
   })
-
-
-
-
 
 }

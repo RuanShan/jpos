@@ -73,6 +73,9 @@
       text-align: right;
     }
     .customer {
+      td, th{
+        width: 16.6666%
+      }
     }
   }
   table.bordered {
@@ -149,7 +152,6 @@
         </div>
         <div class="item-detail">
           <div class="order-detail-container" v-if="orderDetail">
-
             <div class="customer">
               <div class="head"> 客户信息</div>
               <div>
@@ -172,20 +174,18 @@
                   </tr>
                 </table>
               </div>
-
             </div>
 
             <div>
               <div class="head"> 订单信息 {{orderDetail.number}} </div>
-
               <div v-for="group in orderDetail.lineItemGroups" class="line-item-group">
                 <div class="head"> 物品 {{group.number}} {{group.state}} </div>
                 <table border="1" cellspacing="0" style="width: 100%">
                   <tr>
-                    <td>序号</td>
-                    <td>服务项目</td>
-                    <td>项目备注</td>
-                    <td>状态</td>
+                    <th>序号</th>
+                    <th>服务项目</th>
+                    <th>项目备注</th>
+                    <th>状态</th>
                   </tr>
                   <template v-for="(lineItem,index ) in group.lineItems">
                     <tr>
@@ -201,7 +201,7 @@
 
                 </div>
                 <div class="clear">
-                  <div v-show="group.images.length==0"> 没有图片 </div>
+                  <div v-show="group.images.length==0">  </div>
 
                   <el-upload
                     :file-list="group.uploadedImages"
@@ -278,8 +278,8 @@ export default {
         storeId: 0
       },
       multipleSelection: [],
-      imageUploadPath: null
-
+      imageUploadPath: null,
+      imageDialogVisible: false
     }
   },
   mixins: [DialogMixin, CelUIMixin],

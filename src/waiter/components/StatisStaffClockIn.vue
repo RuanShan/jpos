@@ -15,15 +15,9 @@
     .member-time-select {
         width: 230px;
     }
-    .member-clear {
-        position: absolute;
-        top: -4px;
-        right: 4px;
-    }
+
     .order-ok {
-        position: absolute;
-        top: 29px;
-        right: 4px;
+
     }
     .member-line-three-row {
         position: absolute;
@@ -73,8 +67,9 @@
         </el-select>
       </el-form-item>
 
-      <el-button class="member-clear" type="info" size="mini" @click="onReset">清空</el-button>
-      <el-button class="order-ok" type="primary" size="mini" @click="onSubmit">确定</el-button>
+      <el-form-item>
+        <el-button class="order-ok" type="primary" size="mini">确定</el-button>
+      </el-form-item>
     </fieldset>
   </el-form>
 
@@ -89,7 +84,7 @@
       </el-table-column>
       <el-table-column   label="打卡记录详细"  >
         <template slot-scope="scope">
-          <el-tag size="medium" v-for="entry in scope.row.userEntries">{{ entry.displayCreatedAt }} - {{ entry.storeName }} - {{ entry.displayState }}</el-tag>
+          <el-tag size="medium" v-for="entry in scope.row.userEntries" :key="entry.id">{{ entry.displayCreatedAt }} - {{ entry.storeName }} - {{ entry.displayState }}</el-tag>
          </template>
       </el-table-column>
 

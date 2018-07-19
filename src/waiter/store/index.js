@@ -10,7 +10,8 @@ const state = {
   userInfo: {
     storeId: 0,
     avatar: 'default.jpg',
-    apiKey: ''
+    apiKey: '',
+    spree_role_names: [] // 用户角色 waiter,worker,admin
   },
   storeInfo:{
   },
@@ -70,6 +71,7 @@ const actions = {
         user.avatar = userResult.avatar
         user.apiKey = userResult.api_key
         user.name = userResult.username
+        user.roleNames = userResult.spree_role_names
         store.commit('saveUser', user)
       } else {
         throw new Error(userResult)

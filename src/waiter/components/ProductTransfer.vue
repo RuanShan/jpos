@@ -48,6 +48,7 @@
     }
     .print {
         float: right;
+        margin: 10px;
     }
 
     .filters {
@@ -77,11 +78,16 @@
   <div class="cel-window">
     <el-dialog :visible="computedVisible" @open="handleDialogOpen"  :show-close="false"  :top="top" :modal="false">
       <div id="printable" class="print-only">
-        <el-table :data="printableData" style="width: 100%">
-          <el-table-column prop="number" label="Number" width="180"> </el-table-column>
-          <el-table-column prop="name" label="Name" width="180"> </el-table-column>
-          <el-table-column prop="created_at" label="created_at"> </el-table-column>
-        </el-table>
+        <h1> 物品交接单 </h1>
+        <table style="width:100%;">
+          <tr>
+            <th>序号 </th><th>物品编号 </th><th>订单创建时间 </th><th> 工作内容</th>
+          </tr>
+
+          <tr v-for="(data,i) in printableData">
+            <td>{{i+1}}</td><td>{{data.number}}</td><td>{{data.displayCreatedAt}}</td><td>{{data.name}}</td>
+          </tr>
+        </table>
       </div>
 
       <div slot="title" class="title-wrap">
@@ -105,7 +111,7 @@
           </div>
           <el-button type="primary" @click="handleSearch()">搜索</el-button>
 
-          <el-button class="print" type="primary" @click="handlePrint()">Print</el-button>
+          <el-button class="print" type="primary" @click="handlePrint()">打印</el-button>
         </div>
         <!-- filters end -->
 
@@ -128,9 +134,6 @@ import {
 }
 from '@/api/getData'
 
-import {
-  PrintUtil
-} from '@/components/mixin/print'
 import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
@@ -328,11 +331,7 @@ export default {
     },
     handlePrint() {
       //console.log("printableData", this.printableData)
-      console.log("getPrinters", PrintUtil.getPrinters())
-
-      //var printWin = window.open('','','left=0,top=0,width=1,height=1,toolbar=0,scrollbars=0,status  =0')
-      //printWin.focus()
-      //window.print()
+      window.print()
     }
 
   }
