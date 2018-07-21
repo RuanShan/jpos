@@ -78,6 +78,7 @@
     "moment": "^2.22.1",
     "node-notifier": "^5.2.1",
     "printer": "^0.2.2",
+    "quagga": "^0.12.1",
     "time-formater": "^1.0.1",
     "url-assembler": "^1.2.9",
     "usb-detection": "^2.1.0",
