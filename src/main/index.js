@@ -51,6 +51,18 @@ app.on('ready', function(){
   console.log('bindIpcPrinter')
   bindIpcPrinter()
 })
+
+
+app.on('certificate-error', function(event, webContents, url, error, certificate, callback) {
+  console.log( "certificate-error, url=", url )
+  if (url.indexOf( "https://jpos_api")>=0) {
+    // 验证逻辑。
+    event.preventDefault();
+    callback(true);
+  } else {
+    callback(false);
+  }
+});
 /**
  * Auto Updater
  *

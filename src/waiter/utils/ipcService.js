@@ -16,9 +16,9 @@ let printLabelFunction = function(  ){
   if (!process.env.IS_WEB){
     const ipcRenderer = require('electron').ipcRenderer
     return function(params){
-      const result = ipcRenderer.sendSync('print-label', {title: 'test print label'})
-      //console.log("sendSync jpos-get-printers", printers)
-      return result
+      ipcRenderer.send('print-label', params )
+      console.log("send print-label" )
+
     }
   }else{
     return function(){  console.warn("please run in electron, now is web."); return {}  }
@@ -30,9 +30,8 @@ let printReceiptFunction = function(  ){
   if (!process.env.IS_WEB){
     const ipcRenderer = require('electron').ipcRenderer
     return function(params){
-      const result = ipcRenderer.sendSync('print-receipt', {title: 'test print receipt'})
-      //console.log("sendSync jpos-get-printers", printers)
-      return result
+      ipcRenderer.send('print-receipt', params)
+      console.log("send print-receipt")
     }
   }else{
     return function(){  console.warn("please run in electron, now is web."); return {}  }
@@ -42,6 +41,6 @@ let printReceiptFunction = function(  ){
 
 export var PrintUtil = {
   getPrinters: getPrintersFunction(),
-  printLabel: printLabelFunction(),
-  printReceipt: printReceiptFunction(),
+  printLabel: printLabelFunction( ),
+  printReceipt: printReceiptFunction( ),
 }

@@ -19,7 +19,7 @@
 
 <template>
   <div class="setting-printer">
-    <el-form ref="form" :model="form" :inline="true">
+    <el-form ref="form" :model="form"  label-width="120px">
       <fieldset class="printer-section">
         <legend>文档打印机</legend>
         <el-form-item class="member-form-item" label="选择打印机">
@@ -37,6 +37,12 @@
                <span  >{{ item.name }}</span> <span v-if="item.isDefault" >(缺省)</span>
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item class="member-form-item" label="小票抬头文字">
+          <el-input v-model="form.receiptTitle" placeholder="" size="mini" ></el-input>
+        </el-form-item>
+        <el-form-item class="member-form-item" label="小票底部文字">
+          <el-input v-model="form.receiptFooter" placeholder="" size="mini" ></el-input>
         </el-form-item>
       </fieldset>
       <fieldset class="printer-section">
@@ -77,6 +83,8 @@ export default {
         receiptPrinter: "", //小票打印机
         docPrinter: "", //门店打印机
         labelPrinter: "", //工厂打印机
+        receiptTitle: "",
+        receiptFooter: ""
       },
       //*********** 逻辑需要的变量 ***************/
 
@@ -102,6 +110,8 @@ export default {
       this.form.docPrinter = this.storeInfo.docPrinter
       this.form.receiptPrinter = this.storeInfo.receiptPrinter
       this.form.labelPrinter = this.storeInfo.labelPrinter
+      this.form.receiptTitle = this.storeInfo.receiptTitle
+      this.form.receiptFooter = this.storeInfo.receiptFooter
     },
     //小票打印机
     changeForReceipt(){
@@ -120,15 +130,30 @@ export default {
       this.$refs['form'].resetFields();
     },
     buildParams(){
-      let params = { store: { doc_printer_name: this.form.docPrinter, receipt_printer_name: this.form.receiptPrinter, label_printer_name: this.form.labelPrinter } }
+      let params = { store: { doc_printer_name: this.form.docPrinter,
+        receipt_printer_name: this.form.receiptPrinter,
+        label_printer_name: this.form.labelPrinter,
+        receipt_title: this.form.receiptTitle,
+        receipt_footer: this.form.receiptFooter
+       } }
       return params
     },
     submit(){
       updateStore( this.storeId, this.buildParams()).then((res)=>{
-        this.$message({
-          type: 'success',
-          message: "恭喜你，配置提交成功"
-        });
+        if( res.id ){
+          let obj = res
+          let store = {id:obj.id, name:obj.name, docPrinter: obj.doc_printer_name,
+            receiptPrinter: obj.receipt_printer_name, labelPrinter: obj.label_printer_name,
+            receiptTitle: obj.receipt_title, receiptFooter: obj.receipt_footer
+           }
+          this.$store.commit('saveStore', store)
+
+          this.$message({
+            type: 'success',
+            message: "恭喜你，配置提交成功"
+          })
+
+        }
 
       })
     }

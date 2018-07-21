@@ -100,13 +100,7 @@
               </el-date-picker>
             </el-form-item>
 
-            <store-select v-model="formData.storeId" />
-            <el-form-item label="店铺" v-if="authorizeMultiStore()">
-              <el-select v-model="selectedStoreId" @change="changeForState" size="mini">
-                <el-option v-for="item in storeOptions" :key="item.id" :value="item.id" :label="item.name">
-                </el-option>
-              </el-select>
-            </el-form-item>
+            <store-select  v-bind:value.sync="formData.storeId" />           
             <el-form-item>
               <el-button type="primary" class="order-ok" size="mini" @click="onSubmit">确定</el-button>
             </el-form-item>

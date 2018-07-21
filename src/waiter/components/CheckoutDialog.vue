@@ -95,7 +95,7 @@
         </el-form-item>
         <el-form-item>
             <el-checkbox label="打印条码" v-model="formData.isPrintLabel"></el-checkbox>
-            <el-checkbox label="打印小票" v-model="formData.isPrintReciept"></el-checkbox>
+            <el-checkbox label="打印小票" v-model="formData.isPrintReceipt"></el-checkbox>
             <el-checkbox label="公众号电子小票" v-model="formData.enableMpMsg"></el-checkbox>
             <el-checkbox label="短信息" v-model="formData.enableSms"></el-checkbox>
         </el-form-item>
@@ -145,7 +145,7 @@ export default {
         selectPaymentMethodId: null,
         checkList:[],
         isPrintLabel: true,
-        isPrintReciept: false,
+        isPrintReceipt: false,
         enableSms: false,
         enableMpMsg: true,
       },
@@ -211,15 +211,22 @@ export default {
             amount: this.formData.prepaidCardAmount, payment_method_id: this.prepaidCardPaymentMethod.id } )
         }
       }
-console.log( "this.orderRemainder=",this.orderRemainder)
+      console.log( "this.orderRemainder=",this.orderRemainder)
+      console.log( "this.orderItemList=",this.orderItemList)
       let remain = this.formData.prepaidCardAmount - this.totalMoney
       //需要其他支付方式
       if( remain < 0 ){
         paymentsAttributes.push( { payment_method_id: this.selectPaymentMethodId, amount: this.orderRemainder } )
       }
-
+      //  index  cname  discount  groupPosition memo name  price productId quantity
+      //  unitPrice  variantId  variantName
       let order =  { user_id: this.customer.id,  payments: paymentsAttributes, enable_sms: this.formData.enableSms, enable_mp_msg: this.formData.enableMpMsg }
-      order.line_items = this.orderItemList.map((item)=>{ return { quantity: 1, variant_id: item.variantId, cname: item.cname, group_position: item.groupPosition, memo: item.memo}})
+      order.line_items = this.orderItemList.map((item)=>{
+        return { quantity: item.quantity, variant_id: item.variantId, cname: item.cname,
+          group_position: item.groupPosition, memo: item.memo,
+          sale_unit_price: item.unitPrice, discount_percent: item.discount, price: item.price,
+        }
+      })
 
       return { order: order }
     },
@@ -254,14 +261,20 @@ console.log( "this.orderRemainder=",this.orderRemainder)
     handleDialogClosed() {
       this.paymentList = [];
     },
-
     //创建订单
     CreateOrder( params ) {
+      console.log( " CreateOrder params=", params )
         checkout( params ).then((res)=>{
           if( res.id> 0){
-            console.log("checkout dialog res->",params, res)
+            let order = this.buildOrder( res )
+            console.log("checkout dialog res->",params, res, order)
             this.$emit('order-created-event', res )
             this.$emit('update:dialogVisible', false)
+            //if( this.formData.isPrintReceipt ){
+            order.displayCreatedAtDateTime = order.createdAt.format('YYYY年MM月DD日 HH时 mm分 ss秒') //'2018年07月11日 20时 35分 05秒'
+            let printParams = { receiptTitle: this.storeInfo.receiptTitle, receiptFooter: this.storeInfo.receiptFooter, storeName: this.storeInfo.name,  order: order }
+            PrintUtil.printReceipt( printParams )
+            //}
             this.$message({
               type: 'success',
               message: "恭喜你，订单提交成功"

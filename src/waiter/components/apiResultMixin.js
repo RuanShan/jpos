@@ -47,7 +47,7 @@ export var apiResultMixin = {
       }
       order.payments = this.buildPayments( orderResult.payments )
       order.displayCreatedAt = this.getDisplayDateTime(order.createdAt)
-
+      order.displayPaymentState = this.getDisplayPaymentState( order.paymentState )
       orderResult.line_item_groups.forEach((groupResult, i) => {
         let group = {
           id: groupResult.id,
@@ -74,6 +74,7 @@ export var apiResultMixin = {
               id: lineItemResult.id,
               orderId: lineItemResult.order_id,
               group: group,
+              order: order,
               groupNumber: lineItemResult.group_number,
               cname: lineItemResult.cname,
               price: lineItemResult.price,
@@ -196,6 +197,7 @@ export var apiResultMixin = {
       item.line_items.forEach(function(lineItemResult) {
         const lineItem = {
           id: lineItemResult.id,
+          orderId: lineItemResult.order_id,
           group: group,
           groupNumber: lineItemResult.group_number,
           worker_id: lineItemResult.worker_id,
@@ -318,6 +320,7 @@ export var apiResultMixin = {
       user.memo = userResult.memo
       user.normalOrderTotal = parseInt(userResult.normal_order_total)
       user.normalOrderCount = userResult.normal_order_count
+      user.number = userResult.number
       user.cards = []
       if( user.birth ){
         user.birth = moment( user.birth )
@@ -462,6 +465,7 @@ console.log( "buildCustomerStatis=", result, statis)
           amount: parseInt( model.amount ),
           paymentMethodId: model.payment_method_id,
           createdAt: moment(model.created_at),
+          cname: model.cname
         }
         return payment
       })
@@ -524,6 +528,10 @@ console.log( "buildCustomerStatis=", result, statis)
     getUserEntryDisplayState(state) {
       return state == "clockin" ? "登入" : "登出" //prepaid 充值卡， counts 次卡
     },
+    getDisplayPaymentState(state){
+      //支付状态 balance_due:欠款， paid:已经支付
+      return state == "balance_due" ? "未付" : "已付"
+    },
     getDisplayTime( datetime){ // datetime is instance moment
       return datetime.format('HH:mm')
     },
@@ -537,5 +545,6 @@ console.log( "buildCustomerStatis=", result, statis)
       let today = moment()
       return today.format('YYYY-MM-DD')
     }
+
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "jpos",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "qinghe <david@getstore.cn>",
   "description": "An electron-vue project",
   "license": null,
@@ -85,6 +85,7 @@
     "vue-auto-focus": "^1.0.0",
     "vue-axios": "^2.0.2",
     "vue-electron": "^1.0.6",
+    "vue-lodash": "^2.0.0",
     "vue-quill-editor": "^3.0.5",
     "vue-router": "^3.0.1",
     "vue-select": "^2.4.0",

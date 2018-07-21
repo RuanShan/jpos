@@ -51,6 +51,9 @@
     }
     .line-item-group {
       border: 1px solid #ebeef5;
+      .vue-xeditable-empty{
+        font-style: normal;
+      }
     }
     table tr {
       vertical-align: top;
@@ -179,19 +182,21 @@
             <div>
               <div class="head"> 订单信息 {{orderDetail.number}} </div>
               <div v-for="group in orderDetail.lineItemGroups" class="line-item-group">
-                <div class="head"> 物品 {{group.number}} {{group.state}} </div>
+                <div class="head"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
                 <table border="1" cellspacing="0" style="width: 100%">
                   <tr>
-                    <th>序号</th>
+                    <th style="width:8em">序号</th>
                     <th>服务项目</th>
-                    <th>项目备注</th>
-                    <th>状态</th>
+                    <th>项目备注<i class="el-icon-edit"></i></th>
+                    <th style="width:8em">状态</th>
                   </tr>
                   <template v-for="(lineItem,index ) in group.lineItems">
                     <tr>
                       <td>{{ index+1 }}</td>
                       <td>{{ lineItem.cname }}</td>
-                      <td>{{ lineItem.memo }}</td>
+                      <td>
+                        <vue-xeditable  :name="'memo_'+lineItem.id+'_xeditable'" v-model="lineItem.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
+                      </td>
                       <td>{{ lineItem.state }}</td>
                     </tr>
                   </template>
@@ -221,7 +226,6 @@
           </div>
           <div class="actions">
             <el-button @click="cancelOrder()">取消订单</el-button>
-            <el-button @click="ChangeCurrentItemState(false)">编辑</el-button>
             <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
             <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button>
           </div>
@@ -245,7 +249,8 @@ import {
   evolveLineItemGroups,
   cancelOrder,
   deleteGroupImage,
-  getLineItemGroupImageUploadPath
+  getLineItemGroupImageUploadPath,
+  updateLineItem
 }
 from '@/api/getData'
 
@@ -431,7 +436,23 @@ export default {
     handlePictureCardPreview(file) {
       //this.dialogImageUrl = file.originalUrl;
       //this.imageDialogVisible = true;
-    }
+    },
+    handleXeditableChanged(newValue, xeditableName) {
+      console.log("newValue=" + newValue + " xeditableName=" + xeditableName)
+      //示例：groupnumber_1_xeditable
+      let [column, id] = xeditableName.split('_')
+      id = parseInt(id)
+      let lineItem = this.orderDetail.lineItems.find((item)=>{ return item.id== id })
+      let newAttribute = { [column]: newValue }
+      let params = { order_number: lineItem.order.number, line_item: newAttribute }
+      updateLineItem(lineItem.id, params).then((res)=>{
+        if( res.id ){
+          Object.assign( lineItem, newAttribute)
+        }
+      })
+      console.log(" old=", lineItem, "new=", newAttribute)
+      //this.orderItemList.splice(index, 1, newLineItem)
+    },
   }
 }
 </script>
