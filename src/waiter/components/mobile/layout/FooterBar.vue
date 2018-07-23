@@ -53,7 +53,7 @@
             this.img3 = require('@assets/mobile/image/tool/tool.png')
           }
           if (this.selected === "orders") {
-            this.$router.push('/waiter/orders');
+            this.$router.push('/orders');
             this.img3 = require('@assets/mobile/image/tool/tool_selected.png')
           } else {
             this.img3 = require('@assets/mobile/image/tool/tool.png')
