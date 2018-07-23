@@ -193,6 +193,7 @@ export default {
   },
   computed: {
     customerId: function(){
+      console.log(" this.customerComboId=", this.customerComboId)
       return ( this.customerComboId ? this.customerComboId.split('_')[0] : null )
     },
     cardId: function(){

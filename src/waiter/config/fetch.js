@@ -44,6 +44,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       let responseJson = null
       // session expired
       if( response.status ==401 &&  response.ret== 'expired'){
+        console.log("api expired, trigger store.resetUser")
         store.commit('resetUser')
       }
       if( type=='DELETE' &&  response.status == 204 ){

@@ -60,6 +60,11 @@
         }
       }))
     },
+    computed:{
+      localStoreId(){
+         return  _.toInteger( getStore('storeId') )
+      }
+    },
     methods: {
 
       async submitForm (formName) {
@@ -73,13 +78,17 @@
               })
               this.$store.commit("saveUser", this.buildUser( res))
               console.log( " current localstorage=", getStore('storeId'))
-              let storeId = _.toInteger( getStore('storeId') )
+              let storeId = this.localStoreId
               if( storeId > 0 ){
                 // 取得所有店铺信息，保存在store中，
-                this.initializeApp()
+                await this.initializeApp()
                 // 缺省是收银界面
                 this.$router.push({ name: 'first' })
               }else{
+                this.$message({
+                  type: 'warning',
+                  message: '请先设置店铺'
+                })
                 this.$router.push({ name: 'setting' })
               }
 
@@ -102,7 +111,10 @@
       initializeApp(){
         console.log( "..initializeApp..")
         //初始化 localstorage storeId
-        this.getStores()
+        this.getStores().then((stores)=>{
+          let currentStore = stores.find((item)=>{ return item.id == this.localStoreId })
+          this.$store.commit('saveStore', currentStore)
+        })
       }
     },
     watch: {

@@ -35,11 +35,11 @@ import { orderDataMixin } from "@/components/mixin/commonDataMixin"
 Vue.mixin( orderDataMixin )
 
 router.beforeEach(function (to, from, next) {
-  console.log( "beforeEach is working", to)
   // 保存路径信息
   store.commit('saveTitle', to.meta.title)
   //处理用户F5刷新时
-    const user = store.state.userInfo;
+  const user = store.state.userInfo;
+  console.log( "beforeEach is working", to, user)
     if ( to.name !== "login") {
         //未登录
         if (!user.id) {

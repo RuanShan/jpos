@@ -469,6 +469,13 @@ export const fulfillLineItems = data => fetch('/api/v1/line_items/fulfill', data
 export const completeLineItemGroups = data => fetch('/api/v1/line_item_groups/all_complete', data, 'PUT' )
 
 /**
+ * 修改 line_item
+ *   data - { order_number, line_item:{}}
+ *   id - line_item.id
+ */
+export const updateLineItem = ( id, data )=> fetch('/api/v1/line_items/'+id+'/update_extra', data, 'PUT')
+
+/**
  * 删除物品图片
  */
 export const deleteGroupImage = (groupId, groupImageId) => fetch('/api/v1/line_item_groups/' + groupId+'/images/'+groupImageId, {}, 'DELETE');

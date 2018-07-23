@@ -198,7 +198,12 @@
 
           <div class="step step1">
             <div class="head">
-              <span> 门店 </span>
+
+              <el-select  v-model="formData.storeId" size="mini" @change="handleStoreChanged" v-if="authorizeMultiStore">
+                <el-option v-for="item in storeOptions" :key="item.value" :label="item.name" :value="item.id">
+                </el-option>
+              </el-select>
+              <span v-else> 门店 </span>
             </div>
             <div class="pending part-top">
               <div class="title">

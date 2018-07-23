@@ -9758,6 +9758,12 @@ vue-loader@^13.0.5:
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.6.0"
 
+vue-lodash@^2.0.0:
+  version "2.0.0"
+  resolved "http://registry.npm.taobao.org/vue-lodash/download/vue-lodash-2.0.0.tgz#07ea4897537a02fe03adefbca476c96e70e8515c"
+  dependencies:
+    lodash "^4.17.5"
+
 vue-quill-editor@^3.0.5:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/vue-quill-editor/-/vue-quill-editor-3.0.5.tgz#100e850bc774a0a9b15c8eddd8620c856bb7724d"

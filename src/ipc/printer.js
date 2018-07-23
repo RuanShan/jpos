@@ -27,10 +27,8 @@ export function bindIpcPrinter(){
   });
 
   ipcMain.on('print-receipt', function(event, arg) {
-
     console.log(arg);
-    printReceipt()
-    //TsplPrint()
+    printReceipt(arg)
     console.log("end print-esc")
   });
 
