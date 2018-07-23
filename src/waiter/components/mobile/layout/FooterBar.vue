@@ -5,7 +5,7 @@
 <template>
   <div id="tab-bar" class="footer">
     <mt-tabbar v-model="selected" v-show="isShow" fixed class="border-1px-top">
-      <mt-tab-item id="main">
+      <mt-tab-item id="home">
         <img :src="img1" slot="icon">首页
       </mt-tab-item>
       <mt-tab-item id="tool">
@@ -40,8 +40,8 @@
     watch: {
       'selected': {
         handler(){
-          if (this.selected === "main") {
-            this.$router.push('/main');
+          if (this.selected === "home") {
+            this.$router.push('/');
             this.img1 = require("@assets/mobile/image/tool/home_selected.png")
           } else {
             this.img1 = require("@assets/mobile/image/tool/home.png")
