@@ -76,6 +76,8 @@ $header-height: 50px; //头部高度值
 <script>
 import Scan from '@/components/mobile/common/Scan.vue'
 import MemberOrderInfo from '@/components/mobile/common/MemberOrderInfo.vue'
+import {getOrder} from "@/api/getData.js"
+// import { apiResultMixin } from '@/components/apiResultMixin'
 import axios from 'axios';
 
 export default {
@@ -98,7 +100,8 @@ export default {
       codeNum: "", //子组件传来的条码数
       cameraIsOpen: false, //相机开关
       returnServerData: "",   //返回的服务器数据
-      axiosFlag: null,   //axios 返回标志位
+      axiosFlag: null,    //axios 返回标志位
+      orderData:"",       //得到订单接口数据
     }
   },
   methods: {
@@ -117,7 +120,26 @@ export default {
     },
     //搜索按钮点击事件-----
     seach() {
-      this.showScanVue = false;
+      // this.showScanVue = false;
+      if (this.inputNum === '') {
+        this.$alert('请输入订单号', '提示', {
+          confirmButtonText: '确定',
+        });
+      }else{
+        console.log("开始搜索订单了,id=",this.inputNum);
+        this.getOrderByNumber(this.inputNum).then(()=>{
+          console.log(this.returnServerData);
+          this.tableIsVisible = true;
+          return this.returnServerData;
+        });
+      }
+    },
+    //异步处理请求服务器函数---根据订单号码得到订单详情
+    async getOrderByNumber(number) {
+      let returnData = await getOrder(number);
+      // console.log(returnData);
+      this.returnServerData = this.buildOrder(returnData);
+      console.log(this.returnServerData);
     },
     //得到子组件传来的条码数后得处理函数-----
     barCodeNum(code) {
