@@ -11,7 +11,6 @@ const ordersPage = r => require.ensure([], () => r(require('@/mobile/orderList')
 const membersPage = r => require.ensure([], () => r(require('@/mobile/members')), 'members')
 const statisticsPage = r => require.ensure([], () => r(require('@/mobile/statistics')), 'statistics')
 const settingPage = r => require.ensure([], () => r(require('@/mobile/setting')), 'setting')
-const testPage = r => require.ensure([], () => r(require('@/mobile/functionalTest')), 'orders')
 
 
 const routes = [{
@@ -25,38 +24,30 @@ const routes = [{
         component: loginPage
     },
     {
-        path: '/waiter',
-        component: homePage,
-        children: [{
-            name: 'waiter',
-            path: '',
-            component: posPage,
-            meta: []
-        }, {
-              path: 'orders',
-              component: ordersPage,
-              meta: [],
-        }, {
-            path: 'itemGroups',
-            component: itemGroupsPage,
-            meta: [],
-        }, {
-            path: 'members',
-            component: membersPage,
-            meta: [],
-        }, {
-            path: 'statistics',
-            component: statisticsPage,
-            meta: [],
-        }, {
-            path: 'setting',
-            component: settingPage,
-            meta: [],
-        }, {
-            path: 'testGroups',
-            component: testPage,
-            meta: [],
-        }]
+        name: 'pos',
+        path: '/pos',
+        component: posPage,
+        meta: []
+    }, {
+          path: '/orders',
+          component: ordersPage,
+          meta: [],
+    }, {
+        path: '/itemGroups',
+        component: itemGroupsPage,
+        meta: [],
+    }, {
+        path: '/members',
+        component: membersPage,
+        meta: [],
+    }, {
+        path: '/statistics',
+        component: statisticsPage,
+        meta: [],
+    }, {
+        path: '/setting',
+        component: settingPage,
+        meta: [],
     }
 ]
 

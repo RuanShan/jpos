@@ -1,23 +1,22 @@
-<style lang="scss" scoped>
+<style lang="scss">
   /* banner */
   @import '~@assets/mobile/css/mixin.scss';
 </style>
 
 <template>
-  <div class="wrapper">
-    <keep-alive>
-        <router-view></router-view>
-    </keep-alive>
-    <footer-bar class="footer"></footer-bar>
+  <div class="home-container">
 
+    <head-top ></head-top>
+    <footer-bar ></footer-bar>
+
+    this is home page
   </div>
 </template>
 
 <script>
-import FooterBar from '@/components/mobile/footer/FooterBar';
+import FooterBar from '@/components/mobile/layout/FooterBar';
+import HeadTop from '@/components/mobile/layout/HeadTop';
 
-import leftNav from "@/components/layout/LeftNav.vue"
-import headTop from "@/components/layout/headTop.vue";
 import { shopDetails } from "@/api/getData";
 
 export default {
@@ -28,23 +27,10 @@ export default {
     }
   },
   components: {
-    leftNav,
-    headTop,
+    'head-top': HeadTop,
     'footer-bar': FooterBar
   },
-  created() {
-    this.getCurrentUser()
-  },
   methods: {
-    getCurrentUser() {
-console.log( "home.created.getCurrentUser")
-      if (this.userInfo.id) {
-        this.$bus.$emit('UserInitializedEvent')
-        this.$router.push("/waiter");
-      } else {
-        this.$router.push("/login");
-      }
-    },
     async initData() {
       //获取商铺信息
       this.shopDetailData = await shopDetails(

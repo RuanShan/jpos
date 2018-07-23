@@ -3,7 +3,7 @@
       <transition name="form-fade" mode="in-out">
         <section class="form_contianer" v-show="showLogin">
           <div class="manage_tip">
-            <p>JMPOS系统</p>
+            <p>JPOS系统移动端</p>
           </div>
           <el-form :model="loginForm" :rules="rules" ref="loginForm">
           <el-form-item prop="username">
@@ -17,8 +17,8 @@
             </el-form-item>
         </el-form>
         <p class="tip">温馨提示：</p>
-        <p class="tip">未登录过的新用户，自动注册</p>
-        <p class="tip">注册过的用户可凭账号密码登录</p>
+        <p class="tip">请先在电脑端打卡，再登录当前订单系统</p>
+
         </section>
       </transition>
     </div>
@@ -54,7 +54,7 @@
             type: 'success',
             message: '检测到您之前登录过，将自动登录'
           })
-          this.$router.push('waiter')
+          this.$router.push( {name: 'home'} )
         }
       }))
     },
@@ -72,7 +72,7 @@
               this.$store.commit("saveUser", this.buildUser( res))
               // 取得所有店铺信息，保存在store中，
               this.initializeApp()
-              this.$router.push('waiter')
+              this.$router.push( {name: 'home'} )
 
             } else {
               this.$message({

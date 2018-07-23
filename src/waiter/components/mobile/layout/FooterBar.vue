@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div id="tab-bar">
+  <div id="tab-bar" class="footer">
     <mt-tabbar v-model="selected" v-show="isShow" fixed class="border-1px-top">
       <mt-tab-item id="main">
         <img :src="img1" slot="icon">首页
