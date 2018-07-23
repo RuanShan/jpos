@@ -1,4 +1,4 @@
-<style lang="scss" scoped>
+<style lang="scss" >
 
 .orders-container {
     .filters {
@@ -113,6 +113,7 @@
             </el-pagination>
         </div>
     </div>
+    <footer-bar class="footer"></footer-bar>
 
 </div>
 
@@ -120,8 +121,8 @@
 
 <script>
 
-import leftNav from '@/components/layout/LeftNav.vue'
-import headTop from '@/components/layout/headTop'
+import FooterBar from '@/components/mobile/layout/FooterBar';
+
 import {
     findOrders, evolvePosOrders, getStore, getUserInfo, getAddressById
 }
@@ -152,8 +153,7 @@ export default {
             }
         },
     components: {
-        headTop,
-        leftNav
+        'footer-bar': FooterBar
     },
     mixins: [userDataMixin],
     beforeRouteEnter(to, from, next) {
