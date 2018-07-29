@@ -9,7 +9,7 @@ const posPage = r => require.ensure([], () => r(require('@/mobile/pos')), 'pos')
 const itemGroupsPage = r => require.ensure([], () => r(require('@/mobile/itemFlow')), 'itemGroups')
 const ordersPage = r => require.ensure([], () => r(require('@/mobile/orders')), 'orders')
 const membersPage = r => require.ensure([], () => r(require('@/mobile/members')), 'members')
-const statisticsPage = r => require.ensure([], () => r(require('@/mobile/statistics')), 'statistics')
+const profilePage = r => require.ensure([], () => r(require('@/mobile/profile')), 'profile')
 const settingPage = r => require.ensure([], () => r(require('@/mobile/setting')), 'setting')
 
 
@@ -41,8 +41,8 @@ const routes = [{
         component: membersPage,
         meta: [],
     }, {
-        path: '/statistics',
-        component: statisticsPage,
+        path: '/profile',
+        component: profilePage,
         meta: [],
     }, {
         path: '/setting',

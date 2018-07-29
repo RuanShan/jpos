@@ -55,7 +55,9 @@ $header-height: 50px; //头部高度值
         <!-- <router-link to="/" slot="left">
           <mt-button icon="back"></mt-button>
         </router-link> -->
-        <mt-button icon="more" slot="right"></mt-button>
+        <router-link to="/profile" slot="right">
+          <mt-button icon="more" ></mt-button>
+        </router-link>
       </mt-header>
     </div>
 
@@ -167,7 +169,7 @@ export default {
       this.showScanVue = false;   //关闭相机界面
       this.codeNum = code;        //得到条码数字
       console.log("条码数组是  => ",code);
-      
+
       // this.inputNum = code;
       try {
         this.axiosData().then(() => {
@@ -213,4 +215,3 @@ export default {
     }
   }
 </script>
-

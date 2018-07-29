@@ -181,6 +181,26 @@
 
             <div>
               <div class="head"> 订单信息 {{orderDetail.number}} </div>
+              <div>
+                <div class=""> 支付信息 </div>
+                <div>
+                  <table border="1" cellspacing="0" style="width: 100%">
+                    <tr >
+                      <th>支付方式</th>
+                      <th>支付金额</th>
+                      <th style="width:8em">状态</th>
+                      <th style="width:8em">支付时间</th>
+                    </tr>
+                    <tr v-for="(payment,index ) in orderDetail.payments">
+                      <td>{{payment.cname}}</td>
+                      <td>{{payment.amount}}</td>
+                      <td style="width:8em">{{payment.state}}</td>
+                      <td style="width:8em">{{payment.displayCreatedAt}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
               <div v-for="group in orderDetail.lineItemGroups" class="line-item-group">
                 <div class="head"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
                 <table border="1" cellspacing="0" style="width: 100%">

@@ -64,6 +64,12 @@ new Vue({
   components: {
     App
   },
+  created(){
+    this.$bus.$on('session-expired-gevent', () => {
+      console.log('on session-expired-gevent')
+      this.$store.commit('resetUser')
+    })
+  },
   watch: {
     // 导致错误，无法监控userInfo状态
     userInfo: function(newValue) {

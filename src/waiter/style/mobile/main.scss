@@ -1,0 +1,278 @@
+  @import 'vars.scss';
+  @import 'mixin.scss';
+  @import 'animate.scss';
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-touch-callout: none;
+    text-size-adjust: none;
+  }
+
+  html {
+    width: 100%;
+    height: 100%;
+    font-size: 10px;
+    -webkit-text-size-adjust: none;
+    font-family: 'Helvetica Neue', Tahoma, Arial, PingFangSC-Regular, 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+  }
+
+  body {
+    // font-family: cursive;
+    @include box(100%);
+    user-select: none;
+    color: $normal-color;
+    background-color: $primary-bg-color;
+    position: fixed;
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-user-drag: none;
+    -ms-content-zooming: none;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    word-wrap: break-word;
+    -webkit-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    text-size-adjust: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .primary_bg_gray {
+    background-color: $primary-bg-color;
+  }
+
+  * {
+    outline-style: none;
+  }
+
+  input {
+    appearance: none;
+  }
+
+  .noFixed {
+    opacity: 0;
+    height: 0px;
+  }
+
+  .transition_3 {
+    transition: all .35s linear;
+  }
+
+  .primary_bg {
+    background: -webkit-gradient(linear, left top, right top, from(rgb(0, 170, 255)), to(rgb(0, 133, 255)));
+    border: none;
+  }
+
+  .primary_border {
+    border: 1px solid $primary-color;
+    border-radius: 2px;
+  }
+
+  .primary-header {
+    background: -webkit-gradient(linear, left top, right top, from(rgb(0, 170, 255)), to(rgb(0, 133, 255)));
+  }
+
+  .primary_flex_center {
+    align-items: center;
+    display: flex;
+    -webkit-box-pack: justify;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    .col {
+      flex: 0 0 25%;
+    }
+    .col_1 {
+      flex: 1;
+    }
+  }
+
+  .primary_mg {
+    padding: .5rem 1rem;
+  }
+
+  .primary_mg_ver {
+    padding: .5rem 0rem;
+  }
+
+  .primary_mg_ver {
+    padding: .5rem 0rem;
+  }
+
+  .primary_mg_hor {
+    padding: 0rem 1rem;
+  }
+
+  .shopList {
+    margin-top: 1rem;
+    .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+  }
+
+  .primary_bg_white {
+    background: white;
+  } // *:hover {
+  //   transition: all linear 1s;
+  //   transform: rotateZ(360deg) scale(2);
+  // }
+  h2 {
+    margin: 0px;
+    font-size: 1.4rem;
+  } //字体大小 从8到18
+  .fn-c {
+    color: $normal-color-light;
+  }
+
+  .has-footer {
+    margin-bottom: 4.5rem; // padding-bottom: 6rem;
+    padding-bottom: 1rem; // bottom: 4.5rem!important;
+  }
+
+  .has-header {
+    margin-top: 39px; // padding-bottom: 6rem;
+  }
+
+  .transition_3 {
+    transition: all ease .3s
+  }
+
+  .footer_line {
+    min-height: 50px;
+    line-height: 50px;
+    text-align: center;
+    &::before {
+      content: '-----------------'
+    }
+    &::after {
+      content: '-----------------'
+    }
+  }
+
+  .scroll_content {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
+  }
+
+  .add_content {
+    display: flex;
+    justify-content: space-between; // min-width: 70px;
+    span {
+      margin-left: 8px;
+    }
+    .add_button {
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      padding: 0px;
+      margin: 0px;
+      line-height: 15px;
+      font-size: $fn-hg; // color: $white-color;
+    }
+  }
+
+  .mint-header .is-left {
+    .mint-button {
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  .opacity-header {
+    background-color: rgba(0, 0, 0, 0)
+  }
+
+  ; //------------------------函数生产区域
+  @for $i from 8 through 25 {
+    .fn-#{$i} {
+      font-size: .1rem * $i;
+      font-weight: 100*($i - 9)
+    }
+  }
+
+  @for $i from 1 through 8 {
+    .fw-#{$i} {
+      font-weight: 100*$i
+    }
+  }
+
+  @for $i from 8 through 20 {
+    .icon-#{$i} {
+      width: $i*.1rem;
+    }
+  }
+
+  @each $name,
+  $value in $bgcolorList {
+    #{$name} {
+      @include font-block($value);
+    }
+  }
+
+  @for $i from 1 through 5 {
+    h#{$i} {
+      margin: 0px;
+    }
+  } //-----------------------------设置字体颜色区域---------------------
+  .fn-c-memo-light {
+    color: $memo-color-light;
+  } //
+  .platfrom-ios {
+    .has-header {
+      margin-top: 59px; // padding-bottom: 6rem;
+    }
+    .mint-header {
+      z-index: 20140920;
+      padding-top: 20px;
+      height: 60px;
+    }
+    .platfrom-header {
+      padding-top: 20px!important
+    }
+    .float-header {
+      padding-top: 20px!important
+    }
+  }
+
+  .pay_footer {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    background: $white-color;
+    box-sizing: border-box;
+    font-size: $fn-lg;
+    align-items: center;
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, .5);
+    line-height: 50px;
+		font-weight: 500;
+		z-index: 20000;
+    .left {
+      height: 100%;
+      flex: 1;
+      padding-left: $pd-md;
+      color: $white-color;
+      background: rgba(0, 0, 0, .7)
+    }
+    .right {
+      flex: 0 0 80px;
+      height: 100%;
+      text-align: center;
+      background: $primary-green;
+      color: $white-color;
+    }
+  }

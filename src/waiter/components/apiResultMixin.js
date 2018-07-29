@@ -82,7 +82,8 @@ export var apiResultMixin = {
               saleUnitPrice: lineItemResult.sale_unit_price,
               discountPercent: lineItemResult.discount_percent,
               cardId: lineItemResult.card_id,
-              memo: lineItemResult.memo
+              memo: lineItemResult.memo,
+              state: lineItemResult.state
             }
             groupedlineItems.push(lineItem)
           }
@@ -118,6 +119,7 @@ export var apiResultMixin = {
             cname: lineItemResult.cname,
             price: lineItemResult.price,
             cardId: lineItemResult.card_id,
+            state: lineItemResult.state,
             memo: lineItemResult.memo
           }
           order.extraLineItems.push(lineItem)
@@ -465,8 +467,11 @@ console.log( "buildCustomerStatis=", result, statis)
           amount: parseInt( model.amount ),
           paymentMethodId: model.payment_method_id,
           createdAt: moment(model.created_at),
-          cname: model.cname
+          cname: model.cname,
+          state: model.state
         }
+        payment.displayCreatedAt = payment.createdAt.format('MM-DD HH:mm')
+
         return payment
       })
       return payments

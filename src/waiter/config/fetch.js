@@ -1,5 +1,5 @@
 import { baseUrl } from './env'
-import store from '@/store'
+import { EventBus } from '@/components/EventBus'
 
 var Promise = require('es6-promise').Promise;
 
@@ -43,9 +43,13 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       const response = await fetch(url, requestConfig)
       let responseJson = null
       // session expired
+      if( response.status ==401 )
+      {
+        console.log( "response.ret=", response.ret)
+      }
       if( response.status ==401 &&  response.ret== 'expired'){
         console.log("api expired, trigger store.resetUser")
-        store.commit('resetUser')
+        EventBus.emit('session-expired-gevent')
       }
       if( type=='DELETE' &&  response.status == 204 ){
         //删除成功时，没有返回内容

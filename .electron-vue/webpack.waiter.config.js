@@ -45,7 +45,10 @@ let rendererConfig = {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: 'css-loader'
+          use: [
+            'css-loader',
+            'postcss-loader'
+          ]
         })
       },
       {
@@ -53,7 +56,8 @@ let rendererConfig = {
         use: [
           "style-loader", // creates style nodes from JS strings
           "css-loader", // translates CSS into CommonJS
-          "sass-loader" // compiles Sass to CSS
+          "sass-loader", // compiles Sass to CSS
+
         ]
       },
       {
