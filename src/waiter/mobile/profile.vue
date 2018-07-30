@@ -111,7 +111,7 @@
   				</div>
   				<br/>
   				<section class="content-list">
-  					<mt-cell is-link :title="item.title" v-for="item in list" :key="item.text">
+  					<mt-cell is-link :title="item.title" v-for="item in list" :key="item.title">
   						<span>{{item.text}}</span>
   						<img slot="icon" :src="item.img" width="20" height="20">
   					</mt-cell>
@@ -121,9 +121,9 @@
 
 
   			<section class="content-list">
-  				<mt-cell is-link  title="退出" >
-  					<img slot="icon" src="static/mobile/img/mine/shopping.png" width="20" height="20">
-  				</mt-cell>
+
+						<mt-button type="danger" @click="signout">退出</mt-button>
+
   			</section>
   			<br/>
 
@@ -132,6 +132,8 @@
 </template>
 
 <script type="text/babel">
+  import {signout} from '@/api/getData'
+
 	export default {
 		name: "MineCom",
 		data() {
@@ -172,18 +174,28 @@
 						text: "每月最高500m",
 						img: "static/mobile/img/mine/phone.png"
 					}
-				],
-				list_quit: [{
-						title: "服务中心",
-						text: "",
-						img: "static/mobile/img/mine/hua.png"
-					}
 				]
+
 			};
 		},
 		methods: {
 			hide() {
 				this.$store.commit("SHOW_FOOTER", !this.$store.state.common.hasFooter);
+			},
+			async signout(){
+				const res = await signout()
+				if (res.id == null) {
+					this.$message({
+						type: 'success',
+						message: '退出成功'
+					})
+					this.$store.commit("resetUser")
+				} else {
+					this.$message({
+						type: 'error',
+						message: res.message
+					})
+				}
 			}
 		}
 	};

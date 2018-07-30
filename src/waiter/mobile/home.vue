@@ -62,21 +62,7 @@ $header-height: 50px; //头部高度值
     </div>
 
     <div class="main-content">
-      <ul class="seach-tools">
-        <li class="seach-and-button">
-          <mt-field class="input-num" placeholder="订单号/会员号/手机号" v-model="inputNum"></mt-field>
-          <mt-button class="seach-button" type="primary" @click="seach">搜索</mt-button>
-          <!-- <mt-button type="danger" @click="test">test</mt-button> -->
-        </li>
-        <li>
-          <img :src="scanIcon" width="44px" class="location-icon" @click="openCamera" />
-        </li>
-      </ul>
-      <mt-popup class="popup" v-model="popupVisible" popup-transition="popup-fade" position="top">获得网络数据失败,请重试.</mt-popup>
-      <!-- 会员基本信息 -->
-      <member-order-info v-if="tableIsVisible" :returnServerData="returnServerData" :codeNum="codeNum" @succeed="succeed($event)"></member-order-info>
-      <!-- Scan子组件 -->
-      <scan v-if="showScanVue" :cameraIsOpen="cameraIsOpen" @closeCamera="closeCamera($event)" @barCodeNum="barCodeNum($event)"></scan>
+      this is home page
     </div>
 
     <div>

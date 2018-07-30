@@ -26,7 +26,7 @@
         </el-form-item>
         <el-form-item>
           <div class="login">
-            <mt-button type="primary" size="large" @click="submitForm('loginForm')">Login</mt-button>
+            <button type="primary"  @click="submitForm('loginForm')" class="mint-button mint-button--large mint-button--primary">登录</button>
           </div>
 
         </el-form-item>
@@ -100,7 +100,7 @@ export default {
           type: 'success',
           message: '检测到您之前登录过，将自动登录'
         })
-        this.$router.push({ name: 'home' })
+        this.$router.push('orders')
       }
     }))
   },
@@ -118,7 +118,7 @@ export default {
             this.$store.commit("saveUser", this.buildUser(res))
             // 取得所有店铺信息，保存在store中，
             this.initializeApp()
-            this.$router.push({ name: 'home' })
+            this.$router.push('orders')
 
           } else {
             this.$message({
@@ -207,7 +207,7 @@ export default {
   .logo {
     // margin-top: 6%;
     // border: 3px solid #ffb895;
- 
+
   }
   .user-name {
     margin: auto;

@@ -1,315 +1,217 @@
-<style lang="scss" >
-
-.orders-container {
-    .filters {
-        margin: 0 0 20px 0;
-        border: 1px #efefef solid;
-        padding: 10px;
-        background: #f9f9f9;
-        .filter {
-            display: inline-block;
-            width: auto;
-            padding: 10px;
-            border-radius: 5px;
-            .el-select {
-                display: inline-block;
-            }
-        }
-        .el-input {
-            width: 150px;
-            display: inline-block;
-        }
-    }
-    .pagination-wrapper {
-        float:right;
-        padding: 30px;
-    }
-    .collection-options{
-       padding: 30px;
-       float:left;
-    }
+<style lang="scss">
+/* banner */
+@import "~@assets/mobile/css/mixin.scss";
+$header-height: 50px; //头部高度值
+.top-bar {
+  height: $header-height;
+  background-color: rgb(40, 95, 245);
+  color: white;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  .mint-header-title {
+    font-size: x-large;
+  }
 }
-
+.main-content {
+  margin-top: $header-height + 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  // background-color: rgb(250, 249, 214);
+  .seach-tools {
+    width: 100%;
+    padding-left: 0;
+    display: flex;
+    justify-content: space-between;
+    .seach-and-button {
+      display: flex;
+      align-items: center;
+      .input-num {
+        width: 200px;
+        border: 1px solid #62b0ff;
+      }
+      .seach-button {
+        margin-left: 30px;
+      }
+    }
+  }
+  .popup {
+    width: 100%;
+    height: 40px;
+    background-color: #ffacfb;
+    color: white;
+    text-align: center;
+    font-size: 26px;
+  }
+}
 </style>
 
 <template>
-
-<div class="orders-container main">
-    <div class="container">
-        <h3> order list </h3>
-        <!-- filters start -->
-        <div class="filters">
-
-            <div class="filter">
-                Keyword: <el-input label="Keyword" placeholder="请输入number or username" v-model="filters.keyword"></el-input>
-            </div>
-            <div class="filter">
-                OrderState: <el-select v-model="filters.shipment_state" placeholder="All">
-                            <el-option
-                              v-for="item in orderStateOptions"
-                              :key="item.value"
-                              :label="item.label"
-                              :value="item.value">
-                            </el-option>
-                          </el-select>
-
-            </div>
-            <div class="filter">
-                起止时间：
-                <el-date-picker type="datetimerange" placeholder="选择时间范围" style="width:350px" v-model="filters.startEndTime"></el-date-picker>
-            </div>
-            <el-button type="primary" @click="handleSearch()">搜索</el-button>
-        </div>
-        <!-- filters end -->
-
-        <el-table :data="tableData" @selection-change="handleSelectionChange" @expand-change='expand' :expand-row-keys='expendRow' :row-key="row => row.index" style="width: 100%">
-            <el-table-column type="expand">
-                <template slot-scope="props">
-                    <el-form label-position="left" inline class="demo-table-expand">
-                        <el-form-item label="用户名">
-                            <span>{{ props.row.user_name }}</span>
-                        </el-form-item>
-                        <el-form-item label="店铺名称">
-                            <span>{{ props.row.restaurant_name }}</span>
-                        </el-form-item>
-                        <el-form-item label="收货地址">
-                            <span>{{ props.row.address }}</span>
-                        </el-form-item>
-                        <el-form-item label="店铺 ID">
-                            <span>{{ props.row.restaurant_id }}</span>
-                        </el-form-item>
-                        <el-form-item label="店铺地址">
-                            <span>{{ props.row.restaurant_address }}</span>
-                        </el-form-item>
-                    </el-form>
-                </template>
-            </el-table-column>
-            <el-table-column type="selection" width="55" :reserve-selection="reserveSelection"></el-table-column>
-
-            <el-table-column label="订单 ID" prop="number">
-            </el-table-column>
-            <el-table-column label="总价格" prop="total_amount">
-            </el-table-column>
-            <el-table-column label="shipment状态" prop="shipment_state">
-            </el-table-column>
-            <el-table-column label="payment状态" prop="payment_state">
-            </el-table-column>
-            <el-table-column  width="150" label="操作">
-              <template slot-scope="scope">
-                <el-button size="small" @click="handleEdit($index, row)">编辑</el-button>
-                <el-button size="small" type="danger" @click="handleDelete($index, row)">删除</el-button>
-              </template>
-            </el-table-column>
-        </el-table>
-
-        <div class="collection-options">
-          <el-button @click="ChangeOrderStates">Next Step</el-button>
-          <el-button @click="ChangeOrderStates(false)">Draw Back</el-button>
-          <el-button >打印</el-button>
-
-        </div>
-        <div class="pagination-wrapper" >
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="perPage" layout="total, prev, pager, next" :total="count">
-            </el-pagination>
-        </div>
+  <div class="home-container">
+    <head-top></head-top>
+    <!-- <footer-bar ></footer-bar> -->
+    <div>
+      <mt-header class="top-bar" fixed title="汪永峰JPos系统">
+        <!-- <router-link to="/" slot="left">
+          <mt-button icon="back"></mt-button>
+        </router-link> -->
+        <router-link to="/profile" slot="right">
+          <mt-button icon="more" ></mt-button>
+        </router-link>
+      </mt-header>
     </div>
-    <footer-bar class="footer"></footer-bar>
 
-</div>
+    <div class="main-content">
+      <ul class="seach-tools">
+        <li class="seach-and-button">
+          <mt-field class="input-num" placeholder="订单号/会员号/手机号" v-model="inputNum"></mt-field>
+          <mt-button class="seach-button" type="primary" @click="seach">搜索</mt-button>
+          <!-- <mt-button type="danger" @click="test">test</mt-button> -->
+        </li>
+        <li>
+          <img :src="scanIcon" width="44px" class="location-icon" @click="openCamera" />
+        </li>
+      </ul>
+      <mt-popup class="popup" v-model="popupVisible" popup-transition="popup-fade" position="top">获得网络数据失败,请重试.</mt-popup>
+      <!-- 会员基本信息 -->
+      <member-order-info v-if="tableIsVisible" :returnServerData="returnServerData" :codeNum="codeNum" @succeed="succeed($event)"></member-order-info>
+      <!-- Scan子组件 -->
+      <scan v-if="showScanVue" :cameraIsOpen="cameraIsOpen" @closeCamera="closeCamera($event)" @barCodeNum="barCodeNum($event)"></scan>
+    </div>
 
+    <div>
+      <!-- <el-button type="" @click="signout">登出</el-button> -->
+    </div>
+  </div>
 </template>
 
 <script>
-
 import FooterBar from '@/components/mobile/layout/FooterBar';
+import HeadTop from '@/components/mobile/layout/HeadTop';
 
-import {
-    findOrders, evolvePosOrders, getStore, getUserInfo, getAddressById
-}
-from '@/api/getData'
-import {
-  userDataMixin
-}
-from '@/components/mixin/commonDataMixin'
+import Scan from '@/components/mobile/common/Scan.vue'
+import MemberOrderInfo from '@/components/mobile/common/MemberOrderInfo.vue'
+import {getOrder} from "@/api/getData.js"
+// import { apiResultMixin } from '@/components/apiResultMixin'
+import axios from 'axios';
+
+import { shopDetails, signout } from "@/api/getData";
 
 export default {
-    data() {
-            return {
-                tableData: [],
-                currentRow: null,
-                perPage: 2,
-                count: 4,
-                currentPage: 1,
-                reserveSelection: false,
-                expendRow: [],
-                filters: { keyword: '', startEndTime: null, shipment_state: 'all' },
-                multipleSelection: [],
-                orderStateOptions: [{ value: 'all', label: 'all' },
-                  { value: 'pending', label: 'pending' },
-                  { value: 'partial', label: 'partial' },
-                  { value: 'ready_for_factory', label: 'ready_for_factory' },
-                  { value: 'ready', label: 'ready' }]
-
-            }
-        },
-    components: {
-        'footer-bar': FooterBar
+  components: {
+    'scan': Scan,
+    'member-order-info': MemberOrderInfo,
+    'head-top': HeadTop,
+    'footer-bar': FooterBar
+  },
+  name: 'page',
+  data() {
+    return {
+      storeName: "", //店铺名称
+      /*********************UI相关***********************/
+      // scanIcon: require('../../assets/images/scanCode.png'),
+      // scanIcon: require('../../assets/images/scanCode.png'),
+      scanIcon: require('../assets/images/scanCode.png'),
+      logo: require('../assets/images/logo.png'),
+      showScanVue: false,  //是否显示扫描子组件
+      tableIsVisible: false, //表格是否显示标志位
+      popupVisible: false, //popup是否显示标志位
+      // selfVisible:false,
+      /********************数据处理相关*******************/
+      inputNum: '', //输入的会员号或手机号或订单号
+      codeNum: "", //子组件传来的条码数
+      cameraIsOpen: false, //相机开关
+      returnServerData: "",   //返回的服务器数据
+      axiosFlag: null,    //axios 返回标志位
+      orderData:"",       //得到订单接口数据
+    }
+  },
+  methods: {
+    handleClick: function () {
+      this.$toast('Hello world!')
     },
-    mixins: [userDataMixin],
-    beforeRouteEnter(to, from, next) {
-        next(vm => {
-            // 通过 `vm` 访问组件实例
-            console.log(' beforeRouteEnter ')
+    //扫描图标点击事件-----打开Scan子组件
+    openCamera() {
+      this.showScanVue = true;
+      this.cameraIsOpen = true;
+    },
+    //Scan子组件传过来的消息-----关闭Scan子组件
+    closeCamera(flag) {
+      this.showScanVue = false;
+      this.cameraIsOpen = false;
+    },
+    //搜索按钮点击事件-----
+    seach() {
+      // this.showScanVue = false;
+      if (this.inputNum === '') {
+        this.$alert('请输入订单号', '提示', {
+          confirmButtonText: '确定',
+        });
+      }else{
+        console.log("开始搜索订单了,id=",this.inputNum);
+        this.getOrderByNumber(this.inputNum).then(()=>{
+          console.log(this.returnServerData);
+          this.tableIsVisible = true;
+          return this.returnServerData;
+        });
+      }
+    },
+    //异步处理请求服务器函数---根据订单号码得到订单详情
+    async getOrderByNumber(number) {
+      let returnData = await getOrder(number);
+      // console.log(returnData);
+      this.returnServerData = this.buildOrder(returnData);
+      console.log(this.returnServerData);
+    },
+    //得到子组件传来的条码数后得处理函数-----
+    barCodeNum(code) {
+      this.cameraIsOpen = false;  //关闭相机
+      this.showScanVue = false;   //关闭相机界面
+      this.codeNum = code;        //得到条码数字
+      console.log("条码数组是  => ",code);
+
+      // this.inputNum = code;
+      try {
+        this.axiosData().then(() => {
+          this.tableIsVisible = true; //表格组件显示
+        });
+      } catch (error) {
+        this.popupVisible = true;   //弹popup提醒
+      }
+    },
+    async axiosData() {
+      this.returnServerData = await axios.get('https://www.easy-mock.com/mock/5b409280aedea31f953c7898/test/OrderInfo');
+      console.log(this.returnServerData);
+    },
+    succeed(succeed) {
+      if (succeed == true) {
+        this.tableIsVisible = false;
+      }
+    }
+  },
+    async initData() {
+      //获取商铺信息
+      this.shopDetailData = await shopDetails(
+        this.storeId
+      )
+      this.storeName = this.shopDetailData.name;
+
+    },
+
+    async signout() {
+      const res = await signout()
+      if (res.id == null) {
+        this.$message({
+          type: 'success',
+          message: '退出成功'
         })
-    },
-    created() {
-        this.storeId = this.userInfo.storeId
-        this.initData()
-    },
-    mounted() {
-
-    },
-    methods: {
-        async initData() {
-            try {
-
-                this.getOrders()
-            } catch (err) {
-                console.log('获取数据失败', err)
-            }
-        },
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`)
-        },
-        handleCurrentChange(val) {
-            this.currentPage = val
-            this.getOrders()
-        },
-        handleSearch() {
-            this.initData()
-        },
-        async getOrders() {
-          let queryParams = {
-              page: this.currentPage,
-              per_page: this.perPage,
-              "q[store_id_eq]": this.storeId
-          }
-          if ( this.filters.keyword.length>0){
-            // order.number ||  || order.users.username
-            queryParams["q[user_username_cont]"] = this.filters.keyword
-          }
-          if ( this.filters.shipment_state.length>0 && this.filters.shipment_state != 'all' ){
-            // order.number ||  || order.users.username
-            queryParams["q[group_state_eq]"] = this.filters.shipment_state
-          }
-
-            const ordersResult = await findOrders(queryParams)
-            this.count = ordersResult.total_count
-            this.tableData = []
-            ordersResult.orders.forEach((item, index) => {
-                const tableData = {}
-                tableData.id = item.id
-                tableData.number = item.number
-                tableData.total_amount = item.display_total
-                tableData.status = item.state
-                tableData.user_id = item.user_id
-                tableData.store_id = item.store_id
-                tableData.address_id = item.address_id
-                tableData.index = index
-                tableData.shipment_state = item.shipment_state
-                tableData.payment_state = item.payment_state
-                this.tableData.push(tableData)
-            })
-        },
-        async expand(row, status) {
-            if (status) {
-                const restaurant = await getStore(row.store_id)
-                const userInfo = await getUserInfo(row.user_id)
-                const addressInfo = await getAddressById(row.address_id)
-
-                this.tableData.splice(row.index, 1, {...row, ... {
-                        restaurant_name: restaurant.name,
-                        restaurant_address: restaurant.address,
-                        address: addressInfo.address,
-                        user_name: userInfo.username
-                    }
-                })
-                this.$nextTick(() => {
-                    this.expendRow.push(row.index)
-                })
-            } else {
-                const index = this.expendRow.indexOf(row.index)
-                this.expendRow.splice(index, 1)
-            }
-        },
-        handleEditSave() {
-        /*  editUser(this.editForm).then(() => {
-            this.fetchData()
-            this.editDialog = false
-            this.$message({
-              message: '编辑成功',
-              type: 'success'
-            })
-          })
-          */
-        },
-        handleSave() {
-        /*
-          addUser(this.createForm).then(() => {
-            this.fetchData()
-            this.createDialog = false
-            this.$message({
-              message: '保存成功',
-              type: 'success'
-            })
-          })
-          */
-        },
-        handleEdit($index, row) {
-          this.editForm.id = row.id
-          this.editDialog = true
-        },
-        handleDelete($index, row) {
-          this.$confirm('是否删除此条信息?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-          /*
-            removeUser({
-              id: row.id
-            }).then(() => {
-              this.fetchData()
-              this.$message({
-                message: '删除成功',
-                type: 'success'
-              })
-            })
-            */
-          })
-        },
-
-        handleSelectionChange(val) {
-          this.multipleSelection = val
-        },
-        async ChangeOrderStates(forward = true){
-          let orderNumbers = this.multipleSelection.map((order)=> order.number)
-          if( orderNumbers.length == 0){
-            this.$message({
-              message: '警告哦，Please select a order at least',
-              type: 'warning'
-            });
-            return;
-          }
-
-          const posOrdersReturn = await evolvePosOrders( { order_numbers: orderNumbers, forward } )
-          if( posOrdersReturn.count>0 ){
-            this.getOrders()
-          }
-
-          console.log( 'ChangeOrderStates', orderNumbers)
-        }
-    },
-}
-
+        this.$store.commit("resetUser")
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.message
+        })
+      }
+    }
+  }
 </script>

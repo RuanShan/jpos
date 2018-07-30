@@ -59,7 +59,7 @@ router.beforeEach(function (to, from, next) {
 /* eslint-disable no-new */
 
 /*********************************移动app插件 ****************** */
-if (window.navigator.platform == 'iPhone' && false) {
+if (window.navigator.platform == 'iPhone' ) {
 	console.log("app模式启动")
 	document.addEventListener('deviceready', function () {
 		new Vue({
@@ -102,7 +102,18 @@ if (window.navigator.platform == 'iPhone' && false) {
 		template: '<App/>',
 		components: {
 			App
-		}
+		},
+    watch: {
+      userInfo: function(newValue) {
+        if (!newValue.id) {
+          this.$message({
+            type: "error",
+            message: "检测到您的登录信息过期, 请重新登录"
+          });
+          this.$router.push( "login");
+        }
+      }
+    }
 	})
 }
 if (window.navigator.platform == 'iPhone'){
