@@ -67,10 +67,8 @@
 <template>
   <div class="mineCom">
   		<mt-header style="-webkit-transform: translateZ(0)" slot="header" class="primary_bg" title="我的" :fixed="true">
-        <mt-button slot="left">
-          <router-link :to="{ name: 'home'}">
-    				<img src="static/mobile/img/icon/left-w.png" style="width:17px" alt="">
-          </router-link>
+        <mt-button slot="left" @click="goBack">
+     				<img src="static/mobile/img/icon/left-w.png" style="width:17px" alt="">
         </mt-button>
   			<mt-button slot="right">
   			</mt-button>
@@ -181,6 +179,10 @@
 		methods: {
 			hide() {
 				this.$store.commit("SHOW_FOOTER", !this.$store.state.common.hasFooter);
+			},
+			goBack(){
+				console.log(" goback clicked ...")
+				this.$router.go(-1)
 			},
 			async signout(){
 				const res = await signout()
