@@ -26,33 +26,17 @@
         top: 108px;
         bottom: 60px;
     }
-    .statisdatarecordnum {
-        display: inline-block;
-        position: absolute;
-        bottom: 20px;
-        border: solid 1px #939393;
-        .recordnum {
-            color: red;
-            display: inline-block;
-        }
-    }
-    .statisdatarechargemoney {
-        display: inline-block;
-        position: absolute;
-        bottom: 20px;
-        left: 200px;
-        border: solid 1px #939393;
-        .recordnum {
-            color: red;
-            display: inline-block;
-        }
+    .pagiantion-wrap{
+      position: absolute;
+      bottom:20px;
+      right:20px;
     }
 }
 </style>
 
 <template>
 <div class="statis-staff-clock-in">
-  <el-form ref="form" :model="form" label-width="70px" :inline="true">
+  <el-form ref="form" :model="form" label-width="100px" :inline="true">
     <fieldset class="member-field-set">
       <legend>功能选择</legend>
       <el-form-item class="member-form-item" label="时间选择">
@@ -60,15 +44,8 @@
         </el-date-picker>
       </el-form-item>
 
-      <el-form-item label="门店选择">
-        <el-select class="select-options" v-model="form.stateValue" @change="changeForState" size="mini">
-          <el-option v-for="item in stateOptions" :key="item.value" :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-
       <el-form-item>
-        <el-button class="order-ok" type="primary" size="mini">确定</el-button>
+        <el-button class="order-ok" type="primary" size="mini" @click="handleSearch">确定</el-button>
       </el-form-item>
     </fieldset>
   </el-form>
@@ -97,7 +74,7 @@
 
   <!-- 会员统计表   END -->
   <!-- 分页器 START-->
-  <div class="" style="position: absolute;bottom:2px;right:4%;margin-top: 10px;">
+  <div class="pagiantion-wrap" >
     <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="total">
     </el-pagination>
   </div>
@@ -157,23 +134,7 @@ export default {
           }
         }]
       },
-      tableData: [{
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-          }, {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          }, {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-          }],
+      tableData: [],
       //*********** 逻辑需要的变量 ***************/
     };
   },
@@ -182,10 +143,20 @@ export default {
     let start = moment().subtract(6, "days")
     let end = moment()
     this.formData.selectedDates = [start.toDate(), end.toDate()]
-    this.formData.storeId = this.stateOptions[0].value
+    this.formData.storeId = this.storeId
     this.initData()
+    this.$bus.$on('user-entry-created-gevent', () => {
+      console.log( 'handle user-entry-created-gevent')
+      this.initData()
+    })
   },
   computed: {
+    computedStartAt: function() {
+      return this.formData.selectedDates ? this.formData.selectedDates[0] : null
+    },
+    computedEndAt: function() {
+      return this.formData.selectedDates ? this.formData.selectedDates[1] : null
+    }
   },
   methods: {
     initData() {
@@ -202,9 +173,13 @@ export default {
         page: this.currentPage, //分页器选择的当前页数
         per_page: this.perPage, //每页显示12行数据
         eq: {
-          day_gteq: this.formData.selectedDates[0],
-          day_lteq: this.formData.selectedDates[1]
+          store_id_eq: this.formData.storeId
         }
+      }
+
+      if( this.computedStartAt && this.computedEndAt){
+        params.eq.day_gteq = this.computedStartAt
+        params.eq.day_lteq = this.computedEndAt
       }
       return params
     },
@@ -223,6 +198,10 @@ export default {
     onReset(){
       this.$refs['form'].resetFields()
       this.onSubmit()
+    },
+    handleSearch(){
+      this.currentPage = 1;
+      this.initData()
     }
   }
 };

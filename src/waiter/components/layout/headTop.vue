@@ -154,6 +154,8 @@ export default {
     },
     handleUserEntryCreated( newEntry){
       this.userEntries.push( newEntry)
+      console.log( "emit user-entry-created-gevent")
+      this.$bus.$emit('user-entry-created-gevent')
     }
   }
 }

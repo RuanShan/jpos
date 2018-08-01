@@ -65,9 +65,7 @@ export default {
               message: '打卡成功'
             })
             this.$store.commit("saveUser", this.buildUser(res))
-
-
-
+            this.$emit("user-entry-created")
           } else {
             this.$message({
               type: 'error',

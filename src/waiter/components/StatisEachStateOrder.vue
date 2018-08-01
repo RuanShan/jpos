@@ -24,7 +24,7 @@
     left: 10px;
     right: 10px;
     top: 110px;
-    bottom: 50px;
+    bottom: 60px;
   }
 .stati-sdata-order {
     display: inline-block;
@@ -40,41 +40,40 @@
     display: inline-block;
     position: absolute;
     bottom: 20px;
-    left: 200px;
-    border: solid 1px #939393;
+    left: 20px;
+    line-height: 28px;
+    font-size: 14px;
     .recordnum {
       color: red;
       display: inline-block;
     }
+  }
+  .pagiantion-wrap{
+    position: absolute;
+    bottom:20px;
+    right:20px;
   }
 }
 </style>
 
 <template>
   <div class="statis-each-orders">
-    <el-form ref="form" :model="formData" label-width="70px" :inline="true">
+    <el-form ref="form" :model="formData" label-width="80px" :inline="true">
       <fieldset class="order-field-set">
         <legend>功能选择</legend>
-        <el-form-item class="oreder-form-item" label="时间选择">
+        <el-form-item class="oreder-form-item" label="消费日期">
           <el-date-picker class="order-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
 
-        <el-form-item label="门店选择">
-          <el-select class="select-options" v-model="formData.storeId" @change="changeForState" size="mini">
-            <el-option v-for="item in formData.stateOptions" :key="item.value" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-
         <el-form-item label="支付方式">
-          <el-select class="select-options" v-model="formData.payValue" @change="changeForState" size="mini">
-            <el-option v-for="item in payOptions" :key="item.value" :value="item.value">
+          <el-select class="select-options" v-model="formData.paymentMethodId"  size="mini" clearable placeholder="不限">
+            <el-option v-for="item in paymentMethodOptions" :key="item.id" :value="item.id" :label="item.name">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button class="order-ok" type="primary" size="mini">确定</el-button>
+          <el-button class="order-ok" type="primary" size="mini" @click="handleSearch">确定</el-button>
         </el-form-item>
       </fieldset>
     </el-form>
@@ -93,7 +92,7 @@
         </el-table-column>
         <el-table-column label="消费金额" prop="total">
         </el-table-column>
-        <el-table-column label="订单状态" prop="groupState">
+        <el-table-column label="订单状态" prop="displayGroupState">
         </el-table-column>
         <el-table-column label="支付信息">
           <template slot-scope="scope">
@@ -111,18 +110,15 @@
     <!-- 订单统计表   END -->
 
     <!-- 统计数据  START -->
-    <div class="stati-sdata-order">
-      <h4 style="display: inline-block;">记录数:</h4>
-      <h4 class="recordnum">{{totalCount}}</h4>
-    </div>
+
     <div class="stati-sdata-ordermoney">
-      <h4 style="display: inline-block;">合计充值金额:</h4>
+      <h4 style="display: inline-block;">合计订单金额:</h4>
       <h4 class="recordnum">{{totalSum}}</h4>
     </div>
     <!-- 统计数据  END -->
 
     <!-- 分页器 START-->
-    <div class="" style="position: absolute;bottom:2px;right:4%;margin-top: 10px;">
+    <div class="pagiantion-wrap" >
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalPage">
       </el-pagination>
     </div>
@@ -143,24 +139,9 @@ export default {
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null,
-        payValue: "", //支付方式选项
+        paymentMethodId: null, //支付方式选项
       },
-      stateOptions: [{ //门店方式选项
-        value: '全部',
-      }],
-      payOptions: [{ //支付方式选项
-        value: '现金',
-      }, {
-        value: '微信',
-      }, {
-        value: '支付宝',
-      }, {
-        value: '银行卡',
-      },
-      {
-        value: '未付',
-      }
-      ],
+      paymentMethodList: [],
       totalPage: 0, //分页器显示的总页数
       perPage: 12, //主表每页显示12行
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
@@ -191,65 +172,7 @@ export default {
           }
         }]
       },
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }
+      tableData: [
       ],
       //*********** 逻辑需要的变量 ***************/
       returnServerCustomerData: {}, //调用接口,返回的数据
@@ -262,10 +185,18 @@ export default {
     let start = moment().subtract(6, "days")
     let end = moment()
     this.formData.selectedDates = [start.toDate(), end.toDate()]
-    this.formData.storeId = this.stateOptions[0].value
+    this.formData.storeId = this.storeId
     this.initData()
   },
   computed: {
+    paymentMethodOptions: function(){
+
+      let ps =  this.paymentMethodList.map((payment)=>{
+        return {id: payment.id, name: payment.name}
+      })
+      ps.push( {id: 0, name: '未付'})
+      return ps
+    },
     computedStartAt: function () {
       return this.formData.selectedDates[0]
     },
@@ -281,7 +212,11 @@ export default {
         this.totalCount = res.total_count
         this.totalSum = res.total_sum
       })
-      await this.getPaymentMethods()
+      this.getPaymentMethods().then(()=>{
+        this.paymentMethodList = this.paymentMethods.filter((payment)=>{
+          return payment.active
+        })
+      })
       let result = await findOrders(params)
       this.totalPage = result.total_count
       this.tableData = this.buildOrders(result)
@@ -298,11 +233,22 @@ export default {
           order_type_eq: 0
         }
       }
+
+      if( this.formData.paymentMethodId != null){
+        if ( this.formData.paymentMethodId > 0 ){
+          //选择了一个支付方式
+          params.q.payments_payment_method_id_eq =  this.formData.paymentMethodId
+        }else{
+          //所有未交款的
+          params.q.payment_state_eq = 'balance_due'
+        }
+      }
       return params
     },
     //門店選擇改變時的事件處理函數-----
-    changeForState() {
-
+    handleSearch() {
+      this.currentPage = 1
+      this.initData()
     },
     addPaymentDescription() {
       this.tableData.forEach((order) => {

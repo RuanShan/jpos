@@ -129,7 +129,7 @@
                 </tr>
                 <tr>
                   <th>开卡门店</th>
-                  <td>{{item.openCardSite}}</td>
+                  <td>{{item.storeName}}</td>
                   <th>开卡日期</th>
                   <td>{{item.displayCreatedAt}}</td>
                   <th>到期时间</th>

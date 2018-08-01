@@ -100,7 +100,7 @@
             <el-checkbox label="短信息" v-model="formData.enableSms"></el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button type="warning" @click="handleCreateOrderWithoutPayment" v-show="existedOrderId==false">取单时结账</el-button>
+          <el-button type="warning" @click="handleCreateOrderWithoutPayment" v-show="!existedOrderId">取单时结账</el-button>
           <div class="right">
             <el-button type="success" @click="handleCreateOrderAndPayment" :disabled="disableCheckoutButton">结账</el-button>
             <el-button @click="handleCloseDialog()">取消</el-button>
