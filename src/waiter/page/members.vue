@@ -53,10 +53,8 @@
         <el-form :inline="true" class="demo-form-inline">
           <div class="filters">
             <el-form ref="form" :model="formData" label-width="70px" :inline="true">
-              <store-select v-bind:value.sync="formData.storeId" />
-
               <el-form-item label="关键字">
-                <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword"></el-input>
+                <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="handleSearch()" size="mini">搜索</el-button>
@@ -69,7 +67,7 @@
               <el-table class="cel-scrollable-table" :data="customerList" style="width:100%;" border>
                 <el-table-column prop="id" label="ID" width="50">
                 </el-table-column>
-                <el-table-column prop="storeName" label="所属门店">
+                <el-table-column prop="storeName" label="注册门店">
                 </el-table-column>
                 <el-table-column prop="userName" label="会员姓名">
                 </el-table-column>
@@ -109,6 +107,8 @@
 </template>
 
 <script>
+import _ from "lodash"
+
 import leftNav from "@/components/layout/LeftNav.vue"
 import headTop from "@/components/layout/headTop.vue";
 
@@ -166,14 +166,16 @@ export default {
       let params = {
           page: this.currentPage,
           per_page: this.perPage,
+          q:{
+            store_id_eq: this.storeId
+          }
       }
-      // storeId可能为空
-      if( this.formData.storeId ){
-        params["q[store_id_eq]"] = this.formData.storeId //查询说有店铺的客户信息
-      }
+      // storeId 永远为系统设置store
+      params["q[store_id_eq]"] = this.storeId //查询说有店铺的客户信息
+
       // 会员 电话号码或卡号 关键字
       if( this.formData.keyword.length>0){
-        params['q[mobile_or_cards_code_cont]'] = this.formData.keyword
+        params.q.mobile_or_username_or_cards_code_cont = this.formData.keyword
       }
       return params
     },
@@ -182,6 +184,18 @@ export default {
       this.currentPage = val
       this.initData()
     },
+    // 没有使用
+    searchCustomersAsync: _.debounce((keyword, vm) => {
+      findCustomers({
+        q: {
+          store_id_eq: vm.storeId,
+          mobile_or_username_cont: keyword
+        }
+      }).then((result) => {
+        vm.customerList = vm.buildCustomers(result)
+        vm.count = result.total_count
+      })
+    }, 450),
     //添加会员卡点击事件处理函数-----
     addCard() {
 
@@ -224,6 +238,11 @@ export default {
     },
     //搜索按钮点击事件
     handleSearch(){
+      this.currentPage = 1
+      this.initData()
+    },
+    handleResetForm(){
+      this.currentPage = 1
       this.initData()
     }
   }

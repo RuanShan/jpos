@@ -217,10 +217,12 @@ export default {
       let arr = []
       if( this.customerData.cards ){
         this.customerData.cards.forEach((card) => {
-          let obj = {};
-          obj.title = "卡号: " + card.code;
+          let obj = {}
+          obj.title = "卡号: " + card.code
+          let store = this.stores.find((s)=>{return s.id==card.storeId})
+          if( store ){   obj.storeName = store.name }
           Object.assign(obj, card)
-          arr.push(obj);
+          arr.push(obj)
         })
       }
       const nocard = { title: "无卡消费", code: ""   }
@@ -237,22 +239,7 @@ export default {
     async getOrderByNumber(number) {
       this.orderDataByNumber = await getOrder(number);
     },
-    //打开窗口时事件处理函数-----把customerData.cards中的id转换成字符串给this.cards
-    // "cards": [{  //这是我MJPos上的数据
-    //         "id": 1,
-    //         "user_id": 8,
-    //         "code": "056",
-    //         "current_value": "1000.0",
-    //         "name": "PrepaidCard1000 - Master",
-    //         "card_type": "储值卡",
-    //         "card_grade": "8000元---5折",
-    //         "card_state_now": "可用",
-    //         "create_time": "2018-05-24",
-    //         "indate": "3年",
-    //         "open_card_site": "青云街店",
-    //         "memo": "不包括皮衣皮包貂皮",
-    //         "stop_time": "2021-05-24"
-    //     },
+
     async openWindow() {
       this.initData()
     },

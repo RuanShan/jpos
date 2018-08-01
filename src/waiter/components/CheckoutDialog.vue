@@ -66,15 +66,15 @@
           </el-input>
         </el-form-item>
         <el-form-item label="会员卡支付" v-if="isShowPrepaidCard" required  prop="prepaidCardAmount">
-          <el-input v-model="formData.prepaidCardAmount" placeholder="" class="payment-card money align-right">
+          <el-input v-model="formData.prepaidCardAmount" placeholder="" class="payment-card money align-right"  :disabled="!formData.enablePrepaidCard">
             <template slot="prepend">
               <div>
                 <p>{{availablePrepaidCard.name}}</p>
-                <p>卡号{{availablePrepaidCard.code}}余额{{availablePrepaidCard.amount}}</p>
+                <p>卡号{{availablePrepaidCard.code}}余额{{availablePrepaidCard.amountRemaining}}</p>
               </div>
             </template>
           </el-input>
-          <el-checkbox label="使用会员卡" name="type"></el-checkbox>
+          <el-checkbox label="使用会员卡"  v-model="formData.enablePrepaidCard" @change="handleEnablePrepaidCard"></el-checkbox>
         </el-form-item>
 
         <el-form-item label="会员支付密码" v-if="false">
@@ -133,15 +133,12 @@ export default {
       //微信,支付宝
       //支付方式
       paymentMethodList: [      ],
-      paymentList: [{
-        type: "cash",
-        amount: 0
-      }],
+
       formData:{
         prepaidCardAmount: 0,
         paymentAmount: 0,
         paymentPassword: null,
-        enablePrepaidCard: true,
+        enablePrepaidCard: false,
         selectPaymentMethodId: null,
         checkList:[],
         isPrintLabel: true,
@@ -155,7 +152,7 @@ export default {
         ]
       },
       disableCheckoutButton: false,
-      payments: [], //支付被方式选择数字,返回已经被选择的lable,如""现金","微信"等
+      //payments: [], //支付被方式选择数字,返回已经被选择的lable,如""现金","微信"等
     };
   },
   mixins: [DialogMixin],
@@ -216,7 +213,7 @@ export default {
       let remain = this.formData.prepaidCardAmount - this.totalMoney
       //需要其他支付方式
       if( remain < 0 ){
-        paymentsAttributes.push( { payment_method_id: this.selectPaymentMethodId, amount: this.orderRemainder } )
+        paymentsAttributes.push( { payment_method_id: this.formData.selectPaymentMethodId, amount: this.orderRemainder } )
       }
       //  index  cname  discount  groupPosition memo name  price productId quantity
       //  unitPrice  variantId  variantName
@@ -237,20 +234,33 @@ export default {
     }
   },
   methods: {
-    async handleDialogOpened(){
-      await this.getPaymentMethods()
+    handleDialogOpened(){
+      this.getPaymentMethods().then(()=>{
+        this.paymentMethodList = this.paymentMethods
+        if( this.activePaymentMethods.length>0){
+          this.formData.selectPaymentMethodId = this.activePaymentMethods[0].id
+          console.log( "this.formData.selectPaymentMethodId=", this.formData.selectPaymentMethodId)
+        }
+      })
+
       this.formData.paymentAmount = 0
       this.formData.prepaidCardAmount = 0
 
-      this.paymentMethodList = this.paymentMethods
-      if( this.paymentMethodList.length>0){
-        this.selectPaymentMethodId = this.paymentMethodList[0].id
-      }
 
-      let card = this.availablePrepaidCard
-      if( card != null){
+
+      if( this.availablePrepaidCard != null){
         //会员卡的余额是否够用
+        this.formData.enablePrepaidCard = true
+      }
+      this.computePaymentAmount()
+    },
+    computePaymentAmount(){
+      console.log( "this.formData.enablePrepaidCard=", this.formData.enablePrepaidCard )
+      if( this.formData.enablePrepaidCard ){
+        let card = this.availablePrepaidCard
         this.formData.prepaidCardAmount = ( card.amountRemaining >= this.totalPrice ? this.totalPrice : (this.totalPrice - card.amountRemaining) )
+      }else{
+        this.formData.prepaidCardAmount = 0
       }
       if( this.orderRemainder>0){
         this.formData.paymentAmount = this.orderRemainder
@@ -259,7 +269,7 @@ export default {
       console.log( "handleDialogOpened customer=",this.customer, this.paymentMethodList,this.activePaymentMethods )
     },
     handleDialogClosed() {
-      this.paymentList = [];
+      this.paymentMethodList = [];
     },
     //创建订单
     CreateOrder( params ) {
@@ -338,7 +348,10 @@ export default {
       }
       that.disableCheckoutButton = false
     }, 250),
-
+    handleEnablePrepaidCard(newValue){
+      //重新计算各个支付方式需要支付多少
+      this.computePaymentAmount()
+    },
     messageBox(string1, string2) {
       this.$alert(string1, string2, {
         confirmButtonText: "确定",

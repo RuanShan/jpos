@@ -24,7 +24,7 @@
             </el-form-item>
             <el-form-item label="到期时间">
               <el-form-item prop="expireAt">
-                <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+                <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 100%;" :pickerOptions="pickerOptions"></el-date-picker>
               </el-form-item>
             </el-form-item>
             <el-form-item label="会员密码" prop="paymentPassword">
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import {
   DialogMixin
 } from "@/components/mixin/DialogMixin"
@@ -79,7 +80,20 @@ export default {
       },
       rules: {
 
-      }
+      },
+      pickerOptions: {
+         shortcuts: [{
+           text: '一年',
+           onClick(picker) {
+             picker.$emit('pick', moment().add(1, 'years').toDate());
+           }
+         }, {
+           text: '不限',
+           onClick(picker) {
+             picker.$emit('pick', null);
+           }
+         }]
+       },
     }
   },
   computed: {
@@ -113,8 +127,9 @@ export default {
         if (valid) {
           let orderParams = {
             user_id: this.customerData.id,
+            order_type: 'card',
             line_items: [
-              { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1, code: this.cardFormData.code  }
+              { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1, card_code: this.cardFormData.code  }
             ],
             payments: [{
                 payment_method_id:  this.cardFormData.paymentMethodId,

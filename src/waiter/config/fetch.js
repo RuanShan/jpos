@@ -45,9 +45,9 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       // session expired
       if( response.status ==401 )
       {
-        console.log( "response.ret=", response.ret)
+        console.log( "response.error=", response.error)
       }
-      if( response.status ==401 &&  response.ret== 'expired'){
+      if( response.status ==401 &&  (response.error== 'unauthorized' || response.error== 'session_expired')){
         console.log("api expired, trigger store.resetUser")
         EventBus.emit('session-expired-gevent')
       }

@@ -97,8 +97,7 @@ export default {
       /*********************UI相关***********************/
       // scanIcon: require('../../assets/images/scanCode.png'),
       // scanIcon: require('../../assets/images/scanCode.png'),
-      scanIcon: require('../assets/images/scanCode.png'),
-      logo: require('../assets/images/logo.png'),
+     
       showScanVue: false,  //是否显示扫描子组件
       tableIsVisible: false, //表格是否显示标志位
       popupVisible: false, //popup是否显示标志位

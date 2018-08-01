@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       loginVisible: true,  //login 窗口显示标志位
-      logoImage: require('../assets/images/W-logo.jpg'),
+      logoImage: require('@assets/mobile/img/W-logo.jpg'),
       loginForm: {
         username: '',
         password: ''

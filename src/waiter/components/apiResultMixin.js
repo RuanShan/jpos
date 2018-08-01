@@ -434,7 +434,7 @@ console.log( "buildCustomerStatis=", result, statis)
         discountPercent: parseInt(model.discount_percent),
         discountAmount: parseInt(model.discount_amount),
         status: model.status, //enabled:可用， disabled：不可用
-        code: (model.code.length < 10 ? model.code : model.code.slice(0, 8)), // 显示前8位
+        code: (model.code.length < 12 ? model.code : model.code.slice(0, 12)), // 显示前12位
         variantId: model.variant_id,
         productId: model.product_id,
         memo: model.memo,
@@ -444,9 +444,9 @@ console.log( "buildCustomerStatis=", result, statis)
 
       if( card.expireAt){
         card.expireAt =  moment(card.expireAt)
-        card.displayExpireAt = card.expireAt.format('MM-DD HH:mm')
+        card.displayExpireAt = card.expireAt.format('YYYY-MM-DD HH:mm')
       }
-      card.displayCreatedAt = card.createdAt.format('MM-DD HH:mm')
+      card.displayCreatedAt = card.createdAt.format('YYYY-MM-DD HH:mm')
       card.displayStyle = this.getCardDisplayStyle( card.style)
       card.displayStatus = this.getCardDisplayStatus( card.status)
 

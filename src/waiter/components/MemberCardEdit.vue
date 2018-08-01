@@ -41,7 +41,7 @@
         </el-form-item>
         <el-form-item label="到期时间">
           <el-form-item prop="expireAt">
-            <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt" format="yyyy 年 MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-form-item>
         <el-form-item label="会员密码" prop="paymentPassword">

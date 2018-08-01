@@ -5,9 +5,9 @@ Vue.use(Router);
 
 const loginPage = r => require.ensure([], () => r(require('@/mobile/login')), 'login')
 const homePage = r => require.ensure([], () => r(require('@/mobile/home')), 'home')
-const posPage = r => require.ensure([], () => r(require('@/mobile/pos')), 'pos')
 const itemGroupsPage = r => require.ensure([], () => r(require('@/mobile/itemFlow')), 'itemGroups')
-const ordersPage = r => require.ensure([], () => r(require('@/mobile/orders')), 'orders')
+const ordersPage = r => require.ensure([], () => r(require('@/mobile/orders/orders')), 'orders')
+const orderDetailPage = r => require.ensure([], () => r(require('@/mobile/orders/detail')), 'orderDetail')
 const membersPage = r => require.ensure([], () => r(require('@/mobile/members')), 'members')
 const profilePage = r => require.ensure([], () => r(require('@/mobile/profile')), 'profile')
 const settingPage = r => require.ensure([], () => r(require('@/mobile/setting')), 'setting')
@@ -22,15 +22,14 @@ const routes = [{
         path: '/login',
         name: 'login',
         component: loginPage
-    },
-    {
-        name: 'pos',
-        path: '/pos',
-        component: posPage,
-        meta: []
     }, {
           path: '/orders',
           component: ordersPage,
+          meta: [],
+    }, {
+          path: '/order/:number',
+          name: 'orderDetail',
+          component: orderDetailPage,
           meta: [],
     }, {
         path: '/itemGroups',

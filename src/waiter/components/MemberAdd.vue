@@ -45,7 +45,7 @@
               </el-form-item>
               <el-form-item label="生日">
                 <el-form-item prop="birth">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+                  <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                 </el-form-item>
               </el-form-item>
               <el-form-item label="联系地址" prop="address">
@@ -76,7 +76,8 @@
               </el-form-item>
               <el-form-item label="到期时间">
                 <el-form-item prop="expireAt">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt" format="MM 月 dd 日" value-format="MM-dd" style="width: 100%;"></el-date-picker>
+                  <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt"
+                    format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 100%;" :pickerOptions="pickerOptions"></el-date-picker>
                 </el-form-item>
               </el-form-item>
               <el-form-item label="会员密码" prop="paymentPassword">
@@ -121,6 +122,7 @@
 // 入口:props: ["inputNumber"]
 // 出口:this.$emit("AddMemberReturnData", this.returnData);
 // **********
+import moment from 'moment'
 
 import { createCustomer, customerMobileValidate } from "@/api/getData";
 
@@ -216,7 +218,20 @@ export default {
             trigger: "blur"
           }
         ],
-      }
+      },
+      pickerOptions: {
+         shortcuts: [{
+           text: '一年',
+           onClick(picker) {
+             picker.$emit('pick', moment().add(1, 'years').toDate());
+           }
+         }, {
+           text: '不限',
+           onClick(picker) {
+             picker.$emit('pick', null);
+           }
+         }]
+       }
     };
   },
   computed: {
@@ -302,13 +317,13 @@ export default {
         paymentPassword: this.memberFormData.paymentPassword,
         address: this.memberFormData.address,
         birth: this.memberFormData.birth,
-        store_id: this.storeId
-
+        store_id: this.storeId,
+        memo: this.memberFormData.memo
       }
 
       let order = null
       if (this.isAddingCard) {
-        user.cards_attributes = [{ code: this.cardFormData.code, variant_id: this.cardFormData.variantId }]
+        user.cards_attributes = [{ store_id: this.storeId, code: this.cardFormData.code, variant_id: this.cardFormData.variantId, expire_at: this.cardFormData.expireAt, memo: this.cardFormData.memo  }]
 
         order = {
           payments: [
