@@ -51,7 +51,7 @@
         margin: 10px;
     }
 
-    .filters {
+    .formData {
         margin: 0 0 20px;
         border: 1px #efefef solid;
         padding: 10px;
@@ -122,24 +122,24 @@
       </div>
 
       <div class="transfer-product-container fillcontain clear">
-        <!-- filters start -->
-        <div class="filters">
+        <!-- formData start -->
+        <div class="formData">
           <div class="filter">
             关键字:
-            <el-input label="Keyword" placeholder="请输入订单号或用户名" v-model="filters.keyword" @change="handleKeywordChange"></el-input>
+            <el-input label="Keyword" placeholder="请输入物品编号" v-model="formData.keyword" clearable @clear="handleSearch"></el-input>
           </div>
-          <div class="filter">
+          <!-- <div class="filter">
             状态:
-            <el-select v-model="filters.groupState" placeholder="All">
+            <el-select v-model="formData.groupState" placeholder="All">
               <el-option v-for="item in orderStateOptions" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
-          </div>
-          <el-button type="primary" @click="handleSearch()">搜索</el-button>
+          </div> -->
+          <el-button type="primary" @click="handleSearch">搜索</el-button>
 
-          <el-button class="print" type="primary" @click="handlePrint()">打印</el-button>
+          <el-button class="print" type="primary" @click="handlePrint">打印</el-button>
         </div>
-        <!-- filters end -->
+        <!-- formData end -->
 
         <div class="order-list">
           <el-transfer v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name'}" :titles="[orderStateText, nextOrderStateText]" @change="handleTransferItems">
@@ -175,7 +175,7 @@ export default {
       itemList: [],
       transferedItemIds: [],
       perPage: 100,
-      filters: {
+      formData: {
         keyword: '',
         startEndTime: null,
         groupState: '',
@@ -224,11 +224,11 @@ export default {
     },
 
     async changeGroupToNextState(ids = [], forward = true) {
-      let queryParams = {
+      let params = {
         ids,
         forward
       }
-      const groupsReturn = await evolveLineItemGroups(queryParams)
+      const groupsReturn = await evolveLineItemGroups(params)
       if (groupsReturn.count > 0) {
         this.$emit('order-state-changed')
       }
@@ -236,7 +236,7 @@ export default {
     },
 
     handleDialogOpen() {
-      this.filters.keyword = ""
+      this.formData.keyword = ""
       this.lineItemGroupList.length = 0
       this.transferedItemIds.length = 0
       this.initData()
@@ -302,15 +302,19 @@ export default {
 
     },
     async getLineItemGroups() {
-      let queryParams = {
+      let params = {
         page: this.currentPage,
         per_page: this.perPage,
         q: {
           state_in: [this.orderState, this.nextOrderState]
         }
       }
+      if ( this.formData.keyword && this.formData.keyword.length > 0) {
+        // item.number || item.users.username
+        params.q.number_cont = this.formData.keyword
+      }
 
-      const itemsResult = await findLineItemGroups(queryParams)
+      const itemsResult = await findLineItemGroups(params)
       this.count = itemsResult.total_count
       this.lineItemGroupList.splice(0, this.lineItemGroupList.length, ...this.buildLineItemGroups(itemsResult))
       this.lineItemGroupList.forEach((item) => {
@@ -362,6 +366,10 @@ export default {
     displayDate(){
       let date = new Date()
       return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+    },
+    handleSearch(){
+      this.currentPage = 1
+      this.initData()
     }
   }
 }

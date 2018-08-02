@@ -67,7 +67,7 @@ export var apiResultMixin = {
         group.displayState = this.getOrderStateText(group.state)
         order.lineItemGroups.push(group)
         let groupedlineItems = []
-        orderResult.line_items.forEach(function(lineItemResult) {
+        orderResult.line_items.forEach((lineItemResult)=> {
 
           if (groupResult.number == lineItemResult.group_number) {
             const lineItem = {
@@ -85,6 +85,7 @@ export var apiResultMixin = {
               memo: lineItemResult.memo,
               state: lineItemResult.state
             }
+            lineItem.displayState = this.getLineItemDisplayState(lineItem.state )
             groupedlineItems.push(lineItem)
           }
         })
@@ -470,6 +471,8 @@ console.log( "buildCustomerStatis=", result, statis)
           cname: model.cname,
           state: model.state
         }
+        payment.displayState = this.getPaymentDisplayState( payment.state)
+
         payment.displayCreatedAt = payment.createdAt.format('MM-DD HH:mm')
 
         return payment
@@ -534,8 +537,19 @@ console.log( "buildCustomerStatis=", result, statis)
       return state == "clockin" ? "登入" : "登出" //prepaid 充值卡， counts 次卡
     },
     getDisplayPaymentState(state){
+      // order.payment_state
       //支付状态 balance_due:欠款， paid:已经支付
       return state == "balance_due" ? "未付" : "已付"
+    },
+    getPaymentDisplayState(state){
+      // payment.state
+      console.log( " payment.state =", state)
+      return state == "completed" ?  "已付" : "未付"
+    },
+    getLineItemDisplayState(state){
+      // :pending,  :done
+      console.log( " lineitem.state =", state)
+      return state == "done" ?   "已完成" : "待处理"
     },
     getDisplayTime( datetime){ // datetime is instance moment
       return datetime.format('HH:mm')

@@ -39,7 +39,7 @@
     .order-detail-container {
       position: absolute;
       top: 8px;
-      bottom: 50px;
+      bottom: 60px;
       left: 8px;
       right: 8px;
       overflow-y: auto;
@@ -91,7 +91,7 @@
       background-color: #f5f7fa;
     }
   }
-  .filters {
+  .formData {
     margin: 0 0 20px;
     border: 1px #efefef solid;
     padding: 10px;
@@ -103,6 +103,9 @@
       border-radius: 5px;
       .el-select {
         display: inline-block;
+      }
+      .search-input{
+        min-width: 240px;
       }
     }
     .el-input {
@@ -124,15 +127,15 @@
       </div>
 
       <div class=" fillcontain clear">
-        <!-- filters start -->
-        <div class="filters">
+        <!-- formData start -->
+        <div class="formData">
           <div class="filter">
             关键字:
-            <el-input label="Keyword" placeholder="请输入物品编号" v-model="filters.keyword"></el-input>
+            <el-input label="Keyword" placeholder="请输入物品编号" v-model="formData.keyword" class="search-input" clearable @clear="handleClear"></el-input>
           </div>
-          <el-button type="primary" @click="handleSearch()">搜索</el-button>
+          <el-button type="primary" @click="handleSearch">搜索</el-button>
         </div>
-        <!-- filters end -->
+        <!-- formData end -->
         <div class="item-list-wrap">
           <div class="item-list">
             <el-table :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
@@ -163,7 +166,7 @@
                     <th>客户电话 </th>
                     <td> {{ orderCustomer.mobile }} </td>
                     <th>客户姓名 </th>
-                    <td> {{ orderCustomer.name }} </td>
+                    <td> {{ orderCustomer.userName }} </td>
                     <th>客户类型 </th>
                     <td> {{ orderCustomer.displayType }} </td>
                   </tr>
@@ -194,7 +197,7 @@
                     <tr v-for="(payment,index ) in orderDetail.payments">
                       <td>{{payment.cname}}</td>
                       <td>{{payment.amount}}</td>
-                      <td style="width:8em">{{payment.state}}</td>
+                      <td style="width:8em">{{payment.displayState}}</td>
                       <td style="width:8em">{{payment.displayCreatedAt}}</td>
                     </tr>
                   </table>
@@ -217,7 +220,7 @@
                       <td>
                         <vue-xeditable  :name="'memo_'+lineItem.id+'_xeditable'" v-model="lineItem.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
                       </td>
-                      <td>{{ lineItem.state }}</td>
+                      <td>{{ lineItem.displayState }}</td>
                     </tr>
                   </template>
                 </table>
@@ -244,10 +247,10 @@
             </div>
 
           </div>
-          <div class="actions">
+          <div class="actions" v-show="orderDetail">
             <el-button @click="cancelOrder()">取消订单</el-button>
-            <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
-            <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button>
+            <!-- <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
+            <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button> -->
           </div>
         </div>
       </div>
@@ -296,9 +299,8 @@ export default {
       perPage: 12,
       count: 0,
       currentPage: 1,
-      filters: {
+      formData: {
         keyword: '',
-        startEndTime: null,
         groupState: '',
         storeId: 0
       },
@@ -328,9 +330,9 @@ export default {
           state_eq: this.orderState
         }
       }
-      if (this.filters.keyword.length > 0) {
+      if ( this.formData.keyword && this.formData.keyword.length > 0) {
         // item.number || item.users.username
-        params["q[number_cont]"] = this.filters.keyword
+        params.q.number_cont = this.formData.keyword
       }
       return params
     },
@@ -383,7 +385,7 @@ export default {
 
     handleDialogOpen() {
       this.itemDetailList = []
-      this.filters.groupState = this.orderState
+      this.formData.groupState = this.orderState
       this.initData()
       console.log('handleDialogOpen yeah')
     },
@@ -393,7 +395,7 @@ export default {
 
     handleCurrentPageChange(val) {
       this.currentPage = val
-      this.offset = (val - 1) * this.limit
+      //this.offset = (val - 1) * this.limit
       this.initData()
     },
     async handleCurrentRowChange(row) {
@@ -473,6 +475,14 @@ export default {
       console.log(" old=", lineItem, "new=", newAttribute)
       //this.orderItemList.splice(index, 1, newLineItem)
     },
+    handleSearch(){
+      this.currentPage = 1
+      this.initData()
+    },
+    handleClear(){
+      this.currentPage = 1
+      this.initData()
+    }
   }
 }
 </script>
