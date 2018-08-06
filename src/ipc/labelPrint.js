@@ -1,14 +1,16 @@
 import { getPrinters, printDirect } from 'printer'
 import fs from 'fs'
 import _ from 'lodash'
+import iconv from 'iconv-lite'
 
 export function printLabel ( ){
+  const encoding="gb2312"
   // Select the adapter based on your printer type
   // {title, code, memo}
-  let path = __dirname + '/templates/39-5mm_30-0mm_barcode_data.tspl'
+  let path = __dirname + '/templates/20x60_barcode_label.tspl'
   console.log('path', path)
 
-  fs.readFile(path,'utf-8', function(err,data){
+  fs.readFile(path,'ascii', function(err,data){
    if(err){
     console.log(err);
    }else{
@@ -22,7 +24,7 @@ export function printLabel ( ){
      //Append linebreak (\r) to all commands
      data = data + "\r" //Use double quotes to interpolate
      var compiled = _.template( data );
-     compiled({ 'user': 'fred' });
+     data = iconv.encode( compiled({ 'label_title': '什么有用中文'}), encoding);
 
      console.log("raw data", data, printer)
      if( printer ){

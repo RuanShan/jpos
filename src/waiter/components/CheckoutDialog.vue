@@ -364,6 +364,7 @@ export default {
       });
     },
     testPrint(){
+      PrintUtil.printLabel()
       PrintUtil.printReceipt()
     }
   },

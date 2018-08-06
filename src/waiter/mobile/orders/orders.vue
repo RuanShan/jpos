@@ -1,6 +1,10 @@
 <style lang="scss">
 /* banner */
 @import "~@assets/mobile/css/mixin.scss";
+.orders-container{
+  height: 100%;
+  box-sizing: border-box;
+}
 $header-height: 50px; //头部高度值
 .top-bar {
     height: $header-height;
@@ -14,7 +18,7 @@ $header-height: 50px; //头部高度值
     }
 }
 .main-content {
-    margin-top: $header-height + 10px;
+    padding-top: $header-height + 10px;
     margin-left: 10px;
     margin-right: 10px;
     // background-color: rgb(250, 249, 214);
@@ -43,19 +47,19 @@ $header-height: 50px; //头部高度值
         text-align: center;
         font-size: 26px;
     }
-    .orders-container{
+    .orders{
       overflow: auto;
       position: absolute;
       left: 0;
       right: 0;
       bottom: 50px;
-      top: 100px;
+      top: 110px;
     }
 }
 </style>
 
 <template>
-<div class="home-container">
+<div class="orders-container fillcontain">
   <head-top></head-top>
 
 
@@ -70,6 +74,15 @@ $header-height: 50px; //头部高度值
         <img :src="scanIcon" width="44px" class="location-icon" @click="openCamera" />
       </li>
     </ul>
+    <div class="orders">
+      <!-- 订单内容区域 -->
+      <div  class="order_content scroll_content">
+        <div style="margin-top:10px;background:white" v-for="(item,index) in list" :key="index">
+          <OrderItem :value="item" />
+        </div>
+      </div>
+    </div>
+
     <mt-popup class="popup" v-model="popupVisible" popup-transition="popup-fade" position="top">获得网络数据失败,请重试.</mt-popup>
     <!-- 会员基本信息 -->
     <member-order-info v-if="tableIsVisible" :returnServerData="returnServerData" :codeNum="codeNum" @succeed="succeed($event)"></member-order-info>
@@ -77,16 +90,7 @@ $header-height: 50px; //头部高度值
     <scan v-if="showScanVue" :cameraIsOpen="cameraIsOpen" @closeCamera="closeCamera($event)" @barCodeNum="barCodeNum($event)"></scan>
 
 
-    <div class="orders-container">
 
-
-      <!-- 订单内容区域 -->
-      <div  class="order_content ">
-        <div style="margin-top:10px;background:white" v-for="(item,index) in list" :key="index">
-          <OrderItem :value="item" />
-        </div>
-      </div>
-    </div>
 
   </div>
 

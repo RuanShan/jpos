@@ -1,16 +1,42 @@
 <style lang="scss">
+.scan-container{
+  position: fixed;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  .cover{
+    height: 100%;
+    width: 100%;
+    background: #000;
+    opacity: .5;
+  }
+  .camera-wrap{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
 .camera-position {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 25px;
+  margin-top: 100px;
+
   .camera-display {
-    width: 480px;
-    height: 640px;
+    /*vh、vw、vmin、vmax*/
+    width: 75vmin;
+    height: 75vmin;
     border: 1px solid #0080ff;
+    video{
+      width: 100%;
+      height:100%;
+    }
   }
-  .text-positoin { 
+  .text-positoin {
     display: flex;
     // justify-content: center;
     margin-top: 0px;
@@ -27,13 +53,16 @@
 
 
 <template>
-  <div>
-    <div class="camera-position">
+  <div class="scan-container">
+    <div class="cover"> </div>
+    <div class="camera-wrap">
+      <div class="camera-position">
       <div class="camera-display" id="video"></div>
       <div class="text-positoin">
         <h1 class="text">垂直对准条码{{tiaoMa.barCodeNum}}</h1>
       </div>
       <mt-button class="close-button" plain size="large" @click="closeCamera">关闭相机</mt-button>
+    </div>
     </div>
     <div>
       <audio id="audioPlayScan" src="/static/audio/sound.mp3">&nbsp;</audio>

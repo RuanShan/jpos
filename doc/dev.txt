@@ -47,3 +47,26 @@ https://baike.baidu.com/item/CODE39/1144107?fr=aladdin
 移动端登录说明
 ================================================================================
 移动端登录需检查店员是否有打卡记录，以便知道店员所在店铺是哪个。
+
+
+安装 node-print
+================================================================================
+E:\apps\nodejs\jpos\node_modules\printer>node-gyp rebuild --target=1.8.3 --arch=
+x64 --msvs_version=2017 --dist-url=https://atom.io/download/electron
+
+E:\apps\nodejs\jpos\node_modules\usb>..\..\node_modules\.bin\node-pre-gyp rebuil
+d --target=1.8.3 --arch=x64 --dist-url=https://atom.io/download/electron
+
+重新编译适用 electron的组件
+================================================================================
+https://github.com/electron/electron/blob/master/docs/tutorial/using-native-node-modules.md
+.\node_modules\.bin\electron-rebuild.cmd -v=1.8.3
+
+utf8 转 gb2312
+================================================================================
+https://www.npmjs.com/package/iconv-lite
+
+深度解析使用CSS单位px、em、rem、vh、vw、vmin、vmax实现页面布局
+================================================================================
+https://www.cnblogs.com/lidongfeng/p/7243650.html
+当前项目使用 vh、vw、vmin、vmax

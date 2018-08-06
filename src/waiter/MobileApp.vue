@@ -1,6 +1,6 @@
 <template>
-  <div id="app" class="clearfix">
-    <div class="wrapper">
+  <div id="app " class="  clearfix">
+    <div class="wrappe ">
       <router-view></router-view>
     </div>
   </div>
@@ -15,8 +15,7 @@ export default {
 </script>
 
 <style >
-  @reset-global mobile;
-  
+
   html, body {
     background-color: #fafafa;
     -webkit-overflow-scrolling: touch;
@@ -35,5 +34,10 @@ export default {
       font-size: 24px;
       line-height: 40px;
     }
+  }
+  #app{
+  }
+  .wrapper{
+
   }
 </style>

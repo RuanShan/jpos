@@ -8,6 +8,10 @@ import {
 
 
 export function printReceipt(params) {
+  if( params == null){
+    console.error("print receipt params is null")
+    return
+  }
   // Select the adapter based on your printer type
   const device = new escpos.Console(function(data) {
     let printers =  getPrinters()
