@@ -70,3 +70,8 @@ https://www.npmjs.com/package/iconv-lite
 ================================================================================
 https://www.cnblogs.com/lidongfeng/p/7243650.html
 当前项目使用 vh、vw、vmin、vmax
+
+printing-the-bitmap-image-on-zpl-label-printer
+================================================================================
+https://developer.zebra.com/thread/35438
+https://stackoverflow.com/questions/7083180/print-bmp-with-zpl
