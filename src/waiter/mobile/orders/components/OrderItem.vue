@@ -60,7 +60,7 @@
       }
     }
     .order_state {
-    
+
     }
   }
 }
@@ -68,34 +68,33 @@
 <template>
   <section class="orderItem">
     <div class="base-row">
-      <div class="">订单编号: R000000001 </div>
-      <div class="right-date">订单时间: 2018年07月01日 13:25 </div>
+      <div class="">订单编号: {{order.number}} </div>
+      <div class="right-date">订单时间: {{order.displayCreatedAt}}</div>
     </div>
     <div class="base-row">
-      <div class="">客户信息: 13311110000(卡号:1001001) </div>
-      <div class="right-date">订单金额: 600元 </div>
+      <div class="">客户信息: {{order.customer.mobile}}(卡号:{{order.customer.displayCardCode }}) </div>
+      <div class="right-date">订单金额: {{order.total}}元 </div>
     </div>
-    <div class="row" style="min-height:60px">
+    <div v-for="group in order.lineItemGroups" class="row" style="min-height:60px">
 
       <div class="shop_header">
-        <img :src="value.img" alt="">
+        <img :src="group.defulatImageUrl" alt="">
         <div class="shop_text">
-          <h2 class="fn-15 fw-2">
-            <span>这是工作项目列表 {{value.title}}</span>
+          <h2 v-for="item in group.lineItems" class="fn-15 fw-2">
+            <span > {{item.cname}}</span>
             <img :src="backIcon" alt="">
           </h2>
-          <span class="fn-c-memo-light">2017.11.23</span>
         </div>
       </div>
       <div class="order_state fn-13 fn-c-memo fw-2">
-        <div> 物品编号：10089277330011</div>
-        <div> 服务项目: 2个</div>
+        <div> 物品编号：{{group.number}}</div>
+        <div> 服务项目: {{group.lineItems.length}}个</div>
         <div> 物品图片：5张</div>
       </div>
     </div>
 
     <div class="row fw-2" style="justify-content: flex-end;">
-      <router-link :to="{ name: 'orderDetail', params: {number: 1} }">
+      <router-link :to="{ name: 'orderDetail', params: {id: order.id} }">
       <mt-button class="fw-4" style="margin-right:10px;height:30px" plain size="small" type="primary" >订单详细</mt-button>
       </router-link>
     </div>
@@ -112,18 +111,21 @@ export default {
     return {
       list: [],
       detailVisible: false,
-      backIcon: 'static/mobile/img/icon/right.png',
+      backIcon: 'static/mobile/img/icon/right.png'
     };
   },
   props: {
-    value: Object
+    order: Object
   },
   components: {
   },
+  compute:{
+    customer(){
+      return this.order.customer
+    }
+  },
   methods: {
-    hide() {
-      this.$store.commit('SHOW_FOOTER', !this.$store.state.common.hasFooter)
-    },
+
     handleShowDetail(){
       this.detailVisible = true
     }

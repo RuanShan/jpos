@@ -47,13 +47,16 @@ $header-height: 50px; //头部高度值
         text-align: center;
         font-size: 26px;
     }
-    .orders{
+    .order_content{
       overflow: auto;
       position: absolute;
       left: 0;
       right: 0;
       bottom: 50px;
       top: 110px;
+      border-top: 1px solid #e5e5e5;
+      border-top: 1px solid #e5e5e5;
+      background-color: #FFFFFF;
     }
 }
 </style>
@@ -77,8 +80,13 @@ $header-height: 50px; //头部高度值
     <div class="orders">
       <!-- 订单内容区域 -->
       <div  class="order_content scroll_content">
-        <div style="margin-top:10px;background:white" v-for="(item,index) in list" :key="index">
-          <OrderItem :value="item" />
+
+        <div style="margin-top:10px;background:white" v-for="(item,index) in orderList" :key="index">
+          <OrderItem :order="item" />
+        </div>
+
+        <div v-show="noneNewOrder">
+          <p>无待处理订单 <button type="button" @click="getOrders" >刷新看一看</button></p>
         </div>
       </div>
     </div>
@@ -106,15 +114,8 @@ import HeadTop from '@/components/mobile/layout/HeadTop';
 import Scan from '@/components/mobile/common/Scan.vue'
 import MemberOrderInfo from '@/components/mobile/common/MemberOrderInfo.vue'
 import {
-  getOrder
+  findOrders, signout
 } from "@/api/getData.js"
-// import { apiResultMixin } from '@/components/apiResultMixin'
-import axios from 'axios';
-
-import {
-  shopDetails,
-  signout
-} from "@/api/getData";
 
 export default {
   components: {
@@ -124,13 +125,14 @@ export default {
     'footer-bar': FooterBar,
     OrderItem: r => { require.ensure([], () => r(require('./components/OrderItem'))), "OrderItem" }
   },
-  name: 'page',
+  name: 'order',
   data() {
     return {
       storeName: "", //店铺名称
       /*********************UI相关***********************/
       // scanIcon: require('@assets/images/scanCode.png'),
       // scanIcon: require('@assets/images/scanCode.png'),
+      itemDefaultIcon: require('@assets/mobile/img/order/default.jpeg'),
       scanIcon: require('@assets/mobile/img/scanCode.png'),
       showScanVue: false, //是否显示扫描子组件
       tableIsVisible: false, //表格是否显示标志位
@@ -141,63 +143,19 @@ export default {
       codeNum: "", //子组件传来的条码数
       cameraIsOpen: false, //相机开关
       returnServerData: "", //返回的服务器数据
-      axiosFlag: null, //axios 返回标志位
-      orderData: "", //得到订单接口数据
-      list: [
-        {
-          title: "艾比克（明珠广场店）",
-          content: "招牌卤肉-招牌卤肉等两件商品",
-          img: require('@assets//mobile/img/order/1.jpeg'),
-          color: "rgb(255, 151, 0)"
-        }, {
-          title: "西城港式创意茶餐厅",
-          content: "最夯外卖指南",
-          img: require('@assets//mobile/img/order/2.jpeg'),
-          color: "rgb(245, 120, 93)"
-        }, {
-          title: "大唐酸菜鱼",
-          content: "5元现金拿不停",
-          img: require('@assets//mobile/img/order/3.png'),
-          color: "rgb(27, 169, 225)"
-        }, {
-          title: "土耳其烤肉饭",
-          content: "领取口碑好卷",
-          img: require('@assets//mobile/img/order/4.png'),
-          color: "rgb(245, 120, 93)"
-        }, {
-          title: "老盛昌（三林店）",
-          content: "领取口碑好卷",
-          img: require('@assets//mobile/img/order/5.png'),
-          color: "rgb(245, 120, 93)"
-        },
-        {
-          title: "艾比克（明珠广场店）",
-          content: "招牌卤肉-招牌卤肉等两件商品",
-          img: require('@assets//mobile/img/order/1.jpeg'),
-          color: "rgb(255, 151, 0)"
-        }, {
-          title: "西城港式创意茶餐厅",
-          content: "最夯外卖指南",
-          img: require('@assets//mobile/img/order/2.jpeg'),
-          color: "rgb(245, 120, 93)"
-        }, {
-          title: "大唐酸菜鱼",
-          content: "5元现金拿不停",
-          img: require('@assets//mobile/img/order/3.png'),
-          color: "rgb(27, 169, 225)"
-        }, {
-          title: "土耳其烤肉饭",
-          content: "领取口碑好卷",
-          img: require('@assets//mobile/img/order/4.png'),
-          color: "rgb(245, 120, 93)"
-        }, {
-          title: "老盛昌（三林店）",
-          content: "领取口碑好卷",
-          img: require('@assets//mobile/img/order/5.png'),
-          color: "rgb(245, 120, 93)"
-        }
-
-      ]
+      orderList: [], //得到订单接口数据
+      formData:{
+        keyword: ''
+      }
+    }
+  },
+  mounted(){
+    console.log( 'orders event mounted')
+    this.initData()
+  },
+  computed:{
+    noneNewOrder(){
+      return this.orderList.length > 0
     }
   },
   methods: {
@@ -216,27 +174,9 @@ export default {
     },
     //搜索按钮点击事件-----
     seach() {
-      // this.showScanVue = false;
-      if (this.inputNum === '') {
-        this.$alert('请输入订单号', '提示', {
-          confirmButtonText: '确定',
-        });
-      } else {
-        console.log("开始搜索订单了,id=", this.inputNum);
-        this.getOrderByNumber(this.inputNum).then(() => {
-          console.log(this.returnServerData);
-          this.tableIsVisible = true;
-          return this.returnServerData;
-        });
-      }
+
     },
-    //异步处理请求服务器函数---根据订单号码得到订单详情
-    async getOrderByNumber(number) {
-      let returnData = await getOrder(number);
-      // console.log(returnData);
-      this.returnServerData = this.buildOrder(returnData);
-      console.log(this.returnServerData);
-    },
+
     //得到子组件传来的条码数后得处理函数-----
     barCodeNum(code) {
       this.cameraIsOpen = false; //关闭相机
@@ -253,39 +193,48 @@ export default {
         this.popupVisible = true; //弹popup提醒
       }
     },
-    async axiosData() {
-      this.returnServerData = await axios.get('https://www.easy-mock.com/mock/5b409280aedea31f953c7898/test/OrderInfo');
-      console.log(this.returnServerData);
+    initData() {
+      this.getOrders()
     },
-    succeed(succeed) {
-      if (succeed == true) {
-        this.tableIsVisible = false;
+    buildParams(){
+      let params = {
+          page: this.currentPage,
+          per_page: this.perPage,
+          q:{
+            group_state_eq: 'pending',
+            store_id_eq: this.storeId
+          }
+      }
+      if ( this.formData.keyword.length>0){
+        // order.number ||  || order.users.username
+        params["q[user_username_cont]"] = this.formData.keyword
+      }
+      return params
+    },
+    async getOrders() {
+      let params = this.buildParams()
+      const result = await findOrders(params)
+
+      const orders= this.buildOrders(result)
+
+      this.orderList = orders
+      console.log( " orderList =", this.orderList)
+    },
+    async signout() {
+      const res = await signout()
+      if (res.id == null) {
+        this.$message({
+          type: 'success',
+          message: '退出成功'
+        })
+        this.$store.commit("resetUser")
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.message
+        })
       }
     }
   },
-  async initData() {
-    //获取商铺信息
-    this.shopDetailData = await shopDetails(
-      this.storeId
-    )
-    this.storeName = this.shopDetailData.name;
-
-  },
-
-  async signout() {
-    const res = await signout()
-    if (res.id == null) {
-      this.$message({
-        type: 'success',
-        message: '退出成功'
-      })
-      this.$store.commit("resetUser")
-    } else {
-      this.$message({
-        type: 'error',
-        message: res.message
-      })
-    }
-  }
 }
 </script>

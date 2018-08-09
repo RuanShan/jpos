@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {
-  getUserInfo, getPaymentMethods, getCardTypes, getStores
+  getPaymentMethods, getCardTypes, getStores
 } from '@/api/getData'
 
 Vue.use(Vuex)
@@ -50,36 +50,14 @@ const mutations = {
   },
   saveTitle( state, title){
     state.title = title
+  },
+  saveStoreId( state, storeId){
+    state.storeId = storeId
   }
 }
 
 const actions = {
-  async getCurrentUser(store) {
-    try {
-      // 检查是否有cookies  _jpos_session,
-      // 如果没有，说明session过期
-      const userResult = await getUserInfo()
 
-      if (userResult.id) {
-        const user = {
-          storeId: 0,
-          avatar: 'default.jpg',
-          apiKey: ''
-        }
-        user.id = userResult.id
-        user.storeId = userResult.store_id
-        user.avatar = userResult.avatar
-        user.apiKey = userResult.api_key
-        user.name = userResult.username
-        user.roleNames = userResult.spree_role_names
-        store.commit('saveUser', user)
-      } else {
-        throw new Error(userResult)
-      }
-    } catch (err) {
-      console.log('您尚未登陆或者session失效')
-    }
-  },
   async getPaymentMethods( store ){
     if( store.state.paymentMethods){
       return store.state.paymentMethods

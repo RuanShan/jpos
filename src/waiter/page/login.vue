@@ -26,7 +26,7 @@
 
 <script>
   import _ from 'lodash'
-  import {login} from '@/api/getData'
+  import { getUserInfo, login} from '@/api/getData'
   import { getStore } from "@/config/mUtils"
 
   export default {
@@ -115,7 +115,23 @@
           let currentStore = stores.find((item)=>{ return item.id == this.localStoreId })
           this.$store.commit('saveStore', currentStore)
         })
-      }
+      },
+      async getCurrentUser() {
+        try {
+          // 检查是否有cookies  _jpos_session,
+          // 如果没有，说明session过期
+          const userResult = await getUserInfo()
+
+          if (userResult.id) {
+            const user = this.buildUser( userResult )
+            this.$store.commit('saveUser', user)
+          } else {
+            throw new Error(userResult)
+          }
+        } catch (err) {
+          console.log('您尚未登陆或者session失效')
+        }
+      },
     },
     watch: {
       //userInfo: function (newValue) {

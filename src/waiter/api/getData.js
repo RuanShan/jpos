@@ -18,8 +18,12 @@ export const customerMobileValidate = (mobile, id) => fetch('/api/v1/customers/v
  *
  */
 export const login = data => fetch('/users/sign_in', data, 'POST');
-//export const login = data => fetch('/admin/login', data, 'POST');
 
+/**
+ * 登陆
+ *
+ */
+export const loginByEntry = data => fetch('/users/sign_in_by_entry', data, 'POST');
 /**
  * 退出
  */

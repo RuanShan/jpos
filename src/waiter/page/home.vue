@@ -25,10 +25,10 @@ export default {
     headTop
   },
   created() {
-    this.getCurrentUser()
+    this.validateCurrentUser()
   },
   methods: {
-    getCurrentUser() {
+    validateCurrentUser() {
       if (this.userInfo.id) {
         this.$bus.$emit('UserInitializedEvent')
         this.$router.push("/pos");

@@ -92,19 +92,19 @@
   						<h3>0.00
   							<span class="fn-10">元</span>
   						</h3>
-  						<span>钱包</span>
+  						<span>订单金额</span>
   					</div>
   					<div>
   						<h3>1
   							<span class="fn-10">个</span>
   						</h3>
-  						<span>优惠</span>
+  						<span>订单数量</span>
   					</div>
   					<div>
   						<h3>303
   							<span class="fn-10">分</span>
   						</h3>
-  						<span>积分</span>
+  						<span>充值金额</span>
   					</div>
   				</div>
   				<br/>
@@ -137,7 +137,7 @@
 		data() {
 			return {
 				list: [{
-						title: "收货地址",
+						title: "店铺地址",
 						text: "",
 						img: "static/mobile/img/mine/address.png"
 					},
@@ -147,32 +147,7 @@
 						img: "static/mobile/img/mine/heat.png"
 					}
 				],
-				list_two: [{
-						title: "推荐有奖",
-						text: "5元现金",
-						img: "static/mobile/img/mine/gift.png"
-					},
-					{
-						title: "积分商城",
-						text: "0元好物在这里",
-						img: "static/mobile/img/mine/shopping.png"
-					},
-					{
-						title: "每日精选",
-						text: "全场包邮一元起",
-						img: "static/mobile/img/mine/xing.png"
-					},
-					{
-						title: "饿了么联名卡",
-						text: "免费领超级会员",
-						img: "static/mobile/img/mine/bank card.png"
-					},
-					{
-						title: "免费流量",
-						text: "每月最高500m",
-						img: "static/mobile/img/mine/phone.png"
-					}
-				]
+
 
 			};
 		},

@@ -24,10 +24,11 @@ const routes = [{
         component: loginPage
     }, {
           path: '/orders',
+          name: 'orders',
           component: ordersPage,
           meta: [],
     }, {
-          path: '/order/:number',
+          path: '/order/:id',
           name: 'orderDetail',
           component: orderDetailPage,
           meta: [],

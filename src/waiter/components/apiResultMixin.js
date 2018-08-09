@@ -61,6 +61,7 @@ export var apiResultMixin = {
           name: groupResult.name,
           price: parseInt(groupResult.price),
           createdAt: moment(groupResult.created_at),
+          missingImageUrl: groupResult.missing_image_url
 
         }
         group.displayCreatedAt = this.getDisplayDateTime(group.createdAt)
@@ -105,6 +106,7 @@ export var apiResultMixin = {
             group.images.push(image)
           })
         }
+        group.defulatImageUrl = ( group.images.length>0 ? group.images[0].miniUrl : group.missingImageUrl )
         group.lineItems = groupedlineItems
       })
       // groupLineItems 当前订单的所有活
@@ -238,6 +240,13 @@ export var apiResultMixin = {
         })
         user.userEntries = userEntries
       }
+      if( userResult.today_entries ){
+        const todayEntries = userResult.today_entries.map((model)=>{
+          return this.buildUserEntry(model)
+        })
+        user.todayEntries = todayEntries
+      }
+
       return user
     },
     // id, name, description, price, has_variants
@@ -348,7 +357,7 @@ export var apiResultMixin = {
       user.displayGender = this.getDisplayGender(user.gender)
       user.displayCreatedAt = this.getDisplayDateTime( user.createdAt)
       user.displayCreatedAtDate = user.createdAt.format('YYYY-MM-DD')
-
+      user.displayCardCode = user.prepaidCard.code ? user.prepaidCard.code  : "无"
       if( this.stores &&  user.storeId){
         let store = this.stores.find((s)=>{ return s.id == user.storeId })
         user.storeName = store.name
