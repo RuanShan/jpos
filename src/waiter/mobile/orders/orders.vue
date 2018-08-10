@@ -4,61 +4,58 @@
 .orders-container{
   height: 100%;
   box-sizing: border-box;
-}
-$header-height: 50px; //头部高度值
-.top-bar {
-    height: $header-height;
-    background-color: rgb(40, 95, 245);
-    color: white;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    .mint-header-title {
-        font-size: x-large;
-    }
-}
-.main-content {
-    padding-top: $header-height + 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-    // background-color: rgb(250, 249, 214);
-    .seach-tools {
-        width: 100%;
-        padding-left: 0;
-        display: flex;
-        justify-content: space-between;
-        .seach-and-button {
-            display: flex;
-            align-items: center;
-            .input-num {
-                width: 200px;
-                border: 1px solid #62b0ff;
-            }
-            .seach-button {
-                margin-left: 30px;
-            }
+  .main-content {
+      padding-top: 60px;
+      margin-left: 10px;
+      margin-right: 10px;
+      // background-color: rgb(250, 249, 214);
+      .seach-tools {
+          width: 100%;
+          padding-left: 0;
+          display: flex;
+          justify-content: space-between;
+          .seach-and-button {
+              display: flex;
+              align-items: center;
+              .input-num {
+              }
+              .seach-button {
+                  margin-left: 30px;
+              }
+          }
+      }
+      .popup {
+          width: 100%;
+          height: 40px;
+          background-color: #ffacfb;
+          color: white;
+          text-align: center;
+          font-size: 26px;
+      }
+      .orders-wrap{
+        .empty{
+          padding: 10px;
+          text-align: center;
         }
-    }
-    .popup {
-        width: 100%;
-        height: 40px;
-        background-color: #ffacfb;
-        color: white;
-        text-align: center;
-        font-size: 26px;
-    }
-    .order_content{
-      overflow: auto;
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 50px;
-      top: 110px;
-      border-top: 1px solid #e5e5e5;
-      border-top: 1px solid #e5e5e5;
-      background-color: #FFFFFF;
-    }
+      }
+      .orders{
+        overflow: auto;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 50px;
+        top: 110px;
+        border-top: 1px solid #e5e5e5;
+        border-top: 1px solid #e5e5e5;
+        background-color: #FFFFFF;
+        .order{
+          margin-top:10px;
+          padding: 10px;
+        }
+      }
+  }
 }
+
 </style>
 
 <template>
@@ -67,25 +64,27 @@ $header-height: 50px; //头部高度值
 
 
   <div class="main-content">
-    <ul class="seach-tools">
-      <li class="seach-and-button">
-        <mt-field class="input-num" placeholder="订单号/会员号/手机号" v-model="inputNum"></mt-field>
-        <mt-button class="seach-button" type="primary" @click="seach">搜索</mt-button>
+    <div class="seach-tools">
+      <el-form :inline="true" :model="formData" :rules="rules" class="demo-form-inline">
+      <div class="seach-and-button">
+        <el-input  placeholder="订单编号/物品编号/手机号"   v-model="formData.keyword" class="input-num" clearable @clear="handleSeach">  </el-input>
+        <el-button class="seach-button" type="primary" @click="handleSeach">搜索</el-button>
         <!-- <mt-button type="danger" @click="test">test</mt-button> -->
-      </li>
-      <li>
+      </div>
+      </el-form >
+      <div>
         <img :src="scanIcon" width="44px" class="location-icon" @click="openCamera" />
-      </li>
-    </ul>
-    <div class="orders">
+      </div>
+    </div>
+    <div class="orders-wrap">
       <!-- 订单内容区域 -->
-      <div  class="order_content scroll_content">
+      <div  class="orders scroll_content">
 
-        <div style="margin-top:10px;background:white" v-for="(item,index) in orderList" :key="index">
+        <div class="order" style="" v-for="(item,index) in orderList" :key="index">
           <OrderItem :order="item" />
         </div>
 
-        <div v-show="noneNewOrder">
+        <div class="empty" v-show="noneNewOrder">
           <p>无待处理订单 <button type="button" @click="getOrders" >刷新看一看</button></p>
         </div>
       </div>
@@ -96,10 +95,6 @@ $header-height: 50px; //头部高度值
     <member-order-info v-if="tableIsVisible" :returnServerData="returnServerData" :codeNum="codeNum" @succeed="succeed($event)"></member-order-info>
     <!-- Scan子组件 -->
     <scan v-if="showScanVue" :cameraIsOpen="cameraIsOpen" @closeCamera="closeCamera($event)" @barCodeNum="barCodeNum($event)"></scan>
-
-
-
-
   </div>
 
   <footer-bar ></footer-bar>
@@ -125,10 +120,10 @@ export default {
     'footer-bar': FooterBar,
     OrderItem: r => { require.ensure([], () => r(require('./components/OrderItem'))), "OrderItem" }
   },
-  name: 'order',
+  name: 'orders',
   data() {
     return {
-      storeName: "", //店铺名称
+
       /*********************UI相关***********************/
       // scanIcon: require('@assets/images/scanCode.png'),
       // scanIcon: require('@assets/images/scanCode.png'),
@@ -146,11 +141,16 @@ export default {
       orderList: [], //得到订单接口数据
       formData:{
         keyword: ''
+      },
+      rules: {
+         keyword: [
+           { required: true, message: '请输入关键字', trigger: 'change' },
+         ],
       }
     }
   },
-  mounted(){
-    console.log( 'orders event mounted')
+  created(){
+    console.log( 'orders event created')
     this.initData()
   },
   computed:{
@@ -172,10 +172,7 @@ export default {
       this.showScanVue = false;
       this.cameraIsOpen = false;
     },
-    //搜索按钮点击事件-----
-    seach() {
 
-    },
 
     //得到子组件传来的条码数后得处理函数-----
     barCodeNum(code) {
@@ -207,7 +204,7 @@ export default {
       }
       if ( this.formData.keyword.length>0){
         // order.number ||  || order.users.username
-        params["q[user_username_cont]"] = this.formData.keyword
+        params.q.number_or_line_item_groups_number_or_user_mobile_cont = this.formData.keyword
       }
       return params
     },
@@ -219,6 +216,10 @@ export default {
 
       this.orderList = orders
       console.log( " orderList =", this.orderList)
+    },
+    //搜索按钮点击事件-----
+    handleSeach() {
+      this.getOrders()
     },
     async signout() {
       const res = await signout()

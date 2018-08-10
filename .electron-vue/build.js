@@ -12,7 +12,7 @@ const Multispinner = require('multispinner')
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.waiter.config')
-const webConfig = require('./webpack.web.config')
+const webConfig = require('./webpack.web.waiter.config')
 
 const doneLog = chalk.bgGreen.white(' DONE ') + ' '
 const errorLog = chalk.bgRed.white(' ERROR ') + ' '

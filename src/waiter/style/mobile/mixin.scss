@@ -4,9 +4,9 @@
 }
 
 //生产小的字体
-@mixin font-block($bgColor:rgb(240, 115, 115)) {
+@mixin font-block($bgcolor:rgb(240, 115, 115)) {
   @include box;
-  background: $bgColor;
+  background: $bgcolor;
   line-height: 12px;
   padding: .01rem;
   border-radius: 2px;

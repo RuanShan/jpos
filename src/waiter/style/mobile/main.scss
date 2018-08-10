@@ -1,7 +1,8 @@
-  @import 'vars.scss';
-  @import 'mixin.scss';
-  @import 'animate.scss';
-  @import 'common.scss';
+@charset "utf-8";
+  @import './vars.scss';
+  @import './mixin.scss';
+  @import './animate.scss';
+  @import './common.scss';
   * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -123,25 +124,22 @@
 
   .primary_bg_white {
     background: white;
-  } // *:hover {
-  //   transition: all linear 1s;
-  //   transform: rotateZ(360deg) scale(2);
-  // }
+  }
   h2 {
     margin: 0px;
     font-size: 1.4rem;
-  } //字体大小 从8到18
+  } /*字体大小 从8到18*/
   .fn-c {
     color: $normal-color-light;
   }
 
   .has-footer {
-    margin-bottom: 4.5rem; // padding-bottom: 6rem;
-    padding-bottom: 1rem; // bottom: 4.5rem!important;
+    margin-bottom: 4.5rem;
+    padding-bottom: 1rem;
   }
 
   .has-header {
-    margin-top: 39px; // padding-bottom: 6rem;
+    margin-top: 39px;
   }
 
   .transition_3 {
@@ -173,7 +171,7 @@
 
   .add_content {
     display: flex;
-    justify-content: space-between; // min-width: 70px;
+    justify-content: space-between;
     span {
       margin-left: 8px;
     }
@@ -184,7 +182,7 @@
       padding: 0px;
       margin: 0px;
       line-height: 15px;
-      font-size: $fn-hg; // color: $white-color;
+      font-size: $fn-hg;
     }
   }
 

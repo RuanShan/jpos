@@ -232,17 +232,7 @@ export default {
         lineItemGroups: []
       },
       list: [],
-      backIcon: 'static/mobile/img/icon/right.png',
 
-      /***********调试界面使用的数据*************/
-      memberInfo: {
-        mobile: "13456789787",
-        name: "张三",
-        memberType: "会员",
-        number: "123456",
-        cardType: "1000折3",
-        remaining: "8787"
-      },
       fileList: [], //图片文件列表
       dialogImageUrl: '',
       dialogVisible: false,
@@ -304,8 +294,9 @@ export default {
       // console.log(file);
     },
     handleRemove(file, fileList) {
-      // console.log(file);
-      // console.log(fileList);
+      deleteGroupImage( file.groupId, file.id ).then(()=>{
+        console.log(file, fileList);
+      })
     },
     handleAvatarSuccess(response, file, fileList) {
       console.log("ON-SUCCEED CALL-BACK");

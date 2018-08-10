@@ -23,7 +23,8 @@ let whiteListedModules = ['vue']
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
-    renderer: path.join(__dirname, '../src/waiter/main.js')
+    mwaiter: path.join(__dirname, '../src/waiter/mobile_main.js'),
+    waiter: path.join(__dirname, '../src/waiter/main.js')
   },
   externals: [
     ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))
@@ -52,15 +53,6 @@ let rendererConfig = {
         })
       },
       {
-        test: /\.scss$/,
-        use: [
-          "style-loader", // creates style nodes from JS strings
-          "css-loader", // translates CSS into CommonJS
-          "sass-loader", // compiles Sass to CSS
-
-        ]
-      },
-      {
         test: /\.html$/,
         use: 'vue-html-loader'
       },
@@ -80,8 +72,7 @@ let rendererConfig = {
           options: {
             extractCSS: process.env.NODE_ENV === 'production',
             loaders: {
-              sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
-              scss: 'vue-style-loader!css-loader!sass-loader'
+              css: 'vue-style-loader!css-loader!postcss-loader'
             }
           }
         }
@@ -145,6 +136,7 @@ let rendererConfig = {
   resolve: {
     alias: {
       '@': path.join(__dirname, '../src/waiter'),
+      '@assets': path.join(__dirname, '../src/waiter/assets'),
       'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node']

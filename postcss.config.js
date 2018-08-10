@@ -1,5 +1,9 @@
 module.exports = {
-  plugins: [
+  //parser: 'postcss-scss',
 
-  ]
+  plugins: {
+    'postcss-easy-import': {},
+    'postcss-mixins': {},
+    'precss': {},
+  }
 }

@@ -68,7 +68,7 @@
   <div class="mineCom">
   		<mt-header style="-webkit-transform: translateZ(0)" slot="header" class="primary_bg" title="我的" :fixed="true">
         <mt-button slot="left" @click="goBack">
-     				<img src="static/mobile/img/icon/left-w.png" style="width:17px" alt="">
+     				<img src="@assets/mobile/img/icon/left-w.png" style="width:17px" alt="">
         </mt-button>
   			<mt-button slot="right">
   			</mt-button>
@@ -79,7 +79,7 @@
   			<section class="content has-header">
   				<section class="header primary_bg">
   					<div class="left">
-  						<img src="static/mobile/img/header.jpg" alt="">
+  						<img src="@assets/mobile/img/header.jpg" alt="">
   					</div>
   					<section class="title" @click="go('/baseHome/login')">
   						<h3 class="fn-16">刘德华</h3>
@@ -139,12 +139,12 @@
 				list: [{
 						title: "店铺地址",
 						text: "",
-						img: "static/mobile/img/mine/address.png"
+						img: "@assets/mobile/img/mine/address.png"
 					},
 					{
 						title: "我的收藏",
 						text: "",
-						img: "static/mobile/img/mine/heat.png"
+						img: "@assets/mobile/img/mine/heat.png"
 					}
 				],
 
