@@ -6,7 +6,23 @@ export var apiResultMixin = {
     return {
       LineItemGroupPaymentStateEnum: { paid: 'paid', balance_due: 'balance_due'},
       CardStyleEnum:{ prepaid: 'prepaid', counts:'counts' }, // prepaid 充值卡， counts 次卡
-      UserEntryStateEnum:{ clockin: 'clockin', clockout:'clockout' } // 打卡 登入， 登出
+      UserEntryStateEnum:{ clockin: 'clockin', clockout:'clockout' }, // 打卡 登入， 登出
+      LineItemGroupStateEnum: {
+        pending: 'pending',
+        ready_for_factory: "ready_for_factory",
+        processing: "processing",
+        processed: "processed",
+        ready_for_store: "ready_for_store",
+        ready: "ready",
+        shipped: "shipped",
+        canceled: "canceled"
+      },
+    }
+  },
+  computed: {
+    lineItemGroupProgressStates(){
+      let vals = _.values( this.LineItemGroupStateEnum)
+      return _.difference(vals,  [this.LineItemGroupStateEnum.shipped, this.LineItemGroupStateEnum.canceled] )
     }
   },
   methods: {
@@ -84,6 +100,7 @@ export var apiResultMixin = {
               discountPercent: lineItemResult.discount_percent,
               cardId: lineItemResult.card_id,
               memo: lineItemResult.memo,
+              labelIconName: lineItemResult.label_icon_name,
               state: lineItemResult.state
             }
             lineItem.displayState = this.getLineItemDisplayState(lineItem.state )
@@ -509,6 +526,32 @@ console.log( "buildCustomerStatis=", result, statis)
         entry.displayCreatedAtTime = this.getDisplayTime( entry.createdAt )
         entry.displayState = this.getUserEntryDisplayState( entry.state )
         return entry
+    },
+    buildExpenseItems( result ){
+      const entries = result.expense_items.map((model)=>{
+        return this.buildExpenseItem( model )
+      })
+      return entries
+    },
+    buildExpenseItem( model ){
+        let item = {
+          id: model.id,
+          userId: model.user_id,
+          storeId: parseInt( model.store_id ),
+          variantId:  model.variant_id,
+          state: model.state,
+          userName:  model.user_name,
+          storeName: model.store_name,
+          price: parseInt(model.price),
+          cname: model.cname,
+          memo: model.memo,
+          day: moment(model.day),
+          entryDay: moment(model.entry_day),
+          createdAt: moment(model.created_at),
+        }
+        item.displayCreatedAt = this.getDisplayDateTime( item.createdAt )
+        item.displayCreatedAtTime = this.getDisplayTime( item.createdAt )
+        return item
     },
     generateGroupNumber: function() {
       let timestamp = moment().format("YYMMDDHHmmss")

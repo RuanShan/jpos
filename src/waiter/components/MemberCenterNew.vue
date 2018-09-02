@@ -1,5 +1,8 @@
 <style lang="scss">
 .member-container {
+  button.el-button span{
+    color: #fff;
+  }
     .main-content {
         padding: 18px;
     }
@@ -7,6 +10,9 @@
         border: 1px solid silver;
         .member-profile {
             padding: 0 16px;
+            .head{
+              line-height: 36px;
+            }
             .member-table {
                 th {
                     border: 1px solid silver;
@@ -68,7 +74,7 @@
         <div class="member-profile">
           <div class="head">
             <span>会员信息 (消费 ¥{{statis.normalOrderTotal}}) </span>
-            <el-button type="info" size="mini" @click="curentEdit" class="right">会员编辑</el-button>
+            <el-button type="success" size="mini" @click="curentEdit" class="right">会员编辑</el-button>
           </div>
           <table class="member-table">
             <tr>
@@ -94,25 +100,28 @@
         </div>
         <!-- 会员基本信息 END-->
         <div class="cards-wrap" style="margin-top: 10px;">
-          <el-button type="danger" size="mini" @click="addCardButtonClicked" style="float: right;z-index: 999;position: relative;">添&nbsp;&nbsp;加&nbsp;&nbsp;会&nbsp;&nbsp;员&nbsp;&nbsp;卡</el-button>
+          <el-button type="success" size="mini" @click="addCardButtonClicked" class="right" style="z-index: 999;position: relative;">添加会员卡</el-button>
           <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick" class="card-tabs cel-scrollable-tabs">
             <el-tab-pane v-for="(item) in cards" :key="item.code" :label="item.title" :name="item.code">
               <div class="clear ">
                 <div class="left">
-                  <span>余额</span>
+                  <span>当前余额</span>
                   <span>¥ {{item.amountRemaining}}</span>
                 </div>
                 <div class="left">
-                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充值记录</span>
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充值金额</span>
                   <span>¥ {{item.amount}}</span>
                 </div>
                 <div class="left">
-                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消费记录</span>
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消费金额</span>
                   <span>¥ {{item.amountUsed}}</span>
                 </div>
                 <div class="right">
-                  <el-button type="info" size="mini" @click="cardEdit(item)">卡编辑</el-button>
-                  <el-button type="danger" plain size="mini" @click="cardRecharge(item)">会员卡充值</el-button>
+                  <el-button-group v-show="item.id">
+                  <el-button type="success" size="mini" @click="cardEdit(item)">会员卡编辑</el-button>
+                  <el-button type="success" size="mini" @click="cardRecharge(item)">会员卡充值</el-button>
+                  </el-button-group>
+
                 </div>
               </div>
               <!-- 在tab中的卡详情表 START -->

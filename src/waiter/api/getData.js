@@ -62,6 +62,34 @@ export const addUserEntry = data => fetch('/user_entries/', data, 'POST');
 export const findUserAndEntries = data => fetch('/api/v1/users/entries', data, 'POST');
 
 /**
+ * 获取费用支出分类列表
+ */
+export const getExpenses = () => fetch('/api/v1/expenses');
+
+/**
+ * 获取费用支出信息列表
+ */
+export const findExpenseItems = data => fetch('/api/v1/expense_items/search', data, 'POST');
+
+/**
+ * 添加费用支出信息
+ * data
+ *  expense_item[variant_id]
+ *  expense_item[store_id]
+ *  expense_item[user_id]
+ *  expense_item[price]
+ *  expense_item[cname]
+ *  expense_item[memo]
+ */
+export const addExpenseItem = data => fetch('/api/v1/expense_items/', data, 'POST');
+
+/**
+ * 删除费用支出
+ */
+export const deleteExpenseItem = id => fetch('/api/v1/expense_items/'+id, {} , 'DELETE');
+
+
+/**
  * api请求量
  */
 

@@ -23,7 +23,7 @@ let whiteListedModules = ['vue']
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
-    mwaiter: path.join(__dirname, '../src/waiter/mobile_main.js'),
+    //mwaiter: path.join(__dirname, '../src/waiter/mobile_main.js'),
     waiter: path.join(__dirname, '../src/waiter/main.js')
   },
   externals: [
@@ -49,6 +49,16 @@ let rendererConfig = {
           use: [
             'css-loader',
             'postcss-loader'
+          ]
+        })
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            'css-loader',
+            'sass-loader'
           ]
         })
       },

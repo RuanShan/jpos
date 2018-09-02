@@ -4,9 +4,12 @@
     .scrollable-table {
         position: absolute;
         top: 0px;
-        bottom: 50px;
+        bottom: 40px;
         left: 0;
         right: 0;
+    }
+    .pagination-wrap{
+      position: absolute;bottom: 0;right:5px;
     }
 }
 </style>
@@ -34,7 +37,7 @@
 
 
     <!-- 分页器 START-->
-    <div class="" style="position: absolute;bottom: 15px;right:4%;margin-top: 10px;">
+    <div class="pagination-wrap"  >{{cardData.code}}
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </div>

@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 
 import { bindIpcPrinter } from '../ipc/printer'
 /**
@@ -17,6 +17,8 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
+  Menu.setApplicationMenu(null)
+
   /**
    * Initial window options
    */
@@ -55,7 +57,7 @@ app.on('ready', function(){
 
 app.on('certificate-error', function(event, webContents, url, error, certificate, callback) {
   console.log( "certificate-error, url=", url )
-  if (url.indexOf( "https://jpos_api")>=0) {
+  if (url.indexOf( "jpos_api")>=0) {
     // 验证逻辑。
     event.preventDefault();
     callback(true);

@@ -89,6 +89,11 @@
             <OrderDelivery ></OrderDelivery>
             <!-- 取单组件 End-->
           </el-tab-pane>
+          <el-tab-pane label="支出" class="ready-order">
+            <!-- 取单组件 Start-->
+            <ExpenseItems ></ExpenseItems>
+            <!-- 取单组件 End-->
+          </el-tab-pane>
         </el-tabs>
       </el-col>
       <el-col :span="11">
@@ -138,6 +143,7 @@ import CustomerButton from "@/components/CustomerButton.vue"
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
 import MemberAdd from "@/components/MemberAdd.vue"
 import OrderDelivery from "@/components/OrderDelivery.vue"
+import ExpenseItems from "@/components/ExpenseItems.vue"
 import _ from "lodash"
 
 import {
@@ -189,7 +195,8 @@ export default {
     CustomerButton,
     CheckoutDialog,
     MemberAdd,
-    OrderDelivery
+    OrderDelivery,
+    ExpenseItems
   },
   computed: {
     customerId: function(){

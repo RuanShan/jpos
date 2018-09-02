@@ -1,4 +1,8 @@
 <template>
+<!--
+为了便于查看订单状态，这里允许查看搜索任意状态的物品
+-->
+
   <div class="order-delivery-container">
     <!-- 结账组件 Start-->
     <CheckoutDialog :order-item-list="checkoutRequiredLineItems" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible" @payment-created-event="handlePaymentCreated"></CheckoutDialog>
@@ -56,7 +60,9 @@
         <span>{{totalMoney}}</span>&nbsp;
         <i>元</i>
       </div>
-      <div class="check-button font-color" @click="handleDeliverOrders()" > 确认取单 ：&nbsp;￥&nbsp;{{totalMoney}} </div>
+      <div class=" font-color"  >
+        <el-button type="success" @click="handleDeliverOrders()" class="check-button">确认取单 ：&nbsp;￥&nbsp;{{totalMoney}}</el-button>
+      </div>
     </div>
 
   </div>
@@ -176,6 +182,10 @@ export default {
         return total += item.price
       }, 0)
       return Number(t).toFixed(2)
+    },
+    isDeliverable(){
+      let states = this.computedLineItemGroups.map((group)=>{ return group.state })
+      return states.length ==1 && states[0] == this.LineItemGroupStateEnum.ready
     }
   },
   methods:{
@@ -241,7 +251,8 @@ export default {
     },
     async findOrderByCustomer(){
       let cid = this.selectedCustomerId
-      let q = { user_id_eq: cid, group_state_in: ['ready', 'pending']}
+
+      let q = { user_id_eq: cid, group_state_in: this.lineItemGroupProgressStates }
       const ordersResult = await findOrders({ q })
       this.orderList = this.buildOrders(ordersResult)
       this.currentOrders = this.orderList
@@ -272,14 +283,22 @@ export default {
       this.completeOrders()
     },
     handleDeliverOrders(){
-      //检查每件物品对应的Order用户是否付款， 如果没有，弹出结账对话框,
-      if( this.checkoutTotal > 0){
-        this.checkoutDialogVisible = true
+      if( this.isDeliverable){
+        //检查每件物品对应的Order用户是否付款， 如果没有，弹出结账对话框,
+        if( this.checkoutTotal > 0){
+          this.checkoutDialogVisible = true
+        }else{
+          //检查所有物品是否为待交付状态，如果是，弹出确认框
+          //$confirm(message, title, options)
+          this.$confirm("确定交付客户以上物品吗？").then(()=>{
+            this.completeOrders()
+          })
+        }
       }else{
-        //$confirm(message, title, options)
-        this.$confirm("确定交付客户以上物品吗？").then(()=>{
-          this.completeOrders()
-        })
+        this.$message({
+          message: '抱歉，物品还有没全部处理好，暂时无法交付客户！',
+          type: 'error'
+        });
       }
     },
     completeOrders(){
@@ -300,8 +319,14 @@ export default {
 </script>
 
 <style lang="scss">
-.font-color{
-  color: white;
-}
 
+
+.order-delivery-container{
+  .order-sum{
+    line-height: 30px;
+  }
+  .font-color{
+    color: white;
+  }
+}
 </style>
