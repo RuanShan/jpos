@@ -64,7 +64,7 @@ export const findUserAndEntries = data => fetch('/api/v1/users/entries', data, '
 /**
  * 获取费用支出分类列表
  */
-export const getExpenses = () => fetch('/api/v1/expenses');
+export const getExpenses = () => fetch('/api/v1/expense_categories');
 
 /**
  * 获取费用支出信息列表
