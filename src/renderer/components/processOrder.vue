@@ -163,10 +163,7 @@ import {
     findOrders, getOrder, evolvePosOrders
 }
 from '@/api/getData'
-import {
-    userDataMixin, orderDataMixin
-}
-from '@/components/mixin/commonDataMixin'
+
 import {
     apiResultMixin
 }
@@ -192,7 +189,7 @@ export default {
 
             }
         },
-        mixins: [userDataMixin, orderDataMixin, apiResultMixin],
+        mixins: [ apiResultMixin],
         props: ['dialogVisible', 'orderState', 'orderCounts'],
         created() {
             console.log('processOrder created')

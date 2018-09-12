@@ -142,11 +142,7 @@ import {
   findOrderByGroupNumber
 }
 from '@/api/getData'
-import {
-  userDataMixin,
-  orderDataMixin
-}
-from '@/components/mixin/commonDataMixin'
+
 import {
   apiResultMixin
 }
@@ -181,7 +177,7 @@ export default {
       scannerDialogVisible: false
     }
   },
-  mixins: [DialogMixin, userDataMixin, orderDataMixin, apiResultMixin],
+  mixins: [DialogMixin, apiResultMixin],
   components: { 'item-scanner-dialog': ItemScannerDialog},
   props: ['dialogVisible', 'orderState', 'orderCounts'],
   created() {

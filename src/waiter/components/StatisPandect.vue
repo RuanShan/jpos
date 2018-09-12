@@ -93,14 +93,13 @@
       <div class="">
         <!-- 門店選擇 START-->
         <fieldset>
-          <legend>功能选择</legend>
+          <legend>功能选择2</legend>
           <el-form :inline="true" :model="formData" class="demo-form-inline">
             <el-form-item label="时间区间">
               <el-date-picker class="date-picker" v-model="selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
               </el-date-picker>
             </el-form-item>
-
-            <store-select  v-bind:value.sync="formData.storeId" />           
+            <store-select  v-bind:value.sync="formData.storeId"  v-if="authorizeMultiStore()"/>
             <el-form-item>
               <el-button type="primary" class="order-ok" size="mini" @click="onSubmit">确定</el-button>
             </el-form-item>

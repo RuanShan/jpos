@@ -178,11 +178,7 @@ import {
   evolveLineItemGroups
 }
 from '@/api/getData'
-import {
-  userDataMixin,
-  orderDataMixin
-}
-from '@/components/mixin/commonDataMixin'
+
 import {
   apiResultMixin
 }
@@ -213,7 +209,7 @@ export default {
 
     }
   },
-  mixins: [DialogMixin, userDataMixin, orderDataMixin, apiResultMixin],
+  mixins: [DialogMixin, apiResultMixin],
   props: ['dialogVisible', 'orderState', 'itemCounts'],
   created() {
   },

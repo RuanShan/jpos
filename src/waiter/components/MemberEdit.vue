@@ -1,85 +1,83 @@
 <style lang="scss" >
 .add-member-container {
-  .box-card {
-  }
-  .new-member-form {
-    margin: 24px 12px;
-  }
-  .actions {
-    margin: 16px auto;
-    text-align: center;
-  }
+    .box-card {}
+    .new-member-form {
+        margin: 24px 12px;
+    }
+    .actions {
+        margin: 16px auto;
+        text-align: center;
+    }
 }
 .edit-window {
-  margin-top: -70px;
-  .el-form-item {
-    margin-bottom: 14px;
-  }
-  .member-edit-form {
-    padding: 10px 10px;
-    padding-bottom: 0;
-    .el-card__body {
-      padding-bottom: 0;
+    margin-top: -70px;
+    .el-form-item {
+        margin-bottom: 14px;
     }
-  }
+    .member-edit-form {
+        padding: 10px 10px 0;
+        .el-card__body {
+            padding-bottom: 0;
+        }
+    }
 }
 </style>
 
 <template>
-  <div>
-    <!-- 会员编辑窗口 -> START -->
-    <el-dialog class="edit-window" title="会     员     编     辑" :visible="computedVisible" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="handleCloseDialog">
-      <hr style="margin-top: -15px;">
-      <el-row>
-        <el-col :span="24">
-          <el-form :model="memberFormData" :rules="rules" ref="memberFormData" status-icon label-width="100px" class="member-edit-form">
+<div>
+  <!-- 会员编辑窗口 -> START -->
+  <el-dialog class="edit-window" title="会     员     编     辑" :visible="computedVisible" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="handleCloseDialog">
+    <hr style="margin-top: -15px;">
 
-            <el-form-item label="电话" prop="mobile" required>
-              <el-input v-model="memberFormData.mobile"></el-input>
-            </el-form-item>
-            <el-form-item label="姓名" prop="userName">
-              <el-input v-model="memberFormData.userName"></el-input>
-            </el-form-item>
-            <el-form-item label="性别" prop="gender">
-              <el-select v-model="memberFormData.gender" placeholder="请选择" style="width:100%">
-                <el-option v-for="item in sex" :key="item.value" :value="item.value"  :label="item.label">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="生日" prop="birth">
-              <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="MM 月 dd 日" style="width: 100%;"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="联系地址" prop="address">
-              <el-input v-model="memberFormData.address"></el-input>
-            </el-form-item>
-            <el-form-item label="备注" prop="memo">
-              <el-input type="textarea" v-model="memberFormData.memo"></el-input>
-            </el-form-item>
-          </el-form>
-        </el-col>
-      </el-row>
+    <el-form :model="memberFormData" :rules="rules" ref="memberFormData" status-icon label-width="100px" class="member-edit-form">
 
-      <hr style="margin-top: 4px;">
+      <el-form-item label="电话" prop="mobile" required>
+        <el-input v-model="memberFormData.mobile"></el-input>
+      </el-form-item>
+      <el-form-item label="姓名" prop="userName">
+        <el-input v-model="memberFormData.userName"></el-input>
+      </el-form-item>
+      <el-form-item label="性别" prop="gender">
+        <el-select v-model="memberFormData.gender" placeholder="请选择" style="width:100%">
+          <el-option v-for="item in sex" :key="item.value" :value="item.value" :label="item.label">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="生日" prop="birth">
+        <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="MM 月 dd 日" style="width: 100%;"></el-date-picker>
+      </el-form-item>
+      <el-form-item label="联系地址" prop="address">
+        <el-input v-model="memberFormData.address"></el-input>
+      </el-form-item>
+      <el-form-item label="备注" prop="memo">
+        <el-input type="textarea" v-model="memberFormData.memo"></el-input>
+      </el-form-item>
 
-      <el-row type="flex" justify="center">
-        <el-col :span="18">
-          <div class="actions">
-            <el-button type="primary" @click="updateCustomer">更新</el-button>
-            <el-button @click="closeWindow">关闭</el-button>
-          </div>
-        </el-col>
-      </el-row>
-    </el-dialog>
-  </div>
+
+      <hr>
+
+      <el-form-item label="">
+        <el-button type="primary" @click="updateCustomer">更新</el-button>
+        <el-button @click="closeWindow">关闭</el-button>
+      </el-form-item>
+    </el-form>
+
+  </el-dialog>
+</div>
 </template>
 
 
 <script>
-import { updateCustomer, customerMobileValidate } from "@/api/getData";
-import { DialogMixin } from '@/components/mixin/DialogMixin'
+import {
+  updateCustomer,
+  customerMobileValidate
+} from "@/api/getData";
+import {
+  DialogMixin
+} from '@/components/mixin/DialogMixin'
 
 export default {
-  props: ['dialogVisible','customerData'],
+  props: ['dialogVisible', 'customerData'],
   mixins: [DialogMixin],
   data() {
     //验证卡号--1.不能空;2.必须是数字;3.四至十一个字符
@@ -135,8 +133,7 @@ export default {
       },
       returnData: {}, //添加会员方法,异步,请求服务器,调用getData.js中createCustomer
       rules: {
-        code: [
-          {
+        code: [{
             required: true,
             min: 4,
             max: 11,
@@ -146,20 +143,31 @@ export default {
           //{ validator: checkmemberNum, trigger: "blur" }
         ],
 
-        mobile: [
-          { type: "string", required: true, message: "请输入正确的电话号码", pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, trigger: "blur" },
-          { validator: validPhone, message: "电话号码已经注册过。", trigger: "blur" }
-        ],
-        paymentPassword: [
+        mobile: [{
+            type: "string",
+            required: true,
+            message: "请输入正确的电话号码",
+            pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
+            trigger: "blur"
+          },
           {
-            min: 6,
-            max: 11,
-            message: "长度在 6 到 11 个字符",
+            validator: validPhone,
+            message: "电话号码已经注册过。",
             trigger: "blur"
           }
         ],
-        paymentAmount: [
-          { type: "integer", required: true, message: "请输入充值金额", trigger: "blur" },
+        paymentPassword: [{
+          min: 6,
+          max: 11,
+          message: "长度在 6 到 11 个字符",
+          trigger: "blur"
+        }],
+        paymentAmount: [{
+            type: "integer",
+            required: true,
+            message: "请输入充值金额",
+            trigger: "blur"
+          },
           {
             min: 0,
             max: 1000000,
@@ -260,15 +268,22 @@ export default {
 
       let order = null
       if (this.isAddingCard) {
-        user.cards_attributes = [{ code: this.cardFormData.code, variant_id: this.cardFormData.variantId }]
+        user.cards_attributes = [{
+          code: this.cardFormData.code,
+          variant_id: this.cardFormData.variantId
+        }]
 
         order = {
-          payments: [
-            { payment_method_id: this.cardFormData.paymentMethodId, amount: this.cardFormData.paymentAmount }
-          ]
+          payments: [{
+            payment_method_id: this.cardFormData.paymentMethodId,
+            amount: this.cardFormData.paymentAmount
+          }]
         }
       }
-      return { user, order }
+      return {
+        user,
+        order
+      }
     },
 
     fillIn() {
@@ -281,8 +296,8 @@ export default {
     //打开窗口时事件处理函数-----
     openWindow() {
       // 传入的当前选择客户数据
-      this.memberFormData = Object.assign({}, this.customerData )
-      console.log( "openWindow--this.memberFormData=", this.memberFormData )
+      this.memberFormData = Object.assign({}, this.customerData)
+      console.log("openWindow--this.memberFormData=", this.memberFormData)
     },
     //关闭窗口时事件处理函数-----
     closeWindow() {

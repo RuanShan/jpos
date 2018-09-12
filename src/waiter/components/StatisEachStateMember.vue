@@ -67,7 +67,7 @@
           </el-date-picker>
         </el-form-item>
 
-        <store-select  v-bind:value.sync="formData.storeId" />
+        <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
 
       <el-form-item>
         <el-button class="order-ok" type="primary" size="mini">确定</el-button>

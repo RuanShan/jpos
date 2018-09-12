@@ -97,7 +97,6 @@
 <script>
     import headTop from '@/components/layout/headTop'
     import {findOrders, getOrder} from '@/api/getData'
-    import {userDataMixin, orderDataMixin} from '@/components/mixin/commonDataMixin'
     import { apiResultMixin } from '@/components/apiResultMixin'
     export default {
       data () {
@@ -115,7 +114,7 @@
       components: {
         headTop
       },
-      mixins: [userDataMixin, orderDataMixin, apiResultMixin],
+      mixins: [apiResultMixin],
       created(){
         this.getCurrentUser().then(res=>{
           if (this.userInfo.id) {

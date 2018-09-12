@@ -37,7 +37,7 @@
                     <tr><th>客户类型</th><td>{{currentCustomer.customerType}}</td><th>移动电话</th><td>{{currentCustomer.mobile}}</td>
                       <th>消费金额</th><td>{{currentCustomer.normalOrderTotal}}元</td>
                     </tr>
-                    <tr ><th><i class="el-icon-circle-check-outline"></i>会员卡号</th>
+                    <tr ><th>会员卡号</th>
                       <td>{{currentCard.code}}</td><th>会员卡类型</th><td>{{currentCard.name}}</td>
                       <th>会员卡余额</th><td>{{currentCard.amountRemaining}}</td>
                     </tr>

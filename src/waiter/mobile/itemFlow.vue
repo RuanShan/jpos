@@ -281,10 +281,6 @@ import {
   getLineItemGroupCounts
 }
 from '@/api/getData'
-import {
-  userDataMixin
-}
-from '@/components/mixin/commonDataMixin'
 
 export default {
   data() {
@@ -341,7 +337,7 @@ export default {
     ProductTransfer,
     WorkerPerformance
   },
-  mixins: [userDataMixin],
+  mixins: [],
   created() {
     this.$bus.$on('order-created-gevent', () => {
       console.log('on order-created-gevent')

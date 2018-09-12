@@ -119,10 +119,6 @@ import {
     findLineItemGroups, findOrderByGroupNumber, evolveLineItemGroups
 }
 from '@/api/getData'
-import {
-    userDataMixin, orderDataMixin
-}
-from '@/components/mixin/commonDataMixin'
 
 import {
     apiResultMixin
@@ -149,7 +145,7 @@ export default {
                 multipleSelection: [],
             }
         },
-        mixins: [userDataMixin, orderDataMixin,  apiResultMixin, printMixin],
+        mixins: [apiResultMixin, printMixin],
         props: ['dialogVisible', 'orderState','nextOrderState', 'orderCounts'],
         created() {
         },

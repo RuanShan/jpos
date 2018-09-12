@@ -127,10 +127,6 @@ import {
     findOrders, evolvePosOrders, getStore, getUserInfo, getAddressById
 }
 from '@/api/getData'
-import {
-  userDataMixin
-}
-from '@/components/mixin/commonDataMixin'
 
 export default {
     data() {
@@ -155,7 +151,7 @@ export default {
     components: {
         'footer-bar': FooterBar
     },
-    mixins: [userDataMixin],
+    mixins: [],
     beforeRouteEnter(to, from, next) {
         next(vm => {
             // 通过 `vm` 访问组件实例

@@ -136,10 +136,7 @@ import {
     findOrderByGroupNumber, evolveLineItemGroups
 }
 from '@/api/getData'
-import {
-    userDataMixin, orderDataMixin
-}
-from '@/components/mixin/commonDataMixin'
+
 import {
     apiResultMixin
 }
@@ -162,7 +159,7 @@ export default {
                 multipleSelection: [],
             }
         },
-        mixins: [userDataMixin, orderDataMixin, apiResultMixin],
+        mixins: [ apiResultMixin],
         props: ['dialogVisible', 'orderState', 'orderCounts'],
         created() {
             console.log('scanProduct created')

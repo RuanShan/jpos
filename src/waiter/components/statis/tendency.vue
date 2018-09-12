@@ -38,7 +38,7 @@ export default {
       const option = {
         color: colors,
         title: {
-          text: '走势图',
+          text: '',
           subtext: ''
         },
         tooltip: {

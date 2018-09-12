@@ -29,7 +29,7 @@
             <el-card class="box-card">
               <div slot="header" class="clearfix">
                 <span>客户基本信息</span>
-                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                 <el-checkbox label="添加会员卡" name="cardFlag" v-model="cardFlag" style="float: right; "></el-checkbox>
               </div>
               <el-form-item label="电话" prop="mobile" required>
                 <el-input v-model="memberFormData.mobile"></el-input>
@@ -58,12 +58,11 @@
           </el-form>
 
         </el-col>
-        <el-col :span="10">
+        <el-col :span="10" v-show="cardFlag">
           <el-form :model="cardFormData" :rules="rules" ref="cardFormData" status-icon label-width="100px" class="new-member-form">
             <el-card class="box-card">
               <div slot="header" class="clearfix">
                 <span>会员卡信息</span>
-                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
               </div>
               <el-form-item label="会员卡号" prop="code" required>
                 <el-input v-model="cardFormData.code"></el-input>
@@ -231,7 +230,8 @@ export default {
              picker.$emit('pick', null);
            }
          }]
-       }
+       },
+      cardFlag: true
     };
   },
   computed: {

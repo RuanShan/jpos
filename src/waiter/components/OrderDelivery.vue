@@ -48,7 +48,7 @@
       <el-table-column prop="price" label="金额">金额</el-table-column>
       <el-table-column label="操作" width="50">
         <template slot-scope="scope">
-          <el-button type="danger" icon="el-icon-minus" circle @click="discardLineItemGroup(scope.row)" size="mini"></el-button>
+          <el-button type="danger" icon="el-icon-delete"  circle @click="discardLineItemGroup(scope.row)" size="mini"></el-button>
        </template>
       </el-table-column>
     </el-table>

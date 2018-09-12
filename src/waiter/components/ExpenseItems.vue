@@ -15,6 +15,14 @@
     border-bottom: 1px solid #ebeef5;
     background-color: #fff;
     padding: 5px;
+    .search-form{
+      .el-form-item.el-form-item--mini{
+        margin: 0;
+      }
+      table td,table th{
+        padding: 6px 6px;
+      }
+    }
   }
 }
 </style>
@@ -55,7 +63,7 @@
       <el-table-column prop="memo" label="备注"></el-table-column>
       <el-table-column label="操作" width="50">
         <template slot-scope="scope">
-          <el-button type="danger" icon="el-icon-minus" circle @click="handleDeleteExpenseItem(scope.row)" size="mini"></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle @click="handleDeleteExpenseItem(scope.row)" size="mini"></el-button>
        </template>
       </el-table-column>
     </el-table>

@@ -150,10 +150,7 @@ import {
     getProducts, findUsers, findLineItemGroups, fulfillLineItems, findOrderByGroupNumber
 }
 from '@/api/getData'
-import {
-    userDataMixin, orderDataMixin
-}
-from '@/components/mixin/commonDataMixin'
+
 import {
     apiResultMixin
 }
@@ -180,7 +177,7 @@ export default {
                 multipleSelection: [],
             }
         },
-        mixins: [userDataMixin, orderDataMixin, apiResultMixin],
+        mixins: [ apiResultMixin],
         props: ['dialogVisible', 'orderState', 'orderCounts'],
         created() {
 

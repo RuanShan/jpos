@@ -67,8 +67,27 @@ export var orderDataMixin = {
       return false
     },
     authorizeMultiStore(){
-      return this.userInfo.roleNames.indexOf('admin') >= 0
+      console.log( "authorizeMultiStore" )   
+       return this.userAuthorize('MultiStore')
+    },
+    userAuthorize( permission ){
+      let userRole = this.userInfo.roleNames[0]
+      console.log( "authorize=", permission, "userRole=",userRole )
+      if( userRole == 'admin'){
+        return true
+      }else{
+        if( userRole == 'waiter'){
+          if( permission == 'xxx'){
+            return true
+          }else{
+            return false
+          }
+        }else{
+          return false
+        }
+      }
     }
+
   }
 
 }
