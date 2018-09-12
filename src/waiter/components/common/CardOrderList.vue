@@ -57,7 +57,7 @@
   <!-- 会员消费表格 END-->
 
   <!-- 分页器 START-->
-  <div class="pagination-wrap" style="">{{cardData.code}}
+  <div class="pagination-wrap" style="">
     <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalCount">
     </el-pagination>
   </div>

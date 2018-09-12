@@ -1,5 +1,5 @@
 <style lang="scss">
-@import "../style/mixin";
+@import "~@/style/mixin";
 .members-container {
   .members .title-wrap {
     text-align: center;
@@ -113,7 +113,7 @@ import leftNav from "@/components/layout/LeftNav.vue"
 import headTop from "@/components/layout/headTop.vue";
 
 import StoreSelect from '@/components/common/StoreSelect.vue'
-import MemberCenterNew from "@/components/MemberCenterNew.vue";
+import MemberCenterNew from "./MemberCenterNew.vue";
 import {
   findCustomers, deleteCustomer
 } from "@/api/getData";

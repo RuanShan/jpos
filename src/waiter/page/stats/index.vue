@@ -104,18 +104,17 @@
           <el-tab-pane label="总览">
             <statis-pandect></statis-pandect>
           </el-tab-pane>
-
           <el-tab-pane label="会员充值统计">
             <statis-each-state-member v-if="cardTabVisible" ></statis-each-state-member>
           </el-tab-pane>
-
           <el-tab-pane label="订单统计">
             <statis-each-state-order  v-if="orderTabVisible" ></statis-each-state-order>
           </el-tab-pane>
-
+          <el-tab-pane label="费用统计">
+            <StatisExpense  v-if="expenseTabVisible" ></StatisExpense>
+          </el-tab-pane>
           <el-tab-pane label="工厂统计">
           </el-tab-pane>
-
           <el-tab-pane label="会员情况统计">
             <statis-member-case  v-if="memberTabVisible"  > </statis-member-case>
           </el-tab-pane>
@@ -134,11 +133,12 @@ import leftNav from "@/components/layout/LeftNav.vue"
 import headTop from "@/components/layout/headTop.vue";
 
 import DaySale from '@/components/statis/DaySale.vue'
-import StatisPandect from '../components/StatisPandect.vue';
-import StatisEachStateMember from '../components/StatisEachStateMember.vue';
-import StatisEachStateOrder from '../components/StatisEachStateOrder.vue';
-import StatisMemberCase from '../components/StatisMemberCase.vue';
-import StatisStaffClockIn from '../components/StatisStaffClockIn.vue';
+import StatisPandect from './StatisPandect.vue';
+import StatisEachStateMember from './StatisEachStateMember.vue';
+import StatisEachStateOrder from './StatisEachStateOrder.vue';
+import StatisMemberCase from './StatisMemberCase.vue';
+import StatisStaffClockIn from './StatisStaffClockIn.vue';
+import StatisExpense from './StatisExpense.vue';
 
 export default {
   components: {
@@ -150,6 +150,7 @@ export default {
     "statis-each-state-order": StatisEachStateOrder,
     "statis-member-case": StatisMemberCase,
     "statis-staff-clock-in": StatisStaffClockIn,
+    StatisExpense
   },
   data() {
     return {
@@ -158,6 +159,7 @@ export default {
       memberTabVisible: false, //各个门店会员统计组件显示标志位
       orderTabVisible: false,  //各个门店订单统计组件显示标志位
       cardTabVisible: true, //窗口显示标志位
+      expenseTabVisible: false,
       tabsNumber: '0', //字符串，从0开始，标签页的顺序值
       // stateValue: "", //門店選項
       // payValue: "", //支付方式选项
@@ -181,8 +183,11 @@ export default {
           this.orderTabVisible = true;
           break;
         case "3":
+          this.expenseTabVisible = true;
           break;
         case "4":
+          break;
+        case "5":
           this.memberTabVisible = true;
           break;
         default:

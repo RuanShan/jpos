@@ -256,10 +256,10 @@ body > .el-container {
 </template>
 
 <script>
-import MemberExpenseCalendar from "@/components/MemberExpenseCalendar.vue";
-import MemberRechargeRecord from "@/components/MemberRechargeRecord.vue";
-import MemberCenterNew from "@/components/MemberCenterNew.vue";
-import MemberEdit from "@/components/MemberEdit.vue";
+import MemberExpenseCalendar from "./members/MemberExpenseCalendar.vue";
+import MemberRechargeRecord from "./members/MemberRechargeRecord.vue";
+import MemberCenterNew from "./members/MemberCenterNew.vue";
+import MemberEdit from "./members/MemberEdit.vue";
 import { getCustomer } from "@/api/getData";
 import { apiResultMixin } from '@/components/apiResultMixin';
 

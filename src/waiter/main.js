@@ -31,7 +31,7 @@ import {
 } from '@/components/apiResultMixin'
 Vue.mixin( apiResultMixin )
 
-import { orderDataMixin } from "@/components/mixin/commonDataMixin"
+import { orderDataMixin } from "@/components/mixin/DataMixin"
 Vue.mixin( orderDataMixin )
 
 router.beforeEach(function (to, from, next) {

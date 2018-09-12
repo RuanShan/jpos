@@ -1,8 +1,8 @@
 <style lang="scss">
 .member-container {
-  button.el-button span{
-    color: #fff;
-  }
+    button.el-button span {
+        color: #fff;
+    }
     .main-content {
         padding: 18px;
     }
@@ -10,8 +10,8 @@
         border: 1px solid silver;
         .member-profile {
             padding: 0 16px;
-            .head{
-              line-height: 36px;
+            .head {
+                line-height: 36px;
             }
             .member-table {
                 th {
@@ -56,7 +56,7 @@
 <template>
 <div class="member-container " v-if="customerData">
   <card-form :dialog-visible.sync="cardFormVisible" :customer-data="customerData" @card-created-event="handleCustomerChanged"></card-form>
-  <member-card-recharge :dialog-visible.sync="displayRecharge" :customer-data="customerData" :card-data="cardData"  @deposit-order-created-event="handleDepositOrderCreated"></member-card-recharge>
+  <member-card-recharge :dialog-visible.sync="displayRecharge" :customer-data="customerData" :card-data="cardData" @deposit-order-created-event="handleDepositOrderCreated"></member-card-recharge>
   <member-edit :dialog-visible.sync="displayMemberEdit" :customer-data="customerData" @customer-changed-event="handleCustomerChanged"></member-edit>
   <member-card-edit :dialog-visible.sync="displayMemberCardEdit" :customer-data.sync="customerData" :card-data.sync="cardData" @card-changed-event="handleCardChanged"></member-card-edit>
   <div class="cel-window">
@@ -76,7 +76,7 @@
             <span>会员信息 (消费 ¥{{statis.normalOrderTotal}}) </span>
             <el-button type="success" size="mini" @click="curentEdit" class="right">会员编辑</el-button>
           </div>
-          <table class="member-table">
+          <table class="member-table table">
             <tr>
               <th> 会员姓名 </th>
               <td> {{customerData.userName}} </td>
@@ -118,14 +118,14 @@
                 </div>
                 <div class="right">
                   <el-button-group v-show="item.id">
-                  <el-button type="success" size="mini" @click="cardEdit(item)">会员卡编辑</el-button>
-                  <el-button type="success" size="mini" @click="cardRecharge(item)">会员卡充值</el-button>
+                    <el-button type="success" size="mini" @click="cardEdit(item)">会员卡编辑</el-button>
+                    <el-button type="success" size="mini" @click="cardRecharge(item)">会员卡充值</el-button>
                   </el-button-group>
 
                 </div>
               </div>
               <!-- 在tab中的卡详情表 START -->
-              <table class="card-table">
+              <table class="card-table table">
                 <tr>
                   <th>会员卡号</th>
                   <td>{{item.code}}</td>
@@ -141,7 +141,7 @@
                   <td>{{item.storeName}}</td>
                   <th>开卡日期</th>
                   <td>{{item.displayCreatedAt}}</td>
-                  <th>到期时间</th>
+                  <th>到期日期</th>
                   <td>{{item.displayExpireAt}}</td>
                   <th>备注</th>
                   <td>{{item.memo}}</td>
@@ -152,10 +152,10 @@
               <div class="card-records-wrap">
                 <el-tabs type="border-card" v-model="cardRecordTabName" class="card-records  cel-scrollable-tabs">
                   <el-tab-pane label="消费记录" name="orders">
-                      <card-order-list :customer-data="customerData" :card-data="item"></card-order-list>
+                    <card-order-list :customer-data="customerData" :card-data="item"></card-order-list>
                   </el-tab-pane>
-                  <el-tab-pane label="充值记录" name="deposits">
-                      <card-deposit-list :customer-data="customerData" :card-data="item"></card-deposit-list>
+                  <el-tab-pane label="充值记录" name="deposits"  v-if="item.code.length>0">
+                    <card-deposit-list :customer-data="customerData" :card-data="item"></card-deposit-list>
                   </el-tab-pane>
                 </el-tabs>
               </div>
@@ -186,11 +186,11 @@ import {
 import CardForm from "@/components/common/CardForm.vue";
 import CardOrderList from "@/components/common/CardOrderList.vue";
 import CardDepositList from "@/components/common/CardDepositList.vue";
-import MemberCardRecharge from "@/components/MemberCardRecharge.vue";
-import MemberExpenseCalendar from "@/components/MemberExpenseCalendar.vue";
-import MemberRechargeRecord from "@/components/MemberRechargeRecord.vue";
-import MemberEdit from "@/components/MemberEdit.vue";
-import MemberCardEdit from "@/components/MemberCardEdit.vue";
+import MemberCardRecharge from "./MemberCardRecharge.vue";
+import MemberExpenseCalendar from "./MemberExpenseCalendar.vue";
+import MemberRechargeRecord from "./MemberRechargeRecord.vue";
+import MemberEdit from "./MemberEdit.vue";
+import MemberCardEdit from "./MemberCardEdit.vue";
 
 
 export default {
@@ -220,21 +220,28 @@ export default {
       displayMemberCardEdit: false, // 会员卡编辑窗口是否打开标志位
     };
   },
-  computed:{
-    cards: function(){
+  computed: {
+    cards: function () {
       //顾客会员卡数组
       let arr = []
-      if( this.customerData.cards ){
+      if (this.customerData.cards) {
         this.customerData.cards.forEach((card) => {
           let obj = {}
           obj.title = "卡号: " + card.code
-          let store = this.stores.find((s)=>{return s.id==card.storeId})
-          if( store ){   obj.storeName = store.name }
+          let store = this.stores.find((s) => {
+            return s.id == card.storeId
+          })
+          if (store) {
+            obj.storeName = store.name
+          }
           Object.assign(obj, card)
           arr.push(obj)
         })
       }
-      const nocard = { title: "无卡消费", code: ""   }
+      const nocard = {
+        title: "无卡消费",
+        code: ""
+      }
       arr.push(nocard)
       return arr
     }
@@ -283,7 +290,7 @@ export default {
       this.dialogVisible = false;
     },
     //当前会员卡编辑按钮单击事件处理函数-----
-    cardEdit( item ) {
+    cardEdit(item) {
       this.displayMemberCardEdit = true
       this.cardData = item
     },
@@ -304,16 +311,16 @@ export default {
       //上面的语句更新了customerData,但是会员列表页没有自动刷新
       this.$emit("customer-changed-event", newCustomer);
     },
-    handleCardChanged(changedCard){
+    handleCardChanged(changedCard) {
       //构造新的客户对象，
       const newCustomer = Object.assign({}, this.customerData)
-      let index = newCustomer.cards.findIndex((card)=>{
+      let index = newCustomer.cards.findIndex((card) => {
         return changedCard.id == card.id
       })
       newCustomer.cards.splice(index, 1, changedCard)
-      this.handleCustomerChanged( newCustomer )
+      this.handleCustomerChanged(newCustomer)
     },
-    handleDepositOrderCreated( changedCard){
+    handleDepositOrderCreated(changedCard) {
       console.log("handleDepositOrderCreated", changedCard)
       this.$bus.$emit('deposit-order-created-gevent')
       this.handleCardChanged(changedCard)

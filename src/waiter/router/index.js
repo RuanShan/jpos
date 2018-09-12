@@ -5,10 +5,10 @@ Vue.use(Router);
 
 const loginPage = r => require.ensure([], () => r(require('@/page/login')), 'login')
 const homePage = r => require.ensure([], () => r(require('@/page/home')), 'home')
-const posPage = r => require.ensure([], () => r(require('@/page/pos')), 'pos')
+const posPage = r => require.ensure([], () => r(require('@/page/pos/index')), 'pos')
 const itemGroupsPage = r => require.ensure([], () => r(require('@/page/itemFlow')), 'groups')
-const membersPage = r => require.ensure([], () => r(require('@/page/members')), 'members')
-const statisticsPage = r => require.ensure([], () => r(require('@/page/statistics')), 'statistics')
+const membersPage = r => require.ensure([], () => r(require('@/page/members/index')), 'members')
+const statisticsPage = r => require.ensure([], () => r(require('@/page/stats/index')), 'statistics')
 const settingPage = r => require.ensure([], () => r(require('@/page/setting')), 'setting')
 const testPage = r => require.ensure([], () => r(require('@/page/functionalTest')), 'orders')
 
@@ -42,7 +42,7 @@ const routes = [{
         meta: { title: '统计' },
     }, {
         path: '/setting',
-        name: 'setting',        
+        name: 'setting',
         component: settingPage,
         meta: { title: '设置' },
     }, {
