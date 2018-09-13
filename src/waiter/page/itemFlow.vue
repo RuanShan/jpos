@@ -1,6 +1,7 @@
 <style lang="scss" >
 @import '../style/mixin';
 .item-flow-container {
+  background-color: #f4f4f4;
   .item-flow>.title-wrap {
     text-align: center;
     line-height: 48px;
@@ -21,33 +22,37 @@
         left: 18px;
         right: 18px;
         bottom: 50px;
-        background-color: #ffffff;
-
+        display: flex;
+        .locations{
+          width: 120vmin;
+          margin: auto;
+        }
+        .heads-wrap{
+          .head{
+            background: #cccccc;
+            width: 55vmin;
+            float: left;
+            text-align: center;
+            line-height: 50px;
+          }
+        }
         .location {
             position: relative;
             float: left;
 
-            width: 45%;
-            height: 100%;
+            width: 55vmin;
+            height: 55vmin;
             &.ship {
-                width: 10%;
+                width: 10vmin;
                 border-color: transparent;
-                background-color: gray;
                 text-align: center;
+                .step{
+                  background-color: transparent;
+                }
             }
-            .head {
-                position: absolute;
-                top: 0;
-                right: 0;
-                left: 0;
-                text-align: center;
-                z-index: 1;
-            }
+
             .actions {
-                position: absolute;
-                bottom: 0;
-                right: 0;
-                left: 0;
+                text-align: center;
             }
             .overlay {
                 position: absolute;
@@ -59,25 +64,95 @@
                 background-color: #fff;
                 opacity: 0.5;
             }
+            .arraw{
+              position: absolute;
+              background-color: yellow;
+              width: 60px;
+              height: 8px;
+              transform: translate(-50%, -50%);
+              /* point right, position top half part*/
+              &.pr-pc{
+                top: 25%;
+                left: 50%;
+              }
+              &.pr-pr{
+                top: 25%;
+                right: 0;
+                transform: translate( 0, -50%);
+              }
+              &.pl-pc{
+                top: 75%;
+                left: 50%;
+              }
+              &.pl-pr{
+                top: 75%;
+                right: 0;
+                transform: translate( 0, -50%);
+              }
+              &.pl-pc{
+                top: 75%;
+                left: 50%;
+              }
+              &.pl-pl{
+                top: 75%;
+                left: 0;
+                transform: translate(0, -50%);
+              }
+              &.pr-pl{
+                top: 25%;
+                left: 0;
+                transform: translate(0, -50%);
+              }
+              &.pr-plr{
+                top: 25%;
+                left: 50%;
+                right: 25%;
+                width: auto;
+                transform: translate(0, -50%);
+              }
+              &.pl-plr{
+                top: 75%;
+                left: 50%;
+                right: 25%;
+                width: auto;
+                transform: translate(0, -50%);
+              }
+              &.pb-ptc{
+                bottom: 60%;
+                top: 25%;
+                width: 8px;
+                left:75%;
+                height: auto;
+                transform: translate(-50%, -4px);
+              }
+              &.pt-pbc{/* point top, position bottom center */
+                bottom: 25%;
+                top: 60%;
+                width: 8px;
+                height: auto;
+                left:75%;
+                transform: translate(-50%, 4px);
+              }
+            }
         }
         .step {
             position: relative;
             float: left;
             height: 100%;
+            background-color: #ffffff;
+
             &.step0 {
-                min-height: 300px;
+              height: 27.5vmin;
             }
             &.step1 {
                 width: 50%;
                 min-height: 400px;
-                background-color: #32CD32;
-            }
+             }
             &.step2 {
                 width: 50%;
                 float: right;
                 min-height: 400px;
-                background-color: #32CD32;
-            }
+             }
             &.transfer1 {
                 width: 50%;
                 height: 50%;
@@ -99,34 +174,7 @@
                 @include center padding: 8px;
                 background-color: #32CD32;
             }
-            .linex {
-                @include center height: 2px;
-                width: 100%;
-                border-color: inherit;
-                background-color: #c0c4cc;
-                &.offset-l50 {
-                    width: 50%;
-                    transform: translate(0, -50%);
-                }
-                &.offset-r50 {
-                    width: 50%;
-                    transform: translate(-100%, -50%);
-                }
-            }
-            .liney {
-                @include center height: 100%;
-                width: 2px;
-                border-color: inherit;
-                background-color: #c0c4cc;
-                &.offset-t50 {
-                    height: 50%;
-                    transform: translate(-50%, 0);
-                }
-                &.offset-b50 {
-                    height: 50%;
-                    transform: translate(-50%, -100%);
-                }
-            }
+
             .badge {
                 position: relative;
                 vertical-align: middle;
@@ -193,96 +241,110 @@
         </el-form>
       </div>
       <div class="item-flow-control clear">
+        <div class="clear locations" >
+          <div class="heads-wrap clear" style="">
+            <div class="head"> <span> 门店 </span> </div>
+            <div class="head right">  <span class=" "> 工厂 </span> </div>
+          </div>
+          <div class="clear">
+            <div class="location clear">
 
-        <div class="location clear">
+              <div class="step step1">
 
-          <div class="step step1">
-            <div class="head">
-              <span> 门店 </span>
+                <div class="pending part-top">
+
+                  <div class="title">
+                    <el-button @click="processItems('pending')">
+                      客户物品
+                      <div class="badge"> <sup> {{itemCounts.pending}} </sup> </div>
+                    </el-button>
+
+                  </div>
+                </div>
+
+                <div class="ready part-bottom">
+                  <div class="title">
+                    <el-button @click="processItems('ready')"> 等待交付
+                      <div class="badge"> <sup> {{itemCounts.ready}} </sup> </div>
+                    </el-button>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="step transfer1">
+                <div class="title">
+                  <el-button @click="handleTransferProducts('pending', 'ready_for_factory')">门店发货
+                    <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
+                  </el-button>
+                </div>
+              </div>
+
+              <div class="step transfer1" style="top:50%;">
+                <div class="title">
+                  <el-button @click="handleTransferProducts('ready_for_store', 'ready')">
+                    门店待验收
+                    <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
+                  </el-button>
+                </div>
+              </div>
+
+              <div class="arraw pr-pc"> </div>
+              <div class="arraw pr-pr"> </div>
+              <div class="arraw pl-pc"> </div>
+              <div class="arraw pl-pr"> </div>
+
             </div>
-            <div class="pending part-top">
-              <div class="title">
-                <el-button @click="processItems('pending')">
-                  客户物品
-                  <div class="badge"> <sup> {{itemCounts.pending}} </sup> </div>
-                </el-button>
 
+            <div class="location ship">
+              <div class="step step0" style="width:100%;">
+                <div class="title"> 运输 </div>
+              </div>
+              <div class="step step0" style="width:100%;">
+                <div class="title"> 运输 </div>
               </div>
             </div>
 
-            <div class="ready part-bottom">
-              <div class="title">
-                <el-button @click="processItems('ready')"> 等待交付
-                  <div class="badge"> <sup> {{itemCounts.ready}} </sup> </div>
-                </el-button>
+            <div class="location clear">
+              <div class="overlayx"></div>
+              <div class="step step2">
+                <div class="title">
+                  <el-button @click="processItems('processing')">
+                    <div class="badge"> <sup> {{itemCounts.processing}} </sup> </div> 专业服务
+                    <div class="badge"> <sup> {{itemCounts.processed}} </sup> </div>
+                  </el-button>
+                  <div class="actions">
+                    <el-button @click="handleWorkerPerformance('processing')">工作量录入</el-button>
+                  </div>
+                </div>
+
               </div>
-            </div>
+              <div class="step transfer2">
+                <div class="title">
+                  <el-button @click="handleTransferProducts('ready_for_factory', 'processing')"> 工厂待收货
+                    <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
+                  </el-button>
+                </div>
+              </div>
 
-          </div>
+              <div class="step transfer2" style="top:50%;">
+                <div class="title">
+                  <el-button @click="handleTransferProducts('processed', 'ready_for_store')" size="small"> 工厂发货
+                    <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
+                  </el-button>
+                </div>
+              </div>
 
-          <div class="step transfer1">
-            <div class="linex "> </div>
-            <div class="title">
-              <el-button @click="handleTransferProducts('pending', 'ready_for_factory')">门店发货
-                <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
-              </el-button>
-            </div>
-          </div>
+              <div class="arraw pr-plr"> </div>
+              <div class="arraw pr-pl"> </div>
+              <div class="arraw pl-plr"> </div>
+              <div class="arraw pl-pl"> </div>
+              <div class="arraw pb-ptc"> </div>
+              <div class="arraw pt-pbc"> </div>
 
-
-          <div class="step transfer1" style="top:50%;">
-            <div class="linex " style=""> </div>
-            <div class="title">
-              <el-button @click="handleTransferProducts('ready_for_store', 'ready')">
-                门店待验收
-                <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
-              </el-button>
-            </div>
-          </div>
-        </div>
-
-        <div class="location ship">
-          <div class="step step0" style="width:100%;">
-            <div class="title"> 运输 </div>
-          </div>
-          <div class="step step0" style="width:100%;">
-            <div class="title"> 运输 </div>
-          </div>
-        </div>
-
-        <div class="location clear">
-          <div class="overlayx"></div>
-          <div class="step step2">
-            <div class="head"> 工厂 </div>
-            <div class="title">
-              <el-button @click="processItems('processing')">
-                <div class="badge"> <sup> {{itemCounts.processing}} </sup> </div> 专业服务
-                <div class="badge"> <sup> {{itemCounts.processed}} </sup> </div>
-              </el-button>
-            </div>
-            <div class="actions">
-              <el-button @click="handleWorkerPerformance('processing')">工作量录入</el-button>
-            </div>
-          </div>
-          <div class="step transfer2">
-            <div class="linex"> </div>
-            <div class="title">
-              <el-button @click="handleTransferProducts('ready_for_factory', 'processing')"> 工厂待收货
-                <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
-              </el-button>
-            </div>
-          </div>
-
-          <div class="step transfer2" style="top:50%;">
-            <div class="linex"> </div>
-            <div class="title">
-              <el-button @click="handleTransferProducts('processed', 'ready_for_store')" size="small"> 工厂发货
-                <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
-              </el-button>
             </div>
           </div>
         </div>
-
 
       </div>
     </div>

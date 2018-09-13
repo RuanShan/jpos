@@ -1,13 +1,239 @@
+
+<style lang="scss" >
+.pos {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    right: 0;
+    bottom: 50px;
+    border-bottom: 1px solid #d3dce6;
+    border-top: 1px solid #d3dce6;
+    span.vue-xeditable-value {
+        display: block;
+    }
+    input.vue-xeditable-form-control {
+        width: 100%;
+        padding: 0;
+    }
+    .pos-content {
+        height: 100%;
+        .pos-order {
+            position: relative;
+            height: 100%;
+            .el-tabs {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            .el-tabs__content {
+                flex-grow: 1;
+                .el-tab-panel {
+                    height: 100%;
+                }
+            }
+        }
+        .order-final {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            .check-button {
+                padding: 0;
+                width: 100%;
+                line-height: 50px;
+                height: 50px;
+                text-align: center;
+                font-size: 21px;
+                background-color: #67c23a;
+                border-color: #67c23a;
+                span {
+                    color: #fff;
+                }
+            }
+
+        }
+    }
+    .pos-order {
+      /*background-color: #f9fafc;
+      border-right: 1px solid #c0ccda;*/
+        .vue-xeditable-empty {
+            font-style: normal;
+        }
+        .el-tabs__content{
+          padding: 0 10px;
+        }
+        .el-tabs__item {
+            min-width: 80px;
+            text-align: center;
+        }
+        .el-tabs__content {}
+        .customer-container {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            /*border-top: 1px solid #ebeef5;
+            border-bottom: 1px solid #ebeef5;
+          */
+            .search-form {
+                .el-form-item {
+                    margin-bottom: 5px;
+                }
+            }
+
+            .search-result {
+                position: relative;
+                .left {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                }
+                .right {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    right: 0;
+                }
+                .cards {
+                    position: relative;
+                    border: 1px solid #ebeef5;
+                    height: 100%;
+                    overflow-y: auto;
+                    .card {
+                        font-size: 14px;
+                        padding: 5px;
+                        position: relative;
+                        height: 3em;
+                        div {
+                            position: absolute;
+                            top: 0;
+                            left: 2em;
+                            span {
+                                display: inline-block;
+                                padding: 5px 0 0;
+                            }
+                        }
+                    }
+                }
+            }
+            table {
+                td {
+                    width: 20%;
+                }
+                td,
+                th {
+                    border: 1px solid #ebeef5;
+                    padding: 6px 10px;
+                    font-size: 14px;
+                    box-sizing: border-box;
+                    white-space: normal;
+                    line-height: 23px;
+                }
+            }
+        }
+        .order-item-list {
+            position: absolute;
+            top: 140px;
+            bottom: 80px;
+            left: 10px;
+            right: 10px;
+        }
+        .el-table__body-wrapper {
+            position: absolute;
+            top: 48px;
+            bottom: 0;
+            overflow-y: auto;
+        }
+        .customer-button {
+            height: 60px;
+            text-align: center;
+            font-size: 21px;
+            color: #fff;
+            background-color: #909399;
+            border-color: #909399;
+        }
+        .wrap{
+          background-color: #f4f4f4;
+        }
+    }
+    .order-sum {
+        height: 30px;
+        text-align: center;
+        i {
+            font-size: 12px;
+        }
+    }
+    .goods-type {
+        height: 100%;
+        .el-tabs__item {
+            min-width: 80px;
+            text-align: center;
+        }
+        .el-tabs__content {
+            position: absolute;
+            top: 55px;
+            bottom: 0;
+            overflow-y: auto;
+        }
+        .wrap{
+          background-color: #f4f4f4;
+        }
+    }
+    .cook-list {
+        padding: 0 10px 10px;
+        .cook-item {
+            height: auto;
+            padding: 2px;
+            overflow: hidden;
+
+            cursor: pointer;
+            transition: 0.5s;
+            &:hover {
+
+                transform: translate3d(0, -2px, 0);
+                border: none;
+            }
+            .food-wrapper {
+                background-color: #fff;
+                .food-img {
+                    width: 100%;
+                }
+                .good-info {
+                    text-align: center;
+                }
+                .food-name {
+                    color: brown;
+                    font-size: 14px;
+                    letter-spacing: 1px;
+                }
+                .food-price {
+                    display: block;
+                    font-size: 12px;
+                    padding-top: 4px;
+                }
+            }
+
+        }
+    }
+    .wrap {
+        margin: 10px;
+        height: calc(100% - 20px);
+        width: calc(100% - 20px);
+        position: relative;
+    }
+}
+</style>
+
 <template>
 <div>
-  <headTop ></headTop>
+  <headTop></headTop>
   <leftNav></leftNav>
   <!-- 结账组件 Start-->
   <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible" @order-created-event="handleOrderCreated"></CheckoutDialog>
   <!-- 结账组件 End-->
 
   <!-- 添加会员组件 Start-->
-  <member-add  @customer-created-event="handleCustomerCreatedEvent" :dialog-visible.sync="memberAddWindowVisible"></member-add>
+  <member-add @customer-created-event="handleCustomerCreatedEvent" :dialog-visible.sync="memberAddWindowVisible"></member-add>
   <!-- 添加会员组件 End-->
 
   <div class="pos">
@@ -17,87 +243,101 @@
     </div>
     <el-row class="pos-content">
       <el-col :span="13" class="pos-order">
-        <el-tabs>
-          <el-tab-pane label="订单" class="new-order">
-            <div class="customer-container clear">
-              <el-form ref="customerForm" size="mini"  :inline="true" class="search-form">
-                <el-form-item label="会员搜索">
-                  <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入会员/手机号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
-                    <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
+        <div class="wrap">
+          <el-tabs>
+            <el-tab-pane label="订单" class="new-order">
+              <div class="customer-container clear">
+                <el-form ref="customerForm" size="mini" :inline="true" class="search-form">
+                  <el-form-item label="会员搜索">
+                    <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入会员/手机号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
+                      <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
 
-                <el-button type="" size="mini" @click="handleNewCustomerButtonClicked" class="right">添加会员</el-button>
+                  <el-button type="" size="mini" @click="handleNewCustomerButtonClicked" class="right">添加会员</el-button>
 
-              </el-form>
-              <div class="search-result clear">
-                <div >
-                  <table style="width:100%">
-                    <tr><th>客户类型</th><td>{{currentCustomer.customerType}}</td><th>移动电话</th><td>{{currentCustomer.mobile}}</td>
-                      <th>消费金额</th><td>{{currentCustomer.normalOrderTotal}}元</td>
-                    </tr>
-                    <tr ><th>会员卡号</th>
-                      <td>{{currentCard.code}}</td><th>会员卡类型</th><td>{{currentCard.name}}</td>
-                      <th>会员卡余额</th><td>{{currentCard.amountRemaining}}</td>
-                    </tr>
-                  </table>
+                </el-form>
+                <div class="search-result clear">
+                  <div>
+                    <table style="width:100%">
+                      <tr>
+                        <th>客户类型</th>
+                        <td>{{currentCustomer.customerType}}</td>
+                        <th>移动电话</th>
+                        <td>{{currentCustomer.mobile}}</td>
+                        <th>消费金额</th>
+                        <td>{{currentCustomer.normalOrderTotal}}元</td>
+                      </tr>
+                      <tr>
+                        <th>会员卡号</th>
+                        <td>{{currentCard.code}}</td>
+                        <th>会员卡类型</th>
+                        <td>{{currentCard.name}}</td>
+                        <th>会员卡余额</th>
+                        <td>{{currentCard.amountRemaining}}</td>
+                      </tr>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
-            <el-table :data="sortedOrderItemList" border stripe style="width:100%;" class="order-item-list">
-              <el-table-column label="物品序号" :render-header="renderEditableTableHeader" width="100">
-                <template slot-scope="scope">
+              <div class="order-item-list">
+                <el-table class="fillcontain" :data="sortedOrderItemList" border style="width:100%;">
+                <el-table-column label="物品序号" :render-header="renderEditableTableHeader" width="100">
+                  <template slot-scope="scope">
                  <vue-xeditable  :name="'groupPosition_'+scope.row.index+'_xeditable'" v-model="scope.row.groupPosition" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
                </template>
-              </el-table-column>
-              <el-table-column prop="cname" label="服务项目" width="160"></el-table-column>
-              <el-table-column prop="unitPrice" label="单价" :render-header="renderEditableTableHeader" width="80">
-                <template slot-scope="scope">
+                </el-table-column>
+                <el-table-column prop="cname" label="服务项目" width="160"></el-table-column>
+                <el-table-column prop="unitPrice" label="单价" :render-header="renderEditableTableHeader" width="80">
+                  <template slot-scope="scope">
                  <vue-xeditable  :name="'unitPrice_'+scope.row.index+'_xeditable'" v-model="scope.row.unitPrice" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
                </template>
-              </el-table-column>
-              <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
-              <el-table-column prop="discount" label="折扣" width="50">折扣</el-table-column>
-              <el-table-column prop="price" label="金额" width="50">金额</el-table-column>
-              <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
-                <template slot-scope="scope">
+                </el-table-column>
+                <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
+                <el-table-column prop="discount" label="折扣" width="50">折扣</el-table-column>
+                <el-table-column prop="price" label="金额" width="50">金额</el-table-column>
+                <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
+                  <template slot-scope="scope">
                  <vue-xeditable  :name="'memo_'+scope.row.index+'_xeditable'" v-model="scope.row.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
                 </template>
-              </el-table-column>
-              <el-table-column label="操作" width="60" align="center">
-                <template slot-scope="scope">
+                </el-table-column>
+                <el-table-column label="操作" width="60" align="center">
+                  <template slot-scope="scope">
                   <el-button type="danger" icon="el-icon-delete" circle @click="delOrderItem(scope.row)" size="mini"></el-button>
                </template>
-              </el-table-column>
-            </el-table>
-            <div class="order-final">
-              <div class="order-sum">
-                <i>数量：</i>
-                <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
-                <i>金额：</i>
-                <span>¥{{totalMoney}}</span>&nbsp;
-                <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
+                </el-table-column>
+                </el-table>
               </div>
-              <div >
-                <el-button  class="check-button" @click="openCheckoutDialog()"> 收款 ：&nbsp;¥&nbsp;{{totalMoney}}</el-button>
+              <div class="order-final">
+                <div class="order-sum">
+                  <i>数量：</i>
+                  <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
+                  <i>金额：</i>
+                  <span>¥{{totalMoney}}</span>&nbsp;
+                  <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
+                </div>
+                <div>
+                  <el-button class="check-button" @click="openCheckoutDialog()"> 收款 ：&nbsp;¥&nbsp;{{totalMoney}}</el-button>
+                </div>
               </div>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="取单" class="ready-order">
-            <!-- 取单组件 Start-->
-            <OrderDelivery ></OrderDelivery>
-            <!-- 取单组件 End-->
-          </el-tab-pane>
-          <el-tab-pane label="支出" class="ready-order">
-            <!-- 取单组件 Start-->
-            <ExpenseItems ></ExpenseItems>
-            <!-- 取单组件 End-->
-          </el-tab-pane>
-        </el-tabs>
+            </el-tab-pane>
+            <el-tab-pane label="取单" class="ready-order">
+              <!-- 取单组件 Start-->
+              <OrderDelivery></OrderDelivery>
+              <!-- 取单组件 End-->
+            </el-tab-pane>
+            <el-tab-pane label="支出" class="ready-order">
+              <!-- 取单组件 Start-->
+              <ExpenseItems></ExpenseItems>
+              <!-- 取单组件 End-->
+            </el-tab-pane>
+          </el-tabs>
+        </div>
       </el-col>
-      <el-col :span="11">
-        <div class="goods-type">
+      <el-col :span="11" class="goods-type">
+
+        <div class="wrap ">
           <el-tabs>
             <el-tab-pane v-for="menu in menuList" :key="menu.id" v-bind:label="menu.name">
               <div>
@@ -142,8 +382,8 @@ import headTop from "@/components/layout/headTop.vue";
 import CustomerButton from "@/components/CustomerButton.vue"
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
 import MemberAdd from "./MemberAdd.vue"
-import OrderDelivery from "@/components/OrderDelivery.vue"
-import ExpenseItems from "@/components/ExpenseItems.vue"
+import OrderDelivery from "./OrderDelivery.vue"
+import ExpenseItems from "./ExpenseItems.vue"
 import _ from "lodash"
 
 import {
@@ -174,7 +414,7 @@ export default {
         balance: 0,
         cards: []
       }, //改变当前选择会员，显示会员相关信息
-      defaultCard:{
+      defaultCard: {
         code: "无"
       },
       orderItemList: [], //订单 {variantId, price, quantity}
@@ -199,88 +439,89 @@ export default {
     ExpenseItems
   },
   computed: {
-    customerId: function(){
+    customerId: function () {
       console.log(" this.customerComboId=", this.customerComboId)
-      return ( this.customerComboId ? this.customerComboId.split('_')[0] : null )
+      return (this.customerComboId ? this.customerComboId.split('_')[0] : null)
     },
-    cardId: function(){
-      return ( this.customerComboId ? this.customerComboId.split('_')[1] : null )
+    cardId: function () {
+      return (this.customerComboId ? this.customerComboId.split('_')[1] : null)
     },
-    selectedTaxonProducts: function() {
-      return this.productList.filter(function(product) {
+    selectedTaxonProducts: function () {
+      return this.productList.filter(function (product) {
         //return product.taxon_ids.includes( 0 )
         return false;
       });
     },
-    sortedOrderItemList: function() {
+    sortedOrderItemList: function () {
       return this.orderItemList.sort((a, b) => {
         return (a.groupPosition - b.groupPosition)
       })
     },
-    computedCustomerOptions: function() {
+    computedCustomerOptions: function () {
       let ops = this.customerList.map((customer) => {
-        if( customer.cards.length > 0 ){
-          return customer.cards.map((card)=>{
-            return { value: [customer.id,card.id].join('_'),
-              label: customer.mobile + '(#'+card.code+')'
+        if (customer.cards.length > 0) {
+          return customer.cards.map((card) => {
+            return {
+              value: [customer.id, card.id].join('_'),
+              label: customer.mobile + '(#' + card.code + ')'
             }
           })
-        }else{
+        } else {
           return [{
             value: customer.id.toString(),
             label: customer.mobile
           }]
         }
       })
-      return _.flatten( ops )
+      return _.flatten(ops)
     },
     //当前选择的客户
-    currentCustomer: function(){
+    currentCustomer: function () {
       let customer = this.defaultCustomer
       let cid = this.customerId
-      if( cid ){
+      if (cid) {
         customer = this.customerList.find((customer, index, arr) => {
-          return customer.id ==  cid
+          return customer.id == cid
         })
-        if( !customer ){
+        if (!customer) {
           customer = this.defaultCustomer
         }
       }
       return customer
     },
-    currentCard: function(){
+    currentCard: function () {
       let card = this.defaultCard
       let customer = this.currentCustomer
-      let cid =  this.cardId
-      if( customer.cards.length > 0 ){
+      let cid = this.cardId
+      if (customer.cards.length > 0) {
         card = customer.cards.find((card, index, arr) => {
-          return card.id ==  cid
+          return card.id == cid
         })
       }
       return card
     },
-    totalCount: function(){
-      return this.orderItemList.reduce((total, item)=>{
+    totalCount: function () {
+      return this.orderItemList.reduce((total, item) => {
         return total += item.quantity
       }, 0)
     },
-    totalMoney: function(){
-      let t = this.orderItemList.reduce((total, item)=>{
+    totalMoney: function () {
+      let t = this.orderItemList.reduce((total, item) => {
         return total += item.price
       }, 0)
       return Number(t).toFixed(2)
     },
-    addNewCardButtonAvailable: function(){
+    addNewCardButtonAvailable: function () {
       return this.currentCustomer.id && this.currentCustomer.cards.length == 0
     },
-    maxGroupPosition: function() {
+    maxGroupPosition: function () {
       // 返回 0 或 >0
       let max = this.orderItemList.map((item) => {
         return item.groupPosition
       }).sort().pop()
       return max ? max : 0
     },
-    nextGroupPosition: function() {
+    nextGroupPosition: function () {
       //取当前的最大数，再加 +1
       return this.maxGroupPosition + 1
     }
@@ -289,9 +530,9 @@ export default {
     this.initData();
     //新订单创建以后，需要更新当前选择客户的会员卡余额数据
     this.$bus.$on('order-created-gevent', () => {
-      getCustomer( this.currentCustomer.id ).then(result=>{
-        const customer = this.buildCustomer( result )
-        this.setCurrentCustomer( customer )
+      getCustomer(this.currentCustomer.id).then(result => {
+        const customer = this.buildCustomer(result)
+        this.setCurrentCustomer(customer)
       })
     })
 
@@ -309,12 +550,12 @@ export default {
         this.productList = this.buildProducts(productsResult)
       }
     },
-    getTaxonProducts: function(taxonId) {
-      return this.productList.filter(function(product) {
+    getTaxonProducts: function (taxonId) {
+      return this.productList.filter(function (product) {
         return product.taxonIds.includes(taxonId);
       });
     },
-    getProductImageUrl: function(product) {
+    getProductImageUrl: function (product) {
       let image = product.master.images[0];
       return image ?
         baseImgPath + image.product_url :
@@ -398,8 +639,8 @@ export default {
       let newOrderItem = Object.assign({}, this.orderItemList[index], {
         [column]: newValue
       })
-      if( column == 'unitPrice'){
-        this.computePrice( newOrderItem )
+      if (column == 'unitPrice') {
+        this.computePrice(newOrderItem)
       }
       console.log(" old=", this.orderItemList[index], "new=", newOrderItem)
       this.orderItemList.splice(index, 1, newOrderItem)
@@ -429,52 +670,54 @@ export default {
       })
     }, 450),
     //店员改变当前选择客户,更新订单列表折扣率
-    handleCustomerChanged(selectedCustomerId){
-      if( selectedCustomerId ){
-        this.orderItemList.forEach((item)=>{
-          item.discount = this.getDiscountOfVariant( item.variantId )
+    handleCustomerChanged(selectedCustomerId) {
+      if (selectedCustomerId) {
+        this.orderItemList.forEach((item) => {
+          item.discount = this.getDiscountOfVariant(item.variantId)
           this.computePrice(item)
         })
-      }else{
-        this.orderItemList.forEach((item)=>{
+      } else {
+        this.orderItemList.forEach((item) => {
           item.discount = 100
           this.computePrice(item)
         })
       }
     },
-    handleOrderCreated( newOrder ){
+    handleOrderCreated(newOrder) {
       this.orderItemList = []
       this.$bus.$emit('order-created-gevent')
     },
-    findProductByVariantId( variantId ){
-      let product = this.productList.find((product)=>{
-        let vids = product.variants.map((v)=>{ return v.id})
-        return vids.indexOf( variantId ) >= 0
+    findProductByVariantId(variantId) {
+      let product = this.productList.find((product) => {
+        let vids = product.variants.map((v) => {
+          return v.id
+        })
+        return vids.indexOf(variantId) >= 0
       })
       return product
     },
-    handleNewCustomerButtonClicked(){
+    handleNewCustomerButtonClicked() {
       this.memberAddWindowVisible = true
     },
-    handleCustomerCreatedEvent( customer ){
+    handleCustomerCreatedEvent(customer) {
       console.log(" handleCustomerCreatedEvent", customer)
       //如果创建了用户，选择新创建的客户
-      if( customer ){
-        this.setCurrentCustomer( customer )
+      if (customer) {
+        this.setCurrentCustomer(customer)
       }
     },
 
-    getDiscountOfVariant( variantId ){
+    getDiscountOfVariant(variantId) {
       // 找到这个订单对应的商品
       let discount = 100
-      const product = this.findProductByVariantId( variantId )
+      const product = this.findProductByVariantId(variantId)
 
       // 找到会员卡的分类ID，每个分类对应一些打折产品
-      this.currentCustomer.cards.forEach((card)=>{
+      this.currentCustomer.cards.forEach((card) => {
         let pid = card.productId
-        product.relateds.forEach((related) =>{
-          if( related.relatableId == pid){
-            if( related.discountPercent < discount){
+        product.relateds.forEach((related) => {
+          if (related.relatableId == pid) {
+            if (related.discountPercent < discount) {
               discount = related.discountPercent
             }
           }
@@ -483,22 +726,26 @@ export default {
       // 找到商品对应用户会员卡的打折信息，设置折扣率
       return discount
     },
-    computePrice( item ){
-      item.price = item.discount * item.unitPrice * item.quantity /100
+    computePrice(item) {
+      item.price = item.discount * item.unitPrice * item.quantity / 100
     },
-    setCurrentCustomer( customer ){
+    setCurrentCustomer(customer) {
       //
       this.customerList = [customer]
-      this.$nextTick( ()=> {
+      this.$nextTick(() => {
         // DOM updated
-        console.log( " this.computedCustomerOptions=",  this.computedCustomerOptions)
+        console.log(" this.computedCustomerOptions=", this.computedCustomerOptions)
         this.customerComboId = this.computedCustomerOptions[0].value
 
       })
     },
-    renderEditableTableHeader (h, { column }) {
+    renderEditableTableHeader(h, {
+      column
+    }) {
       //显示添加编辑图标的表头
-      return h('p',{}, [ column.label, h('i',{class:"el-icon-edit"})])
+      return h('p', {}, [column.label, h('i', {
+        class: "el-icon-edit"
+      })])
     }
   },
   watch: {
@@ -514,213 +761,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" >
-.pos {
-    position: absolute;
-    top: 50px;
-    left: 50px;
-    right: 0;
-    bottom: 50px;
-    border-bottom: 1px solid #d3dce6;
-    border-top: 1px solid #d3dce6;
-    span.vue-xeditable-value {
-        display: block;
-    }
-    input.vue-xeditable-form-control {
-        width: 100%;
-        padding: 0;
-    }
-    .pos-content {
-        height: 100%;
-        .pos-order {
-            position: relative;
-            height: 100%;
-            .el-tabs {
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-            .el-tabs__content {
-                flex-grow: 1;
-                .el-tab-panel {
-                    height: 100%;
-                }
-            }
-        }
-        .order-final {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            .check-button {
-                padding: 0;
-                width: 100%;
-                line-height: 50px;
-                height: 50px;
-                text-align: center;
-                font-size: 21px;
-                background-color: #67c23a;
-                border-color: #67c23a;
-                span{
-                  color: #fff;
-                }
-            }
-
-        }
-    }
-    .pos-order {
-      .vue-xeditable-empty{
-        font-style: normal;
-      }
-        background-color: #f9fafc;
-        border-right: 1px solid #c0ccda;
-        .el-tabs__item {
-            min-width: 80px;
-            text-align: center;
-        }
-        .el-tabs__content {
-            }
-        .customer-container {
-          height: 118px;
-          border-top: 1px solid #ebeef5;
-          border-bottom: 1px solid #ebeef5;
-          background-color: #fff;
-          padding: 5px;
-          .search-form{
-            height: 33px;
-            .el-form-item {
-              margin-bottom: 5px;
-            }
-          }
-
-          .search-result{
-            position: relative;
-            height: 78px;
-            .left {
-              position: absolute;
-              top:0;bottom: 0;
-              left:0;
-            }
-            .right{
-              position: absolute;
-              top:0;bottom: 0;
-              right:0;
-            }
-            .cards{
-              position: relative;
-              border: 1px solid #ebeef5;
-              height: 100%;
-              overflow-y: auto;
-              .card{
-                font-size: 14px;
-                padding: 5px;
-                position: relative;
-                height: 3em;
-                div{
-                  position: absolute;
-                  top: 0;
-                  left: 2em;
-                  span{
-                    display: inline-block;
-                    padding: 5px 0 0;
-                  }
-                }
-              }
-            }
-          }
-          table{
-            td{
-              width: 20%;
-            }
-            td,th{
-              border: 1px solid #ebeef5;
-              padding: 6px 10px;
-              font-size: 14px;
-              box-sizing: border-box;
-              white-space: normal;
-              line-height: 23px;
-            }
-          }
-        }
-        .order-item-list {
-            position: absolute;
-            top: 130px;
-            bottom: 80px;
-        }
-        .el-table__body-wrapper {
-            position: absolute;
-            top: 48px;
-            bottom: 0;
-            overflow-y: auto;
-        }
-        .customer-button {
-            height: 60px;
-            text-align: center;
-            font-size: 21px;
-            color: #fff;
-            background-color: #909399;
-            border-color: #909399;
-        }
-    }
-    .order-sum {
-        height: 30px;
-        text-align: center;
-        background-color: #fff;
-        border-bottom: 1px solid #d3dce6;
-        i {
-            font-size: 12px;
-        }
-    }
-    .goods-type {
-        .el-tabs__item {
-            min-width: 80px;
-            text-align: center;
-        }
-        .el-tabs__content {
-            position: absolute;
-            top: 40px;
-            bottom: 0;
-            overflow-y: auto;
-        }
-    }
-    .cook-list {
-        padding: 20px;
-        .cook-item {
-            height: auto;
-            padding: 2px;
-            overflow: hidden;
-
-            cursor: pointer;
-            transition: 0.5s;
-            &:hover {
-
-                transform: translate3d(0, -2px, 0);
-                border: none;
-            }
-            .food-wrapper {
-                background-color: #fff;
-                .food-img {
-                    width: 100%;
-                }
-                .good-info {
-                    text-align: center;
-                }
-                .food-name {
-                    color: brown;
-                    font-size: 14px;
-                    letter-spacing: 1px;
-                }
-                .food-price {
-                    display: block;
-                    font-size: 12px;
-                    padding-top: 4px;
-                }
-            }
-
-        }
-    }
-
-}
-
-</style>

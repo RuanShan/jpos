@@ -45,12 +45,7 @@
             <setting-printer></setting-printer>
           </el-tab-pane>
 
-          <el-tab-pane label="微信设置">
-          </el-tab-pane>
-
-          <el-tab-pane label="短信设置">
-          </el-tab-pane>
-
+       
         </el-tabs>
       </div>
     </div>
