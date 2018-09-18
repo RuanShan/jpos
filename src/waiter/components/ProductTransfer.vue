@@ -89,7 +89,7 @@
 <template>
   <div class="cel-window">
     <el-dialog :visible="computedVisible" @open="handleDialogOpen"  :show-close="false"  :top="top" :modal="false">
-      <div id="printable" class="print-only transfer-table-wrap">
+      <div id="printable" class="print-only transfer-table-wrap" style="display:none;">
         <h1> 物品交接单 </h1>
 
         <div class="clear">
@@ -299,6 +299,9 @@ export default {
         })
       }
 
+      this.$store.commit('savePrintableOrders', this.printableData)
+
+      console.log("printableOrders", this.printableOrders,  this.printableData)
 
     },
     async getLineItemGroups() {
@@ -322,6 +325,8 @@ export default {
           this.transferedItemIds.push(item.id)
         }
       })
+      
+      this.$store.commit('savePrintableOrders', this.printableData)
 
       console.log("itemsResult", itemsResult, "itemList", this.itemList)
     },
@@ -365,7 +370,7 @@ export default {
     },
     displayDate(){
       let date = new Date()
-      return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+      return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
     },
     handleSearch(){
       this.currentPage = 1

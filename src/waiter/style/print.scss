@@ -6,10 +6,12 @@
     visibility: visible;
   }
   #printable {
-    position: fixed;
+    /*position: fixed;
     left: 0;
     top: 0;
+    */
     width:100%;
+
   }
   #printable .print-only {
     visibility: visible;
@@ -35,7 +37,9 @@
   line-height: 1.45;
   color: #000;
   background: none;
-  font-size: 14pt; }
+  font-size: 14pt;
+  height: auto;
+  }
 
   /* Headings */
   h1,h2,h3,h4,h5,h6 { page-break-after:avoid; }

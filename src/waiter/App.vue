@@ -1,15 +1,22 @@
 <template>
   <div id="app" class="clearfix">
+    <printable></printable>
     <div class="wrapper">
       <router-view></router-view>
     </div>
+
   </div>
+
+
 </template>
 
 <script>
+import printable from "@/components/printable.vue"
+
 export default {
   name: 'app',
   components: {
+    printable
   }
 };
 </script>

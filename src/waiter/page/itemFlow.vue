@@ -21,29 +21,29 @@
         top: 50px;
         left: 18px;
         right: 18px;
-        bottom: 50px;
+        bottom: 100px;
         display: flex;
         .locations{
-          width: 120vmin;
+          width: 140vmin;
           margin: auto;
         }
         .heads-wrap{
           .head{
             background: #cccccc;
-            width: 55vmin;
+            width: 60vmin;
             float: left;
             text-align: center;
-            line-height: 50px;
+            line-height: 5vmin;
           }
         }
         .location {
             position: relative;
             float: left;
 
-            width: 55vmin;
-            height: 55vmin;
+            width: 60vmin;
+            height: 60vmin;
             &.ship {
-                width: 10vmin;
+                width: 20vmin;
                 border-color: transparent;
                 text-align: center;
                 .step{
@@ -142,7 +142,7 @@
             background-color: #ffffff;
 
             &.step0 {
-              height: 27.5vmin;
+              height: 30vmin;
             }
             &.step1 {
                 width: 50%;

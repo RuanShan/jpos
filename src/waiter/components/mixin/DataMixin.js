@@ -14,7 +14,8 @@ export var orderDataMixin = {
       'paymentMethods',
       'cardTypes',
       'stores',
-      'prepaidPaymentMethodId'
+      'prepaidPaymentMethodId',
+      'printableOrders'
     ])
 
   },
@@ -84,7 +85,11 @@ export var orderDataMixin = {
           return false
         }
       }
-    }
+    },
+    displayDate(){
+      let date = new Date()
+      return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+    },
 
   }
 

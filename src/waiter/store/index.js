@@ -20,7 +20,8 @@ const state = {
   paymentMethods: null,
   cardTypes: null,
   stores: null,
-  prepaidPaymentMethodId: 1
+  prepaidPaymentMethodId: 1,
+  printableOrders:[]
 }
 
 const mutations = {
@@ -53,6 +54,9 @@ const mutations = {
   },
   saveStoreId( state, storeId){
     state.storeId = storeId
+  },
+  savePrintableOrders( state, orders ){
+    state.printableOrders = orders
   }
 }
 
