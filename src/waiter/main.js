@@ -5,9 +5,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-// import '@/common/less/index.less';
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+import '../../element-theme-jpos/index.css'
 
 import '@/style/common.scss'
 import '@/style/element_ui_custom.scss'

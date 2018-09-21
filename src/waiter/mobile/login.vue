@@ -9,7 +9,7 @@
       <el-form-item prop="username">
         <div class="input-user">
           <el-input placeholder="请输入用户名" clearable v-model="loginForm.username">
-            <template slot="prepend">名称</template>
+            <template slot="prepend">用户</template>
           </el-input>
         </div>
 

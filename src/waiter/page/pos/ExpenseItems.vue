@@ -25,6 +25,10 @@
       }
     }
   }
+  .expense-form{
+    th{ width: 6em;}
+    td{ width: auto;}
+  }
 }
 </style>
 
@@ -32,7 +36,7 @@
   <div class="expense-items-container">
     <div class="customer-container clear">
       <div class="search-result clear">
-        <el-form ref="newExpenseItem" :rules="rules" :model="newExpenseItem" size="mini"  :inline="true" class="search-form" >
+        <el-form ref="newExpenseItem" :rules="rules" :model="newExpenseItem" size="mini"  :inline="true" class="search-form expense-form" >
           <table style="width:100%">
             <tr><th>费用类型</th><td>
               <el-form-item prop="expense_category_id">
@@ -41,11 +45,10 @@
               </el-select> </el-form-item></td>
             <th>支出项目</th>
             <td>  <el-form-item prop="cname"> <el-input v-model="newExpenseItem.cname" placeholder="" size="mini"></el-input></el-form-item> </td>
-            <th>支出金额</th><td><el-form-item prop="price"><el-input v-model="newExpenseItem.price" placeholder="" size="mini"></el-input></el-form-item></td>
+
             </tr>
             <tr ><th>发生时间</th><td> <el-form-item prop="day"><el-date-picker  type="date" placeholder="选择日期" v-model="newExpenseItem.day" style="width: 100%;" size="mini"></el-date-picker></el-form-item></td>
-              <th>备注</th>
-              <td colspan="4"> <el-input v-model="newExpenseItem.memo" placeholder="" size="mini"></el-input> </td>
+                 <th>支出金额</th><td><el-form-item prop="price"><el-input v-model="newExpenseItem.price" placeholder="" size="mini"></el-input></el-form-item></td>
             </tr>
           </table>
 
@@ -119,7 +122,7 @@ export default {
             { required: true, message: '请输入金额', trigger: 'change' }
           ],
         day: [
-            {  required: true, message: '请费用发生日期', trigger: 'change' }
+            {  required: true, message: '请选择费用发生日期', trigger: 'change' }
           ],
       }
     }

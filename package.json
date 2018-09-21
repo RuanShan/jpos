@@ -169,5 +169,12 @@
     "webpack-dev-server": "^2.7.1",
     "webpack-hot-middleware": "^2.18.2",
     "webpack-merge": "^4.1.0"
+  },
+  "element-theme": {
+    "browsers": ["ie > 9", "last 2 versions"],
+    "out": "./element-theme-jpos",
+    "config": "./element-variables.css",
+    "theme": "element-theme-chalk",
+    "minimize": false
   }
 }
