@@ -1,15 +1,78 @@
+<style lang="scss" scoped>
+.left-nav {
+  position: absolute;
+  left: 0;
+  // float: left;
+  width: 50px;
+  height: 100%;
+  background-color: #6a3906;
+  top: 0;
+
+
+  .logo{
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    background-color: #fff;
+  }
+
+  .nav {
+    padding: 0;
+    margin: 50px 0 0 0;
+    li.el-menu-item {
+      line-height: 1em;
+      padding: 0;
+      border-bottom: 1px solid #fff;
+      text-align: center;
+      list-style: none;
+      cursor: pointer;
+      background-color: #6a3906;
+      &:hover, a.router-link-active {
+        color: #fff;
+        background-color: #f4b22c;
+      }
+      .router-link-exact-active{
+        background-color: #eff2f7;
+        i.fa,.text-sm {
+          color: #000;
+        }
+      }
+      a{
+        padding: 12px 0 0;
+        display: block;
+        height: 56px;
+      }
+      i.fa {
+        color: #fff;
+      }
+      .text-sm {
+        color: #fff;
+        font-size: 12px;
+        letter-spacing: 2px;
+      }
+    }
+
+  }
+}
+
+</style>
+
 <template>
    <div class="left-nav">
       <div class="logo">LOGO</div>
       <ul class="nav">
         <li class="el-menu-item">
           <router-link to="/pos" >
+            <i class="fa fa-cny"></i>
             <div class="text-sm"> 收银  </div>
           </router-link>
         </li>
         <li class="el-menu-item">
           <router-link to="/itemGroups" >
-            <i class="fa fa-bars"></i>
+            <i class="fa fa-tags"></i>
             <div class="text-sm"> 订单 </div>
           </router-link>
         </li>
@@ -21,7 +84,7 @@
         </li>
         <li class="el-menu-item">
           <router-link to="/statistics" >
-            <i class="fa fa-vcard"></i>
+            <i class="fa fa-bar-chart-o"></i>
             <div class="text-sm">统计</div>
           </router-link>
         </li>
@@ -46,52 +109,3 @@ export default {
   name: 'leftNav'
 };
 </script>
-
-<style lang="scss" scoped>
-.left-nav {
-  position: absolute;
-  left: 0;
-  // float: left;
-  width: 50px;
-  height: 100%;
-  color: #fff;
-  background-color: #1d8ce0;
-  top: 0;
-
-  .router-link-exact-active{
-    background-color: #eff2f7;
-  }
-  .logo{
-    position: absolute;
-    top:0;
-    left: 0;
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    background-color: #fff;
-
-  }
-}
-
-.nav {
-  padding: 0;
-  margin: 50px 0 0 0;
-  li {
-    padding: 0;
-    border-bottom: 1px solid #20a0ff;
-    text-align: center;
-    list-style: none;
-    cursor: pointer;
-    &:hover {
-      color: #000;
-    }
-    a{
-      display: block;
-    }
-  }
-  .text-sm {
-    font-size: 12px;
-    letter-spacing: 2px;
-  }
-}
-</style>

@@ -20,15 +20,20 @@
       .el-form-item.el-form-item--mini{
         margin: 0;
       }
+      .el-form-item__content{
+        width: 100%;
+      }
       table td,table th{
         padding: 6px 6px;
       }
+
+      &.expense-form{
+        th{ width: 6em;}
+        td{ width: auto;}
+      }
     }
   }
-  .expense-form{
-    th{ width: 6em;}
-    td{ width: auto;}
-  }
+
 }
 </style>
 
@@ -40,15 +45,15 @@
           <table style="width:100%">
             <tr><th>费用类型</th><td>
               <el-form-item prop="expense_category_id">
-              <el-select v-model="newExpenseItem.expense_category_id" placeholder="请选择费用类型" size="mini">
+              <el-select v-model="newExpenseItem.expense_category_id" placeholder="请选择费用类型" size="mini" >
                 <el-option  v-for="item in expenseCategories" :key="item.id"  :label="item.name"  :value="item.id">  </el-option>
               </el-select> </el-form-item></td>
             <th>支出项目</th>
-            <td>  <el-form-item prop="cname"> <el-input v-model="newExpenseItem.cname" placeholder="" size="mini"></el-input></el-form-item> </td>
+            <td>  <el-form-item prop="cname" style="width: 100%;"> <el-input v-model="newExpenseItem.cname" placeholder="" size="mini" style="width: 100%;"></el-input></el-form-item> </td>
 
             </tr>
-            <tr ><th>发生时间</th><td> <el-form-item prop="day"><el-date-picker  type="date" placeholder="选择日期" v-model="newExpenseItem.day" style="width: 100%;" size="mini"></el-date-picker></el-form-item></td>
-                 <th>支出金额</th><td><el-form-item prop="price"><el-input v-model="newExpenseItem.price" placeholder="" size="mini"></el-input></el-form-item></td>
+            <tr ><th>发生时间</th><td><el-form-item prop="day"><el-date-picker  type="date" placeholder="选择日期" v-model="newExpenseItem.day" style="width: 100%;" size="mini"></el-date-picker></el-form-item></td>
+                 <th>支出金额</th><td><el-form-item prop="price" style="width: 100%;" ><el-input v-model="newExpenseItem.price" placeholder="" size="mini"></el-input></el-form-item></td>
             </tr>
           </table>
 
@@ -63,9 +68,8 @@
         <el-table-column type="index" label="序号" width="60"></el-table-column>
         <el-table-column prop="displayCreatedAt" label="日期" width="120"></el-table-column>
         <el-table-column prop="cname" label="支付项目"></el-table-column>
-        <el-table-column prop="price" label="金额" width="120"></el-table-column>
+        <el-table-column prop="price" label="金额(元)" width="120"></el-table-column>
         <el-table-column prop="userName" label="创建人员"  width="120"></el-table-column>
-        <el-table-column prop="memo" label="备注"></el-table-column>
         <el-table-column label="操作" width="50">
           <template slot-scope="scope">
             <el-button type="danger" icon="el-icon-delete" circle @click="handleDeleteExpenseItem(scope.row)" size="mini"></el-button>
@@ -188,6 +192,7 @@ console.log( "valid= ", valid, "formName", formName)
                 message: '费用支出添加成功！',
                 type: 'success'
               });
+              this.resetForm(formName)
             }
           })
          } else {

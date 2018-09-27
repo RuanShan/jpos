@@ -65,7 +65,7 @@
     "aws-sdk": "^2.234.1",
     "axios": "^0.16.1",
     "echarts": "^3.8.0",
-    "element-ui": "^2.3.6",
+    "element-ui": "^2.3.9",
     "es6-promise": "^4.2.4",
     "escpos": "^2.4.9",
     "friendly-errors-webpack-plugin": "^1.6.1",

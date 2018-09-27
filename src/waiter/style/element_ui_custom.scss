@@ -30,6 +30,10 @@
       bottom: 0;
       padding: 0;
       overflow-y: auto;
+      &::-webkit-scrollbar{
+        width: 10px;
+        height: 10px;
+      }
     }
   }
 }
@@ -54,7 +58,7 @@
   height: 100%;
   >.el-table__body-wrapper {
       position: absolute;
-      top: 38px;
+      top: 36px;
       bottom: 0;
       overflow-y: auto;
       &::-webkit-scrollbar{

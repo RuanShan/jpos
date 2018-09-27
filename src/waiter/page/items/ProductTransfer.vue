@@ -1,6 +1,5 @@
 <style lang="scss">
-@import '../style/mixin';
-@import '../style/print';
+@import '../../style/print';
 
 .transfer-product-container {
     position: relative;
@@ -325,7 +324,7 @@ export default {
           this.transferedItemIds.push(item.id)
         }
       })
-      
+
       this.$store.commit('savePrintableOrders', this.printableData)
 
       console.log("itemsResult", itemsResult, "itemList", this.itemList)

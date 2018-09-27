@@ -1,5 +1,5 @@
 <style lang="scss" >
-@import '../style/mixin';
+@import '../../style/mixin';
 .item-flow-container {
   background-color: #f4f4f4;
   .item-flow>.title-wrap {
@@ -24,13 +24,13 @@
         bottom: 100px;
         display: flex;
         .locations{
-          width: 140vmin;
+          width: 160vmin;
           margin: auto;
         }
         .heads-wrap{
           .head{
             background: #cccccc;
-            width: 60vmin;
+            width: 70vmin;
             float: left;
             text-align: center;
             line-height: 5vmin;
@@ -40,7 +40,7 @@
             position: relative;
             float: left;
 
-            width: 60vmin;
+            width: 70vmin;
             height: 60vmin;
             &.ship {
                 width: 20vmin;
@@ -78,7 +78,7 @@
               &.pr-pr{
                 top: 25%;
                 right: 0;
-                transform: translate( 0, -50%);
+                transform: translate(50%,-50%);
               }
               &.pl-pc{
                 top: 75%;
@@ -87,7 +87,7 @@
               &.pl-pr{
                 top: 75%;
                 right: 0;
-                transform: translate( 0, -50%);
+                transform:  translate(50%,-50%);
               }
               &.pl-pc{
                 top: 75%;
@@ -96,12 +96,12 @@
               &.pl-pl{
                 top: 75%;
                 left: 0;
-                transform: translate(0, -50%);
+                transform: translate(-50%, -50%);
               }
               &.pr-pl{
                 top: 25%;
                 left: 0;
-                transform: translate(0, -50%);
+                transform: translate(-50%, -50%);
               }
               &.pr-plr{
                 top: 25%;
@@ -357,10 +357,10 @@ import leftNav from "@/components/layout/LeftNav.vue"
 import headTop from "@/components/layout/headTop.vue";
 
 import StoreSelect from '@/components/common/StoreSelect.vue'
-import ItemProcess from '@/components/ItemProcess.vue'
-import ProductScan from '@/components/ProductScan.vue'
-import ProductTransfer from '@/components/ProductTransfer.vue'
-import WorkerPerformance from '@/components/WorkerPerformance.vue'
+import ItemProcess from './ItemProcess.vue'
+import ProductScan from './ProductScan.vue'
+import ProductTransfer from './ProductTransfer.vue'
+import WorkerPerformance from './WorkerPerformance.vue'
 import {
   getLineItemGroupCounts
 }

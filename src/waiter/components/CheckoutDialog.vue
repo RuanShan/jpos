@@ -282,8 +282,8 @@ export default {
             this.$emit('update:dialogVisible', false)
             //if( this.formData.isPrintReceipt ){
             order.displayCreatedAtDateTime = order.createdAt.format('YYYY年MM月DD日 HH时 mm分 ss秒') //'2018年07月11日 20时 35分 05秒'
-            let printParams = { receiptTitle: this.storeInfo.receiptTitle, receiptFooter: this.storeInfo.receiptFooter, storeName: this.storeInfo.name,  order: order }
-            PrintUtil.printReceipt( printParams )
+            let printParams = { labelPrinter: this.storeInfo.labelPrinter, receiptTitle: this.storeInfo.receiptTitle, receiptFooter: this.storeInfo.receiptFooter, storeName: this.storeInfo.name,  order: order }
+            PrintUtil.printReceipt(  printParams )
             PrintUtil.printLabel( printParams )
 
             //}

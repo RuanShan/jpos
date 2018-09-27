@@ -3,10 +3,10 @@
   .box-card {
   }
   .new-member-form {
-    margin: 24px 12px;
+    margin: 20px 10px;
   }
   .actions {
-    margin: 16px auto;
+    margin: 0 auto 20px ;
     text-align: center;
   }
 }

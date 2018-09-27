@@ -1,6 +1,5 @@
 <style lang="scss">
 
-@import '../style/mixin';
 .scan-product-container {
     position: relative;
     .order-list {

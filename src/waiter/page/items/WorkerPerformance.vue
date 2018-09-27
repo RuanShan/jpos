@@ -1,5 +1,4 @@
 <style lang="scss">
-@import '../style/mixin';
 .worker-performance-container {
     position: relative;
     .order-list {

@@ -9,18 +9,19 @@ export function printLabel ( params ){
   // Select the adapter based on your printer type
   // {title, code, memo}
   let path = __dirname + '/templates/20x50_barcode_label.tspl'
-  console.log('path', path)
+  console.log('path', path, 'params', params)
 
   fs.readFile(path,'ascii', function(err,data){
    if(err){
     console.log(err);
    }else{
 
+     let printName = params.labelPrinter||''
      let printers =  getPrinters()
 
      console.log( "printers", printers )
      let printer = printers.find( (printer)=>{
-       return (printer.name.indexOf('TSC') >=0)
+       return (printer.name==printName)
      })
      // 只能打印3个图片，维修(wx.BMP)，清洗(qx.BMP)，保养(by.BMP)
      //PUTBMP 46,350,"weixin40.BMP"  维修图片

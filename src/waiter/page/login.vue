@@ -3,20 +3,20 @@
       <transition name="form-fade" mode="in-out">
         <section class="form_contianer" v-show="showLogin">
           <div class="manage_tip">
-            <p>JPOS系统</p>
+            <p>汪永峰皮具养护中心订单系统</p>
           </div>
           <el-form :model="loginForm" :rules="rules" ref="loginForm">
           <el-form-item prop="username">
-            <el-input v-model="loginForm.username" placeholder="用户名"><span>dsfsf</span></el-input>
+            <el-input v-model="loginForm.username" placeholder="请输入用户名" suffix-icon="fa fa-user"><span>dsfsf</span></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input type="password" placeholder="密码" v-model="loginForm.password"></el-input>
+            <el-input type="password" placeholder="请输入密码" v-model="loginForm.password" suffix-icon="fa fa-keyboard-o"></el-input>
           </el-form-item>
           <el-form-item>
               <el-button type="primary" @click="submitForm('loginForm')" class="submit_btn">登陆</el-button>
             </el-form-item>
         </el-form>
-        <p class="tip">温馨提示：</p>      
+        <p class="tip"> </p>
         </section>
       </transition>
     </div>

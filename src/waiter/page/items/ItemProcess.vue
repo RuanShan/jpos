@@ -1,48 +1,53 @@
 <style lang="scss">
-@import "../style/mixin";
 .process-item-container {
   position: relative;
+  .fillcontain{
+    background: #f9f9f9;
+  }
   .item-list-wrap {
     position: absolute;
-    top: 80px;
-    bottom: 0;
+    top: 70px;
+    bottom: 10px;
     left: 0;
     width: 40%;
-    border: 1px #efefef solid;
     .item-list {
       position: absolute;
-      top: 8px;
-      left: 8px;
-      right: 8px;
+      top: 0;
+      left: 10px;
+      right: 0;
       bottom: 48px;
-      overflow-y: auto;
     }
     .pagination {
       position: absolute;
       right: 16px;
       bottom: 16px;
-      left: 0;
+      .el-pager li{
+        background-color: transparent;
+      }
     }
   }
   .item-detail {
     table {
       width: 100%;
+      border: 1px solid #ebeef5;
+      td,th{
+        padding: 6px 10px;
+      }
     }
 
     position: absolute;
     width: 60%;
-    top: 80px;
+    top: 70px;
     bottom: 0;
     right: 0;
-    padding: 16px;
-    border: 1px #efefef solid;
     .order-detail-container {
       position: absolute;
-      top: 8px;
+      top: 0;
       bottom: 60px;
       left: 8px;
       right: 8px;
       overflow-y: auto;
+      background-color: #fff;
     }
     .head {
       font-size: 15px;
@@ -92,9 +97,8 @@
     }
   }
   .formData {
-    margin: 0 0 20px;
     border: 1px #efefef solid;
-    padding: 10px;
+    /*padding: 10px;*/
     background: #f9f9f9;
     .filter {
       display: inline-block;
@@ -131,14 +135,14 @@
         <div class="formData">
           <div class="filter">
             关键字:
-            <el-input label="Keyword" placeholder="请输入物品编号" v-model="formData.keyword" class="search-input" clearable @clear="handleClear"></el-input>
+            <el-input label="Keyword" placeholder="请输入物品编号" v-model="formData.keyword" class="search-input" clearable @clear="handleClear" size="mini"></el-input>
           </div>
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
+          <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>
         </div>
         <!-- formData end -->
         <div class="item-list-wrap">
-          <div class="item-list">
-            <el-table :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
+          <div class="item-list"  ref="itemList" >
+            <el-table class=""   max-height="100%" border :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
               <el-table-column label="物品编号" prop="number">
               </el-table-column>
               <el-table-column label="订单Id" prop="orderId">
@@ -151,7 +155,7 @@
               </el-table-column>
             </el-table>
           </div>
-          <div class="pagination" style="text-align: left;margin-top: 10px;">
+          <div class="pagination" style="">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total,  pager" :total="count">
             </el-pagination>
           </div>
@@ -306,14 +310,17 @@ export default {
       },
       multipleSelection: [],
       imageUploadPath: null,
-      imageDialogVisible: false
+      imageDialogVisible: false,
+      itemListMaxHeight: 100
     }
   },
   mixins: [DialogMixin, CelUIMixin],
   props: ['dialogVisible', 'orderState', 'itemCounts'],
   components:{  },
   created() {  },
-  computed: {  },
+  mounted() {
+    console.log( "this.$refs.itemList.offsetHeight->", this.$refs.itemList.offsetHeight)
+  },
   methods: {
     async initData() {
       let params = this.buildParams()
