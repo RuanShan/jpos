@@ -56,7 +56,7 @@
   <el-dialog :visible="computedVisible" :show-close="false" @open="handleDialogOpened" @close="handleDialogClosed" class="cel-dialog">
     <div slot="title" class="dialog-title-wrap">
       <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
-      <div> 结算</div>
+      <div> 结账 </div>
     </div>
 
     <div class="checkout-form-wrap">
@@ -87,7 +87,6 @@
               <el-option v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
-
           </el-input>
         </el-form-item>
         <el-form-item label="备注" prop="memo" >
@@ -104,7 +103,6 @@
           <div class="right">
             <el-button type="success" @click="handleCreateOrderAndPayment" :disabled="disableCheckoutButton">结账</el-button>
             <el-button @click="handleCloseDialog()">取消</el-button>
-            <el-button @click="testPrint()">打印测试</el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -213,12 +211,12 @@ export default {
       let remain = this.formData.prepaidCardAmount - this.totalMoney
       //需要其他支付方式
       if( remain < 0 ){
-        paymentsAttributes.push( { payment_method_id: this.formData.selectPaymentMethodId, amount: this.orderRemainder } )
+        paymentsAttributes.push( { payment_method_id: this.formData.selectPaymentMethodId, amount: this.formData.paymentAmount } )
       }
       //  index  cname  discount  groupPosition memo name  price productId quantity
       //  unitPrice  variantId  variantName
       let order =  { user_id: this.customer.id,  payments: paymentsAttributes, enable_sms: this.formData.enableSms, enable_mp_msg: this.formData.enableMpMsg }
-      order.line_items = this.orderItemList.map((item)=>{
+      order.line_items_attributes = this.orderItemList.map((item)=>{
         return { quantity: item.quantity, variant_id: item.variantId, cname: item.cname,
           group_position: item.groupPosition, memo: item.memo,
           sale_unit_price: item.unitPrice, discount_percent: item.discount, price: item.price,
@@ -281,7 +279,7 @@ export default {
             this.$emit('order-created-event', res )
             this.$emit('update:dialogVisible', false)
             //if( this.formData.isPrintReceipt ){
-            order.displayCreatedAtDateTime = order.createdAt.format('YYYY年MM月DD日 HH时 mm分 ss秒') //'2018年07月11日 20时 35分 05秒'
+            order.displayCreatedDateTime = order.createdAt.format('YYYY年MM月DD日 HH时 mm分 ss秒') //'2018年07月11日 20时 35分 05秒'
             let printParams = { labelPrinter: this.storeInfo.labelPrinter, receiptTitle: this.storeInfo.receiptTitle, receiptFooter: this.storeInfo.receiptFooter, storeName: this.storeInfo.name,  order: order }
             PrintUtil.printReceipt(  printParams )
             PrintUtil.printLabel( printParams )

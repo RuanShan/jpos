@@ -295,7 +295,7 @@
                </template>
                 </el-table-column>
                 <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
-                <el-table-column prop="discount" label="折扣" width="50">折扣</el-table-column>
+                <el-table-column prop="discount" label="折扣%" width="65">折扣</el-table-column>
                 <el-table-column prop="price" label="金额" width="50">金额</el-table-column>
                 <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
                   <template slot-scope="scope">

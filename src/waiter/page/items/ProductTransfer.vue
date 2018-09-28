@@ -5,12 +5,11 @@
     position: relative;
     .order-list {
         position: absolute;
-        top: 80px;
+        top: 60px;
         bottom: 0;
         left: 0;
         right: 0;
         padding: 16px;
-        border: 1px #efefef solid;
         .actions {
             position: absolute;
             bottom: 16px;
@@ -51,9 +50,7 @@
     }
 
     .formData {
-        margin: 0 0 20px;
         border: 1px #efefef solid;
-        padding: 10px;
         background: #f9f9f9;
         .filter {
             display: inline-block;
@@ -125,7 +122,7 @@
         <div class="formData">
           <div class="filter">
             关键字:
-            <el-input label="Keyword" placeholder="请输入物品编号" v-model="formData.keyword" clearable @clear="handleSearch"></el-input>
+            <el-input label="Keyword" placeholder="请输入物品编号" v-model="formData.keyword" clearable @clear="handleSearch" size="mini"></el-input>
           </div>
           <!-- <div class="filter">
             状态:
@@ -134,9 +131,9 @@
               </el-option>
             </el-select>
           </div> -->
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
+          <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>
 
-          <el-button class="print" type="primary" @click="handlePrint">打印</el-button>
+          <el-button class="print" type="primary" @click="handlePrint" size="mini">打印</el-button>
         </div>
         <!-- formData end -->
 

@@ -50,6 +50,20 @@
             }
         }
     }
+    .edit-member-button{
+      margin: 5px 0 0 0;
+    }
+    .edit-card-buttons{
+      margin: 0 0 5px 5px;
+    }
+    .add-card-button{
+      margin: 5px;
+      z-index: 999;
+      position: relative;
+    }
+    .money-wrap{
+      line-height: 20px;
+    }
 }
 </style>
 
@@ -74,7 +88,7 @@
         <div class="member-profile">
           <div class="head">
             <span>会员信息 (消费 ¥{{statis.normalOrderTotal}}) </span>
-            <el-button type="success" size="mini" @click="curentEdit" class="right">会员编辑</el-button>
+            <el-button type="success" size="mini" @click="curentEdit" class="right edit-member-button">会员编辑</el-button>
           </div>
           <table class="member-table table">
             <tr>
@@ -91,7 +105,7 @@
               <th> 所属门店</th>
               <td> {{customerData.storeName}}</td>
               <th> 注册日期</th>
-              <td> {{customerData.displayCreatedAt}}</td>
+              <td> {{customerData.displayCreatedDate}}</td>
               <th> 备注</th>
               <td colspan="3"> {{customerData.memo}}</td>
 
@@ -100,24 +114,24 @@
         </div>
         <!-- 会员基本信息 END-->
         <div class="cards-wrap" style="margin-top: 10px;">
-          <el-button type="success" size="mini" @click="addCardButtonClicked" class="right" style="z-index: 999;position: relative;">添加会员卡</el-button>
+          <el-button type="success" size="mini" @click="addCardButtonClicked" class="right add-card-button">添加会员卡</el-button>
           <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick" class="card-tabs cel-scrollable-tabs">
             <el-tab-pane v-for="(item) in cards" :key="item.code" :label="item.title" :name="item.code">
               <div class="clear ">
-                <div class="left">
+                <div class="left money-wrap">
                   <span>当前余额</span>
                   <span>¥ {{item.amountRemaining}}</span>
                 </div>
-                <div class="left">
+                <div class="left money-wrap">
                   <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充值金额</span>
                   <span>¥ {{item.amount}}</span>
                 </div>
-                <div class="left">
+                <div class="left money-wrap">
                   <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消费金额</span>
                   <span>¥ {{item.amountUsed}}</span>
                 </div>
-                <div class="right">
-                  <el-button-group v-show="item.id">
+                <div class="right edit-card-buttons">
+                  <el-button-group v-show="item.id" >
                     <el-button type="success" size="mini" @click="cardEdit(item)">会员卡编辑</el-button>
                     <el-button type="success" size="mini" @click="cardRecharge(item)">会员卡充值</el-button>
                   </el-button-group>

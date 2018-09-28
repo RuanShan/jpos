@@ -64,7 +64,7 @@ export function printReceipt(params) {
   //     lineItems: [ {cname:"皮具保养xxx嘻嘻嘻", saleUnitPrice:20, discountPercent:100, price:100.00, quantity: 1} ],
   //     extraLineItems: [],
   //     lineItemGroups: [],
-  //     displayCreatedAtDateTime: '2018年07月11日 20时 35分 05秒'
+  //     displayCreatedDateTime: '2018年07月11日 20时 35分 05秒'
   //   }
   // }
   //小票内容:  店名，日期，时间，会员号，订单号，门店员工，消费内容，金额合计，支付方式，已付，未付，电话
@@ -94,7 +94,7 @@ export function printReceipt(params) {
         return `${item.cname} ${item.amount}`
       })
       //'会员卡支付：${}' '微信支付：${} '
-      let linea =  `${params.order.displayCreatedAtDateTime}`
+      let linea =  `${params.order.displayCreatedDateTime}`
       // print line
       let lineb = `${params.receiptFooter}`
       let lines = [line, line1, line2, line, line4, ...line4x, line, line5, line6, line7, line7x, linea, line, lineb]

@@ -1,6 +1,7 @@
 <style lang="scss">
 @import "~@/style/mixin";
 .members-container {
+  background-color: #f9f9f9;
   .members .title-wrap {
     text-align: center;
     line-height: 56px;
@@ -16,18 +17,19 @@
   }
   .member-list-wrap{
     position: absolute;
-    top: 50px;
+    top: 0px;
     left: 0px;
     right: 0px;
     bottom: 0px;
-    background-color: #ffffff;
 
     .member-list{
       position: absolute;
-      top: 80px;
+      top: 70px;
       left: 18px;
       right: 18px;
-      bottom: 80px;
+      bottom: 60px;
+      background-color: #ffffff;
+
     }
     .pagination-wrap{
        position: absolute;
@@ -46,22 +48,19 @@
   <div class="members-container page-content">
     <member-center-new :dialog-visible.sync="memberCenterNewWindowVisible" :customer-data.sync="customerData" @customer-changed-event="handleCustomerChanged"></member-center-new>
     <div class="members">
-      <div class="title-wrap">
-        <div>会员</div>
-      </div>
       <div class="member-list-wrap">
-        <el-form :inline="true" class="demo-form-inline">
-          <div class="filters">
-            <el-form ref="form" :model="formData" label-width="70px" :inline="true">
-              <el-form-item label="关键字">
-                <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="handleSearch()" size="mini">搜索</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-form>
+        <div class="filters">
+          <el-form :inline="true" class="demo-form-inline">
+              <el-form ref="form" :model="formData" label-width="70px" :inline="true">
+                <el-form-item label="关键字">
+                  <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="handleSearch()" size="mini">搜索</el-button>
+                </el-form-item>
+              </el-form>
+          </el-form>
+        </div>
         <!-- 表格     END -->
         <div class="member-list grid-content">
               <el-table class="cel-scrollable-table" :data="customerList" style="width:100%;" border>
@@ -81,7 +80,7 @@
                     </el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column prop="displayCreatedAtDate" label="注册时间">
+                <el-table-column prop="displayCreatedDate" label="注册日期">
                 </el-table-column>
                 <el-table-column label="操作" width="160">
                   <template slot-scope="scope">

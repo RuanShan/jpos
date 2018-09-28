@@ -51,11 +51,11 @@
     }
     .head {
       font-size: 15px;
-      padding: 6px;
+      padding: 8px;
+      margin:0 8px 8px;
       border-bottom: 1px #efefef solid;
     }
     .line-item-group {
-      border: 1px solid #ebeef5;
       .vue-xeditable-empty{
         font-style: normal;
       }
@@ -141,11 +141,11 @@
         </div>
         <!-- formData end -->
         <div class="item-list-wrap">
-          <div class="item-list"  ref="itemList" >
-            <el-table class=""   max-height="100%" border :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
+          <div class="item-list" >
+            <el-table class="cel-scrollable-table"   max-height="100%" border :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
               <el-table-column label="物品编号" prop="number">
               </el-table-column>
-              <el-table-column label="订单Id" prop="orderId">
+              <el-table-column label="订单ID" prop="orderId">
               </el-table-column>
               <el-table-column label="总价格" prop="price">
               </el-table-column>
@@ -156,14 +156,14 @@
             </el-table>
           </div>
           <div class="pagination" style="">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total,  pager" :total="count">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total, prev, pager, next" :total="count">
             </el-pagination>
           </div>
         </div>
         <div class="item-detail">
           <div class="order-detail-container" v-if="orderDetail">
-            <div class="customer">
-              <div class="head"> 客户信息</div>
+            <div class="customer box">
+              <div class="box-head"> 客户信息</div>
               <div>
                 <table border="1" cellspacing="0">
                   <tr>
@@ -186,10 +186,10 @@
               </div>
             </div>
 
-            <div>
-              <div class="head"> 订单信息 {{orderDetail.number}} </div>
-              <div>
-                <div class=""> 支付信息 </div>
+            <div class="box">
+              <div class=""> 订单信息 {{orderDetail.number}} </div>
+              <div class="box">
+                <div class="box-head"> 支付信息 </div>
                 <div>
                   <table border="1" cellspacing="0" style="width: 100%">
                     <tr >
@@ -208,9 +208,10 @@
                 </div>
               </div>
 
-              <div v-for="group in orderDetail.lineItemGroups" class="line-item-group">
-                <div class="head"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
-                <table border="1" cellspacing="0" style="width: 100%">
+              <div v-for="group in orderDetail.lineItemGroups" class="box line-item-group">
+                <div class="box-head"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
+                <div class="box-body">
+                  <table border="1"   cellspacing="0" style="width: 100%">
                   <tr>
                     <th style="width:8em">序号</th>
                     <th>服务项目</th>
@@ -228,11 +229,9 @@
                     </tr>
                   </template>
                 </table>
-
-                <div class="head"> 物品图片
-
                 </div>
-                <div class="clear">
+                <div class="box-head"> 物品图片 </div>
+                <div class="box-body clear">
                   <div v-show="group.images.length==0">  </div>
 
                   <el-upload
@@ -252,7 +251,7 @@
 
           </div>
           <div class="actions" v-show="orderDetail">
-            <el-button @click="cancelOrder()">取消订单</el-button>
+            <el-button size="mini" @click="cancelOrder()">取消订单</el-button>
             <!-- <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
             <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button> -->
           </div>
@@ -318,8 +317,8 @@ export default {
   props: ['dialogVisible', 'orderState', 'itemCounts'],
   components:{  },
   created() {  },
-  mounted() {
-    console.log( "this.$refs.itemList.offsetHeight->", this.$refs.itemList.offsetHeight)
+  before_update() {
+    console.log( "itemProcess->before_update")
   },
   methods: {
     async initData() {
@@ -391,10 +390,12 @@ export default {
     },
 
     handleDialogOpen() {
+      console.log('handleDialogOpen yeah')
+      console.log( "this.$refs.itemlist.clientHeight->",  this.$refs.itemlist )
       this.itemDetailList = []
       this.formData.groupState = this.orderState
       this.initData()
-      console.log('handleDialogOpen yeah')
+
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)

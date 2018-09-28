@@ -373,7 +373,7 @@ export var apiResultMixin = {
       user.displayType = user.cards.length>0 ? "会员" : "散客"
       user.displayGender = this.getDisplayGender(user.gender)
       user.displayCreatedAt = this.getDisplayDateTime( user.createdAt)
-      user.displayCreatedAtDate = user.createdAt.format('YYYY-MM-DD')
+      user.displayCreatedDate = this.getDisplayDate( user.createdAt)
       user.displayCardCode = user.prepaidCard.code ? user.prepaidCard.code  : "无"
       if( this.stores &&  user.storeId){
         let store = this.stores.find((s)=>{ return s.id == user.storeId })
@@ -418,7 +418,8 @@ export var apiResultMixin = {
       customer.displayBirth = customer.birth.format('MM-DD');
       customer.cards = customerResult.cards;
       customer.createdAt = moment(customerResult.created_at);
-      customer.displayCreatedAt = customer.createdAt.format('YYYY-MM-DD , hh:mm:ss');
+      customer.displayCreatedAt = this.getDisplayDateTime( customer.createdAt)
+
       customer.email = customerResult.email;
       customer.id = customerResult.id;
       customer.memo = customerResult.memo;
@@ -473,7 +474,10 @@ console.log( "buildCustomerStatis=", result, statis)
         card.expireAt =  moment(card.expireAt)
         card.displayExpireAt = card.expireAt.format('YYYY-MM-DD HH:mm')
       }
-      card.displayCreatedAt = card.createdAt.format('YYYY-MM-DD HH:mm')
+      card.displayCreatedAt =this.getDisplayDate( card.createdAt)
+      card.displayCreatedDate = this.getDisplayDate( card.createdAt)
+
+      card.displayCreatedDate = this.getDisplayDate( card.createdAt)
       card.displayStyle = this.getCardDisplayStyle( card.style)
       card.displayStatus = this.getCardDisplayStatus( card.status)
 
