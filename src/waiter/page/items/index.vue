@@ -29,17 +29,17 @@
         }
         .heads-wrap{
           .head{
-            background: #cccccc;
+            background: #f4b22c;
             width: 70vmin;
             float: left;
             text-align: center;
-            line-height: 5vmin;
+            padding: 8px;
+            span, i { font-size: 1.6em; color: #fff; }
           }
         }
         .location {
             position: relative;
             float: left;
-
             width: 70vmin;
             height: 60vmin;
             &.ship {
@@ -50,7 +50,6 @@
                   background-color: transparent;
                 }
             }
-
             .actions {
                 text-align: center;
             }
@@ -66,7 +65,7 @@
             }
             .arraw{
               position: absolute;
-              background-color: yellow;
+              background-color: #f4b22c;
               width: 60px;
               height: 8px;
               transform: translate(-50%, -50%);
@@ -134,6 +133,18 @@
                 transform: translate(-50%, 4px);
               }
             }
+          .location-store{
+            background-color: #f4f4f4;
+          }
+          .location-factory{
+            background-color: #fef6e9;
+          }
+          .performance-btn{
+            background-color: #6a3906;
+            span{
+              color: #fff;
+            }
+          }
         }
         .step {
             position: relative;
@@ -143,15 +154,16 @@
 
             &.step0 {
               height: 30vmin;
+              font-size: 14px;
             }
             &.step1 {
                 width: 50%;
-                min-height: 400px;
+                /*min-height: 400px;*/
              }
             &.step2 {
                 width: 50%;
                 float: right;
-                min-height: 400px;
+                /*min-height: 400px;*/
              }
             &.transfer1 {
                 width: 50%;
@@ -172,7 +184,6 @@
             .pending {}
             .title {
                 @include center padding: 8px;
-                background-color: #32CD32;
             }
 
             .badge {
@@ -207,149 +218,178 @@
                 right: 0;
             }
         }
+        .order-state-btn{
+          width: 12em;
+          background-color: transparent;
+          cursor: pointer;
+          img{
+            width: 50px;
+          }
+          .badge{
+            line-height: 36px;
+          }
+        }
     }
 }
 </style>
 
 <template>
-<!--
-# 记录商品的处理流程
-# pending : 店里收到商品
-# ready_for_factory: 准备发货到工厂
-# processing: 工厂处理
-# ready_for_store: 准备发货到店里
-# ready: 可以交给客户了
-# shipped: 已交付客户
--->
-<div>
-  <headTop></headTop>
-  <leftNav></leftNav>
-  <div class="item-flow-container page-content">
+  <!--
+  # 记录商品的处理流程
+  # pending : 店里收到商品
+  # ready_for_factory: 准备发货到工厂
+  # processing: 工厂处理
+  # ready_for_store: 准备发货到店里
+  # ready: 可以交给客户了
+  # shipped: 已交付客户
+  -->
+  <div>
+    <headTop></headTop>
+    <leftNav></leftNav>
+    <div class="item-flow-container page-content">
 
-    <product-scan :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </product-scan>
-    <item-process :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </item-process>
-    <product-transfer :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </product-transfer>
-    <WorkerPerformance :order-state="currentOrderState" :dialog-visible.sync="workerPermormanceDialogVisible" @order-state-changed="orderStateChanged"> </WorkerPerformance>
+      <product-scan :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </product-scan>
+      <item-process :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </item-process>
+      <product-transfer :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </product-transfer>
+      <WorkerPerformance :order-state="currentOrderState" :dialog-visible.sync="workerPermormanceDialogVisible" @order-state-changed="orderStateChanged"> </WorkerPerformance>
 
-    <div class="item-flow ">
-      <div class="filters" style="display:none;">
-        <el-form :inline="true" :model="formData" class="demo-form-inline">
-          <store-select  v-bind:value.sync="formData.storeId" />
-          <el-form-item>
-            <el-button type="primary" size="mini" @click="onSubmit">确定</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="item-flow-control clear">
-        <div class="clear locations" >
-          <div class="heads-wrap clear" style="">
-            <div class="head"> <span> 门店 </span> </div>
-            <div class="head right">  <span class=" "> 工厂 </span> </div>
-          </div>
-          <div class="clear">
-            <div class="location clear">
-
-              <div class="step step1">
-
-                <div class="pending part-top">
-
-                  <div class="title">
-                    <el-button @click="processItems('pending')">
-                      客户物品
-                      <div class="badge"> <sup> {{itemCounts.pending}} </sup> </div>
-                    </el-button>
-
-                  </div>
-                </div>
-
-                <div class="ready part-bottom">
-                  <div class="title">
-                    <el-button @click="processItems('ready')"> 等待交付
-                      <div class="badge"> <sup> {{itemCounts.ready}} </sup> </div>
-                    </el-button>
-                  </div>
-                </div>
-
-              </div>
-
-              <div class="step transfer1">
-                <div class="title">
-                  <el-button @click="handleTransferProducts('pending', 'ready_for_factory')">门店发货
-                    <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
-                  </el-button>
-                </div>
-              </div>
-
-              <div class="step transfer1" style="top:50%;">
-                <div class="title">
-                  <el-button @click="handleTransferProducts('ready_for_store', 'ready')">
-                    门店待验收
-                    <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
-                  </el-button>
-                </div>
-              </div>
-
-              <div class="arraw pr-pc"> </div>
-              <div class="arraw pr-pr"> </div>
-              <div class="arraw pl-pc"> </div>
-              <div class="arraw pl-pr"> </div>
-
-            </div>
-
-            <div class="location ship">
-              <div class="step step0" style="width:100%;">
-                <div class="title"> 运输 </div>
-              </div>
-              <div class="step step0" style="width:100%;">
-                <div class="title"> 运输 </div>
-              </div>
-            </div>
-
-            <div class="location clear">
-              <div class="overlayx"></div>
-              <div class="step step2">
-                <div class="title">
-                  <el-button @click="processItems('processing')">
-                    <div class="badge"> <sup> {{itemCounts.processing}} </sup> </div> 专业服务
-                    <div class="badge"> <sup> {{itemCounts.processed}} </sup> </div>
-                  </el-button>
-                  <div class="actions">
-                    <el-button @click="handleWorkerPerformance('processing')">工作量录入</el-button>
-                  </div>
-                </div>
-
-              </div>
-              <div class="step transfer2">
-                <div class="title">
-                  <el-button @click="handleTransferProducts('ready_for_factory', 'processing')"> 工厂待收货
-                    <div class="badge"> <sup> {{itemCounts.ready_for_factory}} </sup> </div>
-                  </el-button>
-                </div>
-              </div>
-
-              <div class="step transfer2" style="top:50%;">
-                <div class="title">
-                  <el-button @click="handleTransferProducts('processed', 'ready_for_store')" size="small"> 工厂发货
-                    <div class="badge"> <sup> {{itemCounts.ready_for_store}} </sup> </div>
-                  </el-button>
-                </div>
-              </div>
-
-              <div class="arraw pr-plr"> </div>
-              <div class="arraw pr-pl"> </div>
-              <div class="arraw pl-plr"> </div>
-              <div class="arraw pl-pl"> </div>
-              <div class="arraw pb-ptc"> </div>
-              <div class="arraw pt-pbc"> </div>
-
-            </div>
-          </div>
+      <div class="item-flow ">
+        <div class="filters" style="display:none;">
+          <el-form :inline="true" :model="formData" class="demo-form-inline">
+            <store-select  v-bind:value.sync="formData.storeId" />
+            <el-form-item>
+              <el-button type="primary" size="mini" @click="onSubmit">确定</el-button>
+            </el-form-item>
+          </el-form>
         </div>
+        <div class="item-flow-control clear">
+          <div class="clear locations" >
+            <div class="heads-wrap clear" style="">
+              <div class="head"><i class="fa fa-2x fa-home "></i> <span> 门店 </span> </div>
+              <div class="head right"><i class="fa fa-2x  fa-university "></i>  <span class=" ">工厂 </span> </div>
+            </div>
+            <div class="clear">
+              <div class="location location-store clear">
+                <div class="step step1">
+                  <div class="pending part-top">
+                    <div class="title">
+                      <button class="order-state-btn" @click="processItems('pending')">
+                        <img src="../../assets/img/order/states/pending.png">
+                        <div class=""> <span> 客户物品 </span>
+                           <el-badge :value="itemCounts.pending" />
+                         </div>
+                      </button>
+                    </div>
+                  </div>
 
+                  <div class="ready part-bottom">
+                    <div class="title">
+                      <button  class="order-state-btn" @click="processItems('ready')">
+                        <img src="../../assets/img/order/states/ready.png">
+                        <div class=""> <span> 等待交付 </span>
+                           <el-badge :value="itemCounts.ready" />
+                         </div>
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="step transfer1">
+                  <div class="title">
+                    <button  class="order-state-btn" @click="handleTransferProducts('pending', 'ready_for_factory')">
+                      <img src="../../assets/img/order/states/ready_for_factory1.png">
+                      <div class=""> <span> 门店发货 </span>
+                         <el-badge :value="itemCounts.ready_for_factory" />
+                       </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="step transfer1" style="top:50%;">
+                  <div class="title">
+                    <button  class="order-state-btn" @click="handleTransferProducts('ready_for_store', 'ready')">
+                      <img src="../../assets/img/order/states/ready_for_store2.png">
+                      <div class=""> <span> 门店待验收 </span>
+                         <el-badge :value="itemCounts.ready_for_store" />
+                       </div>
+                    </button>
+
+                  </div>
+                </div>
+
+                <div class="arraw pr-pc"> </div>
+                <div class="arraw pr-pr"> </div>
+                <div class="arraw pl-pc"> </div>
+                <div class="arraw pl-pr"> </div>
+
+              </div>
+
+              <div class="location ship">
+                <div class="step step0" style="width:100%;">
+                  <div class="title">  <img src="../../assets/img/order/states/truck1.png"> 运输 </div>
+                </div>
+                <div class="step step0" style="width:100%;">
+                  <div class="title">  <img src="../../assets/img/order/states/truck2.png">运输 </div>
+                </div>
+              </div>
+
+              <div class="location location-factory clear">
+                <div class="overlayx"></div>
+                <div class="step step2">
+                  <div class="title">
+                    <button class="order-state-btn" @click="processItems('processing')">
+                      <img src="../../assets/img/order/states/processing.png">
+                      <div class="">
+                        <el-badge :value="itemCounts.processing" />
+                        <span> 专业服务 </span>
+                         <el-badge :value="itemCounts.processed" />
+                       </div>
+                    </button>
+                    <div class="actions">
+                      <el-button @click="handleWorkerPerformance('processing')" class="performance-btn" size="mini">工作量录入</el-button>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="step transfer2">
+                  <div class="title">
+                    <button  class="order-state-btn" @click="handleTransferProducts('ready_for_factory', 'processing')">
+                      <img src="../../assets/img/order/states/ready_for_factory2.png">
+                      <div class=""> <span> 工厂待收货 </span>
+                         <el-badge :value="itemCounts.ready_for_factory" />
+                       </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="step transfer2" style="top:50%;">
+                  <div class="title">
+
+                    <button  class="order-state-btn" @click="handleTransferProducts('processed', 'ready_for_store')">
+                      <img src="../../assets/img/order/states/ready_for_store1.png">
+                      <div class=""> <span> 工厂发货 </span>
+                         <el-badge :value="itemCounts.ready_for_store" />
+                       </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="arraw pr-plr"> </div>
+                <div class="arraw pr-pl"> </div>
+                <div class="arraw pl-plr"> </div>
+                <div class="arraw pl-pl"> </div>
+                <div class="arraw pb-ptc"> </div>
+                <div class="arraw pt-pbc"> </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -378,6 +418,13 @@ export default {
   },
   data() {
     return {
+      itemStateImagePath:{
+        pending: '../../assets/img/order/state.png',
+        ready_for_factory: '../../assets/img/order/state.png',
+        processing: '../../assets/img/order/state.png',
+        ready_for_store: '../../assets/img/order/state.png',
+        ready: '../../assets/img/order/state.png'
+      },
       processItemDialogVisible: false,
       scanProductDialogVisible: false,
       transferProductDialogVisible: false,

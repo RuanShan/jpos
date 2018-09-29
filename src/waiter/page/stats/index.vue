@@ -6,7 +6,6 @@
     legend{
       color:#909399;
     }
-
   }
   .title-wrap {
     display: none;

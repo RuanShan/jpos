@@ -1,7 +1,6 @@
 <style lang="scss">
 .statistics-container {
   .filters {
-    padding: 16px;
     .el-form-item {
       margin: 0;
     }

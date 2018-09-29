@@ -1,5 +1,12 @@
 <style lang="scss">
 .setting-container {
+  fieldset{
+    border: 1px solid #ebeef5;
+    margin: 0;
+    legend{
+      color:#909399;
+    }
+  }
   .title-wrap {
     padding: 6px;
     text-align: center;
@@ -45,7 +52,7 @@
             <setting-printer></setting-printer>
           </el-tab-pane>
 
-       
+
         </el-tabs>
       </div>
     </div>
@@ -55,8 +62,8 @@
 <script>
 import leftNav from "@/components/layout/LeftNav.vue"
 import headTop from "@/components/layout/headTop.vue";
-import SettingBase from '../components/SettingBase.vue';
-import SettingPrinter from '../components/SettingPrinter.vue';
+import SettingBase from './SettingBase.vue';
+import SettingPrinter from './SettingPrinter.vue';
 
 export default {
    components: {

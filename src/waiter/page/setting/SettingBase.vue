@@ -1,14 +1,6 @@
 <style lang="scss">
 .setting-base {
-  .member-field-set {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 5px;
-  }
-  .member-form-item {
-    margin-bottom: 0;
-  }
+
   .select-options {
     width: 120px;
   }
@@ -23,7 +15,7 @@
 <template>
   <div class="setting-base">
     <el-form ref="form" :model="form" :inline="true">
-      <fieldset class="member-field-set">
+      <fieldset  >
         <legend>店铺设置</legend>
         <el-form-item class="member-form-item" label="选择当前店铺名称">
           <el-select class="select-options" v-model="form.storeId" @change="changeForState" size="mini">
@@ -34,8 +26,8 @@
       </fieldset>
     </el-form>
     <div class="button-sett">
-      <el-button  type="info"  @click="handleCancel">取消</el-button>
-      <el-button  type="danger"  @click="handleSave" >保存</el-button>
+      <el-button  type="info"  @click="handleCancel" size="mini">取消</el-button>
+      <el-button  type="danger"  @click="handleSave" size="mini" >保存</el-button>
     </div>
   </div>
 </template>
@@ -64,7 +56,7 @@ export default {
   mounted() {
     let storeId = _.toInteger( getStore('storeId') )
     if(storeId > 0){
-      this.form.storeId = storeId      
+      this.form.storeId = storeId
     }
   },
   computed: {

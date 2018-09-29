@@ -9,7 +9,7 @@ const posPage = r => require.ensure([], () => r(require('@/page/pos/index')), 'p
 const itemGroupsPage = r => require.ensure([], () => r(require('@/page/items/index')), 'groups')
 const membersPage = r => require.ensure([], () => r(require('@/page/members/index')), 'members')
 const statisticsPage = r => require.ensure([], () => r(require('@/page/stats/index')), 'statistics')
-const settingPage = r => require.ensure([], () => r(require('@/page/setting')), 'setting')
+const settingPage = r => require.ensure([], () => r(require('@/page/setting/index')), 'setting')
 const testPage = r => require.ensure([], () => r(require('@/page/functionalTest')), 'orders')
 
 
