@@ -102,7 +102,7 @@
     </div>
     <!-- 分页器 START-->
     <div class="" style="position: absolute;bottom: 15px;right:4%;margin-top: 10px;">
-      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalPage">
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="totalPage">
       </el-pagination>
     </div>
     <!-- 分页器 END-->

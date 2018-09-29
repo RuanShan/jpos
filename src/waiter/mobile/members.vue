@@ -93,7 +93,7 @@
 
       <!-- 分页器 START-->
       <div class="pagination-wrap">
-        <el-pagination @current-change="handlePageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total, prev, pager, next, jumper" :total="count">
+        <el-pagination @current-change="handlePageChange" :current-page.sync="currentPage" :page-size="perPage" layout="total, prev, pager, next" :total="count">
         </el-pagination>
       </div>
       <!-- 分页器 END-->

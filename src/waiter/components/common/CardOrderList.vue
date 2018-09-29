@@ -20,26 +20,7 @@
   <div class="scrollable-table">
     <el-table class="cel-scrollable-table" :data="expenseTableData" border :row-key="row => row.id">
       <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px" @cell-mouse-enter="mouseEnter" :row-key="row => row.id"> -->
-      <el-table-column type="expand">
-        <template slot-scope="props">
-                <el-table :data="props.row.lineItems" :span-method="objectSpanMethod" border >
-                  <el-table-column prop="groupNumber" label="物品编号" width="180">
-                  </el-table-column>
-                  <el-table-column prop="cname" label="服务项目">
-                  </el-table-column>
-                  <el-table-column prop="saleUnitPrice" label="单价">
-                  </el-table-column>
-                  <el-table-column prop="quantity" label="数量">
-                  </el-table-column>
-                  <el-table-column prop="discountPercent" label="折扣">
-                  </el-table-column>
-                  <el-table-column prop="price" label="金额">
-                  </el-table-column>
-                  <el-table-column prop="memo" label="备注">
-                  </el-table-column>
-                </el-table>
-              </template>
-      </el-table-column>
+
       <el-table-column label="订单编号" prop="number">
       </el-table-column>
       <el-table-column label="消费日期" prop="displayCreatedAt">
@@ -52,17 +33,28 @@
       </el-table-column>
       <el-table-column label="操作员" prop="creatorName">
       </el-table-column>
+      <el-table-column label="操作">
+       <template slot-scope="scope">
+         <el-button
+           size="mini"  type="success"
+           @click="handleShowDetail( scope.row)">详情</el-button>
+
+       </template>
+     </el-table-column>
     </el-table>
   </div>
   <!-- 会员消费表格 END-->
 
   <!-- 分页器 START-->
   <div class="pagination-wrap" style="">
-    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalCount">
+    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="totalCount">
     </el-pagination>
   </div>
   <!-- 分页器 END-->
 
+  <el-dialog  title="订单详情"  :visible.sync="dialogVisible" append-to-body class="cel-body-dialog">
+    <OrderDetail :order-detail="orderDetail"> </OrderDetail>
+  </el-dialog>
 </div>
 </template>
 
@@ -71,17 +63,24 @@
 import {
   findOrders
 } from "@/api/getData"
+import  OrderDetail from '@/components/common/OrderDetail.vue'
 
 
 export default {
+  //如果cardData 为空，表示非会员卡消费列表
   props: ["customerData", "cardData"],
+  components:{
+    OrderDetail
+  },
   data() {
     return {
       dateSection: "", //选择的日期时间
       expenseTableData: [], //主表格数据
       totalCount: 0, //数据总行数
       perPage: 12, //主表每页显示12行
-      currentPage: 1 //根据分页器的选择,提交SerVer数据,表示当前是第几页
+      currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
+      dialogVisible: false,
+      orderDetail: null
     };
   },
   created: function() {
@@ -104,12 +103,11 @@ export default {
         per_page: this.perPage, //每页显示12行数据
         q: {
           order_type_eq: 0,
-          payments_source_id_eq: this.cardData.id,
           user_id_eq: this.customerData.id //根据顾客的id
         }
       }
       //会员卡订单
-      if( this.cardData.id ){
+      if( this.cardData ){
         //params.q.payment_method_id =1
         params.q.payments_source_id_eq = this.cardData.id
       }else{
@@ -120,20 +118,15 @@ export default {
     },
     //分页器的改变选择时事件处理函数
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.currentPage = val;
-      console.log(this.currentPage);
-      let requestDataByUserId = { //查询条件
-        "page": this.currentPage, //分页器选择的当前页数
-        "per_page": 12, //每页显示12行数据
-        "q": {
-          "user_id_eq": this.customerData.id //根据顾客的id
-        }
-      }
-      this.getOrdersByUserId(requestDataByUserId).then(() => {
-        this.expenseTableData = this.buildOrders(this.orderDatasByUserId);
-        console.log("得到了会员得订单数据了!");
-      })
+      console.log(`当前页: ${val}`)
+      this.currentPage = val
+      console.log(this.currentPage)
+      this.initData()
+    },
+    handleShowDetail( row ){
+      this.dialogVisible = true
+      console.log("显示当前订单的详细信息...", row);
+      this.orderDetail = row
     }
   }
 };

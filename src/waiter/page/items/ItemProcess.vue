@@ -161,94 +161,95 @@
           </div>
         </div>
         <div class="item-detail">
-          <div class="order-detail-container" v-if="orderDetail">
-            <div class="customer box">
-              <div class="box-head"> 客户信息</div>
-              <div>
-                <table border="1" cellspacing="0">
-                  <tr>
-                    <th>客户电话 </th>
-                    <td> {{ orderCustomer.mobile }} </td>
-                    <th>客户姓名 </th>
-                    <td> {{ orderCustomer.userName }} </td>
-                    <th>客户类型 </th>
-                    <td> {{ orderCustomer.displayType }} </td>
-                  </tr>
-                  <tr>
-                    <th>会员卡号 </th>
-                    <td> {{ orderCustomer.prepaidCard.code }} </td>
-                    <th>会员卡类型 </th>
-                    <td> {{ orderCustomer.prepaidCard.name }} </td>
-                    <th>会员卡余额 </th>
-                    <td> {{ orderCustomer.prepaidCard.amountRemaining }} </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-
-            <div class="box">
-              <div class=""> 订单信息 {{orderDetail.number}} </div>
-              <div class="box">
-                <div class="box-head"> 支付信息 </div>
+          <div class="order-detail-container">
+            <div class="order-detail" v-if="orderDetail">
+              <div class="customer box">
+                <div class="box-head"> 客户信息</div>
                 <div>
-                  <table border="1" cellspacing="0" style="width: 100%">
-                    <tr >
-                      <th>支付方式</th>
-                      <th>支付金额</th>
-                      <th style="width:8em">状态</th>
-                      <th style="width:8em">支付时间</th>
+                  <table border="1" cellspacing="0">
+                    <tr>
+                      <th>客户电话 </th>
+                      <td> {{ orderCustomer.mobile }} </td>
+                      <th>客户姓名 </th>
+                      <td> {{ orderCustomer.userName }} </td>
+                      <th>客户类型 </th>
+                      <td> {{ orderCustomer.displayType }} </td>
                     </tr>
-                    <tr v-for="(payment,index ) in orderDetail.payments">
-                      <td>{{payment.cname}}</td>
-                      <td>{{payment.amount}}</td>
-                      <td style="width:8em">{{payment.displayState}}</td>
-                      <td style="width:8em">{{payment.displayCreatedAt}}</td>
+                    <tr>
+                      <th>会员卡号 </th>
+                      <td> {{ orderCustomer.prepaidCard.code }} </td>
+                      <th>会员卡类型 </th>
+                      <td> {{ orderCustomer.prepaidCard.name }} </td>
+                      <th>会员卡余额 </th>
+                      <td> {{ orderCustomer.prepaidCard.amountRemaining }} </td>
                     </tr>
                   </table>
                 </div>
               </div>
-
-              <div v-for="group in orderDetail.lineItemGroups" class="box line-item-group">
-                <div class="box-head"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
-                <div class="box-body">
-                  <table border="1"   cellspacing="0" style="width: 100%">
-                  <tr>
-                    <th style="width:8em">序号</th>
-                    <th>服务项目</th>
-                    <th>项目备注<i class="el-icon-edit"></i></th>
-                    <th style="width:8em">状态</th>
-                  </tr>
-                  <template v-for="(lineItem,index ) in group.lineItems">
-                    <tr>
-                      <td>{{ index+1 }}</td>
-                      <td>{{ lineItem.cname }}</td>
-                      <td>
-                        <vue-xeditable  :name="'memo_'+lineItem.id+'_xeditable'" v-model="lineItem.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
-                      </td>
-                      <td>{{ lineItem.displayState }}</td>
-                    </tr>
-                  </template>
-                </table>
+              <div class="box">
+                <div class=""> 订单信息 {{orderDetail.number}} </div>
+                <div class="box">
+                  <div class="box-head"> 支付信息 </div>
+                  <div>
+                    <table border="1" cellspacing="0" style="width: 100%">
+                      <tr >
+                        <th>支付方式</th>
+                        <th>支付金额</th>
+                        <th style="width:8em">状态</th>
+                        <th style="width:8em">支付时间</th>
+                      </tr>
+                      <tr v-for="(payment,index ) in orderDetail.payments">
+                        <td>{{payment.cname}}</td>
+                        <td>{{payment.amount}}</td>
+                        <td style="width:8em">{{payment.displayState}}</td>
+                        <td style="width:8em">{{payment.displayCreatedAt}}</td>
+                      </tr>
+                    </table>
+                  </div>
                 </div>
-                <div class="box-head"> 物品图片 </div>
-                <div class="box-body clear">
-                  <div v-show="group.images.length==0">  </div>
 
-                  <el-upload
-                    :file-list="group.uploadedImages"
-                    :action="group.imageUploadPath"
-                    name="image[attachment]"
-                    list-type="picture-card"
-                    :with-credentials="true"
-                    :on-preview="handlePictureCardPreview"
-                    :on-remove="handleRemove">
-                    <i class="el-icon-plus"></i>
-                  </el-upload>
+                <div v-for="group in orderDetail.lineItemGroups" class="box line-item-group">
+                  <div class="box-head"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
+                  <div class="box-body">
+                    <table border="1"   cellspacing="0" style="width: 100%">
+                    <tr>
+                      <th style="width:8em">序号</th>
+                      <th>服务项目</th>
+                      <th>项目备注<i class="el-icon-edit"></i></th>
+                      <th style="width:8em">状态</th>
+                    </tr>
+                    <template v-for="(lineItem,index ) in group.lineItems">
+                      <tr>
+                        <td>{{ index+1 }}</td>
+                        <td>{{ lineItem.cname }}</td>
+                        <td>
+                          <vue-xeditable  :name="'memo_'+lineItem.id+'_xeditable'" v-model="lineItem.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
+                        </td>
+                        <td>{{ lineItem.displayState }}</td>
+                      </tr>
+                    </template>
+                  </table>
+                  </div>
+                  <div class="box-head"> 物品图片 </div>
+                  <div class="box-body clear">
+                    <div v-show="group.images.length==0">  </div>
 
+                    <el-upload
+                      :file-list="group.uploadedImages"
+                      :action="group.imageUploadPath"
+                      name="image[attachment]"
+                      list-type="picture-card"
+                      :with-credentials="true"
+                      :on-preview="handlePictureCardPreview"
+                      :on-remove="handleRemove">
+                      <i class="el-icon-plus"></i>
+                    </el-upload>
+
+                  </div>
                 </div>
               </div>
             </div>
-
+            <div class="el-table__empty-block" v-if="!orderDetail"> <p class=" el-table__empty-text "> 暂无数据 </p></div>
           </div>
           <div class="actions" v-show="orderDetail">
             <el-button size="mini" @click="cancelOrder()">取消订单</el-button>

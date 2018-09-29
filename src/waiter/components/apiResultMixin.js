@@ -4,7 +4,7 @@ import _ from "lodash"
 export var apiResultMixin = {
   data: function(){
     return {
-      LineItemGroupPaymentStateEnum: { paid: 'paid', balance_due: 'balance_due'},
+      LineItemGroupPaymentStateEnum: { paid: 'paid', pending: 'pending'},
       CardStyleEnum:{ prepaid: 'prepaid', counts:'counts' }, // prepaid 充值卡， counts 次卡
       UserEntryStateEnum:{ clockin: 'clockin', clockout:'clockout' }, // 打卡 登入， 登出
       LineItemGroupStateEnum: {
@@ -53,7 +53,7 @@ export var apiResultMixin = {
         creatorName: orderResult.creator_name,
         shipmentState: orderResult.shipment_state,
         groupState: orderResult.group_state,
-        paymentState: orderResult.payment_state, // 支付状态 balance_due:欠款， paid:已经支付
+        paymentState: orderResult.payment_state, // 支付状态 pending:欠款， paid:已经支付
         paymentTotal: orderResult.payment_total, // 一共支付了多少
         createdAt: moment(orderResult.created_at),
         orderType: orderResult.order_type,
@@ -594,8 +594,8 @@ console.log( "buildCustomerStatis=", result, statis)
     },
     getDisplayPaymentState(state){
       // order.payment_state
-      //支付状态 balance_due:欠款， paid:已经支付
-      return state == "balance_due" ? "未付" : "已付"
+      //支付状态 pending:欠款， paid:已经支付
+      return state == "pending" ? "未付" : "已付"
     },
     getPaymentDisplayState(state){
       // payment.state

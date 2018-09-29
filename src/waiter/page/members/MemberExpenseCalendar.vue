@@ -89,7 +89,7 @@
 
     <!-- 分页器 START-->
     <div class="" style="position: absolute;bottom: -16px;right:4%;margin-top: 10px;">
-      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalCount">
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="totalCount">
       </el-pagination>
     </div>
     <!-- 分页器 END-->

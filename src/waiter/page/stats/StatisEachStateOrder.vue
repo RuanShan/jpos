@@ -1,11 +1,6 @@
 <style lang="scss">
 .statis-each-orders {
-  .order-field-set {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 5px;
-  }
+
   .oreder-form-item {
     margin-bottom: 0;
   }
@@ -23,8 +18,8 @@
     position: absolute;
     left: 10px;
     right: 10px;
-    top: 110px;
-    bottom: 60px;
+    top: 100px;
+    bottom: 55px;
   }
 .stati-sdata-order {
     display: inline-block;
@@ -58,9 +53,9 @@
 
 <template>
   <div class="statis-each-orders">
-    <el-form ref="form" :model="formData" label-width="80px" :inline="true">
-      <fieldset class="order-field-set">
-        <legend>功能选择</legend>
+    <el-form ref="form" :model="formData"  :inline="true">
+      <fieldset class="order-field-set filters">
+        <legend>查询条件</legend>
         <el-form-item class="oreder-form-item" label="消费日期">
           <el-date-picker class="order-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
           </el-date-picker>
@@ -119,7 +114,7 @@
 
     <!-- 分页器 START-->
     <div class="pagiantion-wrap" >
-      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalPage">
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="totalPage">
       </el-pagination>
     </div>
     <!-- 分页器 END-->
@@ -240,7 +235,7 @@ export default {
           params.q.payments_payment_method_id_eq =  this.formData.paymentMethodId
         }else{
           //所有未交款的
-          params.q.payment_state_eq = 'balance_due'
+          params.q.payment_state_eq = 'pending'
         }
       }
       return params

@@ -1,14 +1,7 @@
 <style lang="scss">
 .statis-each-member {
-  .member-field-set {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 5px;
-  }
-  .member-form-item {
-    margin-bottom: 0;
-  }
+
+
   .member-time-select {
     width: 230px;
   }
@@ -59,9 +52,10 @@
 
 <template>
   <div class="statis-each-member">
-    <el-form ref="form" :model="formData" label-width="80px" :inline="true">
-      <fieldset class="member-field-set">
-        <legend>功能选择</legend>
+    <el-form ref="form" :model="formData"  :inline="true">
+      <fieldset class="member-field-set filters">
+        <legend>查询条件</legend>
+
         <el-form-item class="member-form-item" label="充值日期">
           <el-date-picker class="member-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
           </el-date-picker>
@@ -70,7 +64,7 @@
         <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
 
       <el-form-item>
-        <el-button class="order-ok" type="primary" size="mini">确定</el-button>
+        <el-button class="order-ok" type="primary" size="mini">查询</el-button>
       </el-form-item>
 
       </fieldset>
@@ -112,7 +106,7 @@
     <!-- 会员统计表   END -->
     <!-- 分页器 START-->
     <div class="pagiantion-wrap">
-      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="totalPage">
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="totalPage">
       </el-pagination>
     </div>
     <!-- 分页器 END-->

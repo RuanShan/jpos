@@ -1,13 +1,10 @@
 <style lang="scss">
 .member-container {
-    button.el-button span {
-        color: #fff;
-    }
     .main-content {
         padding: 18px;
     }
     .box-card {
-        border: 1px solid silver;
+        border: 1px solid #ebeef5;
         .member-profile {
             padding: 0 16px;
             .head {
@@ -15,11 +12,11 @@
             }
             .member-table {
                 th {
-                    border: 1px solid silver;
+                    border: 1px solid #ebeef5;
                 }
                 td {
                     width: 12.5%;
-                    border: 1px solid silver;
+                    border: 1px solid #ebeef5;
                 }
             }
         }
@@ -28,25 +25,28 @@
             position: absolute;
             left: 0;
             right: 0;
-            top: 90px;
+            top: 100px;
             bottom: 16px;
             .card-tabs {
                 .card-table {
                     th {
-                        border: 1px solid silver;
+                        border: 1px solid #ebeef5;
                     }
                     td {
                         width: 12.5%;
-                        border: 1px solid silver;
+                        border: 1px solid #ebeef5;
                     }
                 }
             }
             .card-records-wrap {
                 position: absolute;
-                top: 114px;
+                top: 100px;
                 bottom: 0;
                 left: 0;
                 right: 0;
+                &.nocard-records-wrap{
+                  top:34px;
+                }
             }
         }
     }
@@ -113,7 +113,7 @@
           </table>
         </div>
         <!-- 会员基本信息 END-->
-        <div class="cards-wrap" style="margin-top: 10px;">
+        <div class="cards-wrap" style="">
           <el-button type="success" size="mini" @click="addCardButtonClicked" class="right add-card-button">添加会员卡</el-button>
           <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick" class="card-tabs cel-scrollable-tabs">
             <el-tab-pane v-for="(item) in cards" :key="item.code" :label="item.title" :name="item.code">
@@ -170,6 +170,33 @@
                   </el-tab-pane>
                   <el-tab-pane label="充值记录" name="deposits"  v-if="item.code.length>0">
                     <card-deposit-list :customer-data="customerData" :card-data="item"></card-deposit-list>
+                  </el-tab-pane>
+                </el-tabs>
+              </div>
+            </el-tab-pane>
+
+            <el-tab-pane label="无卡消费" name="">
+              <div class="clear ">
+                <div class="left money-wrap">
+                  <span>当前余额</span>
+                  <span>¥ {{ordersWithoutCard.amountRemaining}}</span>
+                </div>
+                <div class="left money-wrap">
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充值金额</span>
+                  <span>¥ {{ordersWithoutCard.amount}}</span>
+                </div>
+                <div class="left money-wrap">
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消费金额</span>
+                  <span>¥ {{ordersWithoutCard.amountUsed}}</span>
+                </div>
+
+              </div>
+              <!-- 在tab中的卡详情表 START -->
+
+              <div class="card-records-wrap nocard-records-wrap">
+                <el-tabs type="border-card" v-model="cardRecordTabName" class="card-records  cel-scrollable-tabs">
+                  <el-tab-pane label="消费记录" name="orders">
+                    <card-order-list :customer-data="customerData" ></card-order-list>
                   </el-tab-pane>
                 </el-tabs>
               </div>
@@ -232,6 +259,11 @@ export default {
       displayRecharge: false, //会员卡充值界面是否显示标志位
       displayMemberEdit: false, //会员编辑窗口是否打开标志位
       displayMemberCardEdit: false, // 会员卡编辑窗口是否打开标志位
+      ordersWithoutCard:{
+        amountRemaining:0,
+        amount:0,
+        amountUsed:0
+      }
     };
   },
   computed: {
@@ -252,11 +284,11 @@ export default {
           arr.push(obj)
         })
       }
-      const nocard = {
-        title: "无卡消费",
-        code: ""
-      }
-      arr.push(nocard)
+      //const nocard = {
+      //  title: "无卡消费",
+      //  code: ""
+      //}
+      //arr.push(nocard)
       return arr
     }
   },
@@ -270,13 +302,15 @@ export default {
       this.orderDataByNumber = await getOrder(number);
     },
 
-    async openWindow() {
+    openWindow() {
       this.initData()
     },
     async initData() {
       const result = await getCustomerStatis(this.customerData.id)
       this.statis = this.buildCustomerStatis(result)
-      this.tabsNumber = this.cards[0].code //openWindos后选中第一个tabs,之后每次点击别的tab是tabsNumber动态变化
+      if( this.cards.length>0){
+        this.tabsNumber = this.cards[0].code //openWindos后选中第一个tabs,之后每次点击别的tab是tabsNumber动态变化
+      }
     },
     //点击标签的事件处理函数-----
     tabHandleClick(tab, event) {

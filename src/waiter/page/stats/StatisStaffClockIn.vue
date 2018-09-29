@@ -1,14 +1,7 @@
 <style lang="scss">
 .statis-staff-clock-in {
-    .member-field-set {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        top: 5px;
-    }
-    .member-form-item {
-        margin-bottom: 0;
-    }
+
+
     .select-options {
         width: 120px;
     }
@@ -23,8 +16,8 @@
         position: absolute;
         left: 10px;
         right: 10px;
-        top: 108px;
-        bottom: 60px;
+        top: 100px;
+        bottom: 55px;
     }
     .pagiantion-wrap{
       position: absolute;
@@ -36,9 +29,9 @@
 
 <template>
 <div class="statis-staff-clock-in">
-  <el-form ref="form" :model="form" label-width="100px" :inline="true">
-    <fieldset class="member-field-set">
-      <legend>功能选择</legend>
+  <el-form ref="form" :model="form"   :inline="true">
+    <fieldset class="member-field-set filters">
+      <legend>查询条件</legend>
       <el-form-item class="member-form-item" label="时间选择">
         <el-date-picker class="member-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
         </el-date-picker>
@@ -75,7 +68,7 @@
   <!-- 会员统计表   END -->
   <!-- 分页器 START-->
   <div class="pagiantion-wrap" >
-    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next, jumper" :total="total">
+    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="total">
     </el-pagination>
   </div>
   <!-- 分页器 END-->

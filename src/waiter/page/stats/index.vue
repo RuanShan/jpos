@@ -1,5 +1,13 @@
 <style lang="scss">
 .statistics-container {
+  fieldset{
+    border: 1px solid #ebeef5;
+    margin: 0;
+    legend{
+      color:#909399;
+    }
+
+  }
   .title-wrap {
     display: none;
     line-height: 42px;
@@ -8,7 +16,10 @@
     text-align: center;
   }
   .filters {
-    padding: 16px;
+    position: absolute;
+     left: 10px;
+     right: 10px;
+     top: 15px;
     .el-form-item {
       margin: 0;
     }

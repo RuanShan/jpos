@@ -175,7 +175,7 @@ export default {
     //需要付款的物品
     checkoutRequiredLineItemGroups: function(){
       return this.computedLineItemGroups.filter( (item)=>{
-        return item.paymentState== this.LineItemGroupPaymentStateEnum.balance_due
+        return item.paymentState== this.LineItemGroupPaymentStateEnum.pending
       })
     },
     //需要付款的金额
