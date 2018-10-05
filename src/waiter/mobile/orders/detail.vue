@@ -1,108 +1,150 @@
 <style lang='scss'>
-.member-tabble-container {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  .member-table-left {
-    margin: 10px;
+.order-detail{
+  .mint-header{
+    background-color: #f4b22c;
   }
-  .member-table-center {
-    width: 100%;
-    margin: 10px;
-    .member-table {
-      width: 100%;
+  .head{
+    span{
+      display: inline-block;
+      padding: 6px;
+      color: #fff;
+      background-color: #6a3906;
+      border-radius: 3px;
     }
+    padding: 10px 0 10px 0;
   }
-  .member-table-right {
-    margin: 10px;
+  .subtitle {
+    display: inline-block;
+    padding: 6px;
+    color: #6a3906;
   }
-}
-.order-table-container {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  .order-table-left {
-    margin: 10px;
-  }
-  .order-table-center {
-    width: 100%;
-    margin: 10px;
-    .order-table {
-      width: 100%;
-    }
-  }
-  .order-table-right {
-    margin: 10px;
-  }
-}
-.item-detail-wrap{
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50px;
-  bottom: 50px;
-
   table{
     width: 100%;
+    background-color: #fff;
+    td,
+    th {
+        border: 1px solid #ebeef5;
+        padding: 6px 10px;
+        font-size: 14px;
+        box-sizing: border-box;
+        white-space: normal;
+        line-height: 23px;
+    }
   }
-}
-.succeed {
-  // position: absolute;
-  font-size: x-large;
-  margin: 20px;
-  // bottom: 25px;
-  // left: 10px;
-  // right: 10px;
-}
- .upload-list {
-    margin-top: 25px;
+  .payments-wrap{
+    padding: 0 0 10px 0;
+    margin-bottom: 10px;
+  }
+  .member-tabble-container {
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    .upload {
-      .el-upload-list--picture-card {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-      }
-      .el-upload--picture-card {
-        width: 200px;
-        height: 200px;
-        line-height: 200px;
-      }
-      .el-upload-list__item {
-        width: 200px;
-        height: 200px;
-      }
-      .el-upload-list__item-preview {
-        width: 130px;
-      }
-      .el-upload-list__item-delete {
-        width: 130px;
-      }
-      .el-icon-zoom-in {
-        font-size: 80px;
-      }
-      .el-icon-delete {
-        font-size: 80px;
+    justify-content: space-between;
+    .member-table-left {
+      margin: 10px;
+    }
+    .member-table-center {
+      width: 100%;
+      margin: 10px;
+      .member-table {
+        width: 100%;
       }
     }
-    .dialog {
-      .el-dialog__headerbtn {
-        font-size: 120px;
-        top: -33px;
-        right: 0px;
-      }
+    .member-table-right {
+      margin: 10px;
     }
   }
+  .order-table-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .order-table-left {
+      margin: 10px;
+    }
+    .order-table-center {
+      width: 100%;
+      margin: 10px;
+      .order-table {
+        width: 100%;
+      }
+    }
+    .order-table-right {
+      margin: 10px;
+    }
+  }
+  .item-detail-wrap{
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 50px;
+    bottom: 50px;
+  }
+  .line-item-groups
+  {
+    .line-item-group{
+      padding: 10px 0 10px;
+      border-bottom: 1px solid #6a3906;
+    }
+    .line-item-group:first-child{
+      border-top: 1px solid #6a3906;
+    }
+    .line-item-group:last-child{
+      border-bottom: none;
+    }
+  }
+  .upload-list {
+      margin-top: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      .upload {
+        .el-upload-list--picture-card {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+        }
+        .el-upload--picture-card {
+          width: 200px;
+          height: 200px;
+          line-height: 200px;
+        }
+        .el-upload-list__item {
+          width: 200px;
+          height: 200px;
+        }
+        .el-upload-list__item-preview {
+          width: 130px;
+        }
+        .el-upload-list__item-delete {
+          width: 130px;
+        }
+        .el-icon-zoom-in {
+          font-size: 80px;
+        }
+        .el-icon-delete {
+          font-size: 80px;
+        }
+      }
+      .dialog {
+        .el-dialog__headerbtn {
+          font-size: 120px;
+          top: -33px;
+          right: 0px;
+        }
+      }
+    }
+  .box{
+    margin-bottom: 10px;
+  }
+  .back-btn{
+    margin-top: 5px;
+  }
+}
 </style>
 
-
 <template>
-
-  <section class="orderDetail">
+  <section class="order-detail">
     <div>
       <mt-header title="订单详情">
         <div slot="left">
@@ -112,8 +154,8 @@
     </div>
     <div class="item-detail-wrap">
       <div class="order-detail" v-if="orderDetail">
-        <div class="customer">
-          <div class="head"> 客户信息</div>
+        <div class="box">
+          <div class="head"> <span> <i class="fa fa-user">  客户信息</i> </span> </div>
           <div>
             <table border="1" cellspacing="0">
               <tr>
@@ -136,10 +178,10 @@
           </div>
         </div>
 
-        <div>
-          <div class="head"> 订单信息 {{orderDetail.number}} </div>
-          <div>
-            <div class=""> 支付信息 </div>
+        <div class="box">
+          <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{orderDetail.number}}</i> </span> </div>
+          <div class="payments-wrap">
+            <div class="subtitle"> 支付信息 </div>
             <div>
               <table border="1" cellspacing="0" style="width: 100%">
                 <tr >
@@ -157,9 +199,9 @@
               </table>
             </div>
           </div>
-
-          <div v-for="group in orderDetail.lineItemGroups" class="line-item-group">
-            <div class="head"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
+          <div class="line-item-groups">
+            <div v-for="group in orderDetail.lineItemGroups" class="line-item-group">
+            <div class="subtitle"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
             <table border="1" cellspacing="0" style="width: 100%">
               <tr>
                 <th style="width:8em">序号</th>
@@ -179,10 +221,8 @@
               </template>
             </table>
 
-            <div class="head"> 物品图片
-
-            </div>
-            <div class="clear">
+            <div class="subtitle"> 物品图片  </div>
+            <div class=" ">
               <div v-show="group.images.length==0">  </div>
 
               <el-upload
@@ -198,13 +238,14 @@
 
             </div>
           </div>
+          </div>
         </div>
 
       </div>
     </div>
 
     <div class="footer">
-      <mt-button @click="handleDone">完成</mt-button>
+      <mt-button class="back-btn" @click="handleDone">返回</mt-button>
     </div>
   </section>
 
