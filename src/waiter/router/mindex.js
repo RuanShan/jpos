@@ -5,11 +5,9 @@ Vue.use(Router);
 
 const loginPage = r => require.ensure([], () => r(require('@/mobile/login')), 'login')
 const homePage = r => require.ensure([], () => r(require('@/mobile/home')), 'home')
-const itemGroupsPage = r => require.ensure([], () => r(require('@/mobile/itemFlow')), 'itemGroups')
 const ordersPage = r => require.ensure([], () => r(require('@/mobile/orders/orders')), 'orders')
 const orderDetailPage = r => require.ensure([], () => r(require('@/mobile/orders/detail')), 'orderDetail')
 const profilePage = r => require.ensure([], () => r(require('@/mobile/profile')), 'profile')
-const settingPage = r => require.ensure([], () => r(require('@/mobile/setting')), 'setting')
 
 
 const routes = [{
@@ -32,16 +30,8 @@ const routes = [{
           component: orderDetailPage,
           meta: [],
     }, {
-        path: '/itemGroups',
-        component: itemGroupsPage,
-        meta: [],
-    }, {
         path: '/profile',
         component: profilePage,
-        meta: [],
-    }, {
-        path: '/setting',
-        component: settingPage,
         meta: [],
     }
 ]

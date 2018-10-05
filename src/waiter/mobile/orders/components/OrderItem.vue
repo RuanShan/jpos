@@ -12,10 +12,9 @@
   }
   .row {
     align-items: center;
-    min-height: 50px;
+    padding: 10px;
     display: flex;
-    justify-content: space-between; // border-bottom: .5px solid #e5e5e5;
-    box-shadow: 0 0 1px rgba(0, 0, 0, .11);
+    justify-content: space-between; //
     .shop_header {
       flex: 2;
       display: flex;
@@ -61,17 +60,28 @@
 
     }
   }
+  .boxh{
+     border-bottom: 1px solid #e5e5e5;
+     padding: 10px;
+  }
+  .boxf{
+    border-top: 1px solid #e5e5e5;
+    padding: 10px;
+    text-align: right;
+  }
 }
 </style>
 <template>
   <section class="orderItem">
-    <div class="base-row">
-      <div class="">订单编号: {{order.number}} </div>
-      <div class="right-date">订单时间: {{order.displayCreatedAt}}</div>
-    </div>
-    <div class="base-row">
-      <div class="">客户信息: {{order.customer.mobile}}(卡号:{{order.customer.displayCardCode }}) </div>
-      <div class="right-date">订单金额: {{order.total}}元 </div>
+    <div class="boxh">
+      <div class="base-row">
+        <div class="">订单编号: {{order.number}} </div>
+        <div class="right-date">订单时间: {{order.displayCreatedAt}}</div>
+      </div>
+      <div class="base-row">
+        <div class="">客户信息: {{order.customer.mobile}}(卡号:{{order.customer.displayCardCode }}) </div>
+        <div class="right-date">订单金额: {{order.total}}元 </div>
+      </div>
     </div>
     <div v-for="group in order.lineItemGroups" class="row" style="min-height:60px">
 
@@ -92,7 +102,7 @@
       </div>
     </div>
 
-    <div class="row fw-2" style="justify-content: flex-end;">
+    <div class="boxf" style="justify-content: flex-end;">
       <router-link :to="{ name: 'orderDetail', params: {id: order.id} }">
       <mt-button class="fw-4" style="margin-right:10px;height:30px" plain size="small" type="primary" >订单详细</mt-button>
       </router-link>

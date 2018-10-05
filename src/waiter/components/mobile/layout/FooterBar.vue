@@ -5,15 +5,20 @@
     left: 0;
     right: 0;
     height: 50px;
-    color: white;
-    background-color: #285ff5;
     text-align: center;
+    background-color: #f4b22c;
+    *{
+      color: #3e3a39;
+    }
+    .copyright{
+      line-height: 50px;
+    }
   }
 </style>
 
 <template>
   <div  class="footer">
-    JPOS 底部版权信息
+    <p class="copyright">汪永峰皮具养护订单系统底部版权信息</p>
   </div>
 </template>
 <style>

@@ -1,6 +1,6 @@
 <template>
   <div id="app " class="  clearfix">
-    <div class="wrappe ">
+    <div class="wrap">
       <router-view></router-view>
     </div>
   </div>
@@ -37,7 +37,7 @@ export default {
   }
   #app{
   }
-  .wrapper{
+  .wrap{
 
   }
 </style>

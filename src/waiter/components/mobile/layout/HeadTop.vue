@@ -1,4 +1,4 @@
-<style lang="css">
+<style lang="scss">
 
 .header.is-fixed {
     top: 0;
@@ -9,27 +9,34 @@
 }
 .header {
     align-items: center;
-    background-color: #26a2ff;
+    background-color: #f4b22c;
     box-sizing: border-box;
-    color: #fff;
     font-size: 14px;
-    height: 40px;
-    line-height: 1;
     padding: 0 10px;
     position: relative;
     text-align: center;
     white-space: nowrap;
+    *{
+      color: #3e3a39;
+    }
+    .left{
+      height: 50px;
+     }
+    .logo{
+      height: 100%;
+      vertical-align: middle;
+    }
+    span{
+      line-height: 50px;
+    }
 }
-.header  span{
-  line-height: 40px;
-  color: #fff;
-}
+
 </style>
 
 <template>
   <header class="header is-fixed"   >
-    <div class="left">
-      <img alt="LOGO">
+    <div class=" left">
+      <img class="logo" alt="LOGO" :src="logoImage">
       <span> 大连永峰皮具养护-新开路店</span>
     </div>
     <div class="right">
@@ -44,3 +51,13 @@
     </div>
   </header>
 </template>
+<script>
+
+export default {
+  data() {
+    return {
+      logoImage: require('@assets/mobile/img/logo.jpg'),
+    }
+  }
+}
+</script>

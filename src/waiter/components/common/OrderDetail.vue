@@ -79,7 +79,7 @@
       <div class="box-body clear">
         <div v-show="group.images.length==0">  </div>
         <el-row :gutter="20" class="images">
-          <el-col :span="8" v-for="image in group.images" >
+          <el-col :span="8" v-for="image in group.images" :key="image.id" >
             <img :src="image.bigUrl" class="image"></el-col>
         </el-row>
       </div>

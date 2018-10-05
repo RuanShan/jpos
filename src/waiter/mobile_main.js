@@ -4,12 +4,12 @@ import Vue from 'vue'
 import App from './MobileApp'
 import router from './router/mindex'
 import store from './store'
-
+import './assets/css/font-awesome.min.css'
 import '@/assets/mobile/css/reset.mobile.css' // global css
 
 
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+import '../../element-theme-jpos/index.css'
 Vue.use(ElementUI)
 
 import Mint from 'mint-ui';

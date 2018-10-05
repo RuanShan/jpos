@@ -5,6 +5,7 @@
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 1;
   .cover{
     height: 100%;
     width: 100%;
@@ -40,9 +41,7 @@
     display: flex;
     // justify-content: center;
     margin-top: 0px;
-    .text {
-      color: hotpink;
-    }
+
   }
   .close-button {
     width: 480px;
@@ -59,7 +58,7 @@
       <div class="camera-position">
       <div class="camera-display" id="video"></div>
       <div class="text-positoin">
-        <h1 class="text">垂直对准条码{{tiaoMa.barCodeNum}}</h1>
+        <h1 class="bg-warning">垂直对准条码{{tiaoMa.barCodeNum}}</h1>
       </div>
       <mt-button class="close-button" plain size="large" @click="closeCamera">关闭相机</mt-button>
     </div>

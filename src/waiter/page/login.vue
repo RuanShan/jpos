@@ -3,7 +3,7 @@
       <transition name="form-fade" mode="in-out">
         <section class="form_contianer" v-show="showLogin">
           <div class="manage_tip">
-            <p>汪永峰皮具养护中心订单系统</p>
+            <p>订单系统登录</p>
           </div>
           <el-form :model="loginForm" :rules="rules" ref="loginForm">
           <el-form-item prop="username">

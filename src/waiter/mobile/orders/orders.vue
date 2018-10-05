@@ -1,91 +1,103 @@
 <style lang="scss">
 /* banner */
 @import "~@assets/mobile/css/mixin.scss";
-.orders-container{
-  height: 100%;
-  box-sizing: border-box;
-  .main-content {
-      padding-top: 60px;
-      margin-left: 10px;
-      margin-right: 10px;
-      // background-color: rgb(250, 249, 214);
-      .seach-tools {
-          width: 100%;
-          padding-left: 0;
-          display: flex;
-          justify-content: space-between;
-          .seach-and-button {
-              display: flex;
-              align-items: center;
-              .input-num {
-              }
-              .seach-button {
-                  margin-left: 30px;
-              }
-          }
-      }
-      .popup {
-          width: 100%;
-          height: 40px;
-          background-color: #ffacfb;
-          color: white;
-          text-align: center;
-          font-size: 26px;
-      }
-      .orders-wrap{
-        .empty{
-          padding: 10px;
-          text-align: center;
+.orders-container {
+    height: 100%;
+    box-sizing: border-box;
+    .main-content {
+        padding-top: 60px;
+        margin-left: 10px;
+        margin-right: 10px;
+        // background-color: rgb(250, 249, 214);
+        .seach-tools {
+          position: relative;
+            padding-left: 0;
+            .keyword {}
+             .scan-button-wrap{
+               position: absolute;
+               left: 0;
+               top: 0;
+               width: 70px;
+               text-align: center
+             }
+            .seach-button-wrap {
+              position: absolute;
+              right: 0;
+              top: 0;
+              width: 100px;
+              text-align: center
+            }
+            .scan-button {
+            }
+            .el-form{
+              margin: 0 100px 0 70px;
+            }
         }
-      }
-      .orders{
-        overflow: auto;
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 50px;
-        top: 110px;
-        border-top: 1px solid #e5e5e5;
-        border-top: 1px solid #e5e5e5;
-        background-color: #FFFFFF;
-        .order{
-          margin-top:10px;
-          padding: 10px;
+        .popup {
+            width: 100%;
+            height: 40px;
+            background-color: #ffacfb;
+            color: white;
+            text-align: center;
+            font-size: 26px;
         }
-      }
-  }
+        .orders-wrap {
+            .empty {
+                padding: 10px;
+                text-align: center;
+            }
+        }
+        .orders {
+            overflow: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 50px;
+            top: 110px;
+            border-top: 1px solid #e5e5e5;
+            border-top: 1px solid #e5e5e5;
+            .order {
+                margin: 0 10px 10px;
+                background-color: #FFFFFF;
+            }
+            .order:first-child,.order:last-child{
+              margin:10px;
+            }
+        }
+    }
 }
-
 </style>
 
 <template>
 <div class="orders-container fillcontain">
   <head-top></head-top>
 
-
   <div class="main-content">
     <div class="seach-tools">
-      <el-form :inline="true" :model="formData" :rules="rules" class="demo-form-inline">
-      <div class="seach-and-button">
-        <el-input  placeholder="订单编号/物品编号/手机号"   v-model="formData.keyword" class="input-num" clearable @clear="handleSeach">  </el-input>
-        <el-button class="seach-button" type="primary" @click="handleSeach">搜索</el-button>
-        <!-- <mt-button type="danger" @click="test">test</mt-button> -->
+      <el-form  :model="formData" :rules="rules">
+        <el-form-item>
+          <el-input placeholder="订单编号/物品编号/手机号" v-model="formData.keyword" class="keyword" clearable @clear="handleSeach">
+            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <div class="left scan-button-wrap">
+        <img :src="scanIcon" width="44px" class="scan-button" @click="openCamera" />
       </div>
-      </el-form >
-      <div>
-        <img :src="scanIcon" width="44px" class="location-icon" @click="openCamera" />
+      <div class="right seach-button-wrap">
+        <el-button class="seach-button" type="primary" @click="handleSeach">搜索</el-button>
       </div>
     </div>
     <div class="orders-wrap">
       <!-- 订单内容区域 -->
-      <div  class="orders scroll_content">
+      <div class="orders scroll_content">
 
         <div class="order" style="" v-for="(item,index) in orderList" :key="index">
           <OrderItem :order="item" />
         </div>
 
         <div class="empty" v-show="noneNewOrder">
-          <p>无待处理订单 <button type="button" @click="getOrders" >刷新看一看</button></p>
+          <p>无待处理订单 <button type="button" @click="getOrders">刷新看一看</button></p>
         </div>
       </div>
     </div>
@@ -97,7 +109,7 @@
     <scan v-if="showScanVue" :cameraIsOpen="cameraIsOpen" @closeCamera="closeCamera($event)" @barCodeNum="barCodeNum($event)"></scan>
   </div>
 
-  <footer-bar ></footer-bar>
+  <footer-bar></footer-bar>
 
 </div>
 </template>
@@ -109,7 +121,8 @@ import HeadTop from '@/components/mobile/layout/HeadTop';
 import Scan from '@/components/mobile/common/Scan.vue'
 import MemberOrderInfo from '@/components/mobile/common/MemberOrderInfo.vue'
 import {
-  findOrders, signout
+  findOrders,
+  signout
 } from "@/api/getData.js"
 
 export default {
@@ -118,7 +131,9 @@ export default {
     'member-order-info': MemberOrderInfo,
     'head-top': HeadTop,
     'footer-bar': FooterBar,
-    OrderItem: r => { require.ensure([], () => r(require('./components/OrderItem'))), "OrderItem" }
+    OrderItem: r => {
+      require.ensure([], () => r(require('./components/OrderItem'))), "OrderItem"
+    }
   },
   name: 'orders',
   data() {
@@ -139,27 +154,29 @@ export default {
       cameraIsOpen: false, //相机开关
       returnServerData: "", //返回的服务器数据
       orderList: [], //得到订单接口数据
-      formData:{
+      formData: {
         keyword: ''
       },
       rules: {
-         keyword: [
-           { required: true, message: '请输入关键字', trigger: 'change' },
-         ],
+        keyword: [{
+          required: true,
+          message: '请输入关键字',
+          trigger: 'change'
+        }, ],
       }
     }
   },
-  created(){
-    console.log( 'orders event created')
+  created() {
+    console.log('orders event created')
     this.initData()
   },
-  computed:{
-    noneNewOrder(){
+  computed: {
+    noneNewOrder() {
       return this.orderList.length > 0
     }
   },
   methods: {
-    handleClick: function() {
+    handleClick: function () {
       this.$toast('Hello world!')
     },
     //扫描图标点击事件-----打开Scan子组件
@@ -193,16 +210,16 @@ export default {
     initData() {
       this.getOrders()
     },
-    buildParams(){
+    buildParams() {
       let params = {
-          page: this.currentPage,
-          per_page: this.perPage,
-          q:{
-            group_state_eq: 'pending',
-            store_id_eq: this.storeId
-          }
+        page: this.currentPage,
+        per_page: this.perPage,
+        q: {
+          group_state_eq: 'pending',
+          store_id_eq: this.storeId
+        }
       }
-      if ( this.formData.keyword.length>0){
+      if (this.formData.keyword.length > 0) {
         // order.number ||  || order.users.username
         params.q.number_or_line_item_groups_number_or_user_mobile_cont = this.formData.keyword
       }
@@ -212,10 +229,10 @@ export default {
       let params = this.buildParams()
       const result = await findOrders(params)
 
-      const orders= this.buildOrders(result)
+      const orders = this.buildOrders(result)
 
       this.orderList = orders
-      console.log( " orderList =", this.orderList)
+      console.log(" orderList =", this.orderList)
     },
     //搜索按钮点击事件-----
     handleSeach() {
