@@ -10,8 +10,7 @@
     }
 }
 .edit-window {
-    margin-top: -70px;
-    .el-form-item {
+     .el-form-item {
         margin-bottom: 14px;
     }
     .member-edit-form {
@@ -26,8 +25,12 @@
 <template>
 <div>
   <!-- 会员编辑窗口 -> START -->
-  <el-dialog class="edit-window" title="会     员     编     辑" :visible="computedVisible" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="handleCloseDialog">
-    <hr style="margin-top: -15px;">
+  <el-dialog class="edit-window cel-dialog"  :visible="computedVisible" width="50%" center :close-on-click-modal="false" :append-to-body="true" :show-close="false"  @open="openWindow" @close="handleCloseDialog">
+    <div slot="title" class="dialog-title-wrap">
+      <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog"></i> </div>
+      <div> 会员编辑 </div>
+    </div>
+
 
     <el-form :model="memberFormData" :rules="rules" ref="memberFormData" status-icon label-width="100px" class="member-edit-form">
 
@@ -53,12 +56,12 @@
         <el-input type="textarea" v-model="memberFormData.memo"></el-input>
       </el-form-item>
 
-
-      <hr>
-
       <el-form-item label="">
-        <el-button type="primary" @click="updateCustomer">更新</el-button>
-        <el-button @click="closeWindow">关闭</el-button>
+        <div class="right">
+          <el-button type="primary" @click="updateCustomer">确定</el-button>
+          <el-button @click="closeWindow">取消</el-button>
+        </div>
+
       </el-form-item>
     </el-form>
 

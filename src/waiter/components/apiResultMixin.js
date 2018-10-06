@@ -1,6 +1,10 @@
 import moment from 'moment'
 import _ from "lodash"
 
+//import {
+//  baseImgPath
+//} from "@/config/env"
+
 export var apiResultMixin = {
   data: function(){
     return {
@@ -123,6 +127,7 @@ export var apiResultMixin = {
             group.images.push(image)
           })
         }
+        //有很多地方使用物品图片，
         group.defulatImageUrl = ( group.images.length>0 ? group.images[0].miniUrl : group.missingImageUrl )
         group.lineItems = groupedlineItems
       })

@@ -12,6 +12,11 @@
             width: 100%;
             font-size: 16px;
         }
+        .hide-password{
+          width: 0;
+          height: 0;
+          opacity:0;
+        }
     }
 }
 
@@ -19,7 +24,7 @@
 </style>
 
 <template>
-    <el-dialog :visible="computedVisible" @open="handleDialogOpen" append-to-body :show-close="false">
+    <el-dialog :visible="computedVisible" @open="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog">
       <div slot="title" class="title-wrap">
         <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
         <div> 打卡</div>
@@ -29,15 +34,22 @@
         <section class="form_contianer">
 
           <el-form :model="clockinForm" :rules="rules" ref="clockinForm">
+            <input name="mockpassword1" type="password" class="hide-password">
+
             <el-form-item prop="username">
-              <el-input v-model="clockinForm.username" placeholder="用户名"><span>dsfsf</span></el-input>
+              <el-input v-model="clockinForm.username" placeholder="用户名">
+                <i class="fa fa-user" slot="suffix">  </i>
+              </el-input>
             </el-form-item>
             <el-form-item prop="password">
-              <el-input type="password" placeholder="密码" v-model="clockinForm.password"></el-input>
+              <el-input type="password" placeholder="密码" v-model="clockinForm.password">
+              <i class="fa fa-keyboard-o" slot="suffix">  </i></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('clockinForm')" class="submit_btn">打卡</el-button>
             </el-form-item>
+            <input name="mockpassword2" type="password" class="hide-password">
+
           </el-form>
           <p class="tip"> </p>
 
@@ -91,11 +103,12 @@ export default {
       }))
     }
   },
+
   methods: {
     handleDialogOpen() {
       this.scanedNumbers = []
       this.lineItemGroups = []
-      //this.$refs.scannerInput.focus()
+      this.$refs.clockinForm.resetFields()
     },
 
     async submitForm(formName) {

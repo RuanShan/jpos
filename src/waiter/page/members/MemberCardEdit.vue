@@ -1,35 +1,16 @@
 <style lang="scss">
 .card-form {
 }
-.card-edit-window {
-  margin-top: -70px;
-  .el-dialog__body {
-    padding: 20px 20px 6px 20px;
-    border-top: solid 1px #7c7f81;
-    margin-top: 11px;
-    margin-left: 20px;
-    margin-right: 20px;
-    border-bottom: solid 1px #7c7f81;
-  }
-  .el-form-item {
-    margin-bottom: 14px;
-  }
-  .member-edit-form {
-    padding: 10px 10px;
-    padding-bottom: 0;
-    .el-card__body {
-      padding-bottom: 0;
-    }
-  }
-}
+
 </style>
 <template>
   <!-- 会员卡编辑 START-->
   <div class="card-form">
-    <el-dialog class="card-edit-window" title="提示" :visible="computedVisible" :show-close="true" width="600px" @open="handleOpen" @close="handleCloseDialog">
-      <div slot="title" class="title-wrap">
-        <!-- <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div> -->
-        <div>会员卡信息</div>
+    <el-dialog class="cel-dialog"   :visible="computedVisible" :show-close="false"   @open="handleOpen" @close="handleCloseDialog">
+
+      <div slot="title" class="dialog-title-wrap">
+        <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog"></i> </div>
+        <div> 会员卡信息 </div>
       </div>
 
       <el-form :model="cardFormData" ref="cardForm" status-icon label-width="100px" class="new-member-form">
@@ -51,11 +32,16 @@
         <el-form-item label="备注" prop="address">
           <el-input type="textarea" v-model="cardFormData.memo"></el-input>
         </el-form-item>
+
+        <el-form-item>
+          <div class="right">
+            <el-button type="primary" @click="submitForm">确 定</el-button>
+            <el-button @click="handleClose">取 消</el-button>
+          </div>
+        </el-form-item>
+
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-      </div>
+     
     </el-dialog>
   </div>
   <!-- 会员基本信息 END-->

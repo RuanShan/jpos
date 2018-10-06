@@ -17,8 +17,11 @@
 
 <template>
   <div class="">
-    <el-dialog title="会     员     卡     充     值" :visible.sync="computedVisible" width="50%" center :close-on-click-modal="false" :append-to-body="true" @open="openWindow" @close="closeWindow">
-      <hr style="margin: -5px 15px;">
+    <el-dialog  :visible.sync="computedVisible"  center :close-on-click-modal="false" :append-to-body="true" :show-close="false" @open="openWindow" @close="handleCloseDialog"  class="cel-dialog">
+      <div slot="title" class="dialog-title-wrap">
+        <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog"></i> </div>
+        <div> 会员卡充值 </div>
+      </div>
       <el-row>
         <el-col :span="1">
           <div class="grid-content "></div>
@@ -128,7 +131,7 @@
               </el-col>
               <el-col :span="6">
                 <div class="grid-content">
-                  <el-button type="info" style="width:100%" @click="closeWindow">退出</el-button>
+                  <el-button type="info" style="width:100%" @click="handleCloseDialog">退出</el-button>
                 </div>
               </el-col>
               <el-col :span="2">
@@ -189,11 +192,6 @@ export default {
     openWindow() {
 
     },
-    //关闭窗口时事件处理函数-----
-    closeWindow() {
-      this.handleCloseDialog()
-      // console.log("子组件点击了关闭按钮!!!");
-    },
     //改变打印选择状态时触发函数-----
     changePrint(){
       console.log(this.checkedPrint);
@@ -220,7 +218,7 @@ export default {
         let order = this.buildOrder( result )
         let card = order.customer.cards.find((item)=>{ return item.id == this.cardData.id })
         this.$emit( 'deposit-order-created-event', card )
-        this.closeWindow()
+        this.handleCloseDialog()
         this.$message({
           type: "success",
           message: "恭喜你，会员卡充值成功！"

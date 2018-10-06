@@ -6,7 +6,7 @@
 <template>
   <!-- 会员基本信息 START-->
   <div class="card-form" v-if="customerData">
-    <el-dialog  title="提示"  :visible="computedVisible"  :show-close="false" width="600px"  @open="handleOpen">
+    <el-dialog  :visible="computedVisible"  :show-close="false" class="cel-dialog"  @open="handleOpen">
       <div slot="title" class="title-wrap">
         <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
         <div>会员卡信息</div>
@@ -42,12 +42,15 @@
             <el-form-item label="备注" prop="address">
               <el-input v-model="cardFormData.cardMemo"></el-input>
             </el-form-item>
+
+            <el-form-item  >
+              <div class="right">
+                <el-button @click="fillIn()" type="danger">测试填入</el-button>
+                <el-button type="primary" @click="submitForm">确 定</el-button>
+                <el-button @click="handleClose">取 消</el-button>
+              </div>
+            </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="fillIn()" type="danger">测试填入</el-button>
-      </div>
     </el-dialog >
   </div>
   <!-- 会员基本信息 END-->

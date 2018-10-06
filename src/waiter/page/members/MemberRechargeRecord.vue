@@ -1,28 +1,31 @@
-<style scoped>
-.customer-wrap{
-  padding: 18px 0;
+<style lang="scss">
+.member-rechange-container{
+  .customer-wrap{
+    padding: 18px 0;
+  }
+  .grid-content {
+    padding: 18px;
+  }
+  .scrollable-table{
+    position: absolute;
+    top: 200px;
+    bottom: 100px;
+    left: 18px;
+    right: 18px;
+    background-color: purple;
+  }
+  .search{
+    padding: 0 0 18px 0;
+  }
+  .search .part{
+    float: left;
+    width: 50%;
+  }
+  .fieldsethtight {
+    height: 50px;
+  }
 }
-.grid-content {
-  padding: 18px;
-}
-.scrollable-table{
-  position: absolute;
-  top: 200px;
-  bottom: 100px;
-  left: 18px;
-  right: 18px;
-  background-color: purple;
-}
-.search{
-  padding: 0 0 18px 0;
-}
-.search .part{
-  float: left;
-  width: 50%;
-}
-.fieldsethtight {
-  height: 50px;
-}
+
 </style>
 
 <template>
