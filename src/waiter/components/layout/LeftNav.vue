@@ -71,9 +71,15 @@
           </router-link>
         </li>
         <li class="el-menu-item">
-          <router-link to="/itemGroups" >
+          <router-link to="/sitems" >
             <i class="fa fa-tags"></i>
-            <div class="text-sm"> 订单 </div>
+            <div class="text-sm"> 店订单 </div>
+          </router-link>
+        </li>
+        <li class="el-menu-item">
+          <router-link to="/fitems" >
+            <i class="fa fa-tags"></i>
+            <div class="text-sm"> 厂订单 </div>
           </router-link>
         </li>
         <li class="el-menu-item">

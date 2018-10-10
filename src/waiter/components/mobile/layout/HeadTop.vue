@@ -51,12 +51,35 @@
     </div>
   </header>
 </template>
+
 <script>
+import {signout} from '@/api/getData'
 
 export default {
   data() {
     return {
       logoImage: require('@assets/mobile/img/logo.jpg'),
+    }
+  },
+  methods: {
+    async handleCommand (command) {
+      if (command == 'home') {
+        this.$router.push('/manage')
+      } else if (command == 'singout') {
+        const res = await signout()
+        if (res.id == null) {
+          this.$message({
+            type: 'success',
+            message: '退出成功'
+          })
+          this.$store.commit("resetUser")
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.message
+          })
+        }
+      }
     }
   }
 }

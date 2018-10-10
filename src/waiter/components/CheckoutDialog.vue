@@ -200,11 +200,9 @@ export default {
       //  }
       //}
       let paymentsAttributes = []
-      if( this.availablePrepaidCard){
-        if( this.prepaidCardPaymentMethod ){
-          paymentsAttributes.push( { source_id: this.availablePrepaidCard.id, source_type: "Spree::Card",
-            amount: this.formData.prepaidCardAmount, payment_method_id: this.prepaidCardPaymentMethod.id } )
-        }
+      if( this.formData.enablePrepaidCard ){
+        paymentsAttributes.push( { source_id: this.availablePrepaidCard.id, source_type: "Spree::Card",
+          amount: this.formData.prepaidCardAmount, payment_method_id: this.prepaidCardPaymentMethod.id } )
       }
       console.log( "this.orderRemainder=",this.orderRemainder)
       console.log( "this.orderItemList=",this.orderItemList)
@@ -248,7 +246,9 @@ export default {
 
       if( this.availablePrepaidCard != null){
         //会员卡的余额是否够用
-        this.formData.enablePrepaidCard = true
+        if( this.availablePrepaidCard.amountRemaining>0){
+          this.formData.enablePrepaidCard = true          
+        }
       }
       this.computePaymentAmount()
     },

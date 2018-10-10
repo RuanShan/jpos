@@ -91,11 +91,15 @@
     <div class="orders-wrap">
       <!-- 订单内容区域 -->
       <div class="orders scroll_content">
-
-        <div class="order" style="" v-for="(item,index) in orderList" :key="index">
-          <OrderItem :order="item" />
-        </div>
-
+        <mt-loadmore :top-method="loadTop" :top-status.sync="topStatus"  ref="loadmore">
+          <div class="order" style="" v-for="(item,index) in orderList" :key="index">
+            <OrderItem :order="item" />
+          </div>
+          <div slot="top" class="mint-loadmore-top">
+            <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">释放更新</span>
+            <span v-show="topStatus === 'loading'">Loading...</span>
+          </div>
+        </mt-loadmore>
         <div class="empty" v-show="noneNewOrder">
           <p>无待处理订单 <button type="button" @click="getOrders">刷新看一看</button></p>
         </div>
@@ -138,7 +142,7 @@ export default {
   name: 'orders',
   data() {
     return {
-
+      topStatus: '',
       /*********************UI相关***********************/
       // scanIcon: require('@assets/images/scanCode.png'),
       // scanIcon: require('@assets/images/scanCode.png'),
@@ -172,7 +176,7 @@ export default {
   },
   computed: {
     noneNewOrder() {
-      return this.orderList.length > 0
+      return this.orderList.length == 0
     }
   },
   methods: {
@@ -237,6 +241,12 @@ export default {
     //搜索按钮点击事件-----
     handleSeach() {
       this.getOrders()
+    },
+    loadTop(){
+      console.log(" load top ...")
+      this.getOrders()
+      this.$refs.loadmore.onTopLoaded();
+
     },
     async signout() {
       const res = await signout()

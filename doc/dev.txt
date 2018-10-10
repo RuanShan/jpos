@@ -75,3 +75,11 @@ printing-the-bitmap-image-on-zpl-label-printer
 ================================================================================
 https://developer.zebra.com/thread/35438
 https://stackoverflow.com/questions/7083180/print-bmp-with-zpl
+
+构建Pad用页面
+=================
+https://blog.csdn.net/boyit0/article/details/52275657/
+
+yarn run build:web
+
+copy /dist/web   服务器：/public/

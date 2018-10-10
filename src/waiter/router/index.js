@@ -7,6 +7,8 @@ const loginPage = r => require.ensure([], () => r(require('@/page/login')), 'log
 const homePage = r => require.ensure([], () => r(require('@/page/home')), 'home')
 const posPage = r => require.ensure([], () => r(require('@/page/pos/index')), 'pos')
 const itemGroupsPage = r => require.ensure([], () => r(require('@/page/items/index')), 'groups')
+const storeitemsPage = r => require.ensure([], () => r(require('@/page/items/sindex')), 'store_items')
+const factoryitemsPage = r => require.ensure([], () => r(require('@/page/items/findex')), 'factory_items')
 const membersPage = r => require.ensure([], () => r(require('@/page/members/index')), 'members')
 const statisticsPage = r => require.ensure([], () => r(require('@/page/stats/index')), 'statistics')
 const settingPage = r => require.ensure([], () => r(require('@/page/setting/index')), 'setting')
@@ -32,6 +34,14 @@ const routes = [{
         path: '/itemGroups',
         component: itemGroupsPage,
         meta: { title: '订单' },
+    }, {
+        path: '/sitems',
+        component: storeitemsPage,
+        meta: { title: '店订单' },
+    }, {
+        path: '/fitems',
+        component: factoryitemsPage,
+        meta: { title: '厂订单' },
     }, {
         path: '/members',
         component: membersPage,

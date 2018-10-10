@@ -530,6 +530,7 @@ export default {
     this.initData();
     //新订单创建以后，需要更新当前选择客户的会员卡余额数据
     this.$bus.$on('order-created-gevent', () => {
+      console.log('order-created-gevent', 'this.currentCustomer', this.currentCustomer, this.currentCustomer.id)
       getCustomer(this.currentCustomer.id).then(result => {
         const customer = this.buildCustomer(result)
         this.setCurrentCustomer(customer)

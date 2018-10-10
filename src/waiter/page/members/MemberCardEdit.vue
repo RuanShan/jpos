@@ -15,10 +15,10 @@
 
       <el-form :model="cardFormData" ref="cardForm" status-icon label-width="100px" class="new-member-form">
         <el-form-item label="会员卡号" prop="code" required>
-          <el-input v-model="cardFormData.code" readonly ></el-input>
+          <el-input v-model="cardFormData.code" disabled ></el-input>
         </el-form-item>
         <el-form-item label="会员卡类型" prop="variantId" required>
-          <el-input v-model="cardFormData.name"></el-input>
+          <el-input v-model="cardFormData.name" disabled></el-input>
         </el-form-item>
         <el-form-item label="到期时间">
           <el-form-item prop="expireAt">
@@ -41,7 +41,7 @@
         </el-form-item>
 
       </el-form>
-     
+
     </el-dialog>
   </div>
   <!-- 会员基本信息 END-->

@@ -8,7 +8,7 @@ export function printLabel ( params ){
   const encoding="gb2312"
   // Select the adapter based on your printer type
   // {title, code, memo}
-  let path = __dirname + '/templates/20x50_barcode_label.tspl'
+  let path = __dirname + '/templates/te310/20x50_barcode_label.tspl'
   console.log('path', path, 'params', params)
 
   fs.readFile(path,'ascii', function(err,data){

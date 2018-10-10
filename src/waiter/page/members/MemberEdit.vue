@@ -47,7 +47,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="生日" prop="birth">
-        <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="MM 月 dd 日" style="width: 100%;"></el-date-picker>
+        <el-date-picker type="date" placeholder="选择日期" v-model="memberFormData.birth" format="yyyy 年 MM 月 dd 日" style="width: 100%;"></el-date-picker>
       </el-form-item>
       <el-form-item label="联系地址" prop="address">
         <el-input v-model="memberFormData.address"></el-input>
