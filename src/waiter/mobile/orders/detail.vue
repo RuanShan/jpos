@@ -254,6 +254,7 @@
 <script type="text/babel">
 import {
   getOrder,
+  findOrderByGroupNumber,
   updateLineItem,
   deleteGroupImage,
   getLineItemGroupImageUploadPath,
@@ -272,11 +273,10 @@ export default {
         payments: [],
         lineItemGroups: []
       },
-      list: [],
-
       fileList: [], //图片文件列表
       dialogImageUrl: '',
       dialogVisible: false,
+      lineItemGroupNumber: null,
     };
   },
   beforeRouteUpdate (to, from, next) {
@@ -300,23 +300,25 @@ export default {
   },
   methods: {
 
-    initData(){
-
-      getOrder( this.orderId).then((result)=>{
-        const order = this.buildOrder(result)
-
-        order.lineItemGroups.forEach((group)=>{
-          group.imageUploadPath = getLineItemGroupImageUploadPath( group.id)
-
-          group.uploadedImages = group.images.map((img)=>{
-            return Object.assign( img, {name: img.attachmentFileName, url: img.bigUrl}  )
-          })
+    async initData(){
+      let result = null
+      if( this.$route.params.lineItemGroupNumber ){
+        this.lineItemGroupNumber =  this.$route.params.lineItemGroupNumber
+        result = await findOrderByGroupNumber( this.lineItemGroupNumber )
+      }else{
+        result = await getOrder( this.orderId )
+      }
+console.log( "initData->", result)
+      const order = this.buildOrder(result)
+      order.lineItemGroups.forEach((group)=>{
+        group.imageUploadPath = getLineItemGroupImageUploadPath( group.id)
+        group.uploadedImages = group.images.map((img)=>{
+          return Object.assign( img, {name: img.attachmentFileName, url: img.bigUrl}  )
         })
-        this.orderDetail = order
-        this.orderCustomer = order.customer
-        console.log('orderDetail', this.orderDetail)
-
       })
+      this.orderDetail = order
+      this.orderCustomer = order.customer
+      console.log('orderDetail', this.orderDetail)
 
     },
     handleBack() {

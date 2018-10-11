@@ -64,7 +64,10 @@
     </div>
     </div>
     <div>
-      <audio id="audioPlayScan" src="/static/audio/sound.mp3">&nbsp;</audio>
+      <audio id="audioPlayScan" >
+        <source src="/static/audio/sound.ogg" type="audio/ogg">
+        <source src="/static/audio/sound.mp3" type="audio/mpeg">
+      </audio>
     </div>
   </div>
 </template>

@@ -10,27 +10,26 @@
         margin-right: 10px;
         // background-color: rgb(250, 249, 214);
         .seach-tools {
-          position: relative;
+            position: relative;
             padding-left: 0;
             .keyword {}
-             .scan-button-wrap{
-               position: absolute;
-               left: 0;
-               top: 0;
-               width: 70px;
-               text-align: center
-             }
+            .scan-button-wrap {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 70px;
+                text-align: center;
+            }
             .seach-button-wrap {
-              position: absolute;
-              right: 0;
-              top: 0;
-              width: 100px;
-              text-align: center
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100px;
+                text-align: center;
             }
-            .scan-button {
-            }
-            .el-form{
-              margin: 0 100px 0 70px;
+            .scan-button {}
+            .el-form {
+                margin: 0 100px 0 70px;
             }
         }
         .popup {
@@ -60,8 +59,9 @@
                 margin: 0 10px 10px;
                 background-color: #FFFFFF;
             }
-            .order:first-child,.order:last-child{
-              margin:10px;
+            .order:first-child,
+            .order:last-child {
+                margin: 10px;
             }
         }
     }
@@ -74,7 +74,7 @@
 
   <div class="main-content">
     <div class="seach-tools">
-      <el-form  :model="formData" :rules="rules">
+      <el-form :model="formData" :rules="rules">
         <el-form-item>
           <el-input placeholder="订单编号/物品编号/手机号" v-model="formData.keyword" class="keyword" clearable @clear="handleSeach">
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -91,7 +91,7 @@
     <div class="orders-wrap">
       <!-- 订单内容区域 -->
       <div class="orders scroll_content">
-        <mt-loadmore :top-method="loadTop" :top-status.sync="topStatus"  ref="loadmore">
+        <mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore">
           <div class="order" style="" v-for="(item,index) in orderList" :key="index">
             <OrderItem :order="item" />
           </div>
@@ -106,7 +106,7 @@
       </div>
     </div>
 
-    <mt-popup class="popup" v-model="popupVisible" popup-transition="popup-fade" position="top">获得网络数据失败,请重试.</mt-popup>
+    <mt-popup class="popup" v-model="popupVisible" popup-transition="popup-fade" position="top">没有找到物品编码{{codeNum}},请重试.</mt-popup>
     <!-- 会员基本信息 -->
     <member-order-info v-if="tableIsVisible" :returnServerData="returnServerData" :codeNum="codeNum" @succeed="succeed($event)"></member-order-info>
     <!-- Scan子组件 -->
@@ -194,7 +194,6 @@ export default {
       this.cameraIsOpen = false;
     },
 
-
     //得到子组件传来的条码数后得处理函数-----
     barCodeNum(code) {
       this.cameraIsOpen = false; //关闭相机
@@ -204,8 +203,24 @@ export default {
 
       // this.inputNum = code;
       try {
-        this.axiosData().then(() => {
-          this.tableIsVisible = true; //表格组件显示
+        //  <router-link :to="{ name: 'orderDetail', params: {id: order.id} }">
+        let params = {
+          q: {
+            line_item_groups_number_eq: code
+          }
+        }
+        findOrders(params).then((result) => {
+          console.log('find orders by code ', code)
+          if (result.count == 1) {
+            this.$router.push({
+              name: 'orderDetail',
+              params: {
+                lineItemGroupNumber: code
+              }
+            })
+          } else {
+            this.popupVisible = true; //弹popup提醒
+          }
         });
       } catch (error) {
         this.popupVisible = true; //弹popup提醒
@@ -220,8 +235,10 @@ export default {
         per_page: this.perPage,
         q: {
           group_state_eq: 'pending',
-          store_id_eq: this.storeId
-        }
+          store_id_eq: this.storeId,
+          s: ["created_at desc"]
+        },
+
       }
       if (this.formData.keyword.length > 0) {
         // order.number ||  || order.users.username
@@ -242,7 +259,7 @@ export default {
     handleSeach() {
       this.getOrders()
     },
-    loadTop(){
+    loadTop() {
       console.log(" load top ...")
       this.getOrders()
       this.$refs.loadmore.onTopLoaded();
