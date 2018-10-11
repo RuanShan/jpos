@@ -76,12 +76,18 @@ export var orderDataMixin = {
         return true
       }else{
         if( userRole == 'waiter'){
-          if( permission == 'xxx'){
+          if( permission == 'pos' ||  permission == 'sitems'||  permission == 'members'||  permission == 'statistics'){
             return true
           }else{
             return false
           }
-        }else{
+        }else if( userRole == 'worker'){
+          if(  permission == 'fitems' ||  permission == 'statistics'){
+            return true
+          }else{
+            return false
+          }
+        } else{
           return false
         }
       }

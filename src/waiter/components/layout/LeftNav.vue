@@ -64,48 +64,43 @@
    <div class="left-nav">
       <div class="logo">LOGO</div>
       <ul class="nav">
-        <li class="el-menu-item">
+        <li class="el-menu-item" v-if="userAuthorize('pos')">
           <router-link to="/pos" >
             <i class="fa fa-cny"></i>
             <div class="text-sm"> 收银  </div>
           </router-link>
         </li>
-        <li class="el-menu-item">
+        <li class="el-menu-item" v-if="userAuthorize('sitems')">
           <router-link to="/sitems" >
             <i class="fa fa-tags"></i>
             <div class="text-sm"> 店订单 </div>
           </router-link>
         </li>
-        <li class="el-menu-item">
+        <li class="el-menu-item" v-if="userAuthorize('fitems')">
           <router-link to="/fitems" >
             <i class="fa fa-tags"></i>
             <div class="text-sm"> 厂订单 </div>
           </router-link>
         </li>
-        <li class="el-menu-item">
+        <li class="el-menu-item" v-if="userAuthorize('members')">
           <router-link to="/members" >
             <i class="fa fa-vcard"></i>
             <div class="text-sm">会员</div>
           </router-link>
         </li>
-        <li class="el-menu-item">
+        <li class="el-menu-item" v-if="userAuthorize('statistics')">
           <router-link to="/statistics" >
             <i class="fa fa-bar-chart-o"></i>
             <div class="text-sm">统计</div>
           </router-link>
         </li>
-        <li class="el-menu-item">
+        <li class="el-menu-item" v-if="userAuthorize('setting')">
           <router-link to="/setting" >
             <i class="fa fa-gears"></i>
             <div class="text-sm">设置</div>
           </router-link>
         </li>
-        <li class="el-menu-item">
-          <router-link to="/testGroups" >
-            <i class="fa fa-bars"></i>
-            <div class="text-sm"> 测试 </div>
-          </router-link>
-        </li>
+
       </ul>
     </div>
 </template>

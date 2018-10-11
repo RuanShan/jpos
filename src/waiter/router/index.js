@@ -27,7 +27,7 @@ const routes = [{
         meta: {  },
     }, {
           path: '/pos',
-          name: 'first',
+          name: 'pos',
           component: posPage,
           meta: { title: '收银' },
     }, {
@@ -40,6 +40,7 @@ const routes = [{
         meta: { title: '店订单' },
     }, {
         path: '/fitems',
+        name: 'fitems',
         component: factoryitemsPage,
         meta: { title: '厂订单' },
     }, {

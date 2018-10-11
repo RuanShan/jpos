@@ -59,15 +59,14 @@ export default {
   mounted() {
     this.showLogin = true
     this.getCurrentUser().then((() => {
+      console.log("get current user =>", this.userInfo)
       if (this.userInfo.id) {
         this.initializeApp()
         this.$message({
           type: 'success',
           message: '检测到您之前登录过，将自动登录'
         })
-        this.$router.push({
-          name: 'first'
-        })
+        this.redirectDefaultPage()
       }
     }))
   },
@@ -99,9 +98,7 @@ export default {
               // 取得所有店铺信息，保存在store中，
               await this.initializeApp()
               // 缺省是收银界面
-              this.$router.push({
-                name: 'first'
-              })
+              this.redirectDefaultPage()
             } else {
               this.$message({
                 type: 'warning',
@@ -154,6 +151,21 @@ export default {
         console.log('您尚未登陆或者session失效')
       }
     },
+    redirectDefaultPage(){
+      if( this.userAuthorize('setting')){
+        this.$router.push({
+          name: 'setting'
+        })
+      }else if( this.userAuthorize('fitems')){
+        this.$router.push({
+          name: 'fitems'
+        })
+      }else{
+        this.$router.push({
+          name: 'pos'
+        })
+      }
+    }
   },
   watch: {
     //userInfo: function (newValue) {
