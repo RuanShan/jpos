@@ -67,7 +67,7 @@ export var apiResultMixin = {
       }
       order.payments = this.buildPayments( orderResult.payments )
       order.displayCreatedAt = this.getDisplayDateTime(order.createdAt)
-      order.displayPaymentState = this.getDisplayPaymentState( order.paymentState )
+      order.displayPaymentState = this.getOrderDisplayPaymentState( order.paymentState )
       orderResult.line_item_groups.forEach((groupResult, i) => {
         let group = {
           id: groupResult.id,
@@ -82,10 +82,10 @@ export var apiResultMixin = {
           price: parseInt(groupResult.price),
           createdAt: moment(groupResult.created_at),
           missingImageUrl: groupResult.missing_image_url
-
         }
         group.displayCreatedAt = this.getDisplayDateTime(group.createdAt)
-        group.displayState = this.getOrderStateText(group.state)
+        group.displayState = this.getOrderDisplayState(group.state)
+        group.displayPaymentState = this.getGroupDisplayPaymentState( group.paymentState )
         order.lineItemGroups.push(group)
         let groupedlineItems = []
         orderResult.line_items.forEach((lineItemResult)=> {
@@ -216,10 +216,29 @@ export var apiResultMixin = {
         state: item.state,
         paymentState: item.payment_state,
         createdAt: moment(item.created_at),
-        lineItems: []
+        missingImageUrl: item.missing_image_url,
+        lineItems: [],
+        images: []
       }
+      if( item.images ){
+        item.images.forEach(function(imageResult) {
+          const image = {
+            type: "GroupImage",
+            id: imageResult.id,
+            position: imageResult.position,
+            group: group,
+            groupId: imageResult.viewable_id,
+            miniUrl: imageResult.mini_url,
+            bigUrl: imageResult.big_url,
+            originalUrl: imageResult.original_url
+          }
+          group.images.push(image)
+        })
+      }
+      //有很多地方使用物品图片，
+      group.defulatImageUrl = ( group.images.length>0 ? group.images[0].miniUrl : group.missingImageUrl )
       group.displayCreatedAt = this.getDisplayDateTime( group.createdAt )
-      group.displayState = this.getOrderStateText(group.state)
+      group.displayState = this.getOrderDisplayState(group.state)
 
       item.line_items.forEach(function(lineItemResult) {
         const lineItem = {
@@ -576,7 +595,7 @@ console.log( "buildCustomerStatis=", result, statis)
     getCardDisplayStatus(status) {
       return status == "enabled" ? "可用" : "不可用" //prepaid 充值卡， counts 次卡
     },
-    getOrderStateText(state) {
+    getOrderDisplayState(state) {
       if (state == "pending") {
         return "新订单"
       } else if (state == "ready") {
@@ -597,7 +616,12 @@ console.log( "buildCustomerStatis=", result, statis)
     getUserEntryDisplayState(state) {
       return state == "clockin" ? "登入" : "登出" //prepaid 充值卡， counts 次卡
     },
-    getDisplayPaymentState(state){
+    getOrderDisplayPaymentState(state){
+      // order.payment_state
+      //支付状态 pending:欠款， paid:已经支付
+      return state == "pending" ? "未付" : "已付"
+    },
+    getGroupDisplayPaymentState(state){
       // order.payment_state
       //支付状态 pending:欠款， paid:已经支付
       return state == "pending" ? "未付" : "已付"

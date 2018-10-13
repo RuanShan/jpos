@@ -44,8 +44,8 @@
         <el-table-column prop="number" label="物品条码"> </el-table-column>
         <el-table-column prop="order.number" label="订单号"></el-table-column>
         <el-table-column prop="name" label="服务项目"></el-table-column>
-        <el-table-column prop="displayState" label="工作状态"></el-table-column>
-        <el-table-column prop="paymentState" label="支付状态"></el-table-column>
+        <el-table-column prop="displayState" label="物品状态"></el-table-column>
+        <el-table-column prop="displayPaymentState" label="支付状态"></el-table-column>
         <el-table-column prop="price" label="金额">金额</el-table-column>
         <el-table-column label="操作" width="50">
           <template slot-scope="scope">
@@ -284,6 +284,7 @@ export default {
     handlePaymentCreated(){
       this.completeOrders()
     },
+    // 交付客户订单
     handleDeliverOrders(){
       if( this.isDeliverable){
         //检查每件物品对应的Order用户是否付款， 如果没有，弹出结账对话框,
@@ -298,7 +299,7 @@ export default {
         }
       }else{
         this.$message({
-          message: '抱歉，物品还有没全部处理好，暂时无法交付客户！',
+          message: '抱歉，物品无法交付客户，请确认物品状态为“待交付”！',
           type: 'error'
         });
       }
@@ -312,7 +313,8 @@ export default {
           this.$message({
             message: '客户物品状态已成功更新！',
             type: 'success'
-          });
+          })
+          this.currentOrders = []
         }
       })
     },

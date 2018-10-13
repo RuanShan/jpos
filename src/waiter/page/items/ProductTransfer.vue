@@ -36,6 +36,33 @@
               .el-transfer-panel__list{
                 height: auto;
               }
+              .el-transfer-panel__item{
+                .el-checkbox__input{
+                  top: 18px;
+                }
+                height: 60px;
+                line-height: 60px;
+                .item{
+                  display: flex;
+                }
+                .title{
+                  padding: 5px;
+                  line-height: 24px;
+                  text-overflow: ellipsis;
+                }
+                .image-wrap {
+                  width: 60px;
+                  height: 60px;
+                  text-align: center;
+                  line-height: 60px;
+                  display: inline-block;
+                  img{
+                    max-width: 50px;
+                    max-height: 50px;
+                    vertical-align: middle;
+                  }
+                }
+              }
             }
         }
     }
@@ -139,7 +166,15 @@
 
         <div class="order-list">
           <el-transfer v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name'}" :titles="[orderStateText, nextOrderStateText]" @change="handleTransferItems">
-            <span slot-scope="{ option }">{{ option.number }} - {{ option.name }}</span>
+            <div slot-scope="{ option }" class="item">
+              <div class="image-wrap">
+                <img :src="option.defulatImageUrl" alt="">
+              </div>
+              <div class="title">
+                <p class="">{{ option.number }} </p>
+                <p class="">{{ option.name }}</p>
+               </div>
+            </div>
           </el-transfer>
         </div>
 

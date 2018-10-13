@@ -66,7 +66,7 @@ export default {
       dialogFormVisible: false,
       focusCtrl: 0, // 自动聚焦控制,变动时,执行自动聚焦指令
       currentIndex: 0, // 当前聚焦元素的索引
-      actionType: 'next', // 自动聚焦的行为类型
+      actionType: 'first', // 自动聚焦的行为类型
       form: {
         number: null
       },
@@ -88,6 +88,7 @@ export default {
       this.scanedNumbers = []
       this.lineItemGroups = []
       //this.$refs.scannerInput.focus()
+      this.handleBlur()
     },
     handleScannerInput() {
       console.log("---handleScannerInput---")

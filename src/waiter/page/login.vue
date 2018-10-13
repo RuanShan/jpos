@@ -58,6 +58,7 @@ export default {
   },
   mounted() {
     this.showLogin = true
+    this.$store.commit('resetUser')
     this.getCurrentUser().then((() => {
       console.log("get current user =>", this.userInfo)
       if (this.userInfo.id) {
@@ -92,20 +93,22 @@ export default {
               message: '登录成功'
             })
             this.$store.commit("saveUser", this.buildUser(res))
+            // 取得所有店铺信息，保存在store中，
+            await this.initializeApp()
+
             console.log(" current localstorage=", getStore('storeId'))
             let storeId = this.localStoreId
             if (storeId > 0) {
-              // 取得所有店铺信息，保存在store中，
-              await this.initializeApp()
               // 缺省是收银界面
               this.redirectDefaultPage()
             } else {
+
+              this.$router.push({
+                name: 'setting'
+              })
               this.$message({
                 type: 'warning',
                 message: '请先设置店铺'
-              })
-              this.$router.push({
-                name: 'setting'
               })
             }
 
@@ -132,7 +135,10 @@ export default {
         let currentStore = stores.find((item) => {
           return item.id == this.localStoreId
         })
-        this.$store.commit('saveStore', currentStore)
+        // storeInfo 不能为null，很多地方调用 storeInfo.name
+        if( currentStore ){
+          this.$store.commit('saveStore', currentStore)          
+        }
       })
     },
     async getCurrentUser() {

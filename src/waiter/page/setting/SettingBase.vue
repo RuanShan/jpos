@@ -61,9 +61,12 @@ export default {
   },
   computed: {
     computedStoreOptions(){
-      let options = this.stores.map((store)=>{
-        return {id: store.id, name: store.name}
-      })
+      let options = []
+      if( this.stores ){
+        options = this.stores.map((store)=>{
+          return {id: store.id, name: store.name}
+        })
+      }
       return options
     }
   },

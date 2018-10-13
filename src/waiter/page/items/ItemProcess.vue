@@ -16,6 +16,19 @@
       left: 10px;
       right: 0;
       bottom: 48px;
+      .image-wrap {
+        width: 60px;
+        height: 60px;
+        text-align: center;
+        line-height: 60px;
+        display: inline-block;
+        img{
+          max-width: 60px;
+          max-height: 60px;
+          vertical-align: middle;
+        }
+      }
+
     }
     .pagination {
       position: absolute;
@@ -29,9 +42,12 @@
   .item-detail {
     table {
       width: 100%;
-      border: 1px solid #ebeef5;
       td,th{
         padding: 6px 10px;
+        border: 1px solid #ebeef5;
+      }
+      tr {
+        vertical-align: top;
       }
     }
 
@@ -60,10 +76,6 @@
         font-style: normal;
       }
     }
-    table tr {
-      vertical-align: top;
-    }
-
     .item-image {
       float: left;
       width: 25%;
@@ -143,8 +155,15 @@
         <div class="item-list-wrap">
           <div class="item-list" >
             <el-table class="cel-scrollable-table"   max-height="100%" border :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
-              <el-table-column label="物品编号" prop="number">
+              <el-table-column  label="物品"  width="180">
+                <template slot-scope="scope">
+                  <div class="image-wrap">
+                    <img :src="scope.row.defulatImageUrl" alt="">
+                  </div>
+                  <span>{{scope.row.number}} </span>
+                </template>
               </el-table-column>
+
               <el-table-column label="订单ID" prop="orderId">
               </el-table-column>
               <el-table-column label="总价格" prop="price">
@@ -411,22 +430,19 @@ export default {
       if (row) {
         this.currentItem = row
         console.log('handleCurrentRowChange', row, this.currentItem)
-        if (row.orderDetail == null) {
+        //if (row.orderDetail == null) {
           const orderResult = await getOrder(row.orderId)
-
           row.orderDetail = this.buildOrder(orderResult)
-          console.log('orderDetail', row.orderDetail)
-        }
+        //}
         this.orderDetail = row.orderDetail
         this.orderCustomer = this.orderDetail.customer
         this.orderDetail.lineItemGroups.forEach((group)=>{
           group.imageUploadPath = getLineItemGroupImageUploadPath( group.id)
-
           group.uploadedImages = group.images.map((img)=>{
             return Object.assign( img, {name: img.attachmentFileName, url: img.bigUrl}  )
           })
         })
-
+        console.log('orderDetail', row.orderDetail)
 
       } else {
         this.currentItem = null
@@ -453,11 +469,6 @@ export default {
           }
         })
       })
-    },
-    imageuploaded(res) {
-      if (res.errcode == 0) {
-        this.src = 'http://img1.vued.vanthink.cn/vued751d13a9cb5376b89cb6719e86f591f3.png';
-      }
     },
     handleRemove(file, fileList) {
       deleteGroupImage( file.groupId, file.id ).then(()=>{

@@ -14,12 +14,13 @@ const state = {
     spree_role_names: [] // 用户角色 waiter,worker,admin
   },
   storeInfo:{
+    name: "未知"
   },
   storeId: 0,
   title: null,// 当前路径名称
   paymentMethods: null,
   cardTypes: null,
-  stores: null,
+  stores: null, // 设置为空数组,列表显示时不会
   prepaidPaymentMethodId: 1,
   printableOrders:[]
 }

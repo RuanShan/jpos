@@ -150,7 +150,7 @@ import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
 
-import ItemScannerDialog  from '@/components/ItemScannerDialog.vue'
+import ItemScannerDialog  from './ItemScannerDialog.vue'
 
 import _ from 'lodash'
 
