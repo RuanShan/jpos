@@ -3,6 +3,8 @@
 @import "../style/mixin";
 .login_page {
     background-color: #324057;
+    background-image: url('/static/mobile/img/login-bg.jpg');
+    background-size: cover;
     .form_contianer {
         @include wh(320px, 210px);
         @include ctp(320px, 210px);
@@ -29,11 +31,13 @@
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
-        .logo-wrap {
-            padding: 15px;
-            img {
-                width: 100%;
-            }
+
+        .logo-wrap{
+          padding: 15px;
+          height: 110px;
+          img{
+            height: 100%;
+          }
         }
         .form-head{
           color: #fff;
@@ -69,7 +73,7 @@
   <div class="login-content" ref="loginPage">
     <div class="wrap">
       <div class="logo-wrap">
-        <img :src="logoImage" />
+        <img src="/static/mobile/img/logo-w.png" />
       </div>
       <p class="form-head"> 订单系统登录 </p>
       <el-form :model="loginForm" :rules="rules" ref="loginForm">

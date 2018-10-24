@@ -231,6 +231,7 @@ export default {
   },
   methods: {
     handleDialogOpened(){
+      this.disableCheckoutButton = false
       this.getPaymentMethods().then(()=>{
         this.paymentMethodList = this.paymentMethods
         if( this.activePaymentMethods.length>0){
@@ -247,7 +248,7 @@ export default {
       if( this.availablePrepaidCard != null){
         //会员卡的余额是否够用
         if( this.availablePrepaidCard.amountRemaining>0){
-          this.formData.enablePrepaidCard = true          
+          this.formData.enablePrepaidCard = true
         }
       }
       this.computePaymentAmount()
@@ -281,7 +282,7 @@ export default {
             //if( this.formData.isPrintReceipt ){
             order.displayCreatedDateTime = order.createdAt.format('YYYY年MM月DD日 HH时 mm分 ss秒') //'2018年07月11日 20时 35分 05秒'
             let printParams = { labelPrinter: this.storeInfo.labelPrinter, receiptTitle: this.storeInfo.receiptTitle, receiptFooter: this.storeInfo.receiptFooter, storeName: this.storeInfo.name,  order: order }
-            PrintUtil.printReceipt(  printParams )
+            PrintUtil.printReceipt( printParams )
             PrintUtil.printLabel( printParams )
 
             //}
@@ -336,6 +337,7 @@ export default {
       this.CreateOrder( params )
     },
     handleCreateOrderAndPaymentAsync:_.debounce(( vm) => {
+      //防抖，防止多次提交
       let that = vm
       that.disableCheckoutButton = true
       let params = that.checkoutParams

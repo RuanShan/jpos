@@ -2,13 +2,26 @@
 <style lang="scss">
   @import '~@/style/mixin';
   .header_container{
-    background-color: #EFF2F7;
-    border-top: 1px solid #d3dce6;
+    background-color: #fff;
+    border-bottom: 1px solid #d3dce6;
     height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-left: 50px;
+    .logo{
+      position: absolute;
+      top:0;
+      left: 0;
+      width: 150px;
+      height: 49px;
+      line-height: 49px;
+      background-color: #fff;
+      background-image: url('/static/img/logo1.jpg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
     .title{
       padding: 0 10px;
     }
@@ -39,6 +52,8 @@
 
 <template>
   <div class="header_container">
+    <div class="logo">LOGO</div>
+
     <UserClockin :dialog-visible.sync="userCheckinDialogVisible" @user-entry-created="handleUserEntryCreated" ></UserClockin>
 
     <div class="title left">

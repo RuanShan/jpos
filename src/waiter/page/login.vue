@@ -3,7 +3,9 @@
   <transition name="form-fade" mode="in-out">
     <section class="form_contianer" v-show="showLogin">
       <div class="manage_tip">
-        <p>订单系统登录</p>
+        <div class="logo-wrap">
+          <img src="/static/img/logo-w.png"/>
+        </div>
       </div>
       <el-form :model="loginForm" :rules="rules" ref="loginForm">
         <input name="mockpassword1" type="password" class="hide-password">
@@ -137,7 +139,7 @@ export default {
         })
         // storeInfo 不能为null，很多地方调用 storeInfo.name
         if( currentStore ){
-          this.$store.commit('saveStore', currentStore)          
+          this.$store.commit('saveStore', currentStore)
         }
       })
     },
@@ -187,41 +189,50 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 @import '../style/mixin';
 .login_page {
     background-color: #324057;
-}
-.manage_tip {
-    position: absolute;
-    width: 100%;
-    top: -100px;
-    left: 0;
-    p {
-        font-size: 34px;
-        color: #fff;
-    }
-}
-.form_contianer {
-    @include wh(320px, 220px);
-    @include ctp(320px, 220px);
-    padding: 10px 25px;
-    border-radius: 5px;
-    text-align: center;
-    background-color: #fff;
-    .submit_btn {
+    background-image: url('/static/img/login-bg.jpg');
+    background-size: cover;
+    .manage_tip {
+        position: absolute;
         width: 100%;
-        font-size: 16px;
+        top: -120px;
+        left: 0;
+        p {
+            font-size: 34px;
+            color: #fff;
+        }
     }
-    .hide-password{
-      width: 0;
-      height: 0;
-      opacity:0;
+    .logo-wrap{
+      height: 110px;
+      img{
+        height: 100%;
+      }
     }
-}
-.tip {
-    font-size: 12px;
-    color: red;
+    .form_contianer {
+        @include wh(320px, 220px);
+        @include ctp(320px, 220px);
+        padding: 10px 25px;
+        border-radius: 5px;
+        text-align: center;
+        background-color: #fff;
+        .submit_btn {
+            width: 100%;
+            font-size: 16px;
+        }
+        .hide-password{
+          width: 0;
+          height: 0;
+          opacity:0;
+        }
+    }
+    .tip {
+        font-size: 12px;
+        color: red;
+    }
+
 }
 
 </style>

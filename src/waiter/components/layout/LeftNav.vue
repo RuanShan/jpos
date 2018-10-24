@@ -1,31 +1,20 @@
-<style lang="scss" scoped>
+<style lang="scss" >
 .left-nav {
   position: absolute;
-  left: 0;
   // float: left;
   width: 50px;
   height: 100%;
   background-color: #6a3906;
-  top: 0;
-
-
-  .logo{
-    position: absolute;
-    top:0;
-    left: 0;
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    background-color: #fff;
-  }
-
+  top: 50px;
+  left: 0;
+  bottom: 0;
   .nav {
     padding: 0;
-    margin: 50px 0 0 0;
+    margin: 0;
     li.el-menu-item {
       line-height: 1em;
       padding: 0;
-      border-bottom: 1px solid #fff;
+      border-bottom: 1px solid #d3dce6;
       text-align: center;
       list-style: none;
       cursor: pointer;
@@ -62,7 +51,6 @@
 
 <template>
    <div class="left-nav">
-      <div class="logo">LOGO</div>
       <ul class="nav">
         <li class="el-menu-item" v-if="userAuthorize('pos')">
           <router-link to="/pos" >

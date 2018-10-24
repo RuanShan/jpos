@@ -272,6 +272,7 @@
           </div>
           <div class="actions" v-show="orderDetail">
             <el-button size="mini" @click="cancelOrder()">取消订单</el-button>
+            <el-button size="mini" @click="handlePrintLabel()" type="primary">打印条码</el-button>
             <!-- <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
             <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button> -->
           </div>
@@ -307,6 +308,10 @@ import {
 import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
+
+import {
+  PrintUtil
+} from '@/utils/ipcService'
 
 
 export default {
@@ -502,6 +507,10 @@ export default {
     handleClear(){
       this.currentPage = 1
       this.initData()
+    },
+    handlePrintLabel(){
+      let printParams = { order: this.orderDetail }
+      PrintUtil.printLabel( printParams )
     }
   }
 }

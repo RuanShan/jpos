@@ -7,7 +7,6 @@
     right: 0;
     bottom: 50px;
     border-bottom: 1px solid #d3dce6;
-    border-top: 1px solid #d3dce6;
     span.vue-xeditable-value {
         display: block;
     }
