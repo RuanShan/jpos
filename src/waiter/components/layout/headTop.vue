@@ -52,7 +52,7 @@
 
 <template>
   <div class="header_container">
-    <div class="logo">LOGO</div>
+    <div class="logo"></div>
 
     <UserClockin :dialog-visible.sync="userCheckinDialogVisible" @user-entry-created="handleUserEntryCreated" ></UserClockin>
 

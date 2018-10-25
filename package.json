@@ -12,7 +12,7 @@
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "dev": "node .electron-vue/dev-runner-waiter.js",
     "devw": "node .electron-vue/dev-runner-waiter.js",
-    "dev:mwaiter": "cross-env PORT=8081 webpack-dev-server --inline --progress --config .electron-vue/webpack.dev.mwaiter.config.js",
+    "dev:padwaiter": "cross-env PORT=8081 webpack-dev-server --inline --progress --config .electron-vue/webpack.dev.padwaiter.config.js",
     "dev:webwaiter": "cross-env PORT=8080 webpack-dev-server --inline --progress --config .electron-vue/webpack.dev.waiter.config.js",
     "e2e": "npm run pack && mocha test/e2e",
     "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src test",

@@ -23,7 +23,6 @@ let whiteListedModules = ['vue']
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
-    //mwaiter: path.join(__dirname, '../src/waiter/mobile_main.js'),
     waiter: path.join(__dirname, '../src/waiter/main.js')
   },
   externals: [

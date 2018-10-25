@@ -13,7 +13,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 let webConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
-    mweb: path.join(__dirname, '../src/waiter/mobile_main.js')
+    mweb: path.join(__dirname, '../src/waiter/pad_main.js')
   },
   module: {
     rules: [

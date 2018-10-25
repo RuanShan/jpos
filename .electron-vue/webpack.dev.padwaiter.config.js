@@ -16,7 +16,7 @@ const TARGET_SUBPATH = 'waiter'
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   entry: {
-    app: './src/waiter/mobile_main.js'
+    app: './src/waiter/pad_main.js'
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
