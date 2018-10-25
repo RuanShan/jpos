@@ -77,6 +77,7 @@
     right: 10px;
     top: 50px;
     bottom: 50px;
+    overflow-y: auto;
   }
   .line-item-groups
   {

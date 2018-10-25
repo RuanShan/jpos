@@ -37,7 +37,7 @@
   <header class="header is-fixed"   >
     <div class=" left">
       <img class="logo" alt="LOGO" :src="logoImage">
-      <span> 大连永峰皮具养护-新开路店</span>
+      <span> {{storeInfo.name}}</span>
     </div>
     <div class="right">
       <el-dropdown @command="handleCommand" >
@@ -58,7 +58,7 @@ import {signout} from '@/api/getData'
 export default {
   data() {
     return {
-      logoImage: require('@assets/mobile/img/logo.jpg'),
+      logoImage: require('@assets/mobile/img/logo.png'),
     }
   },
   methods: {

@@ -36,6 +36,7 @@
       width: 100%;
       height:100%;
     }
+    background-color:#f4f4f4;
   }
   .text-positoin {
     display: flex;
@@ -60,7 +61,7 @@
       <div class="text-positoin">
         <h1 class="bg-warning">垂直对准条码{{tiaoMa.barCodeNum}}</h1>
       </div>
-      <mt-button class="close-button" plain size="large" @click="closeCamera">关闭相机</mt-button>
+      <mt-button class="close-button" primary size="large" @click="closeCamera">关闭相机</mt-button>
     </div>
     </div>
     <div>

@@ -51,6 +51,8 @@
 
 <template>
    <div class="left-nav">
+     <MissingStore ></MissingStore>
+
       <ul class="nav">
         <li class="el-menu-item" v-if="userAuthorize('pos')">
           <router-link to="/pos" >
@@ -94,7 +96,12 @@
 </template>
 
 <script>
+import MissingStore from "@/components/common/MissingStore.vue"
+
 export default {
+  components:{
+    MissingStore
+  },
   name: 'leftNav'
 };
 </script>

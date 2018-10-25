@@ -1,7 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './MobileApp'
+import App from './PadApp'
 import router from './router/pad_index'
 import store from './store'
 import './assets/css/font-awesome.min.css'

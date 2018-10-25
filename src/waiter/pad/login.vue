@@ -73,7 +73,7 @@
   <div class="login-content" ref="loginPage">
     <div class="wrap">
       <div class="logo-wrap">
-        <img src="/static/mobile/img/logo-w.png" />
+        <img v-bind:src="logoImage" />
       </div>
       <p class="form-head"> 订单系统登录 </p>
       <el-form :model="loginForm" :rules="rules" ref="loginForm">
@@ -120,7 +120,7 @@ export default {
   data() {
     return {
       loginVisible: true, //login 窗口显示标志位
-      logoImage: require('@assets/mobile/img/logo.jpg'),
+      logoImage: require('@assets/mobile/img/logo.png'),
       loginForm: {
         username: '',
         password: ''

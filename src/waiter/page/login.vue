@@ -97,22 +97,11 @@ export default {
             this.$store.commit("saveUser", this.buildUser(res))
             // 取得所有店铺信息，保存在store中，
             await this.initializeApp()
-
             console.log(" current localstorage=", getStore('storeId'))
-            let storeId = this.localStoreId
-            if (storeId > 0) {
-              // 缺省是收银界面
-              this.redirectDefaultPage()
-            } else {
-
-              this.$router.push({
-                name: 'setting'
-              })
-              this.$message({
-                type: 'warning',
-                message: '请先设置店铺'
-              })
-            }
+            // MissingStore组件处理无法找到当前店铺，它将提示设置店铺，这里无需检查。
+            // let storeId = this.localStoreId
+            // 缺省是收银界面
+            this.redirectDefaultPage()
 
           } else {
             this.$message({
