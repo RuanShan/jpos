@@ -70,7 +70,7 @@ const actions = {
     const result = await getPaymentMethods()
 
     const list = result.payment_methods.map((pm)=>{
-        return {id:pm.id, name:pm.name, active: pm.active, posable: pm.posable}
+        return {id:pm.id, type: pm.type, name:pm.name, active: pm.active, posable: pm.posable}
     })
 
     store.commit('savePaymentMethods', list)

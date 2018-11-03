@@ -378,7 +378,6 @@
 import leftNav from "@/components/layout/LeftNav.vue"
 import headTop from "@/components/layout/headTop.vue";
 
-import CustomerButton from "@/components/CustomerButton.vue"
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
 import MemberAdd from "./MemberAdd.vue"
 import OrderDelivery from "./OrderDelivery.vue"
@@ -431,7 +430,6 @@ export default {
     loading,
     leftNav,
     headTop,
-    CustomerButton,
     CheckoutDialog,
     MemberAdd,
     OrderDelivery,

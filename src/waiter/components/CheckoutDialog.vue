@@ -182,7 +182,7 @@ export default {
     },
     prepaidCardPaymentMethod: function(){
       return this.paymentMethodList.find((pm)=>{
-        return (pm.name.indexOf('PrepaidCard') >= 0 )
+        return (pm.type.indexOf('PrepaidCard') >= 0 )
       })
     },
     //检查订单ID是否存在，如果存在结账时，只需要付款，无需创建订单
@@ -200,6 +200,7 @@ export default {
       //  }
       //}
       let paymentsAttributes = []
+      console.log(" prepaidCardPaymentMethod =", this.prepaidCardPaymentMethod)
       if( this.formData.enablePrepaidCard ){
         paymentsAttributes.push( { source_id: this.availablePrepaidCard.id, source_type: "Spree::Card",
           amount: this.formData.prepaidCardAmount, payment_method_id: this.prepaidCardPaymentMethod.id } )
