@@ -17,10 +17,10 @@
       height: 49px;
       line-height: 49px;
       background-color: #fff;
-      background-image: url('/static/img/logo1.jpg');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
+      overflow: hidden;
+      img{
+        height: 100%;
+      }
     }
     .title{
       padding: 0 10px;
@@ -52,7 +52,9 @@
 
 <template>
   <div class="header_container">
-    <div class="logo"></div>
+    <div class="logo">
+      <img v-bind:src='logoImage' >
+    </div>
 
     <UserClockin :dialog-visible.sync="userCheckinDialogVisible" @user-entry-created="handleUserEntryCreated" ></UserClockin>
 
@@ -108,6 +110,7 @@ export default {
   },
   data () {
     return {
+      logoImage: require('@assets/img/logo-t.png'),
       userCheckinDialogVisible: false,
       baseImgPath,
       userEntries: []

@@ -373,6 +373,8 @@ export var apiResultMixin = {
       user.memo = userResult.memo
       user.normalOrderTotal = parseInt(userResult.normal_order_total)
       user.normalOrderCount = userResult.normal_order_count
+      user.wxFollowerNickname = userResult.wx_follower_nickname
+      user.wxFollowerHeadimgurl = userResult.wx_follower_headimgurl
       user.number = userResult.number
       user.cards = []
       if( user.birth ){

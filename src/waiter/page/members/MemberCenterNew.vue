@@ -98,8 +98,10 @@
               <td> {{customerData.mobile}}</td>
               <th> 会员性别</th>
               <td> {{customerData.displayGender}}</td>
-              <th> 会员生日</th>
-              <td> {{customerData.displayBirth}}</td>
+              <th> 关联微信</th>
+              <td> <span v-show="customerData.wxFollowerNickname"> {{customerData.wxFollowerNickname}} </span>
+                  <span v-show="!customerData.wxFollowerNickname"> 无 </span>
+              </td>
             </tr>
             <tr>
               <th> 所属门店</th>

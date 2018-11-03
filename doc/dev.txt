@@ -83,3 +83,11 @@ https://blog.csdn.net/boyit0/article/details/52275657/
 yarn run build:web
 
 copy /dist/web   服务器：/public/
+
+构建window应用程序
+================================================================================
+yarn run build
+
+Electron A note for Windows Users
+================================================================================
+https://simulatedgreg.gitbooks.io/electron-vue/content/en/getting_started.html#a-note-for-windows-users

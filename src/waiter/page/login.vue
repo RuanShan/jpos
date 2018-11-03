@@ -4,7 +4,7 @@
     <section class="form_contianer" v-show="showLogin">
       <div class="manage_tip">
         <div class="logo-wrap">
-          <img src="/static/img/logo-w.png"/>
+          <img src="@assets/img/logo-w.png"/>
         </div>
       </div>
       <el-form :model="loginForm" :rules="rules" ref="loginForm">
@@ -182,7 +182,7 @@ export default {
 @import '../style/mixin';
 .login_page {
     background-color: #324057;
-    background-image: url('/static/img/login-bg.jpg');
+    background-image: url('../assets/img/login-bg.jpg');
     background-size: cover;
     .manage_tip {
         position: absolute;

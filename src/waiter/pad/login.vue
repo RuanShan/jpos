@@ -3,7 +3,7 @@
 @import "../style/mixin";
 .login_page {
     background-color: #324057;
-    background-image: url('/static/mobile/img/login-bg.jpg');
+    background-image: url('../assets/mobile/img/login-bg.jpg');
     background-size: cover;
     .form_contianer {
         @include wh(320px, 210px);
