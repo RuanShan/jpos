@@ -214,7 +214,7 @@ export default {
       }
       //  index  cname  discount  groupPosition memo name  price productId quantity
       //  unitPrice  variantId  variantName
-      let order =  { user_id: this.customer.id,  payments: paymentsAttributes, enable_sms: this.formData.enableSms, enable_mp_msg: this.formData.enableMpMsg }
+      let order =  { store_id: this.storeId, user_id: this.customer.id,  payments: paymentsAttributes, enable_sms: this.formData.enableSms, enable_mp_msg: this.formData.enableMpMsg }
       order.line_items_attributes = this.orderItemList.map((item)=>{
         return { quantity: item.quantity, variant_id: item.variantId, cname: item.cname,
           group_position: item.groupPosition, memo: item.memo,

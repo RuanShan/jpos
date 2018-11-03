@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="order-item-list">
-      <el-table :data="computedLineItemGroups" border stripe style="width:100%;" class="fillcontain">
+      <el-table :data="computedLineItemGroups" border stripe style="width:100%;" class="fillcontain" highlight-current-row  @current-change="handleCurrentGroupChange">
         <el-table-column prop="displayCreatedAt" label="订单日期"></el-table-column>
         <el-table-column prop="number" label="物品条码"> </el-table-column>
         <el-table-column prop="order.number" label="订单号"></el-table-column>
@@ -102,6 +102,7 @@ export default {
       currentOrders:[], // 当前选择的客户对应的订单列表, 按订单关键字搜索后，选择的订单列表
       currentCustomer: null,
       currentCard: null,
+      currentRow:null,
       checkoutDialogVisible: false,
       imageDialogVisible: false
     }
@@ -250,6 +251,11 @@ export default {
         this.currentCard = {}
         this.currentOrders = []
       }
+    },
+    handleCurrentGroupChange(val){
+      this.currentRow = val
+      console.log( "currentRow", this.currentRow)
+      this.$emit('current-group-changed', val)
     },
     async findOrderByCustomer(){
       let cid = this.selectedCustomerId

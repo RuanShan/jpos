@@ -8,7 +8,6 @@ Vue.use(Vuex)
 
 const state = {
   userInfo: {
-    storeId: 0,
     avatar: 'default.jpg',
     apiKey: '',
     spree_role_names: [] // 用户角色 waiter,worker,admin
@@ -28,14 +27,12 @@ const state = {
 const mutations = {
   resetUser(state){
     state.userInfo = {
-      storeId: 0,
       avatar: 'default.jpg',
       apiKey: ''
     }
   },
   saveUser(state, userInfo) {
     state.userInfo = userInfo
-    state.storeId = state.userInfo.storeId
   },
   savePaymentMethods( state, newPaymentMethods){
     state.paymentMethods = newPaymentMethods

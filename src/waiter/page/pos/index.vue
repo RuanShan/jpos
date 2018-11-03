@@ -173,9 +173,16 @@
             top: 55px;
             bottom: 0;
             overflow-y: auto;
+            width: 100%;
         }
         .wrap{
           background-color: #f4f4f4;
+        }
+        .image-list{
+          padding: 0 10px 10px;
+          .el-upload.el-upload--picture-card{
+            display: none;
+          }
         }
     }
     .cook-list {
@@ -220,6 +227,15 @@
         width: calc(100% - 20px);
         position: relative;
     }
+    .empty{
+      min-height: 60px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 }
 </style>
 
@@ -243,8 +259,8 @@
     <el-row class="pos-content">
       <el-col :span="13" class="pos-order">
         <div class="wrap">
-          <el-tabs>
-            <el-tab-pane label="订单" class="new-order">
+          <el-tabs v-model="selectedTaxonName" @tab-click="handleTabClick">
+            <el-tab-pane label="订单"  name="newOrderTab" class="new-order">
               <div class="customer-container clear">
                 <el-form ref="customerForm" size="mini" :inline="true" class="search-form">
                   <el-form-item label="会员搜索">
@@ -321,23 +337,22 @@
                 </div>
               </div>
             </el-tab-pane>
-            <el-tab-pane label="取单" class="ready-order">
+            <el-tab-pane label="取单"  name="readyOrderTab" class="ready-order">
               <!-- 取单组件 Start-->
-              <OrderDelivery></OrderDelivery>
+              <OrderDelivery @current-group-changed="handleCurrentGroupChanged"></OrderDelivery>
               <!-- 取单组件 End-->
             </el-tab-pane>
-            <el-tab-pane label="支出" class="ready-order">
+            <el-tab-pane label="支出"  name="expenseItemTab" class="ready-order">
               <!-- 取单组件 Start-->
-              <ExpenseItems></ExpenseItems>
+              <ExpenseItems @current-expense-item-changed="handleCurrentGroupChanged"></ExpenseItems>
               <!-- 取单组件 End-->
             </el-tab-pane>
           </el-tabs>
         </div>
       </el-col>
       <el-col :span="11" class="goods-type">
-
         <div class="wrap ">
-          <el-tabs>
+          <el-tabs v-show="selectedTaxonName=='newOrderTab'">
             <el-tab-pane v-for="menu in menuList" :key="menu.id" v-bind:label="menu.name">
               <div>
                 <el-row class="cook-list">
@@ -364,6 +379,35 @@
 
                   </el-col>
                 </el-row>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+          <el-tabs v-show="selectedTaxonName=='readyOrderTab'" >
+            <el-tab-pane  label="GroupImage">
+              <div class="empty" v-show="computedGroupImages.length==0">
+                暂无数据
+              </div>
+              <div class="image-list">
+                <el-upload
+                  action=""
+                  :auto-upload="false"
+                  list-type="picture-card"
+                  :file-list="computedGroupImages" :on-preview="handlePreviewImage">
+                  <i class="el-icon-plus"></i>
+                </el-upload>
+                <el-dialog :visible.sync="dialogVisible">
+                  <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+          <el-tabs v-show="selectedTaxonName=='expenseItemTab'">
+            <el-tab-pane  label="ExpenseItemImage" >
+              <div class="empty" v-show="computedGroupImages.length==0">
+                暂无数据
+              </div>
+              <div class="image-list">
+                this is expense item tab
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -399,11 +443,12 @@ export default {
   name: "pos",
   data() {
     return {
+
       showLoading: true, //显示加载动画
       shopDetailData: null, //商铺详情
       menuList: [], //食品列表
       menuIndex: 0, //已选菜单索引值，默认为0
-      selectedTaxonId: 0,
+      selectedTaxonName: 'newOrderTab',
       productList: [],
       baseImgPath,
       defaultCustomer: {
@@ -416,14 +461,16 @@ export default {
         code: "无"
       },
       orderItemList: [], //订单 {variantId, price, quantity}
-      packages: [],
+      selectedGroup: null,
+      selectedExpenseItem: null,
       checkoutDialogVisible: false,
       memberAddWindowVisible: false,
       customerList: [], //按关键字搜索到的客户列表
       //由于搜索列表的每一项是 会员+会员卡，即如果会员有两个卡就有两项，
       //所以select的值为customerId+cardId, 当没有会员卡时，只有customerId
       customerComboId: null,
-
+      dialogImageUrl: '',
+      dialogVisible: false
     };
   },
   components: {
@@ -436,25 +483,25 @@ export default {
     ExpenseItems
   },
   computed: {
-    customerId: function () {
+    customerId () {
       console.log(" this.customerComboId=", this.customerComboId)
       return (this.customerComboId ? this.customerComboId.split('_')[0] : null)
     },
-    cardId: function () {
+    cardId () {
       return (this.customerComboId ? this.customerComboId.split('_')[1] : null)
     },
-    selectedTaxonProducts: function () {
+    selectedTaxonProducts () {
       return this.productList.filter(function (product) {
         //return product.taxon_ids.includes( 0 )
         return false;
       });
     },
-    sortedOrderItemList: function () {
+    sortedOrderItemList () {
       return this.orderItemList.sort((a, b) => {
         return (a.groupPosition - b.groupPosition)
       })
     },
-    computedCustomerOptions: function () {
+    computedCustomerOptions () {
       let ops = this.customerList.map((customer) => {
         if (customer.cards.length > 0) {
           return customer.cards.map((card) => {
@@ -473,7 +520,7 @@ export default {
       return _.flatten(ops)
     },
     //当前选择的客户
-    currentCustomer: function () {
+    currentCustomer () {
       let customer = this.defaultCustomer
       let cid = this.customerId
       if (cid) {
@@ -486,7 +533,7 @@ export default {
       }
       return customer
     },
-    currentCard: function () {
+    currentCard () {
       let card = this.defaultCard
       let customer = this.currentCustomer
       let cid = this.cardId
@@ -497,30 +544,48 @@ export default {
       }
       return card
     },
-    totalCount: function () {
+    totalCount () {
       return this.orderItemList.reduce((total, item) => {
         return total += item.quantity
       }, 0)
     },
-    totalMoney: function () {
+    totalMoney () {
       let t = this.orderItemList.reduce((total, item) => {
         return total += item.price
       }, 0)
       return Number(t).toFixed(2)
     },
-    addNewCardButtonAvailable: function () {
+    addNewCardButtonAvailable () {
       return this.currentCustomer.id && this.currentCustomer.cards.length == 0
     },
-    maxGroupPosition: function () {
+    maxGroupPosition () {
       // 返回 0 或 >0
       let max = this.orderItemList.map((item) => {
         return item.groupPosition
       }).sort().pop()
       return max ? max : 0
     },
-    nextGroupPosition: function () {
+    nextGroupPosition () {
       //取当前的最大数，再加 +1
       return this.maxGroupPosition + 1
+    },
+    computedGroupImages(){
+      if(this.selectedGroup==null) { return []
+      }else{
+        return this.selectedGroup.images.map( (image)=>{
+          return {name: image.name, url: image.bigUrl}
+        })
+      }
+
+    },
+    computedExpenseItemImages(){
+      if(this.selectedExpenseItem==null) {
+        return []
+      }else{
+        return this.selectedExpenseItem.images.map( (image)=>{
+          return {name: image.name, url: image.bigUrl}
+        })
+      }
     }
   },
   created() {
@@ -548,12 +613,12 @@ export default {
         this.productList = this.buildProducts(productsResult)
       }
     },
-    getTaxonProducts: function (taxonId) {
+    getTaxonProducts (taxonId) {
       return this.productList.filter(function (product) {
         return product.taxonIds.includes(taxonId);
       });
     },
-    getProductImageUrl: function (product) {
+    getProductImageUrl (product) {
       let image = product.master.images[0];
       return image ?
         baseImgPath + image.product_url :
@@ -643,6 +708,11 @@ export default {
       console.log(" old=", this.orderItemList[index], "new=", newOrderItem)
       this.orderItemList.splice(index, 1, newOrderItem)
     },
+    // select order tabs
+    handleTabClick(tab, event) {
+      console.log(this.selectedTaxonName)
+
+    },
     // 客户搜索事件处理
     openCheckoutDialog() {
       console.log("openCheckoutDialog")
@@ -685,6 +755,23 @@ export default {
       this.orderItemList = []
       this.$bus.$emit('order-created-gevent')
     },
+    // in ready group tab, current group change event
+    handleCurrentGroupChanged(selectedGroup){
+      console.log( "selectedGroup=", selectedGroup)
+      if( selectedGroup ){
+        this.selectedGroup = selectedGroup
+      }else{
+        this.selectedGroup = null
+      }
+    },
+    // in expense items tab, current group change event
+    handleCurrentExpenseItemChanged(selectedExpenseItem){
+      if( selectedExpenseItem ){
+        this.selectedExpenseItem = selectedExpenseItem
+      }else{
+        this.selectedExpenseItem = null
+      }
+    },
     findProductByVariantId(variantId) {
       let product = this.productList.find((product) => {
         let vids = product.variants.map((v) => {
@@ -704,7 +791,11 @@ export default {
         this.setCurrentCustomer(customer)
       }
     },
-
+    handlePreviewImage(file){
+      console.log(" handlePreviewImage", file)
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
     getDiscountOfVariant(variantId) {
       // 找到这个订单对应的商品
       let discount = 100
@@ -733,8 +824,7 @@ export default {
       this.$nextTick(() => {
         // DOM updated
         console.log(" this.computedCustomerOptions=", this.computedCustomerOptions)
-        this.customerComboId = this.computedCustomerOptions[0].value
-
+        //this.customerComboId = this.computedCustomerOptions[0].value
       })
     },
     renderEditableTableHeader(h, {
@@ -747,7 +837,7 @@ export default {
     }
   },
   watch: {
-    // userInfo: function(newValue) {
+    // userInfo(newValue) {
     //   if (!newValue.id) {
     //     this.$message({
     //       type: "error",

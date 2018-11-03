@@ -167,7 +167,7 @@ export default {
     buildPrams(){
       return {
         entry_day_eq: moment().format('YYYY-MM-DD'),
-        store_id: this.storeId
+        store_id_eq: this.storeId
       }
     },
     async initData(){
