@@ -144,6 +144,12 @@ export default {
       rechargeMoneySum: "0" //统计数据之充值金额合计
     };
   },
+  created() {
+    this.$bus.$on('order-created-gevent', () => {
+      console.log('on order-created-gevent')
+      this.initData()
+    })
+  },
   mounted() {
     let start = moment().subtract(6, "days")
     let end = moment()
