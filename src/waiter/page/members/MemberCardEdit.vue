@@ -20,6 +20,13 @@
         <el-form-item label="会员卡类型" prop="variantId" required>
           <el-input v-model="cardFormData.name" disabled></el-input>
         </el-form-item>
+        <el-form-item label="是否可用">
+          <el-radio-group v-model="cardFormData.status">
+            <el-radio label="enabled">可用</el-radio>
+            <el-radio label="disabled">禁用</el-radio>
+          </el-radio-group>
+
+        </el-form-item>
         <el-form-item label="到期时间">
           <el-form-item prop="expireAt">
             <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
@@ -81,7 +88,7 @@ export default {
       this.$refs['cardForm'].validate((valid) => {
         if (valid) {
           let params = {
-            card: { memo: this.cardFormData.memo, expire_at: this.cardFormData.expireAt  }
+            card: { status: this.cardFormData.status,  memo: this.cardFormData.memo, expire_at: this.cardFormData.expireAt  }
           }
           updateCard( this.cardData.id, params ).then((result) => {
             if (result.id) {

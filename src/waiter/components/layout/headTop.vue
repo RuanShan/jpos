@@ -23,7 +23,7 @@
       }
     }
     .title{
-      padding: 0 10px;
+      padding: 0 110px;
     }
     .header-right {
         float: right;
