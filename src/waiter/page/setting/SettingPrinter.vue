@@ -56,8 +56,8 @@
       </fieldset>
     </el-form>
     <div class="button-sett">
-      <el-button  type="info"  @click="clearSelect">取消</el-button>
-      <el-button  type="danger" @click="submit">保存</el-button>
+      <el-button  type="danger" @click="submit" size="mini" >保存</el-button>
+      <el-button  type=""  @click="clearSelect" size="mini" >取消</el-button>
     </div>
   </div>
 </template>

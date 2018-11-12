@@ -383,7 +383,7 @@
             </el-tab-pane>
           </el-tabs>
           <el-tabs v-show="selectedTaxonName=='readyOrderTab'" >
-            <el-tab-pane  label="GroupImage">
+            <el-tab-pane  label="物品图片">
               <div class="empty" v-show="computedGroupImages.length==0">
                 暂无数据
               </div>
@@ -402,7 +402,7 @@
             </el-tab-pane>
           </el-tabs>
           <el-tabs v-show="selectedTaxonName=='expenseItemTab'">
-            <el-tab-pane  label="ExpenseItemImage" >
+            <el-tab-pane  label="费用图片" >
               <div class="empty" v-show="computedGroupImages.length==0">
                 暂无数据
               </div>

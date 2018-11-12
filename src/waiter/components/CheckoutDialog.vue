@@ -77,9 +77,6 @@
           <el-checkbox label="使用会员卡"  v-model="formData.enablePrepaidCard" @change="handleEnablePrepaidCard"></el-checkbox>
         </el-form-item>
 
-        <el-form-item label="会员支付密码" v-if="false">
-          <el-input v-model="formData.paymentPassword" placeholder="" class="money align-right" type="password"></el-input>
-        </el-form-item>
 
         <el-form-item label="支付方式"  class="payment">
           <el-input v-model="formData.paymentAmount" placeholder="" class="money">
@@ -108,6 +105,12 @@
       </el-form>
     </div>
   </el-dialog>
+  <el-dialog :visible="passwordDialogVisible"
+    <el-form-item label="会员支付密码" >
+      <el-input v-model="formData.paymentPassword" placeholder="" class="money align-right" type="password"></el-input>
+    </el-form-item>
+  </el-dialog>
+
 </div>
 </template>
 
@@ -131,7 +134,6 @@ export default {
       //微信,支付宝
       //支付方式
       paymentMethodList: [      ],
-
       formData:{
         prepaidCardAmount: 0,
         paymentAmount: 0,
@@ -150,6 +152,7 @@ export default {
         ]
       },
       disableCheckoutButton: false,
+      passwordDialogVisible: false
       //payments: [], //支付被方式选择数字,返回已经被选择的lable,如""现金","微信"等
     };
   },

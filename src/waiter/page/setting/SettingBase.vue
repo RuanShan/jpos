@@ -23,11 +23,16 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item class="member-form-item" label="会员支付是否必须密码">
+          <el-switch class="select-options" v-model="form.checkoutPasswordRequired"   size="mini">
+          </el-switch>
+        </el-form-item>
+
       </fieldset>
     </el-form>
     <div class="button-sett">
-      <el-button  type="info"  @click="handleCancel" size="mini">取消</el-button>
       <el-button  type="danger"  @click="handleSave" size="mini" >保存</el-button>
+      <el-button  type=""  @click="handleCancel" size="mini">取消</el-button>
     </div>
   </div>
 </template>
@@ -44,6 +49,7 @@ export default {
       //*********** UI需要的变量 ***************/
       form: {
         storeId: null, //門店選項
+        checkoutPasswordRequired: false
       },
       stateOptions: [{ //门店方式选项
         value: '全部',

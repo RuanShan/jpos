@@ -122,11 +122,15 @@
             </el-col>
             <el-col :span="4">
               <div class="data_list">
-                <span class="data_num">{{statis.orderCount}}</span> 新增订单</div>
+                <span class="data_num">{{statis.serviceOrderCount}}</span> 新增订单金额/新增服务订单</div>
             </el-col>
             <el-col :span="4">
               <div class="data_list">
                 <span class="data_num">{{statis.cardCount}}</span> 新增会员卡</div>
+            </el-col>
+            <el-col :span="4">
+              <div class="data_list">
+                <span class="data_num">{{statis.cardCount}}</span> 新增会员充值金额</div>
             </el-col>
           </el-row>
           <el-row :gutter="20">
@@ -141,7 +145,7 @@
             </el-col>
             <el-col :span="4">
               <div class="data_list">
-                <span class="data_num">{{statis.allOrderCount}}</span> 订单</div>
+                <span class="data_num">{{statis.allServiceOrderCount}}</span> 订单</div>
             </el-col>
             <el-col :span="4">
               <div class="data_list">
@@ -216,13 +220,19 @@ export default {
       },
       statis: {
         userCount: null,
-        orderCount: null,
+        serviceOrderCount: null,
         cardCount: null,
+        serviceTotal: null,
+        depositTotal: null,
         allUserCount: null,
-        allOrderCount: null,
-        allCardCount: null
+        allServiceOrderCount: null,
+        allCardCount: null,
+        allServiceTotal: null,
+        allDepositTotal: null
       },
       sevenDate: [
+        [],
+        [],
         [],
         [],
         []
@@ -275,11 +285,15 @@ export default {
       Promise.all([selectedDayCount(this.computedDayParam), totalCount(this.computedDaysParams)])
         .then(res => {
           this.statis.userCount = res[0].new_customers_count  //新增客户
-          this.statis.orderCount = res[0].new_orders_count    //新增订单
+          this.statis.serviceOrderCount = res[0].service_order_count    //新增服务订单
           this.statis.cardCount = res[0].new_cards_count      //新增会员卡
+          this.statis.serviceTotal = res[0].service_total      //新增服务订单金额
+          this.statis.depositTotal = res[0].deposit_total      //新增充值订单金额
           this.statis.allUserCount = res[1].new_customers_count
-          this.statis.allOrderCount = res[1].new_orders_count
+          this.statis.allServiceOrderCount = res[1].service_order_count
           this.statis.allCardCount = res[1].new_cards_count
+          this.statis.allServiceTotal = res[1].serviceTotal
+          this.statis.allDepositTotal = res[1].deposit_total
         }).catch(err => {
           console.log(err)
         })
@@ -298,7 +312,7 @@ export default {
 
           if (sale_day) {
             resArr[0].push(sale_day.new_customers_count)
-            resArr[1].push(sale_day.new_orders_count)
+            resArr[1].push(sale_day.service_order_count)
             resArr[2].push(sale_day.new_cards_count)
           } else {
             resArr[0].push(0)
