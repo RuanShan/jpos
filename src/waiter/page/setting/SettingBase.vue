@@ -14,21 +14,22 @@
 
 <template>
   <div class="setting-base">
-    <el-form ref="form" :model="form" :inline="true">
+    <el-form ref="form" :model="form" >
+
       <fieldset  >
-        <legend>店铺设置</legend>
-        <el-form-item class="member-form-item" label="选择当前店铺名称">
+        <legend>工作场所设置</legend>
+        <el-form-item class="member-form-item" label="选择当前工作场所"  label-width="180px">
           <el-select class="select-options" v-model="form.storeId" @change="changeForState" size="mini">
             <el-option v-for="item in computedStoreOptions" :key="item.id" :value="item.id" :label="item.name">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item class="member-form-item" label="会员支付是否必须密码">
+        <el-form-item class="member-form-item" label="会员支付是否必须密码" label-width="180px">
           <el-switch class="select-options" v-model="form.checkoutPasswordRequired"   size="mini">
           </el-switch>
         </el-form-item>
-
       </fieldset>
+
     </el-form>
     <div class="button-sett">
       <el-button  type="danger"  @click="handleSave" size="mini" >保存</el-button>

@@ -111,45 +111,57 @@
         <section class="data_section">
           <header class="section_title"></header>
           <el-row :gutter="20" style="margin-bottom: 10px;">
-            <el-col :span="4" :offset="4">
+            <el-col :span="3" :offset="3">
               <div class="data_list today_head">
                 <span class="data_num head">当日数据：</span>
               </div>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
+              <div class="data_list">
+                <span class="data_num">{{statis.serviceOrderCount}}</span>  订单数量</div>
+            </el-col>
+            <el-col :span="3">
+              <div class="data_list">
+                <span class="data_num">{{statis.serviceTotal}}</span> 订单金额 </div>
+            </el-col>
+            <el-col :span="3">
               <div class="data_list">
                 <span class="data_num">{{statis.userCount}}</span> 新增客户</div>
             </el-col>
-            <el-col :span="4">
-              <div class="data_list">
-                <span class="data_num">{{statis.serviceOrderCount}}</span> 新增订单金额/新增服务订单</div>
-            </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
               <div class="data_list">
                 <span class="data_num">{{statis.cardCount}}</span> 新增会员卡</div>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
               <div class="data_list">
-                <span class="data_num">{{statis.cardCount}}</span> 新增会员充值金额</div>
+                <span class="data_num">{{statis.depositTotal}}</span> 会员充值金额</div>
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="4" :offset="4">
+            <el-col :span="3" :offset="3">
               <div class="data_list all_head">
                 <span class="data_num head">总数据：</span>
               </div>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
+              <div class="data_list">
+                <span class="data_num">{{statis.allServiceOrderCount}}</span> 订单数量</div>
+            </el-col>
+            <el-col :span="3">
+              <div class="data_list">
+                <span class="data_num">{{statis.allServiceTotal}}</span> 订单金额</div>
+            </el-col>
+            <el-col :span="3">
               <div class="data_list">
                 <span class="data_num">{{statis.allUserCount}}</span> 注册客户</div>
             </el-col>
-            <el-col :span="4">
-              <div class="data_list">
-                <span class="data_num">{{statis.allServiceOrderCount}}</span> 订单</div>
-            </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
               <div class="data_list">
                 <span class="data_num">{{statis.allCardCount}}</span> 会员卡</div>
+            </el-col>
+            <el-col :span="3">
+              <div class="data_list">
+                <span class="data_num">{{statis.allDepositTotal}}</span> 会员充值金额</div>
             </el-col>
           </el-row>
         </section>
@@ -292,7 +304,7 @@ export default {
           this.statis.allUserCount = res[1].new_customers_count
           this.statis.allServiceOrderCount = res[1].service_order_count
           this.statis.allCardCount = res[1].new_cards_count
-          this.statis.allServiceTotal = res[1].serviceTotal
+          this.statis.allServiceTotal = res[1].service_total
           this.statis.allDepositTotal = res[1].deposit_total
         }).catch(err => {
           console.log(err)
@@ -303,9 +315,7 @@ export default {
 
       selectedDaysCount(this.computedDaysParams).then(res => {
         const resArr = [
-          [],
-          [],
-          []
+          [], [], [], [], []
         ]
         this.compuatedDays.forEach((day, i) => {
           let sale_day = res.sale_days.find((item) => { return item.day == day })
@@ -314,10 +324,14 @@ export default {
             resArr[0].push(sale_day.new_customers_count)
             resArr[1].push(sale_day.service_order_count)
             resArr[2].push(sale_day.new_cards_count)
+            resArr[3].push(sale_day.service_total)
+            resArr[4].push(sale_day.deposit_total)
           } else {
             resArr[0].push(0)
             resArr[1].push(0)
             resArr[2].push(0)
+            resArr[3].push(0)
+            resArr[4].push(0)
           }
         })
         this.sevenDate = resArr

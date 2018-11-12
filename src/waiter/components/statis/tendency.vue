@@ -45,7 +45,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['新注册用户', '新增订单', '新增管理员']
+          data: ['新注册用户', '新增订单', '新增会员卡', '订单金额', '充值金额']
         },
         toolbox: {
           show: false,
@@ -133,7 +133,7 @@ export default {
             }
           },
           {
-            name: '新增管理员',
+            name: '新增会员卡',
             type: 'line',
             data: this.sevenDate[2],
             yAxisIndex: 1,

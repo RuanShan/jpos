@@ -180,8 +180,8 @@
           </div>
         </div>
         <div class="item-detail">
-          <div class="order-detail-container">
-            <div class="order-detail" v-if="orderDetail">
+          <div class="order-detail-container scrollable">
+            <div class="order-detail " v-if="orderDetail">
               <div class="customer box">
                 <div class="box-head"> 客户信息</div>
                 <div>
