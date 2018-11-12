@@ -10,12 +10,11 @@ SET PEEL OFF
 SET PARTIAL_CUTTER OFF
 SET CUTTER 1
 CLS
-TEXT 14,576,"FONT001",270,3,2,"<%=label_title%>"
+TEXT 15,510,"FONT001",270,2,2,"<%=label_title%>"
+TEXT 50,510,"FONT001",270,2,2,"<%=store_name%>"
 BARCODE 12,300,"128M",85,2,270,3,6,"!105<%=group_number%>"
 BLOCK 144,576,576,75,"FONT001",270,2,2,3,"<%=item_memos%>"
-PUTBMP 69,525,"<%=item1_icon%>40.BMP"
-PUTBMP 69,450,"<%=item2_icon%>40.BMP"
-PUTBMP 69,375,"<%=item3_icon%>40.BMP"
+PUTBMP 15,525,"<%=item1_icon%>40.BMP"
 BAR 4,590,240,1
 
 PRINT 1,1

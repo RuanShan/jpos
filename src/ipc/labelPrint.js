@@ -34,7 +34,7 @@ export function printLabel ( params ){
      var order = params.order;
      order.lineItemGroups.forEach((group)=>{
        var itemMemos = group.lineItems.map((item)=>{ return item.memo}).join( ' ')
-       var lableParams = { 'label_title': '永峰皮具养护物品条码', 'group_number': group.number, 'item_memos': itemMemos, 'item1_icon':'','item2_icon':'','item3_icon':'' }
+       var lableParams = { 'label_title': '永峰皮具养护中心', 'store_name': '西安路店', 'group_number': group.number, 'item_memos': itemMemos, 'item1_icon':'','item2_icon':'','item3_icon':'' }
 
        group.lineItems.forEach((item,i)=>{
          lableParams['item'+(i+1)+'_icon'] = item.labelIconName
