@@ -105,13 +105,6 @@
       </el-form>
     </div>
   </el-dialog>
-  <el-dialog :visible="passwordDialogVisible"
-    <el-form :model="formData" :rules="rules" ref="formData" label-width="100px" class="checkout-form">
-      <el-form-item label="会员支付密码" >
-        <el-input v-model="formData.paymentPassword" placeholder="" class="money align-right" type="password"></el-input>
-      </el-form-item>
-    </el-form>
-  </el-dialog>
 
 </div>
 </template>
@@ -153,8 +146,7 @@ export default {
           { required: true, type: 'number', trigger: 'change' }
         ]
       },
-      disableCheckoutButton: false,
-      passwordDialogVisible: false
+      disableCheckoutButton: false
       //payments: [], //支付被方式选择数字,返回已经被选择的lable,如""现金","微信"等
     };
   },
@@ -328,7 +320,11 @@ export default {
     },
     handleCreateOrderAndPayment(){
       //250毫秒以后才可以调用，以防鼠标多次点击
-      this.handleCreateOrderAndPaymentAsync(this)
+      if( this.isPasswordRequired()){
+        this.promptPassword()
+      }else{
+        this.handleCreateOrderAndPaymentAsync(this)
+      }
     },
     handleCreateOrderWithoutPayment(){
       if( this.orderRemainder > 0){
@@ -360,6 +356,20 @@ export default {
       //重新计算各个支付方式需要支付多少
       this.computePaymentAmount()
     },
+    isPasswordRequired(){
+      return true
+    },
+    promptPassword(){
+        this.$prompt('请输入会员支付密码', '会员支付密码', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputValidator: async()=>{  return true },
+          inputErrorMessage: '会员支付密码不正确'
+        }).then(({ value }) => {
+          this.handleCreateOrderAndPaymentAsync(this)
+        }).catch(() => {
+        })
+    },
     messageBox(string1, string2) {
       this.$alert(string1, string2, {
         confirmButtonText: "确定",
@@ -375,6 +385,7 @@ export default {
       PrintUtil.printLabel()
       PrintUtil.printReceipt()
     }
+
   },
 
 };

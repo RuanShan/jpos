@@ -656,6 +656,14 @@ export var apiResultMixin = {
       return models
 
     },
+
+    buildStore( model){
+      return {id:model.id, name:model.name, docPrinter: model.doc_printer_name,
+        receiptPrinter: model.receipt_printer_name, labelPrinter: model.label_printer_name,
+        receiptTitle: model.receipt_title, receiptFooter: model.receipt_footer, type: model.type,
+        stockLocationId: model.stock_location_id, checkoutPasswordRequired: model.checkout_password_required
+       }
+    },
     generateGroupNumber: function() {
       let timestamp = moment().format("YYMMDDHHmmss")
       return timestamp

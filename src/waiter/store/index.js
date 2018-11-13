@@ -95,13 +95,12 @@ const actions = {
         list.push({id:obj.id, name:obj.name, docPrinter: obj.doc_printer_name,
           receiptPrinter: obj.receipt_printer_name, labelPrinter: obj.label_printer_name,
           receiptTitle: obj.receipt_title, receiptFooter: obj.receipt_footer, type: obj.type,
-          stockLocationId: obj.stock_location_id
+          stockLocationId: obj.stock_location_id, checkoutPasswordRequired: obj.checkout_password_required
          })
     })
     store.commit('saveStores', list)
     return store.state.stores
   }
-
 }
 
 export default new Vuex.Store({

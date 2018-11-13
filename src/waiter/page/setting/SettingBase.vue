@@ -64,6 +64,7 @@ export default {
     let storeId = _.toInteger( getStore('storeId') )
     if(storeId > 0){
       this.form.storeId = storeId
+      this.form.checkoutPasswordRequired = this.storeInfo.checkoutPasswordRequired
     }
   },
   computed: {
@@ -96,7 +97,7 @@ export default {
       if( selectedStore ){
         setStore('storeId', storeId)
         this.$store.commit('saveStore', selectedStore)
-
+        // same store.
         this.$message({
           type: 'success',
           message: "恭喜你，配置提交成功"
