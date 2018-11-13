@@ -88,6 +88,27 @@ export const addExpenseItem = data => fetch('/api/v1/expense_items/', data, 'POS
  */
 export const deleteExpenseItem = id => fetch('/api/v1/expense_items/'+id, {} , 'DELETE');
 
+/**
+ * 获取stockItem列表
+ * params: stock_location_id
+ */
+export const findStockItems = (data) => fetch('/api/v1/stock_items/search', data, 'POST');
+
+/**
+ * 获取stockMovement列表
+ */
+export const findStockMovements = data => fetch('/api/v1/stock_movements/search', data, 'POST');
+
+/**
+ * 添加stockMovement信息
+ *  stock_location_id
+ *  stock_movement[variant_id]
+ *  stock_movement[store_id]
+ *  stock_movement[user_id]
+ *  stock_movement[price]
+ */
+export const addStockMovement = (data) => fetch('/api/v1/stock_movements', data, 'POST');
+
 
 /**
  * api请求量
@@ -336,19 +357,6 @@ export const findCustomers = data => fetch('/api/v1/customers/search', data, 'PO
  */
 
 export const getCustomerStatis = user_id => fetch('/api/v1/customers/' + user_id+'/statis');
-
-/**
- * 获取所有客户信息
- */
-
-export const findCustomers_1 = data => fetch('/api/v1/customers/search_1', data, 'POST');
-
-
-/**
- * 根据电话号码搜索得到客户信息
- */
-
-export const findCustomers_2 = data => fetch('/api/v1/customers/search_2', data, 'POST');
 
 /**
  * 获取用户列表

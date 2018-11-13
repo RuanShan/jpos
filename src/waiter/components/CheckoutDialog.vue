@@ -106,9 +106,11 @@
     </div>
   </el-dialog>
   <el-dialog :visible="passwordDialogVisible"
-    <el-form-item label="会员支付密码" >
-      <el-input v-model="formData.paymentPassword" placeholder="" class="money align-right" type="password"></el-input>
-    </el-form-item>
+    <el-form :model="formData" :rules="rules" ref="formData" label-width="100px" class="checkout-form">
+      <el-form-item label="会员支付密码" >
+        <el-input v-model="formData.paymentPassword" placeholder="" class="money align-right" type="password"></el-input>
+      </el-form-item>
+    </el-form>
   </el-dialog>
 
 </div>

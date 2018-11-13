@@ -347,6 +347,11 @@
               <ExpenseItems @current-expense-item-changed="handleCurrentGroupChanged"></ExpenseItems>
               <!-- 取单组件 End-->
             </el-tab-pane>
+            <el-tab-pane label="库存"  name="stockMovementTab" class="ready-order">
+              <!-- 取单组件 Start-->
+              <StockMovements @current-stock-movement-changed="handleCurrentGroupChanged"></StockMovements>
+              <!-- 取单组件 End-->
+            </el-tab-pane>
           </el-tabs>
         </div>
       </el-col>
@@ -426,6 +431,7 @@ import CheckoutDialog from "@/components/CheckoutDialog.vue"
 import MemberAdd from "./MemberAdd.vue"
 import OrderDelivery from "./OrderDelivery.vue"
 import ExpenseItems from "./ExpenseItems.vue"
+import StockMovements from "./StockMovements.vue"
 import _ from "lodash"
 
 import {
@@ -480,7 +486,8 @@ export default {
     CheckoutDialog,
     MemberAdd,
     OrderDelivery,
-    ExpenseItems
+    ExpenseItems,
+    StockMovements
   },
   computed: {
     customerId () {

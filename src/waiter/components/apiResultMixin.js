@@ -612,7 +612,50 @@ export var apiResultMixin = {
       }
       return item
     },
+    buildStockItems( result ){
+      const models = result.stock_items.map((model)=>{
+        return this.buildStockItem( model )
+      })
+      return models
+    },
+    buildStockItem( model){
+       // {
+       //     "id": 17,
+       //     "count_on_hand": 0,
+       //     "backorderable": false,
+       //     "stock_location_id": 1,
+       //     "variant_id": 17,
+       //     "variant": {
+       //         "id": 17,
+       //         "name": "保养鞋",
+       //         "sku": "YF-0000",
+       //         "price": "20.0",
+       //         "display_price": "¥20.00",
+       //         "options_text": "规格: 低规"
+       //     }
+       // }
+       const item = {
+         id: model.id,
+         variantId: model.variant_id,
+         stockLocationId: model.stock_location_id,
+         variantName: model.variant.name,
+         variantPrice: parseInt( model.variant.price )
+       }
+       return item
+    },
+    buildStockMovements( result ){
+      const models = result.stock_movements.map((model)=>{
+        let item = this.buildStockItem( model.stock_item )
+        item.id = model.id
+        item.quantity = model.quantity
+        item.stockItemId = model.stock_item_id
+        item.day = model.day
+        item.createdByName = model.created_by_name
+        return item
+      })
+      return models
 
+    },
     generateGroupNumber: function() {
       let timestamp = moment().format("YYMMDDHHmmss")
       return timestamp

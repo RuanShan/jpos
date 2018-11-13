@@ -58,18 +58,19 @@ export default {
       showLogin: false
     }
   },
-  mounted() {
+  async mounted() {
     this.showLogin = true
     this.$store.commit('resetUser')
     this.getCurrentUser().then((() => {
       console.log("get current user =>", this.userInfo)
       if (this.userInfo.id) {
-        this.initializeApp()
-        this.$message({
-          type: 'success',
-          message: '检测到您之前登录过，将自动登录'
+        this.initializeApp().then(()=>{
+          this.$message({
+            type: 'success',
+            message: '检测到您之前登录过，将自动登录'
+          })
+          this.redirectDefaultPage()          
         })
-        this.redirectDefaultPage()
       }
     }))
   },
@@ -119,10 +120,10 @@ export default {
         }
       })
     },
-    initializeApp() {
+    async initializeApp() {
       console.log("..initializeApp..")
       //初始化 localstorage storeId
-      this.getStores().then((stores) => {
+      await this.getStores().then((stores) => {
         let currentStore = stores.find((item) => {
           return item.id == this.localStoreId
         })
