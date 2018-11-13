@@ -471,7 +471,7 @@ export var apiResultMixin = {
       const statis = { orderTotal: 0, normalOrderTotal: 0, cardOrderTotal: 0 }
       statis.normalOrderTotal = parseInt(result.normal_order_total)
       statis.cardOrderTotal = parseInt(result.card_order_total)
-console.log( "buildCustomerStatis=", result, statis)
+      console.log( "buildCustomerStatis=", result, statis)
       return statis
     },
 
@@ -583,6 +583,36 @@ console.log( "buildCustomerStatis=", result, statis)
         item.displayCreatedAtTime = this.getDisplayTime( item.createdAt )
         return item
     },
+    buildLineItems( result ){
+      const models = result.line_items.map((model)=>{
+        return this.buildLineItem( model )
+      })
+      return models
+    },
+    buildLineItem( model ){
+      const item = {
+        id: model.id,
+        orderId: model.order_id,
+        groupNumber: model.group_number,
+        workerId: model.worker_id,
+        workAt: model.work_at,
+        cname: model.cname,
+        price: model.price,
+        state: model.state,
+        memo: model.memo,
+        workerName: model.worker_name,
+        storeName: model.store_name,
+        createdAt: moment(model.created_at)
+      }
+      item.displayCreatedAt = this.getDisplayDateTime( item.createdAt )
+      item.displayState = this.getLineItemDisplayState(item.state )
+      if( item.workAt){
+        item.workAt = moment(model.workAt)
+        item.displayWorkAt = this.getDisplayDateTime( item.workAt )
+      }
+      return item
+    },
+
     generateGroupNumber: function() {
       let timestamp = moment().format("YYMMDDHHmmss")
       return timestamp

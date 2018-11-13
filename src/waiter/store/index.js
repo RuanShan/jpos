@@ -94,7 +94,7 @@ const actions = {
     result.stores.forEach((obj)=>{
         list.push({id:obj.id, name:obj.name, docPrinter: obj.doc_printer_name,
           receiptPrinter: obj.receipt_printer_name, labelPrinter: obj.label_printer_name,
-          receiptTitle: obj.receipt_title, receiptFooter: obj.receipt_footer
+          receiptTitle: obj.receipt_title, receiptFooter: obj.receipt_footer, type: obj.type
          })
     })
     store.commit('saveStores', list)

@@ -124,6 +124,7 @@
             <StatisExpense  v-if="expenseTabVisible" ></StatisExpense>
           </el-tab-pane>
           <el-tab-pane label="工厂统计">
+            <StatisWorker  v-if="workerTabVisible" ></StatisWorker>
           </el-tab-pane>
           <el-tab-pane label="会员情况统计">
             <statis-member-case  v-if="memberTabVisible"  > </statis-member-case>
@@ -149,6 +150,7 @@ import StatisEachStateOrder from './StatisEachStateOrder.vue';
 import StatisMemberCase from './StatisMemberCase.vue';
 import StatisStaffClockIn from './StatisStaffClockIn.vue';
 import StatisExpense from './StatisExpense.vue';
+import StatisWorker from './StatisWorker.vue';
 
 export default {
   components: {
@@ -160,7 +162,8 @@ export default {
     "statis-each-state-order": StatisEachStateOrder,
     "statis-member-case": StatisMemberCase,
     "statis-staff-clock-in": StatisStaffClockIn,
-    StatisExpense
+    StatisExpense,
+    StatisWorker
   },
   data() {
     return {
@@ -170,6 +173,7 @@ export default {
       orderTabVisible: false,  //各个门店订单统计组件显示标志位
       cardTabVisible: true, //窗口显示标志位
       expenseTabVisible: false,
+      workerTabVisible: false,
       tabsNumber: '0', //字符串，从0开始，标签页的顺序值
       // stateValue: "", //門店選項
       // payValue: "", //支付方式选项
@@ -196,6 +200,7 @@ export default {
           this.expenseTabVisible = true;
           break;
         case "4":
+          this.workerTabVisible = true;
           break;
         case "5":
           this.memberTabVisible = true;

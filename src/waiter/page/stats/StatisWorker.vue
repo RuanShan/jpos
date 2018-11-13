@@ -59,17 +59,19 @@
     <el-table class="cel-scrollable-table" :data="tableData"  border>
       <el-table-column prop="id" label="ID" width="80">
       </el-table-column>
-      <el-table-column prop="storeName" label="所属门店" width="140">
+      <el-table-column prop="storeName" label="所属门店" width="150">
       </el-table-column>
-      <el-table-column prop="cname" label="支付项目" width="140">
+      <el-table-column prop="displayCreatedAt" label="订单日期" width="140">
       </el-table-column>
-      <el-table-column prop="price" label="金额" width="140">
+      <el-table-column prop="cname" label="工作内容" >
       </el-table-column>
-      <el-table-column prop="userName" label="操作人" width="80">
-      </el-table-column>
-
-      <el-table-column prop="displayCreatedAt" label="创建日期" width="140"></el-table-column>
       <el-table-column prop="memo" label="备注">
+      </el-table-column>
+      <el-table-column prop="displayState" label="工作状态" width="120">
+      </el-table-column>
+      <el-table-column prop="workerName" label="工人" width="120">
+      </el-table-column>
+      <el-table-column prop="displayWorkAt" label="验收时间" width="120">
       </el-table-column>
     </el-table>
 
@@ -92,7 +94,7 @@
 <script>
 import moment from 'moment'
 import {
-  findExpenseItems
+  findLineItems
 } from '@/api/getData'
 
 export default {
@@ -161,10 +163,10 @@ export default {
   methods: {
     async initData() {
       let params = this.buildParams()
-      let result = await findExpenseItems(params)
+      let result = await findLineItems(params)
 
       this.totalPage = result.total_count
-      this.tableData = this.buildExpenseItems(result)
+      this.tableData = this.buildLineItems(result)
       console.log("result=", result, "this.tableData = ", this.tableData)
     },
     buildParams() {
@@ -172,8 +174,13 @@ export default {
         page: this.currentPage, //分页器选择的当前页数
         per_page: this.perPage, //每页显示12行数据
         q: {
+          line_item_groups_state_in: ['processing', 'processed', 'ready_for_store']
         }
       }
+      //if(!this.isLocationFactory()){
+      //  //如果不是工厂，添加当前店铺作为查询条件
+      //  params.q.store_id_eq = this.storeId
+      //}
 
       if ( this.computedStartAt && this.computedEndAt){
         params.q.created_at_gteq= this.computedStartAt

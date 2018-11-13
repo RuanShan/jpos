@@ -486,6 +486,14 @@ export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/' + nu
  */
 export const getLineItemGroupByNumber = number => fetch('/api/v1/line_item_groups/' + number)
 
+
+/**
+ * 查询 LineItem, 工作量统计
+ * data: page,
+ *       q - store_id_eq
+ */
+export const findLineItems = data => fetch('/api/v1/line_items/search', data, 'POST')
+
 /**
  * update LineItem worker_id列表
  * data: worker_id,

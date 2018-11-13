@@ -3,10 +3,6 @@ import {
   mapActions
 } from 'vuex'
 
-export var userDataMixin = {
-
-}
-
 export var orderDataMixin = {
   computed: {
     ...mapState([
@@ -96,7 +92,10 @@ export var orderDataMixin = {
       let date = new Date()
       return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
     },
-
+    //判断软件设置的地点是否为工厂
+    isLocationFactory(){
+      return /Factory/.test(this.storeInfo.type)
+    }
   }
 
 }

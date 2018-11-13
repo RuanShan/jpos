@@ -343,6 +343,10 @@ export default {
           state_in: [this.orderState, this.nextOrderState]
         }
       }
+      if(!this.isLocationFactory()){
+        //如果不是工厂，添加当前店铺作为查询条件
+        params.q.store_id_eq = this.storeId
+      }
       if ( this.formData.keyword && this.formData.keyword.length > 0) {
         // item.number || item.users.username
         params.q.number_cont = this.formData.keyword
