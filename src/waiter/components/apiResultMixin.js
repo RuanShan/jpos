@@ -1,6 +1,10 @@
 import moment from 'moment'
 import _ from "lodash"
-
+import {
+  getLineItemGroupImageUploadPath,
+  getExpenseItemImageUploadPath
+}
+from '@/api/getData'
 //import {
 //  baseImgPath
 //} from "@/config/env"
@@ -69,23 +73,8 @@ export var apiResultMixin = {
       order.displayCreatedAt = this.getDisplayDateTime(order.createdAt)
       order.displayPaymentState = this.getOrderDisplayPaymentState( order.paymentState )
       orderResult.line_item_groups.forEach((groupResult, i) => {
-        let group = {
-          id: groupResult.id,
-          orderId: groupResult.order_id,
-          order: order,
-          number: groupResult.number,
-          state: groupResult.state,
-          paymentState: groupResult.payment_state,
-          lineItems: [],
-          images: [],
-          name: groupResult.name,
-          price: parseInt(groupResult.price),
-          createdAt: moment(groupResult.created_at),
-          missingImageUrl: groupResult.missing_image_url
-        }
-        group.displayCreatedAt = this.getDisplayDateTime(group.createdAt)
-        group.displayState = this.getOrderDisplayState(group.state)
-        group.displayPaymentState = this.getGroupDisplayPaymentState( group.paymentState )
+        let group = this.buildLineItemGroup( groupResult )
+
         order.lineItemGroups.push(group)
         let groupedlineItems = []
         orderResult.line_items.forEach((lineItemResult)=> {
@@ -111,25 +100,8 @@ export var apiResultMixin = {
             groupedlineItems.push(lineItem)
           }
         })
-        // 如果图片存在
-        if( groupResult.images ){
-          groupResult.images.forEach(function(imageResult) {
-            const image = {
-              type: "GroupImage",
-              id: imageResult.id,
-              position: imageResult.position,
-              group: group,
-              groupId: imageResult.viewable_id,
-              miniUrl: imageResult.mini_url,
-              bigUrl: imageResult.big_url,
-              originalUrl: imageResult.original_url
-            }
-            group.images.push(image)
-          })
-        }
-        //有很多地方使用物品图片，
-        group.defulatImageUrl = ( group.images.length>0 ? group.images[0].miniUrl : group.missingImageUrl )
         group.lineItems = groupedlineItems
+
       })
       // groupLineItems 当前订单的所有活
       const items = order.lineItemGroups.map((group) => {
@@ -206,6 +178,7 @@ export var apiResultMixin = {
     },
 
     buildLineItemGroup: function(result) {
+
       let item = result
       let group = {
         id: item.id,
@@ -227,33 +200,40 @@ export var apiResultMixin = {
             id: imageResult.id,
             position: imageResult.position,
             group: group,
-            groupId: imageResult.viewable_id,
+            viewableId: imageResult.viewable_id,
             miniUrl: imageResult.mini_url,
             bigUrl: imageResult.big_url,
             originalUrl: imageResult.original_url
           }
+          image.groupId = image.viewableId
+          image.url = image.bigUrl
           group.images.push(image)
         })
       }
       //有很多地方使用物品图片，
+      group.imageUploadPath =  getLineItemGroupImageUploadPath( group.id )
       group.defulatImageUrl = ( group.images.length>0 ? group.images[0].miniUrl : group.missingImageUrl )
       group.displayCreatedAt = this.getDisplayDateTime( group.createdAt )
       group.displayState = this.getOrderDisplayState(group.state)
+      group.displayPaymentState = this.getGroupDisplayPaymentState( group.paymentState )
 
-      item.line_items.forEach(function(lineItemResult) {
-        const lineItem = {
-          id: lineItemResult.id,
-          orderId: lineItemResult.order_id,
-          group: group,
-          groupNumber: lineItemResult.group_number,
-          worker_id: lineItemResult.worker_id,
-          cname: lineItemResult.cname,
-          price: lineItemResult.price,
-          state: lineItemResult.state,
-          memo: lineItemResult.memo
-        }
-        group.lineItems.push(lineItem)
-      })
+      if( item.line_items ){
+        item.line_items.forEach(function(lineItemResult) {
+          const lineItem = {
+            id: lineItemResult.id,
+            orderId: lineItemResult.order_id,
+            group: group,
+            groupNumber: lineItemResult.group_number,
+            worker_id: lineItemResult.worker_id,
+            cname: lineItemResult.cname,
+            price: lineItemResult.price,
+            state: lineItemResult.state,
+            memo: lineItemResult.memo
+          }
+          group.lineItems.push(lineItem)
+        })
+      }
+
       return group
     },
     buildUsers: function(result) {
@@ -578,7 +558,25 @@ export var apiResultMixin = {
           day: moment(model.day),
           entryDay: moment(model.entry_day),
           createdAt: moment(model.created_at),
+          images: []
         }
+        if( model.images ){
+          model.images.forEach(function(imageResult) {
+            const image = {
+              type: "ExpenseImage",
+              id: imageResult.id,
+              position: imageResult.position,
+              expense: item,
+              viewableId: imageResult.viewable_id,
+              miniUrl: imageResult.mini_url,
+              bigUrl: imageResult.big_url,
+              originalUrl: imageResult.original_url
+            }
+            image.url= image.bigUrl // el-upload required
+            item.images.push(image)
+          })
+        }
+        item.imageUploadPath = getExpenseItemImageUploadPath( item.id )
         item.displayCreatedAt = this.getDisplayDateTime( item.createdAt )
         item.displayCreatedAtTime = this.getDisplayTime( item.createdAt )
         return item

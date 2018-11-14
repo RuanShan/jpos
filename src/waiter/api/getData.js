@@ -4,7 +4,8 @@ import { baseUrl } from '@/config/env'
 /**************************************************************************
  * jpos spree api
  **************************************************************************/
-export const getLineItemGroupImageUploadPath=( id ) => { return baseUrl+'/api/v1/line_item_groups/'+id+'/images'; }
+ export const getLineItemGroupImageUploadPath=( id ) => { return baseUrl+'/api/v1/line_item_groups/'+id+'/images'; }
+ export const getExpenseItemImageUploadPath=( id ) => { return baseUrl+'/api/v1/expense_items/'+id+'/images'; }
 
 /**
  * 检查电话号码是否存在
@@ -84,9 +85,20 @@ export const findExpenseItems = data => fetch('/api/v1/expense_items/search', da
 export const addExpenseItem = data => fetch('/api/v1/expense_items/', data, 'POST');
 
 /**
+ *  获取费用支出
+ */
+export const getExpenseItem = id => fetch('/api/v1/expense_items/'+id );
+
+/**
  * 删除费用支出
  */
 export const deleteExpenseItem = id => fetch('/api/v1/expense_items/'+id, {} , 'DELETE');
+
+/**
+ * 删除费用图片
+ */
+export const deleteExpenseItemImage = (id, imageId) => fetch('/api/v1/expense_items/' + id+'/images/'+imageId, {}, 'DELETE');
+
 
 /**
  * 获取stockItem列表

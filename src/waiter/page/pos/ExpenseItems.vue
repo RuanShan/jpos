@@ -64,7 +64,7 @@
       </div>
     </div>
     <div class="order-item-list"  style="top:150px;">
-      <el-table :data="expenseItemList" border stripe style="width:100%;" class="fillcontain">
+      <el-table :data="expenseItemList" border stripe style="width:100%;" class="fillcontain" highlight-current-row  @current-change="handleCurrentGroupChange">
         <el-table-column type="index" label="序号" width="60"></el-table-column>
         <el-table-column prop="displayCreatedAt" label="日期" width="120"></el-table-column>
         <el-table-column prop="cname" label="支付项目"></el-table-column>
@@ -96,7 +96,7 @@
 import _ from "lodash"
 import moment from "moment"
 import {
-  findExpenseItems, addExpenseItem, deleteExpenseItem, getExpenses //
+  findExpenseItems, addExpenseItem, deleteExpenseItem, getExpenses, getExpenseItem //
 } from "@/api/getData"
 import {
   DialogMixin
@@ -229,6 +229,14 @@ console.log( "valid= ", valid, "formName", formName)
         });
 
     },
+    async handleCurrentGroupChange(row){
+      const result = await getExpenseItem(row.id)
+      row.detail = this.buildExpenseItem(result)
+      this.currentRow = row
+
+      console.log( "currentRow", this.currentRow)
+      this.$emit('current-item-changed', row.detail)
+    }
   }
 }
 </script>

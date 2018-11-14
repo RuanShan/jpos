@@ -180,8 +180,10 @@
         }
         .image-list{
           padding: 0 10px 10px;
-          .el-upload.el-upload--picture-card{
-            display: none;
+          &.group-image-list{
+            .el-upload.el-upload--picture-card{
+              display: none;
+            }
           }
         }
     }
@@ -259,7 +261,7 @@
     <el-row class="pos-content">
       <el-col :span="13" class="pos-order">
         <div class="wrap">
-          <el-tabs v-model="selectedTaxonName" @tab-click="handleTabClick">
+          <el-tabs v-model="selectedTabName" @tab-click="handleTabClick">
             <el-tab-pane label="订单"  name="newOrderTab" class="new-order">
               <div class="customer-container clear">
                 <el-form ref="customerForm" size="mini" :inline="true" class="search-form">
@@ -344,12 +346,12 @@
             </el-tab-pane>
             <el-tab-pane label="支出"  name="expenseItemTab" class="ready-order">
               <!-- 取单组件 Start-->
-              <ExpenseItems @current-expense-item-changed="handleCurrentGroupChanged"></ExpenseItems>
+              <ExpenseItems @current-item-changed="handleCurrentGroupChanged"></ExpenseItems>
               <!-- 取单组件 End-->
             </el-tab-pane>
             <el-tab-pane label="库存"  name="stockMovementTab" class="ready-order">
               <!-- 取单组件 Start-->
-              <StockMovements @current-stock-movement-changed="handleCurrentGroupChanged"></StockMovements>
+              <StockMovements @current-item-changed="handleCurrentGroupChanged"></StockMovements>
               <!-- 取单组件 End-->
             </el-tab-pane>
           </el-tabs>
@@ -357,7 +359,7 @@
       </el-col>
       <el-col :span="11" class="goods-type">
         <div class="wrap ">
-          <el-tabs v-show="selectedTaxonName=='newOrderTab'">
+          <el-tabs v-show="selectedTabName=='newOrderTab'">
             <el-tab-pane v-for="menu in menuList" :key="menu.id" v-bind:label="menu.name">
               <div>
                 <el-row class="cook-list">
@@ -387,12 +389,12 @@
               </div>
             </el-tab-pane>
           </el-tabs>
-          <el-tabs v-show="selectedTaxonName=='readyOrderTab'" >
+          <el-tabs v-show="selectedTabName=='readyOrderTab'" >
             <el-tab-pane  label="物品图片">
               <div class="empty" v-show="computedGroupImages.length==0">
                 暂无数据
               </div>
-              <div class="image-list">
+              <div class="group-image-list image-list">
                 <el-upload
                   action=""
                   :auto-upload="false"
@@ -406,13 +408,19 @@
               </div>
             </el-tab-pane>
           </el-tabs>
-          <el-tabs v-show="selectedTaxonName=='expenseItemTab'">
+          <el-tabs v-show="selectedTabName=='expenseItemTab'">
             <el-tab-pane  label="费用图片" >
-              <div class="empty" v-show="computedGroupImages.length==0">
-                暂无数据
-              </div>
-              <div class="image-list">
-                this is expense item tab
+              <div class="expense-image-list image-list">
+                <el-upload
+                  :file-list="computedGroupImages"
+                  :action="computedImageUploadPath"
+                  name="image[attachment]"
+                  list-type="picture-card"
+                  :with-credentials="true"
+                  :on-remove="handleRemoveImage"
+                  :on-preview="handlePreviewImage" v-show="computedImageUploadPath">
+                  <i class="el-icon-plus"></i>
+                </el-upload>
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -438,7 +446,8 @@ import {
   foodMenu,
   getProducts,
   findCustomers,
-  getCustomer
+  getCustomer,
+  deleteExpenseItemImage
 } from "@/api/getData";
 import loading from "@/components/common/loading";
 import {
@@ -454,7 +463,7 @@ export default {
       shopDetailData: null, //商铺详情
       menuList: [], //食品列表
       menuIndex: 0, //已选菜单索引值，默认为0
-      selectedTaxonName: 'newOrderTab',
+      selectedTabName: 'newOrderTab',
       productList: [],
       baseImgPath,
       defaultCustomer: {
@@ -467,8 +476,7 @@ export default {
         code: "无"
       },
       orderItemList: [], //订单 {variantId, price, quantity}
-      selectedGroup: null,
-      selectedExpenseItem: null,
+      selectedItems: {}, // { tabname: selectedItem}
       checkoutDialogVisible: false,
       memberAddWindowVisible: false,
       customerList: [], //按关键字搜索到的客户列表
@@ -577,22 +585,12 @@ export default {
       return this.maxGroupPosition + 1
     },
     computedGroupImages(){
-      if(this.selectedGroup==null) { return []
-      }else{
-        return this.selectedGroup.images.map( (image)=>{
-          return {name: image.name, url: image.bigUrl}
-        })
-      }
-
+      let selectedItem = this.selectedItems[this.selectedTabName]
+      return selectedItem ? selectedItem.images : []
     },
-    computedExpenseItemImages(){
-      if(this.selectedExpenseItem==null) {
-        return []
-      }else{
-        return this.selectedExpenseItem.images.map( (image)=>{
-          return {name: image.name, url: image.bigUrl}
-        })
-      }
+    computedImageUploadPath(){
+      let selectedItem = this.selectedItems[this.selectedTabName]
+      return selectedItem ? selectedItem.imageUploadPath : ''
     }
   },
   created() {
@@ -717,7 +715,7 @@ export default {
     },
     // select order tabs
     handleTabClick(tab, event) {
-      console.log(this.selectedTaxonName)
+      console.log(this.selectedTabName)
 
     },
     // 客户搜索事件处理
@@ -765,20 +763,9 @@ export default {
     // in ready group tab, current group change event
     handleCurrentGroupChanged(selectedGroup){
       console.log( "selectedGroup=", selectedGroup)
-      if( selectedGroup ){
-        this.selectedGroup = selectedGroup
-      }else{
-        this.selectedGroup = null
-      }
+      this.$set(this.selectedItems, this.selectedTabName, selectedGroup)
     },
-    // in expense items tab, current group change event
-    handleCurrentExpenseItemChanged(selectedExpenseItem){
-      if( selectedExpenseItem ){
-        this.selectedExpenseItem = selectedExpenseItem
-      }else{
-        this.selectedExpenseItem = null
-      }
-    },
+
     findProductByVariantId(variantId) {
       let product = this.productList.find((product) => {
         let vids = product.variants.map((v) => {
@@ -802,6 +789,11 @@ export default {
       console.log(" handlePreviewImage", file)
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+    },
+    handleRemoveImage(file, fileList) {
+      deleteExpenseItemImage( file.viewableId, file.id ).then(()=>{
+        console.log(file, fileList);
+      })
     },
     getDiscountOfVariant(variantId) {
       // 找到这个订单对应的商品

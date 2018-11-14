@@ -41,6 +41,10 @@
 <script>
 import _ from 'lodash'
 import {setStore, getStore } from "@/config/mUtils"
+import {
+  updateStore
+}
+from '@/api/getData'
 
 export default {
   data() {
@@ -86,6 +90,12 @@ export default {
     handleCancel() {
       this.form.stateValue = "";
     },
+    buildParams(){
+      let params = { store: {
+        checkout_password_required: this.form.checkoutPasswordRequired
+       } }
+      return params
+    },
     handleSave(){
       let storeId = this.form.storeId
 
@@ -95,13 +105,19 @@ export default {
         return item.id == storeId
       })
       if( selectedStore ){
-        setStore('storeId', storeId)
-        this.$store.commit('saveStore', selectedStore)
-        // same store.
-        this.$message({
-          type: 'success',
-          message: "恭喜你，配置提交成功"
-        });
+        updateStore( storeId, this.buildParams()).then((res)=>{
+          if( res.id ){
+            setStore('storeId', storeId)
+            let store = this.buildStore( res )
+            this.$store.commit('saveStore', store)
+
+            this.$message({
+              type: 'success',
+              message: "恭喜你，配置提交成功"
+            })
+
+          }
+        })
       }
 
     }
