@@ -561,6 +561,12 @@ export const getUserCards = (userId) => fetch('/api/v1/users/' + userId + '/card
  */
 export const updateCard = (cardId, data ) => fetch('/api/v1/cards/' + cardId, data, 'PUT');
 
+/**
+ * replace card  客户更换会员卡，如：会员卡丢失
+ * params
+ *   target_code-
+ */
+export const replaceCard = (cardId, data ) => fetch('/api/v1/cards/' + cardId +'/replace', data, 'PUT');
 
 /**
  * get card transactions 根据会员卡Id获取会员卡充值记录

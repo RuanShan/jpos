@@ -69,7 +69,8 @@
 
 <template>
 <div class="member-container " v-if="customerData">
-  <card-form :dialog-visible.sync="cardFormVisible" :customer-data="customerData" @card-created-event="handleCustomerChanged"></card-form>
+  <CardTransfer :dialog-visible.sync="cardTransferVisible" :customer-data="customerData" :card-data="cardData"  @card-transfered-event="handleCardChanged"></CardTransfer>
+  <card-form :dialog-visible.sync="cardFormVisible" :customer-data="customerData" @card-created-event="handleCardChanged"></card-form>
   <member-card-recharge :dialog-visible.sync="displayRecharge" :customer-data="customerData" :card-data="cardData" @deposit-order-created-event="handleDepositOrderCreated"></member-card-recharge>
   <member-edit :dialog-visible.sync="displayMemberEdit" :customer-data="customerData" @customer-changed-event="handleCustomerChanged"></member-edit>
   <member-card-edit :dialog-visible.sync="displayMemberCardEdit" :customer-data.sync="customerData" :card-data.sync="cardData" @card-changed-event="handleCardChanged"></member-card-edit>
@@ -136,6 +137,7 @@
                   <el-button-group v-show="item.id" >
                     <el-button type="success" size="mini" @click="cardEdit(item)">会员卡编辑</el-button>
                     <el-button type="success" size="mini" @click="cardRecharge(item)">会员卡充值</el-button>
+                    <el-button type="success" size="mini" @click="cardTransfer(item)">会员卡转卡</el-button>
                   </el-button-group>
 
                 </div>
@@ -150,7 +152,7 @@
                   <th>会员卡级别</th>
                   <td>{{item.name}}</td>
                   <th>会员卡状态</th>
-                  <td>{{item.displayStatus}}</td>
+                  <td>{{item.displayState}}</td>
                 </tr>
                 <tr>
                   <th>开卡门店</th>
@@ -227,6 +229,7 @@ import {
   getOrder
 } from "@/api/getData";
 import CardForm from "@/components/common/CardForm.vue";
+import CardTransfer from "@/components/common/CardTransfer.vue";
 import CardOrderList from "@/components/common/CardOrderList.vue";
 import CardDepositList from "@/components/common/CardDepositList.vue";
 import MemberCardRecharge from "./MemberCardRecharge.vue";
@@ -240,6 +243,7 @@ export default {
   props: ["dialogVisible", "customerData"],
   mixins: [DialogMixin],
   components: {
+    CardTransfer,
     "card-form": CardForm,
     "member-card-recharge": MemberCardRecharge,
     "member-expense-calendar": MemberExpenseCalendar,
@@ -253,6 +257,7 @@ export default {
     return {
       customer: null,
       cardFormVisible: false,
+      cardTransferVisible: false,
       tabsNumber: "", //每次点击别的tab是tabsNumber动态变化
       amountRemaining: "", //每张卡的余额
       statis: {},
@@ -341,8 +346,13 @@ export default {
     },
     //当前会员卡编辑按钮单击事件处理函数-----
     cardEdit(item) {
-      this.displayMemberCardEdit = true
       this.cardData = item
+      this.displayMemberCardEdit = true
+    },
+    //当前会员卡转卡按钮单击事件处理函数-----
+    cardTransfer(item) {
+      this.cardData = item
+      this.cardTransferVisible = true
     },
     //添加会员卡点击事件处理函数-----
     addCardButtonClicked() {
@@ -362,12 +372,17 @@ export default {
       this.$emit("customer-changed-event", newCustomer);
     },
     handleCardChanged(changedCard) {
+      //添加会员卡或者修改会员卡信息，
       //构造新的客户对象，
       const newCustomer = Object.assign({}, this.customerData)
       let index = newCustomer.cards.findIndex((card) => {
         return changedCard.id == card.id
       })
-      newCustomer.cards.splice(index, 1, changedCard)
+      if( index >=0){ //修改
+        newCustomer.cards[index]= changedCard
+      }else{// 添加
+        newCustomer.cards.push( changedCard )
+      }
       this.handleCustomerChanged(newCustomer)
     },
     handleDepositOrderCreated(changedCard) {

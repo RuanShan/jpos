@@ -26,7 +26,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-Jpos-Site-Id': 1
+        'X-Jpos-Site-Id': store.state.storeId
         //'X-Spree-Token': store.state.userInfo.apiKey
       },
       mode: 'cors',

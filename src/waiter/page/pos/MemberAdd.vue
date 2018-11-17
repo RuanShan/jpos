@@ -39,7 +39,7 @@
               </el-form-item>
               <el-form-item label="性别" prop="gender">
                 <el-select v-model="memberFormData.gender" placeholder="请选择" style="width:100%">
-                  <el-option v-for="item in sex" :key="item.value" :value="item.value">
+                  <el-option v-for="item in sex" :key="item.value" :value="item.value" :label="item.label">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -167,13 +167,15 @@ export default {
         mobile: "",
         birth: "",
         address: "",
-        gender: "男",
+        gender: 1,
         memo: ''
       },
       sex: [{
-        value: '男',
+        label: '男',
+        value: 1,
       }, {
-        value: '女',
+        label: '女',
+        value: 0,
       }],
       cardFormData: {
         code: "",
@@ -317,6 +319,7 @@ export default {
         paymentPassword: this.memberFormData.paymentPassword,
         address: this.memberFormData.address,
         birth: this.memberFormData.birth,
+        gender: this.memberFormData.gender,
         store_id: this.storeId,
         memo: this.memberFormData.memo
       }
@@ -326,6 +329,7 @@ export default {
         user.cards_attributes = [{ store_id: this.storeId, code: this.cardFormData.code, variant_id: this.cardFormData.variantId, expire_at: this.cardFormData.expireAt, memo: this.cardFormData.memo  }]
 
         order = {
+          store_id: this.storeId,
           payments: [
             { payment_method_id: this.cardFormData.paymentMethodId, amount: this.cardFormData.amount }
           ]

@@ -148,7 +148,7 @@ export var apiResultMixin = {
             model.displayCreatedAt =this.getDisplayDateTime( model.createdAt )
             order.cardTransactions.push(model)
         })
-        // 通常一个订单对应一条充值记录
+        // 通常一个订单对应一条充值记录或者一条消费记录
         order.cardTransaction = order.cardTransactions[0]
       }
       return order
@@ -467,7 +467,8 @@ export var apiResultMixin = {
         amountUsed: parseInt(model.amount_used), // 使用钱数
         discountPercent: parseInt(model.discount_percent),
         discountAmount: parseInt(model.discount_amount),
-        status: model.status, //enabled:可用， disabled：不可用
+        //status: model.status, //enabled:可用， disabled：不可用
+        state: model.state, //enabled:可用， disabled：不可用, replaced: 已转卡
         code: (model.code.length < 12 ? model.code : model.code.slice(0, 12)), // 显示前12位
         variantId: model.variant_id,
         productId: model.product_id,
@@ -485,7 +486,7 @@ export var apiResultMixin = {
 
       card.displayCreatedDate = this.getDisplayDate( card.createdAt)
       card.displayStyle = this.getCardDisplayStyle( card.style)
-      card.displayStatus = this.getCardDisplayStatus( card.status)
+      card.displayState = this.getCardDisplayState( card.state)
 
       return card
     },
@@ -673,8 +674,11 @@ export var apiResultMixin = {
     getCardDisplayStyle(style) {
       return style == "prepaid" ? "充值卡" : "次卡" //prepaid 充值卡， counts 次卡
     },
-    getCardDisplayStatus(status) {
-      return status == "enabled" ? "可用" : "不可用" //prepaid 充值卡， counts 次卡
+    getCardDisplayState(state) {
+      if( state == "enabled") return "可用";
+      if( state == "disabled") return "不可用";
+      if( state == "replaced") return "已转卡";
+      return "未知"
     },
     getOrderDisplayState(state) {
       if (state == "pending") {

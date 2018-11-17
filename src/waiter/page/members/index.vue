@@ -29,7 +29,17 @@
       right: 18px;
       bottom: 60px;
       background-color: #ffffff;
-
+      .el-tag{
+        &.enabled{
+          color: #67C23A;
+        }
+        &.replaced{
+          color: #E6A23C;
+        }
+        &.disabled{
+          color: #909399;
+        }
+      }
     }
     .pagination-wrap{
        position: absolute;
@@ -76,7 +86,11 @@
                 </el-table-column>
                 <el-table-column  label="卡号" >
                   <template slot-scope="scope">
-                    <el-tag  v-for="(item, index) in scope.row.cards" :key="item.id">{{item.code}}
+                    <el-tag  v-for="(item, index) in scope.row.cards" :key="item.id" :class="item.state">
+                      <i class="el-icon-circle-check-outline" v-show="item.state=='enabled'"></i>
+                      <i class="el-icon-circle-close-outline" v-show="item.state=='disabled'"></i>
+                      <i class="el-icon-refresh" v-show="item.state=='replaced'"></i>
+                      {{item.code}}
                     </el-tag>
                   </template>
                 </el-table-column>

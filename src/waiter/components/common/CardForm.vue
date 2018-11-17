@@ -45,7 +45,6 @@
 
             <el-form-item  >
               <div class="right">
-                <el-button @click="fillIn()" type="danger">测试填入</el-button>
                 <el-button type="primary" @click="submitForm">确 定</el-button>
                 <el-button @click="handleClose">取 消</el-button>
               </div>
@@ -61,14 +60,12 @@ import moment from 'moment'
 import {
   DialogMixin
 } from "@/components/mixin/DialogMixin"
-import {
-  apiResultMixin
-} from '@/components/apiResultMixin'
+
 import { checkout } from "@/api/getData";
 
 export default {
   props: ["customerData", "dialogVisible"],
-  mixins: [DialogMixin, apiResultMixin],
+  mixins: [DialogMixin],
   data() {
     return {
       paymentMethodList: [      ],
@@ -142,7 +139,7 @@ export default {
           checkout( {order: orderParams} ).then((result)=>{
             if( result.id ){
               let order = this.buildOrder( result )
-              this.$emit( 'card-created-event', order.customer )
+              this.$emit( 'card-created-event', order.cardTransaction.card )
               this.$message( {
                 message: '恭喜你，会员卡创建成功',
                 type: 'success'

@@ -21,7 +21,7 @@
           <el-input v-model="cardFormData.name" disabled></el-input>
         </el-form-item>
         <el-form-item label="是否可用">
-          <el-radio-group v-model="cardFormData.status">
+          <el-radio-group v-model="cardFormData.state">
             <el-radio label="enabled">可用</el-radio>
             <el-radio label="disabled">禁用</el-radio>
           </el-radio-group>
@@ -88,7 +88,7 @@ export default {
       this.$refs['cardForm'].validate((valid) => {
         if (valid) {
           let params = {
-            card: { status: this.cardFormData.status,  memo: this.cardFormData.memo, expire_at: this.cardFormData.expireAt  }
+            card: { state: this.cardFormData.state,  memo: this.cardFormData.memo, expire_at: this.cardFormData.expireAt  }
           }
           updateCard( this.cardData.id, params ).then((result) => {
             if (result.id) {
