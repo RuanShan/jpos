@@ -25,7 +25,7 @@
 
       <el-row type="flex" justify="center">
         <el-col :span="10">
-          <el-form :model="memberFormData" :rules="rules" ref="memberFormData" status-icon label-width="100px" class="new-member-form">
+          <el-form :model="memberFormData" :rules="memberRules" ref="memberFormData" status-icon label-width="100px" class="new-member-form">
             <el-card class="box-card">
               <div slot="header" class="clearfix">
                 <span>客户基本信息</span>
@@ -59,7 +59,7 @@
 
         </el-col>
         <el-col :span="10" v-show="cardFlag">
-          <el-form :model="cardFormData" :rules="rules" ref="cardFormData" status-icon label-width="100px" class="new-member-form">
+          <el-form :model="cardFormData" :rules="cardRules" ref="cardFormData" status-icon label-width="100px" class="new-member-form">
             <el-card class="box-card">
               <div slot="header" class="clearfix">
                 <span>会员卡信息</span>
@@ -79,8 +79,8 @@
                     format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 100%;" :pickerOptions="pickerOptions"></el-date-picker>
                 </el-form-item>
               </el-form-item>
-              <el-form-item label="会员密码" prop="paymentPassword">
-                <el-input v-model="cardFormData.paymentPassword"></el-input>
+              <el-form-item label="会员密码" prop="paymentPassword" required>
+                <el-input v-model="cardFormData.paymentPassword" ></el-input>
               </el-form-item>
               <el-form-item label="付款方式" prop="paymentMethodId" required>
                 <el-select v-model="cardFormData.paymentMethodId" placeholder="请选择支付方式">
@@ -182,11 +182,18 @@ export default {
         amount: null,
         expireAt: "",
         paymentMethodId: null,
+        paymentPassword: null,
         variantId: null,
         memo: ""
       },
       returnData: {}, //添加会员方法,异步,请求服务器,调用getData.js中createCustomer
-      rules: {
+      memberRules: {
+        mobile: [
+          { type: "string", required: true, message: "请输入正确的电话号码", pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, trigger: "blur" },
+          { validator: validPhone, message: "电话号码已经注册过。", trigger: "blur" }
+        ]
+      },
+      cardRules: {
         code: [
           {
             required: true,
@@ -197,16 +204,12 @@ export default {
           },
           //{ validator: checkmemberNum, trigger: "blur" }
         ],
-
-        mobile: [
-          { type: "string", required: true, message: "请输入正确的电话号码", pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, trigger: "blur" },
-          { validator: validPhone, message: "电话号码已经注册过。", trigger: "blur" }
-        ],
         paymentPassword: [
+          { type: "string", required: true, message: "请输入支付密码"},
           {
             min: 6,
-            max: 11,
-            message: "长度在 6 到 11 个字符",
+            max: 12,
+            message: "长度在 6 到 12 个字符",
             trigger: "blur"
           }
         ],
@@ -220,6 +223,7 @@ export default {
           }
         ],
       },
+
       pickerOptions: {
          shortcuts: [{
            text: '一年',
@@ -316,7 +320,6 @@ export default {
       let user = {
         username: this.memberFormData.username,
         mobile: this.memberFormData.mobile,
-        paymentPassword: this.memberFormData.paymentPassword,
         address: this.memberFormData.address,
         birth: this.memberFormData.birth,
         gender: this.memberFormData.gender,
@@ -326,7 +329,9 @@ export default {
 
       let order = null
       if (this.isAddingCard) {
-        user.cards_attributes = [{ store_id: this.storeId, code: this.cardFormData.code, variant_id: this.cardFormData.variantId, expire_at: this.cardFormData.expireAt, memo: this.cardFormData.memo  }]
+        user.cards_attributes = [{ store_id: this.storeId,
+          paymentPassword: this.cardFormData.paymentPassword,
+          code: this.cardFormData.code, variant_id: this.cardFormData.variantId, expire_at: this.cardFormData.expireAt, memo: this.cardFormData.memo  }]
 
         order = {
           store_id: this.storeId,

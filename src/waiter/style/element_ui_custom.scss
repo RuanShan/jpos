@@ -42,7 +42,7 @@
   &::-webkit-scrollbar{
     width: 10px;
     height: 10px;
-  }  
+  }
 }
 /*ele 对话框 非全屏 样式 自定义*/
 .cel-dialog{
@@ -115,4 +115,20 @@
 
 .el-upload-list__item-actions i{
   color:#fff;
+}
+
+.cel-table{
+  th{
+      padding: 12px 6px;
+  }
+  td{
+    border: none;
+    padding: 12px 6px;
+    text-align: left;
+    word-break: keep-all;
+    white-space: nowrap;
+  }
+}
+.cel-table::before{
+  height: 0;
 }

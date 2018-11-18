@@ -1,19 +1,12 @@
 <style lang="scss">
 .card-transfer {
-  .el-table {
-    margin-bottom: 20px;
+  .dialog-body-inner{ width: 90%; margin: auto;}
+  .cel-table {
     th{
         width: 8em;
-        text-align: right;
-        padding: 12px 6px;
-    }
-    td{
-        padding: 12px 6px;
-        text-align: center;
-        word-break: keep-all;
-        white-space: nowrap;
     }
   }
+  fieldset{    margin-bottom: 20px;  }
 }
 </style>
 <template>
@@ -24,32 +17,36 @@
         <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
         <div>会员卡转卡</div>
       </div>
+      <div class="dialog-body-inner">
+        <fieldset >
+          <legend>会员信息</legend>
+          <div class="el-table cel-table">
+            <table>
+              <tr> <th>旧会员卡号 </th> <td>{{cardData.code}} </td> <th>开卡门店 </th><td>{{cardData.storeName}} </td>
+              </tr>
+              <tr>
+                <th>会员卡类型</th><td> {{cardData.displayStyle}}</td> <th>会员卡级别</th><td>{{cardData.name}} </td>
+              </tr>
+              <tr>
+                <th>开卡日期</th><td>{{cardData.displayCreatedAt}} </td> <th>到期日期</th><td> {{cardData.displayExpireAt}}</td>
+              </tr>
+            </table>
+          </div>
+        </fieldset>
 
-      <div class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
-        <table>
-          <tr> <th>旧会员卡号 </th> <td>{{cardData.code}} </td> <th>开卡门店 </th><td>{{cardData.storeName}} </td>
-          </tr>
-          <tr>
-            <th>会员卡类型</th><td> {{cardData.displayStyle}}</td> <th>会员卡级别</th><td>{{cardData.name}} </td>
-          </tr>
-          <tr>
-            <th>开卡日期</th><td>{{cardData.displayCreatedAt}} </td> <th>到期日期</th><td> {{cardData.displayExpireAt}}</td>
-          </tr>
-        </table>
+        <el-form :model="cardFormData" :rules="rules" ref="cardForm" status-icon label-width="100px" class="new-member-form">
+
+              <el-form-item label="新会员卡号" prop="code"  required>
+                <el-input v-model="cardFormData.code" ></el-input>
+              </el-form-item>
+              <el-form-item  >
+                <div class="right">
+                  <el-button type="primary" @click="submitForm">确 定</el-button>
+                  <el-button @click="handleClose">取 消</el-button>
+                </div>
+              </el-form-item>
+        </el-form>
       </div>
-
-      <el-form :model="cardFormData" :rules="rules" ref="cardForm" status-icon label-width="100px" class="new-member-form">
-
-            <el-form-item label="新会员卡号" prop="code"  required>
-              <el-input v-model="cardFormData.code" ></el-input>
-            </el-form-item>
-            <el-form-item  >
-              <div class="right">
-                <el-button type="primary" @click="submitForm">确 定</el-button>
-                <el-button @click="handleClose">取 消</el-button>
-              </div>
-            </el-form-item>
-      </el-form>
     </el-dialog >
   </div>
   <!-- 会员基本信息 END-->
@@ -122,8 +119,8 @@ export default {
               })
 
               console.log( " replaceCard =", cards )
-              this.$emit('card-changed-event', card[0])
-              this.$emit('card-changed-event', card[1])
+              this.$emit('card-changed-event', cards[0])
+              this.$emit('card-changed-event', cards[1])
               this.$message({
                 message: '恭喜你，会员卡更新成功',
                 type: 'success'
