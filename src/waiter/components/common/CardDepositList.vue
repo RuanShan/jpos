@@ -37,7 +37,7 @@
 
 
     <!-- 分页器 START-->
-    <div class="pagination-wrap"  >{{cardData.code}}
+    <div class="pagination-wrap"  >
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="totalCount">
       </el-pagination>
     </div>

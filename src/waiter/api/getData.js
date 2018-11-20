@@ -15,6 +15,13 @@ import { baseUrl } from '@/config/env'
 export const customerMobileValidate = (mobile, id) => fetch('/api/v1/customers/validate_mobile', {mobile,id} );
 
 /**
+ * 检查会员卡密码是否正确
+ * payment_password: 支付密码
+ * id: 会员卡id
+ */
+export const validateCardPassword = (id, payment_password) => fetch('/api/v1/cards/validate_password', {id,payment_password} );
+
+/**
  * 登陆
  *
  */

@@ -24,7 +24,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item class="member-form-item" label="会员支付是否必须密码" label-width="180px">
+        <el-form-item class="member-form-item" label="会员支付必须密码" label-width="180px">
           <el-switch class="select-options" v-model="form.checkoutPasswordRequired"   size="mini">
           </el-switch>
         </el-form-item>

@@ -112,7 +112,7 @@
 <script>
 import _ from "lodash"
 
-import { checkout, addPayments } from "@/api/getData"
+import { checkout, addPayments, validateCardPassword } from "@/api/getData"
 import {
   PrintUtil
 } from '@/utils/ipcService'
@@ -167,15 +167,22 @@ export default {
     availablePrepaidCard: function(){
       let card = this.customer.cards.find((card)=>{
         // 充值卡 && 可用状态 && 余额>0
-        return card.style == 'prepaid' && card.status == 'enabled' && card.amountRemaining > 0
+        return card.style == 'prepaid' && card.state == 'enabled' && card.amountRemaining > 0
       })
       return card
     },
     isShowPrepaidCard: function(){
       return this.availablePrepaidCard != null
     },
-    isShowCustomerPassword: function(){
-      return this.isShowPrepaidCard && this.customer.paymentPassword.length>0
+    isPasswordRequired: function(){
+
+      let isCardBelongsOtherStore = false
+      if( this.availablePrepaidCard ){
+        isCardBelongsOtherStore = (this.availablePrepaidCard.storeId == this.storeId)
+      }
+      //使用会员卡支付 && （店铺设置必须支付密码 || 这张卡是其它店铺的卡）
+      console.log("store.checkoutPasswordRequired=",this.storeInfo.checkoutPasswordRequired, isCardBelongsOtherStore)
+      return this.isShowPrepaidCard && (this.storeInfo.checkoutPasswordRequired || isCardBelongsOtherStore)
     },
     prepaidCardPaymentMethod: function(){
       return this.paymentMethodList.find((pm)=>{
@@ -240,8 +247,6 @@ export default {
 
       this.formData.paymentAmount = 0
       this.formData.prepaidCardAmount = 0
-
-
 
       if( this.availablePrepaidCard != null){
         //会员卡的余额是否够用
@@ -320,7 +325,7 @@ export default {
     },
     handleCreateOrderAndPayment(){
       //250毫秒以后才可以调用，以防鼠标多次点击
-      if( this.isPasswordRequired()){
+      if( this.isPasswordRequired){
         this.promptPassword()
       }else{
         this.handleCreateOrderAndPaymentAsync(this)
@@ -356,19 +361,22 @@ export default {
       //重新计算各个支付方式需要支付多少
       this.computePaymentAmount()
     },
-    isPasswordRequired(){
-      return true
-    },
     promptPassword(){
         this.$prompt('请输入会员支付密码', '会员支付密码', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          inputValidator: async()=>{  return true },
+          inputValidator: async(value)=>{  return await this.handleValidateCardPassword(value) },
           inputErrorMessage: '会员支付密码不正确'
         }).then(({ value }) => {
           this.handleCreateOrderAndPaymentAsync(this)
         }).catch(() => {
         })
+    },
+    async handleValidateCardPassword( password ){
+
+       let response = await validateCardPassword(this.availablePrepaidCard.id, password )
+       console.log( "handleValidateCardPassword=",password, response )
+       return response.result == true
     },
     messageBox(string1, string2) {
       this.$alert(string1, string2, {

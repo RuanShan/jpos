@@ -64,7 +64,7 @@
         <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
 
       <el-form-item>
-        <el-button class="order-ok" type="primary" size="mini">查询</el-button>
+        <el-button class="order-ok" type="primary" size="mini" @click="handleSearch">查询</el-button>
       </el-form-item>
 
       </fieldset>
@@ -180,7 +180,7 @@ export default {
     this.storeOptions = [{ id: null, name: "全部" }].concat(stores)
     let start = moment().subtract(6, "days")
     let end = moment()
-    this.selectedDates = [start.toDate(), end.toDate()]
+    this.formData.selectedDates = [start.toDate(), end.toDate()]
     this.initData()
     this.$bus.$on('deposit-order-created-gevent', () => {
       this.initData()
@@ -197,7 +197,6 @@ export default {
   },
   methods: {
     async initData() {
-      this.formData.selectedDates = this.selectedDates
       let params = this.buildParams()
       getOrderCount(params).then((res) => {
         this.totalCount = res.total_count
@@ -214,7 +213,9 @@ export default {
         page: this.currentPage, //分页器选择的当前页数
         per_page: this.perPage, //每页显示12行数据
         q: {
-          order_type_eq: 1
+          created_at_gteq: this.computedStartAt,
+          created_at_lteq: this.computedEndAt,
+          order_type_in: [1,2]
         }
       }
       return params
@@ -228,6 +229,10 @@ export default {
       this.currentPage = val
       this.initData()
     },
+    handleSearch() {
+      this.currentPage = 1
+      this.initData()
+    }
   }
 };
 </script>

@@ -242,7 +242,7 @@ export default {
   },
   computed: {
     isAddingCard: function () {
-      return this.cardFormData.code.length > 0
+      return this.cardFlag
     },
     activePaymentMethods: function () {
       return this.paymentMethodList.filter((pm) => {
