@@ -113,7 +113,7 @@ export default {
       logoImage: require('@assets/img/logo-t.png'),
       userCheckinDialogVisible: false,
       baseImgPath,
-      userEntries: []
+      localUserEntries: []
     }
   },
   computed: {
@@ -121,10 +121,10 @@ export default {
       return baseImgPath + '/img/' + this.userInfo.avatar
     },
     computedUserAndEntries(){
-      const users = this.userEntries.map( (entry)=>{ return { id: entry.userId, name: entry.username} })
+      const users = this.localUserEntries.map( (entry)=>{ return { id: entry.userId, name: entry.username} })
       const uniqUsers = _.uniqWith( users, _.isEqual)
       uniqUsers.forEach((user)=>{
-        const entries = this.userEntries.filter((entry)=>{ return entry.userId == user.id})
+        const entries = this.localUserEntries.filter((entry)=>{ return entry.userId == user.id})
         user.entries = entries
       })
       console.log( "uniqUsers=",uniqUsers)
@@ -139,7 +139,8 @@ export default {
       let params = {q: { store_id_eq: this.storeId, day_eq: this.getQueryParamToday() }}
       findUserEntries( params ).then((result)=>{
         console.log( "headTop storeId =", this.storeId )
-        this.userEntries = this.buildUserEntries( result )
+        this.localUserEntries = this.buildUserEntries( result )
+        this.$store.saveUserEntries( this.localUserEntries )
       })
     },
 
@@ -171,9 +172,9 @@ export default {
       this.userCheckinDialogVisible = true
     },
     handleUserEntryCreated( newEntry){
-      this.userEntries.push( newEntry)
+      this.localUserEntries.push( newEntry)
       console.log( "emit user-entry-created-gevent")
-      this.$bus.$emit('user-entry-created-gevent')
+      this.$bus.$emit('user-entry-created-gevent', this.localUserEntries)
     }
   }
 }

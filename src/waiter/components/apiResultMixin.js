@@ -266,6 +266,7 @@ export var apiResultMixin = {
           return this.buildUserEntry(model)
         })
         user.todayEntries = todayEntries
+        
       }
 
       return user

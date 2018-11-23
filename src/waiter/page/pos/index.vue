@@ -239,6 +239,18 @@
       align-items: center;
     }
 }
+.pos-cover{
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  right: 0;
+  bottom: 0;
+  background-color: #000000;
+  opacity: 0.3;
+  z-index: 10;
+  color: red;
+  text-align: center;
+}
 </style>
 
 <template>
@@ -428,6 +440,8 @@
       </el-col>
     </el-row>
   </div>
+  <div class="pos-cover" v-show="!isUserEntryExist">请先打卡，再处理业务！</div>
+
 </div>
 </template>
 
@@ -591,6 +605,11 @@ export default {
     computedImageUploadPath(){
       let selectedItem = this.selectedItems[this.selectedTabName]
       return selectedItem ? selectedItem.imageUploadPath : ''
+    },
+    isUserEntryExist(){
+      //以便检验用户是否打卡，是否可以下单
+      let entry = this.userEntries.find((entry)=>{ return entry.state=='clockin' })
+      return entry != null
     }
   },
   created() {

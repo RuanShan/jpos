@@ -267,7 +267,7 @@ export default {
       return this.formData.selectedDates[1]
     },
     computedDayParam: function () {
-      let params = { q: { day_eq: this.computedStartAt } }
+      let params = { q: { day_eq: this.computedEndAt } }
       return params
     },
     computedDaysParams() {
@@ -293,9 +293,11 @@ export default {
   methods: {
     initData() {
       this.formData.selectedDates = this.selectedDates
-      console.log("this.formData.selectedDates = ", this.formData.selectedDates)
+      console.log("StatisPandect.formData.selectedDates = ", this.formData.selectedDates)
+      //统计最后一天(今天)，和 开始到最后一天的数据
       Promise.all([selectedDayCount(this.computedDayParam), totalCount(this.computedDaysParams)])
         .then(res => {
+          console.log("StatisPandect.res = ", res)
           this.statis.userCount = res[0].new_customers_count  //新增客户
           this.statis.serviceOrderCount = res[0].service_order_count    //新增服务订单
           this.statis.cardCount = res[0].new_cards_count      //新增会员卡
