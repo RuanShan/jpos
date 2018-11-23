@@ -72,7 +72,14 @@
       <el-table-column prop="displayCreatedAt" label="创建日期" width="140"></el-table-column>
       <el-table-column  label="图片">
         <template slot-scope="scope">
-          <div v-for="image in scope.row.images"> <img :src="image.miniUrl" > </div>
+
+        <ul>
+        <li v-for="(image, j) in scope.row.images" style="display: inline-block"  >
+          <img v-lazy="image.miniUrl"   @click="handleOpenGallery('lightbox'+scope.$index, j)"  >
+        </li>
+        </ul>
+        <LightBox :ref="'lightbox'+scope.$index" :images="scope.row.lightboxImages" :showLightBox="false"></LightBox>
+
         </template>
       </el-table-column>
 
@@ -184,6 +191,7 @@ export default {
 
       this.totalPage = result.total_count
       this.tableData = this.buildExpenseItems(result)
+      this.buildLightboxImages( this.tableData  )
       console.log("result=", result, "this.tableData = ", this.tableData)
     },
     buildParams() {
@@ -212,6 +220,10 @@ export default {
     handleSearch(){
       this.currentPage = 1;
       this.initData()
+    },
+    handleOpenGallery(ref, index) {
+      console.log( "ref=", ref)
+      this.$refs[ref].showImage(index)
     },
     buildLightboxImages( expenseItems ){
       //https://github.com/pexea12/vue-image-lightbox
