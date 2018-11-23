@@ -62,7 +62,7 @@
       </el-table-column>
       <el-table-column prop="storeName" label="所属门店" width="140">
       </el-table-column>
-      <el-table-column prop="username" label="会员姓名" width="140">
+      <el-table-column prop="userName" label="会员姓名" width="140">
       </el-table-column>
       <el-table-column prop="mobile" label="电话" width="140">
       </el-table-column>

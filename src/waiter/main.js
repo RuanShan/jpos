@@ -26,6 +26,12 @@ Vue.use(VueXeditable)
 import AutoFocus from 'vue-auto-focus'
 Vue.use(AutoFocus)
 
+// image lozyload
+require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
+import VueLazyLoad from 'vue-lazyload'
+Vue.use(VueLazyLoad)
+
+
 import {
   apiResultMixin
 } from '@/components/apiResultMixin'

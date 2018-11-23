@@ -11,9 +11,7 @@
     width: 120px;
   }
 
-.order-ok {
 
-  }
  .order-line-three-row {
     position: absolute;
     left: 10px;
@@ -21,7 +19,7 @@
     top: 100px;
     bottom: 55px;
   }
-.stati-sdata-order {
+  .stati-sdata-order {
     display: inline-block;
     position: absolute;
     bottom: 20px;
@@ -62,7 +60,7 @@
         </el-form-item>
 
         <el-form-item label="支付方式">
-          <el-select class="select-options" v-model="formData.paymentMethodId"  size="mini" clearable placeholder="不限">
+          <el-select class="select-options" v-model="formData.paymentMethodId"  size="mini" clearable placeholder="不限" @clear="handleClear">
             <el-option v-for="item in paymentMethodOptions" :key="item.id" :value="item.id" :label="item.name">
             </el-option>
           </el-select>
@@ -264,10 +262,14 @@ export default {
     },
     //分页器的改变选择时事件处理函数
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.currentPage = val;
-      console.log(this.currentPage);
+      console.log(`当前页: ${val}`)
+      this.currentPage = val
+      console.log(this.currentPage)
     },
+    handleClear(){
+      console.log( " Selected paymentMethodId = ", this.formData.paymentMethodId)
+      this.formData.paymentMethodId = null
+    }
   }
 };
 </script>

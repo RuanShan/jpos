@@ -87,6 +87,8 @@
     "vue-auto-focus": "^1.0.0",
     "vue-axios": "^2.0.2",
     "vue-electron": "^1.0.6",
+    "vue-image-lightbox": "^6.0.1",
+    "vue-lazyload": "^1.2.6",
     "vue-lodash": "^2.0.0",
     "vue-quill-editor": "^3.0.5",
     "vue-router": "^3.0.1",
@@ -171,7 +173,10 @@
     "webpack-merge": "^4.1.0"
   },
   "element-theme": {
-    "browsers": ["ie > 9", "last 2 versions"],
+    "browsers": [
+      "ie > 9",
+      "last 2 versions"
+    ],
     "out": "./element-theme-jpos",
     "config": "./element-variables.css",
     "theme": "element-theme-chalk",

@@ -70,6 +70,12 @@
       </el-table-column>
 
       <el-table-column prop="displayCreatedAt" label="创建日期" width="140"></el-table-column>
+      <el-table-column  label="图片">
+        <template slot-scope="scope">
+          <div v-for="image in scope.row.images"> <img :src="image.miniUrl" > </div>
+        </template>
+      </el-table-column>
+
       <el-table-column prop="memo" label="备注">
       </el-table-column>
     </el-table>
@@ -96,7 +102,13 @@ import {
   findExpenseItems
 } from '@/api/getData'
 
+import LightBox from 'vue-image-lightbox'
+
+
 export default {
+  components: {
+    LightBox,
+  },
   data() {
     return {
       //*********** 过滤条件 ***************/
@@ -200,6 +212,19 @@ export default {
     handleSearch(){
       this.currentPage = 1;
       this.initData()
+    },
+    buildLightboxImages( expenseItems ){
+      //https://github.com/pexea12/vue-image-lightbox
+      //[{
+      //  thumb: 'http://example.com/thumb.jpg',
+      //  src: 'http://example.com/image.jpg',
+      //}]
+      expenseItems.forEach((item)=>{
+        item.lightboxImages = item.images.map((image)=>{
+          return {  thumb: image.miniUrl,
+                    src: image.bigUrl}
+        })
+      })
     }
   }
 };

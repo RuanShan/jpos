@@ -76,7 +76,7 @@
         <el-table-column prop="cardTransaction.card.code" label="会员卡号" width="120">
 
         </el-table-column>
-        <el-table-column prop="cardTransaction.customer.username" label="会员姓名" width="90">
+        <el-table-column prop="cardTransaction.customer.userName" label="会员姓名" width="90">
         </el-table-column>
         <el-table-column prop="cardTransaction.card.displayStyle" label="卡类型" width="90">
         </el-table-column>

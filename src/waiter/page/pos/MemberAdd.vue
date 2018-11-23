@@ -80,7 +80,7 @@
                 </el-form-item>
               </el-form-item>
               <el-form-item label="会员密码" prop="paymentPassword" required>
-                <el-input v-model="cardFormData.paymentPassword" ></el-input>
+                <el-input type="password" v-model="cardFormData.paymentPassword" ></el-input>
               </el-form-item>
               <el-form-item label="付款方式" prop="paymentMethodId" required>
                 <el-select v-model="cardFormData.paymentMethodId" placeholder="请选择支付方式">

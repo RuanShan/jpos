@@ -230,12 +230,13 @@ console.log( "valid= ", valid, "formName", formName)
 
     },
     async handleCurrentGroupChange(row){
-      const result = await getExpenseItem(row.id)
-      row.detail = this.buildExpenseItem(result)
-      this.currentRow = row
-
-      console.log( "currentRow", this.currentRow)
-      this.$emit('current-item-changed', row.detail)
+      if( row ){
+        const result = await getExpenseItem(row.id)
+        row.detail = this.buildExpenseItem(result)
+        this.currentRow = row
+        console.log( "currentRow", this.currentRow)
+        this.$emit('current-item-changed', row.detail)
+      }
     }
   }
 }
