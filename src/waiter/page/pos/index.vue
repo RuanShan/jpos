@@ -1,5 +1,6 @@
-
 <style lang="scss" >
+@import '~@/style/mixin';
+
 .pos {
     position: absolute;
     top: 50px;
@@ -249,6 +250,9 @@
   opacity: 0.3;
   z-index: 10;
   color: red;
+  span{
+    @include ctt();
+  }
   text-align: center;
 }
 </style>
@@ -440,7 +444,7 @@
       </el-col>
     </el-row>
   </div>
-  <div class="pos-cover" v-show="!isUserEntryExist">请先打卡，再处理业务！</div>
+  <div class="pos-cover" v-show="!isUserEntryExist"> <span> 请先打卡，再处理业务！</span> </div>
 
 </div>
 </template>

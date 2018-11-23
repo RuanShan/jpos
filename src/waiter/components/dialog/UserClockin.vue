@@ -24,9 +24,9 @@
 </style>
 
 <template>
-    <el-dialog :visible="computedVisible" @open="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog">
+    <el-dialog :visible="computedVisible" @opened="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog">
       <div slot="title" class="title-wrap">
-        <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
+        <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog"></i> </div>
         <div> 打卡</div>
       </div>
 
@@ -108,6 +108,8 @@ export default {
     handleDialogOpen() {
       this.scanedNumbers = []
       this.lineItemGroups = []
+      // Cannot read property 'resetFields' of undefined
+      console.log( " this.$refs.clockinForm=", this.$refs.clockinForm)
       this.$refs.clockinForm.resetFields()
     },
 

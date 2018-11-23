@@ -140,7 +140,7 @@ export default {
       findUserEntries( params ).then((result)=>{
         console.log( "headTop storeId =", this.storeId )
         this.localUserEntries = this.buildUserEntries( result )
-        this.$store.saveUserEntries( this.localUserEntries )
+        this.$store.commit( 'saveUserEntries', this.localUserEntries )
       })
     },
 
