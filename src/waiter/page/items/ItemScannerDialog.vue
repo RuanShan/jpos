@@ -3,11 +3,12 @@
 </style>
 
 <template>
-    <el-dialog :visible="computedVisible" @open="handleDialogOpen" append-to-body :show-close="false">
-      <div slot="title" class="title-wrap">
+    <el-dialog  class="cel-dialog"  :visible="computedVisible" @open="handleDialogOpen" append-to-body :show-close="false">
+      <div slot="title" class="dialog-title-wrap">
         <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
         <div> 扫码</div>
       </div>
+
       <div  @click.capture="handleBlur" >
         <el-form :model="form" v-auto-focus="focusCtrl" :data-current="currentIndex" :data-action="actionType" label-width="80px">
           <el-form-item label="物品编码">
