@@ -90,7 +90,7 @@ export default {
         page: this.currentPage, //分页器选择的当前页数
         per_page: 12, //每页显示12行数据
         q: {
-          order_type_eq: 1, //充值订单
+          order_type_in: [1,2], //充值订单
           user_id_eq: this.customerData.id, //根据顾客的id
           line_items_card_id_eq: this.cardData.id
         }

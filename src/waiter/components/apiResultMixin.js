@@ -12,6 +12,7 @@ from '@/api/getData'
 export var apiResultMixin = {
   data: function(){
     return {
+      OrderTypeEnum: { normal: 'normal', card: 'card', deposit: 'deposit' },
       LineItemGroupPaymentStateEnum: { paid: 'paid', pending: 'pending'},
       CardStyleEnum:{ prepaid: 'prepaid', counts:'counts' }, // prepaid 充值卡， counts 次卡
       UserEntryStateEnum:{ clockin: 'clockin', clockout:'clockout' }, // 打卡 登入， 登出
@@ -266,7 +267,7 @@ export var apiResultMixin = {
           return this.buildUserEntry(model)
         })
         user.todayEntries = todayEntries
-        
+
       }
 
       return user

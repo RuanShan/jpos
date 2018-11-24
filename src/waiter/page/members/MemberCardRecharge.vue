@@ -29,8 +29,8 @@
                   <tr>
                     <th style="width: 20%;">会员卡号</th>
                     <td style="width: 30%">{{cardData.code}}</td>
-                    <th style="width: 20%;color:#ff3cff;">卡内余额</th>
-                    <td style="width: 30%;color:#ff00ff;font-weight:bold;">{{cardData.amountRemaining}}</td>
+                    <th style="width: 20%;">卡内余额</th>
+                    <td style="width: 30%;color:#F56C6C;font-weight:bold;">{{cardData.amountRemaining}}</td>
                   </tr>
                   <tr>
                     <th>会员卡类型</th>
@@ -55,9 +55,9 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="付款方式" prop="paymentMethodId">
-                <el-radio-group v-model="formData.paymentMethodId"  fill="#ff00ff" @change="changeRechargeWay">
-                  <el-radio-button v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id"> </el-radio-button>
+              <el-form-item label="付款方式" prop="paymentMethodLabel">
+                <el-radio-group v-model="formData.paymentMethodLabel"   @change="changeRechargeWay">
+                  <el-radio-button v-for="item in activePaymentMethods" :key="item.id" :label="item.name"  > </el-radio-button>
                 </el-radio-group>
               </el-form-item>
             <!-- 付款方式     END -->
@@ -88,6 +88,9 @@
 
             <!-- 备注     END -->
             <el-form-item label="">
+              <div class="left">
+                <el-checkbox label="公众号消息推送" v-model="formData.enableMpMsg"></el-checkbox>
+              </div>
               <div class="right">
                 <el-button type="primary" @click="handleCheckout">确定</el-button>
                 <el-button @click="handleCloseDialog">取消</el-button>
@@ -122,9 +125,11 @@ export default {
       cardTypeList: [],
       formData:{
         variantId: null,
+        paymentMethodLabel: null, //支付方式
         paymentMethodId: null, //支付方式单选按钮默认选择,会根据用户选择动态变化
         inputMoney: null,  //输入充值金额
         inputMemo: "",//备注输入框
+        enableMpMsg: true //
       },
       rules:{},
       checkedPrint: true,//是否打印标志位
@@ -153,6 +158,7 @@ export default {
         this.paymentMethodList = this.paymentMethods
         if( this.activePaymentMethods.length>0){
           this.formData.paymentMethodId = this.activePaymentMethods[0].id
+          this.formData.paymentMethodLabel = this.activePaymentMethods[0].name
           console.log( "this.formData.paymentMethodId=", this.formData.paymentMethodId)
         }
 
@@ -165,19 +171,28 @@ export default {
       console.log(this.checkedPrint);
     },
     //改变支付方式触发函数-----
-    changeRechargeWay(){
+    changeRechargeWay(val){
+      this.activePaymentMethods.forEach((method)=>{
+        if( method.name == val){
+          this.formData.paymentMethodId = method.id
+        }
+      })
       console.log(this.formData.paymentMethodId);
     },
 
     async handleCheckout(){
       const orderParams = {
+        store_id: this.storeId,
         user_id: this.customerData.id,
-        order_type: 1,
+        order_type: this.OrderTypeEnum.deposit,
         line_items: [
-          { variant_id: this.cardData.variantId, quantity: 1,  card_id: this.cardData.id, price: this.inputMoney, cname: "会员卡充值" }
+          { variant_id: this.cardData.variantId, quantity: 1,  card_id: this.cardData.id, price: this.formData.inputMoney, cname: "会员卡充值" }
         ],
-        payments:[
-
+        payments_attributes: [
+          {
+            payment_method_id: this.formData.paymentMethodId,
+            amount: this.formData.inputMoney
+          }
         ]
       }
       let result = await checkout( { order: orderParams })
