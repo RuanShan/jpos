@@ -330,7 +330,7 @@ export default {
       let order = null
       if (this.isAddingCard) {
         user.cards_attributes = [{ store_id: this.storeId,
-          paymentPassword: this.cardFormData.paymentPassword,
+          payment_password: this.cardFormData.paymentPassword,
           code: this.cardFormData.code, variant_id: this.cardFormData.variantId, expire_at: this.cardFormData.expireAt, memo: this.cardFormData.memo  }]
 
         order = {

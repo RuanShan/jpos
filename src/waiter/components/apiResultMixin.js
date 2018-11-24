@@ -475,6 +475,7 @@ export var apiResultMixin = {
         variantId: model.variant_id,
         productId: model.product_id,
         memo: model.memo,
+        paymentPassword: model.payment_password,
         expireAt: model.expire_at, //可能为空
         createdAt: moment(model.created_at),
       }

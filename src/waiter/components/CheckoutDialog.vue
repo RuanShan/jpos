@@ -363,19 +363,22 @@ export default {
     },
     promptPassword(){
         this.$prompt('请输入会员支付密码', '会员支付密码', {
+          showInput: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          inputValidator: async(value)=>{  return await this.handleValidateCardPassword(value) },
+          inputValidator: (value)=>{  return value== this.availablePrepaidCard.paymentPassword  },
           inputErrorMessage: '会员支付密码不正确'
         }).then(({ value }) => {
+          console.log( " $prompt then ", value)
           this.handleCreateOrderAndPaymentAsync(this)
-        }).catch(() => {
+        }).catch((err) => {
+          console.log( " $prompt catch ", err)
         })
     },
     async handleValidateCardPassword( password ){
 
        let response = await validateCardPassword(this.availablePrepaidCard.id, password )
-       console.log( "handleValidateCardPassword=",password, response )
+       console.log( "handleValidateCardPassword=",password, response, response.result == true )
        return response.result == true
     },
     messageBox(string1, string2) {
