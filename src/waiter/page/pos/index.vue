@@ -498,6 +498,7 @@ export default {
       checkoutDialogVisible: false,
       memberAddWindowVisible: false,
       customerList: [], //按关键字搜索到的客户列表
+      currentCustomer: null,
       //由于搜索列表的每一项是 会员+会员卡，即如果会员有两个卡就有两项，
       //所以select的值为customerId+cardId, 当没有会员卡时，只有customerId
       customerComboId: null,
@@ -553,19 +554,7 @@ export default {
       return _.flatten(ops)
     },
     //当前选择的客户
-    currentCustomer () {
-      let customer = this.defaultCustomer
-      let cid = this.customerId
-      if (cid) {
-        customer = this.customerList.find((customer, index, arr) => {
-          return customer.id == cid
-        })
-        if (!customer) {
-          customer = this.defaultCustomer
-        }
-      }
-      return customer
-    },
+
     currentCard () {
       let card = this.defaultCard
       let customer = this.currentCustomer
@@ -617,6 +606,7 @@ export default {
     }
   },
   created() {
+    this.currentCustomer = this.defaultCustomer
     this.initData();
     //新订单创建以后，需要更新当前选择客户的会员卡余额数据
     this.$bus.$on('order-created-gevent', () => {
@@ -766,13 +756,20 @@ export default {
       })
     }, 450),
     //店员改变当前选择客户,更新订单列表折扣率
-    handleCustomerChanged(selectedCustomerId) {
-      if (selectedCustomerId) {
+    handleCustomerChanged(selectedComboCustomerId) {
+      if (selectedComboCustomerId) {
+        //当前选择的客户
+        this.currentCustomer = this.customerList.find((customer, index, arr) => {
+          return customer.id == this.customerId
+        })
+
         this.orderItemList.forEach((item) => {
           item.discount = this.getDiscountOfVariant(item.variantId)
           this.computePrice(item)
         })
       } else {
+        this.currentCustomer = this.defaultCustomer
+
         this.orderItemList.forEach((item) => {
           item.discount = 100
           this.computePrice(item)
@@ -842,12 +839,12 @@ export default {
     },
     setCurrentCustomer(customer) {
       //
-      this.customerList = [customer]
-      this.$nextTick(() => {
-        // DOM updated
-        console.log(" this.computedCustomerOptions=", this.computedCustomerOptions)
-        //this.customerComboId = this.computedCustomerOptions[0].value
-      })
+      let indexOfItem = this.customerList.findIndex(( item)=>{ return item.id == customer.id })
+      if( indexOfItem>=0){
+        this.customerList.splice(indexOfItem, 1, customer)
+      }
+
+      this.currentCustomer = customer
     },
     renderEditableTableHeader(h, {
       column
