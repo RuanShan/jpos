@@ -174,11 +174,11 @@ export default {
     isShowPrepaidCard: function(){
       return this.availablePrepaidCard != null
     },
-    isPasswordRequired: function(){
+    isPasswordRequired(){
 
       let isCardBelongsOtherStore = false
       if( this.availablePrepaidCard ){
-        isCardBelongsOtherStore = (this.availablePrepaidCard.storeId == this.storeId)
+        isCardBelongsOtherStore = (this.availablePrepaidCard.storeId != this.storeId)
       }
       //使用会员卡支付 && （店铺设置必须支付密码 || 这张卡是其它店铺的卡）
       console.log("store.checkoutPasswordRequired=",this.storeInfo.checkoutPasswordRequired, isCardBelongsOtherStore)
@@ -364,6 +364,7 @@ export default {
     promptPassword(){
         this.$prompt('请输入会员支付密码', '会员支付密码', {
           showInput: true,
+          inputType: 'password',
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           inputValidator: (value)=>{  return value== this.availablePrepaidCard.paymentPassword  },

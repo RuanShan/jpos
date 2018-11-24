@@ -85,10 +85,8 @@ export default {
   methods: {
     //門店選擇改變時的事件處理函數-----
     changeForState() {
-
     },
     handleCancel() {
-      this.form.stateValue = "";
     },
     buildParams(){
       let params = { store: {
