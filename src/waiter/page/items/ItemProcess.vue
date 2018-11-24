@@ -28,7 +28,11 @@
           vertical-align: middle;
         }
       }
-
+      .group-number{
+        word-break: keep-all;
+        white-space: nowrap;
+      }
+      th,td{ text-align: center; }
     }
     .pagination {
       position: absolute;
@@ -160,7 +164,7 @@
                   <div class="image-wrap">
                     <img :src="scope.row.defulatImageUrl" alt="">
                   </div>
-                  <span>{{scope.row.number}} </span>
+                  <div class="group-number">{{scope.row.number}} </div>
                 </template>
               </el-table-column>
 

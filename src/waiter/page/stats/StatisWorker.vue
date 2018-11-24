@@ -177,10 +177,10 @@ export default {
           line_item_group_state_in: ['processing', 'processed', 'ready_for_store']
         }
       }
-      //if(!this.isLocationFactory()){
-      //  //如果不是工厂，添加当前店铺作为查询条件
-      //  params.q.store_id_eq = this.storeId
-      //}
+      if(!this.isLocationFactory()){
+        //如果不是工厂，添加当前店铺作为查询条件
+        params.q.store_id_eq = this.formData.storeId
+      }
 
       if ( this.computedStartAt && this.computedEndAt){
         params.q.created_at_gteq= this.computedStartAt

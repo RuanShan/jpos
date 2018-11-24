@@ -16,6 +16,13 @@
       margin-bottom: 0;
     }
   }
+  .cover{
+    @include allcover();
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0.1;
+  }
   .item-flow-control {
         position: absolute;
         top: 50px;
@@ -248,10 +255,10 @@
     <leftNav></leftNav>
     <div class="item-flow-container page-content">
 
-      <product-scan :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </product-scan>
-      <item-process :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </item-process>
-      <product-transfer :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </product-transfer>
-      <WorkerPerformance :order-state="currentOrderState" :dialog-visible.sync="workerPermormanceDialogVisible" @order-state-changed="orderStateChanged"> </WorkerPerformance>
+      <product-scan  :selected-store-id="formData.storeId" :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </product-scan>
+      <item-process  :selected-store-id="formData.storeId" :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </item-process>
+      <product-transfer  :selected-store-id="formData.storeId" :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </product-transfer>
+      <WorkerPerformance  :selected-store-id="formData.storeId" :order-state="currentOrderState" :dialog-visible.sync="workerPermormanceDialogVisible" @order-state-changed="orderStateChanged"> </WorkerPerformance>
 
       <div class="item-flow ">
         <div class="filters" style="display:none;">
@@ -335,6 +342,7 @@
               </div>
 
               <div class="location location-factory clear">
+
                 <div class="overlayx"></div>
                 <div class="step step2">
                   <div class="title">
@@ -381,6 +389,8 @@
                 <div class="arraw pl-pl"> </div>
                 <div class="arraw pb-ptc"> </div>
                 <div class="arraw pt-pbc"> </div>
+
+                <div class="cover"> </div>
 
               </div>
             </div>
@@ -506,6 +516,10 @@ export default {
     },
 
     processItems(orderState) {
+      // processing
+      if( orderState == this.LineItemGroupStateEnum.processing ){
+        return
+      }
       this.processItemDialogVisible = true
       this.currentOrderState = orderState
       console.log('processItems')
@@ -516,6 +530,11 @@ export default {
       console.log('handleScanOrders')
     },
     handleTransferProducts(orderState, nextOrderState) {
+       // processed, ready_for_factory
+      if( orderState == this.LineItemGroupStateEnum.processed ||
+        orderState == this.LineItemGroupStateEnum.ready_for_factory ){
+        return
+      }
       this.currentOrderState = orderState
       this.nextOrderState = nextOrderState
       this.transferProductDialogVisible = true

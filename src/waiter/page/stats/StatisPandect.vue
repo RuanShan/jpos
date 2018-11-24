@@ -196,7 +196,7 @@ export default {
       //*********** 过滤条件 ***************/
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
-        storeId: null
+        storeId: 0
       },
       storeOptions: [{ //门店方式选项
         value: '全部',
@@ -257,6 +257,7 @@ export default {
     let start = moment().subtract(6, "days")
     let end = moment()
     this.selectedDates = [start.toDate(), end.toDate()]
+    this.formData.storeId = this.storeId
     this.initData()
   },
   computed: {
@@ -268,13 +269,20 @@ export default {
     },
     computedDayParam: function () {
       let params = { q: { day_eq: this.computedEndAt } }
+      if( this.formData.storeId > 0){
+        params.q.store_id_eq = this.formData.storeId
+      }
       return params
     },
     computedDaysParams() {
       let params = {
-        q: {          day_gteq: this.computedStartAt,
+        q: {
+          day_gteq: this.computedStartAt,
           day_lteq: this.computedEndAt
         }
+      }
+      if( this.formData.storeId > 0){
+        params.q.store_id_eq = this.formData.storeId
       }
       return params
     },

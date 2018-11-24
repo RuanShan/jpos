@@ -105,6 +105,9 @@
           </el-table-column>
           <el-table-column label="订单状态" prop="group.state">
           </el-table-column>
+          <el-table-column label="订单时间" prop="displayCreatedAt">
+          </el-table-column>
+
           <el-table-column label="工人">
             <template slot-scope="scope">
                         <p v-if="scope.row.worker_id>0">

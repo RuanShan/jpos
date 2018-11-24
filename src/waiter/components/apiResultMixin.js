@@ -372,7 +372,7 @@ export var apiResultMixin = {
           user.cards.push(card)
         })
         // 选择第一个可用的card作为 缺省会员卡
-        user.prepaidCard = user.cards.find((card)=>{ return (card.status == 'enabled' && card.style== this.CardStyleEnum.prepaid)})
+        user.prepaidCard = user.cards.find((card)=>{ return (card.state == 'enabled' && card.style== this.CardStyleEnum.prepaid)})
       }
 
       if( ! user.prepaidCard ){

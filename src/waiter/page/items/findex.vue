@@ -18,6 +18,13 @@
       margin-bottom: 0;
     }
   }
+  .cover{
+    @include allcover();
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0.1;
+  }
   .item-flow-control {
         position: absolute;
         top: 50px;
@@ -324,6 +331,7 @@
                 <div class="arraw pr-pr"> </div>
                 <div class="arraw pl-pc"> </div>
                 <div class="arraw pl-pr"> </div>
+                <div class="cover"> </div>
 
               </div>
 
@@ -508,6 +516,14 @@ export default {
     },
 
     processItems(orderState) {
+      if(this.isLocationFactory()){
+        // pending, ready
+        if( orderState == this.LineItemGroupStateEnum.pending ||
+          orderState == this.LineItemGroupStateEnum.ready ){
+          return
+        }
+      }
+
       this.processItemDialogVisible = true
       this.currentOrderState = orderState
       console.log('processItems')
@@ -518,6 +534,14 @@ export default {
       console.log('handleScanOrders')
     },
     handleTransferProducts(orderState, nextOrderState) {
+      if(this.isLocationFactory()){
+        // pending, ready_for_factory
+        if( orderState == this.LineItemGroupStateEnum.pending ||
+          orderState == this.LineItemGroupStateEnum.ready_for_store ){
+          return
+        }
+      }
+
       this.currentOrderState = orderState
       this.nextOrderState = nextOrderState
       this.transferProductDialogVisible = true
