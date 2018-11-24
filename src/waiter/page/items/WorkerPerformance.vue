@@ -155,6 +155,9 @@ import ItemScannerDialog  from './ItemScannerDialog.vue'
 import _ from 'lodash'
 
 export default {
+  props: ['dialogVisible', 'orderState', 'orderCounts'],
+  mixins: [DialogMixin, apiResultMixin],
+  components: { 'item-scanner-dialog': ItemScannerDialog},
   data() {
     return {
       top: '0',
@@ -176,9 +179,6 @@ export default {
       scannerDialogVisible: false
     }
   },
-  mixins: [DialogMixin, apiResultMixin],
-  components: { 'item-scanner-dialog': ItemScannerDialog},
-  props: ['dialogVisible', 'orderState', 'orderCounts'],
   created() {
 
   },

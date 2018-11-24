@@ -339,7 +339,7 @@ export default {
     }
   },
   mixins: [DialogMixin, CelUIMixin],
-  props: ['dialogVisible', 'orderState', 'itemCounts'],
+  props: ['selectedStoreId','dialogVisible', 'orderState', 'itemCounts'],
   components:{  },
   created() {  },
   before_update() {
@@ -357,9 +357,11 @@ export default {
         page: this.currentPage,
         per_page: this.perPage,
         q:{
-          store_id_eq: this.storeId,
           state_eq: this.orderState
         }
+      }
+      if( this.formData.storeId > 0 ){
+        params.q.store_id_eq = this.formData.storeId
       }
       if ( this.formData.keyword && this.formData.keyword.length > 0) {
         // item.number || item.users.username
@@ -419,6 +421,7 @@ export default {
       console.log( "this.$refs.itemlist.clientHeight->",  this.$refs.itemlist )
       this.itemDetailList = []
       this.formData.groupState = this.orderState
+      this.formData.storeId = this.selectedStoreId
       this.initData()
 
     },

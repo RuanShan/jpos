@@ -223,7 +223,8 @@ export default {
         q: {
           created_at_gteq: this.computedStartAt,
           created_at_lteq: this.computedEndAt,
-          order_type_eq: 0
+          order_type_eq: 0,
+          store_id_eq: this.storeId
         }
       }
 

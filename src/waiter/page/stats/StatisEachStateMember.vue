@@ -215,7 +215,8 @@ export default {
         q: {
           created_at_gteq: this.computedStartAt,
           created_at_lteq: this.computedEndAt,
-          order_type_in: [1,2]
+          order_type_in: [1,2],
+          store_id_eq: this.storeId
         }
       }
       return params

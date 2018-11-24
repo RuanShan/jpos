@@ -16,6 +16,7 @@ const state = {
     name: "未知"
   },
   storeId: 0,
+  storeType: null,
   title: null,// 当前路径名称
   paymentMethods: null,
   cardTypes: null,
@@ -44,6 +45,7 @@ const mutations = {
   saveStore(state, storeInfo) {
     state.storeInfo = storeInfo
     state.storeId = storeInfo.id
+    state.storeType = storeInfo.type
   },
   saveStores(state, stores) {
     state.stores = stores

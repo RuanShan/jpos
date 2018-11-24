@@ -250,13 +250,13 @@
     <leftNav></leftNav>
     <div class="factory-item-flow-container page-content">
 
-      <product-scan :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </product-scan>
-      <item-process :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </item-process>
-      <product-transfer :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </product-transfer>
-      <WorkerPerformance :order-state="currentOrderState" :dialog-visible.sync="workerPermormanceDialogVisible" @order-state-changed="orderStateChanged"> </WorkerPerformance>
+      <product-scan :selected-store-id="formData.storeId" :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </product-scan>
+      <item-process :selected-store-id="formData.storeId" :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </item-process>
+      <product-transfer :selected-store-id="formData.storeId" :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </product-transfer>
+      <WorkerPerformance :selected-store-id="formData.storeId" :order-state="currentOrderState" :dialog-visible.sync="workerPermormanceDialogVisible" @order-state-changed="orderStateChanged"> </WorkerPerformance>
 
       <div class="item-flow ">
-        <div class="filters">
+        <div class="filters" style="display:none">
           <el-form :inline="true" :model="formData" class="demo-form-inline">
             <store-select  v-bind:value.sync="formData.storeId" />
             <el-form-item>
@@ -480,7 +480,7 @@ export default {
       console.log('on order-changed-gevent')
       this.initData()
     })
-    this.formData.storeId = this.storeId
+    //this.formData.storeId = this.storeId
     this.initData()
   },
   computed:{

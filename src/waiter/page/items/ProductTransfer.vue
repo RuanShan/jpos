@@ -210,12 +210,13 @@ export default {
         keyword: '',
         startEndTime: null,
         groupState: '',
+        storeId: 0
       },
       multipleSelection: [],
     }
   },
   mixins: [DialogMixin],
-  props: ['dialogVisible', 'dialogTitle', 'orderState', 'nextOrderState', 'orderCounts'],
+  props: ['selectedStoreId', 'dialogVisible', 'dialogTitle', 'orderState', 'nextOrderState', 'orderCounts'],
   created() {},
   computed: {
 
@@ -270,6 +271,7 @@ export default {
       this.formData.keyword = ""
       this.lineItemGroupList.length = 0
       this.transferedItemIds.length = 0
+      this.formData.storeId = this.selectedStoreId
       this.initData()
       console.log('handleDialogOpen yeah')
     },
@@ -343,7 +345,7 @@ export default {
           state_in: [this.orderState, this.nextOrderState]
         }
       }
-      if(!this.isLocationFactory()){
+      if(this.formData.storeId>0){
         //如果不是工厂，添加当前店铺作为查询条件
         params.q.store_id_eq = this.storeId
       }

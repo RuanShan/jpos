@@ -179,6 +179,7 @@ export default {
         page: this.currentPage, //分页器选择的当前页数
         per_page: this.perPage, //每页显示12行数据
         q: {
+          store_id_eq: this.storeId
         }
       }
 
@@ -188,10 +189,7 @@ export default {
       }
       return params
     },
-    //門店選擇改變時的事件處理函數-----
-    changeForState() {
 
-    },
     //分页器的改变选择时事件处理函数
     handleCurrentChange(val) {
       this.currentPage = val;
