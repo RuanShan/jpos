@@ -27,8 +27,8 @@
                 <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 100%;" :pickerOptions="pickerOptions"></el-date-picker>
               </el-form-item>
             </el-form-item>
-            <el-form-item label="会员密码" prop="paymentPassword">
-              <el-input v-model="cardFormData.paymentPassword"></el-input>
+            <el-form-item label="会员密码" prop="paymentPassword" required>
+              <el-input type="password" v-model="cardFormData.paymentPassword"></el-input>
             </el-form-item>
             <el-form-item label="付款方式" prop="paymentMethodId" required>
               <el-select v-model="cardFormData.paymentMethodId" placeholder="请选择支付方式" >
@@ -73,13 +73,41 @@ export default {
       cardFormData: {
         code: "",
         paymentAmount: null,
-        expireAt: "",
+        expireAt: null,
         paymentMethodId: null,
         variantId: null,
-        memo: ""
+        memo: "",
+        paymentPassword: ""
       },
       rules: {
-
+        code: [
+          {
+            required: true,
+            min: 4,
+            max: 11,
+            message: "卡号为长度在 4 到 11 个数字和字母",
+            trigger: "blur"
+          },
+          //{ validator: checkmemberNum, trigger: "blur" }
+        ],
+        paymentPassword: [
+          { type: "string", required: true, message: "请输入支付密码"},
+          {
+            min: 6,
+            max: 12,
+            message: "长度在 6 到 12 个字符",
+            trigger: "blur"
+          }
+        ],
+        amount: [
+          { type: "integer", required: true, message: "请输入充值金额", trigger: "blur" },
+          {
+            min: 0,
+            max: 1000000,
+            message: "请输入有效充值金额",
+            trigger: "blur"
+          }
+        ],
       },
       pickerOptions: {
          shortcuts: [{
@@ -126,6 +154,7 @@ export default {
       this.$refs['cardForm'].validate((valid) => {
         if (valid) {
           let orderParams = {
+            store_id: this.storeId,
             user_id: this.customerData.id,
             order_type: 'card',
             line_items: [
@@ -136,7 +165,12 @@ export default {
                 amount: this.cardFormData.paymentAmount
               }]
           }
-          checkout( {order: orderParams} ).then((result)=>{
+          let cardParams = {code: this.cardFormData.code,
+            payment_password: this.cardFormData.paymentPassword,
+            expire_at: this.cardFormData.expireAt,
+            memo: this.cardForm.memo
+          }
+          checkout( {order: orderParams, card: cardParams} ).then((result)=>{
             if( result.id ){
               let order = this.buildOrder( result )
               this.$emit( 'card-created-event', order.cardTransaction.card )

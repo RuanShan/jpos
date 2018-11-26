@@ -36,7 +36,7 @@
           </el-form-item>
           <el-form-item label="会员密码" prop="paymentPassword">
             <el-input v-model="formData.paymentPassword" placeholder="如果不想修改保持为空" >
-              <el-button slot="append" icon="el-icon-mobile-phone" :disabled="passwordSms.disabled" >{{passwordSms.text}}</el-button>
+              <el-button slot="append" icon="el-icon-mobile-phone"  @click="sendPassword">{{passwordSms.text}}</el-button>
             </el-input>
           </el-form-item>
 
@@ -60,7 +60,7 @@
 
 <script>
 import { DialogMixin } from "@/components/mixin/DialogMixin"
-import { updateCard } from "@/api/getData";
+import { sendPasswordSms, updateCard } from "@/api/getData";
 
 export default {
   props: ['dialogVisible','customerData','cardData'],
@@ -124,9 +124,13 @@ export default {
       });
     },
     sendPassword(){
+      console.log( "sendPassword clicked")
+      // disable click first
+      this.passwordSms.disabled = true
+
       sendPasswordSms(this.cardData.id).then((response) => {
         console.log('收到的response = ', response)
-        if (response.ret == 1) {
+        if (response.ret) {
           let timer = setInterval(() => {
             this.passwordSms.disabled = true
             this.passwordSms.countdown--
@@ -138,6 +142,11 @@ export default {
               clearInterval(timer)
             }
           }, 1000)
+        }else{
+          this.$message({
+            message: '短信发送失败,请联系管理员处理!',
+            type: 'erorr'
+          })
         }
       })
     },
