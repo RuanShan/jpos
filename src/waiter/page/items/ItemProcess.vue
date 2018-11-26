@@ -258,7 +258,7 @@
                     <div v-show="group.images.length==0">  </div>
 
                     <el-upload
-                      :file-list="group.uploadedImages"
+                      :file-list="group.images"
                       :action="group.imageUploadPath"
                       name="image[attachment]"
                       list-type="picture-card"
@@ -283,10 +283,12 @@
         </div>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="imageDialogVisible">
+    <el-dialog  append-to-body :visible.sync="imageDialogVisible">
       <el-carousel :initial-index="0"	 arrow="always" :autoplay="false">
-        <el-carousel-item v-for="item in 4" :key="item">
-          <h3>{{ item }}</h3>
+        <el-carousel-item v-for="item in carouselImages" :key="item.id">
+          <div  style="text-align:center;">
+           <img :src="item.url">
+          </div>
         </el-carousel-item>
       </el-carousel>
     </el-dialog>
@@ -339,7 +341,8 @@ export default {
       multipleSelection: [],
       imageUploadPath: null,
       imageDialogVisible: false,
-      itemListMaxHeight: 100
+      itemListMaxHeight: 100,
+      carouselImages: []
     }
   },
   mixins: [DialogMixin, CelUIMixin],
@@ -488,8 +491,10 @@ export default {
       })
     },
     handlePictureCardPreview(file) {
+      let images = file.group.images
+      this.carouselImages = images
       //this.dialogImageUrl = file.originalUrl;
-      //this.imageDialogVisible = true;
+      this.imageDialogVisible = true;
     },
     handleXeditableChanged(newValue, xeditableName) {
       console.log("newValue=" + newValue + " xeditableName=" + xeditableName)

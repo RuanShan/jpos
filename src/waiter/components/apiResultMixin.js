@@ -200,7 +200,7 @@ export var apiResultMixin = {
             type: "GroupImage",
             id: imageResult.id,
             position: imageResult.position,
-            group: group,
+            group: group, // it is required for group image el-carousel, ItemProcess.vue
             viewableId: imageResult.viewable_id,
             miniUrl: imageResult.mini_url,
             bigUrl: imageResult.big_url,
