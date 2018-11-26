@@ -54,8 +54,7 @@ https://baike.baidu.com/item/CODE39/1144107?fr=aladdin
 E:\apps\nodejs\jpos\node_modules\printer>node-gyp rebuild --target=1.8.3 --arch=
 x64 --msvs_version=2017 --dist-url=https://atom.io/download/electron
 
-E:\apps\nodejs\jpos\node_modules\usb>..\..\node_modules\.bin\node-pre-gyp rebuil
-d --target=1.8.3 --arch=x64 --dist-url=https://atom.io/download/electron
+E:\apps\nodejs\jpos\node_modules\usb>..\..\node_modules\.bin\node-pre-gyp rebuild --target=1.8.3 --arch=x64 --dist-url=https://atom.io/download/electron
 
 重新编译适用 electron的组件
 ================================================================================

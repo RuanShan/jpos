@@ -27,7 +27,7 @@
   },
   "build": {
     "productName": "jpos",
-    "appId": "org.simulatedgreg.electron-vue",
+    "appId": "org.ruanshan.electron-vue",
     "directories": {
       "output": "build"
     },

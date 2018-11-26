@@ -22,6 +22,13 @@ export const customerMobileValidate = (mobile, id) => fetch('/api/v1/customers/v
 export const validateCardPassword = (id, payment_password) => fetch('/api/v1/cards/validate_password', {id,payment_password} );
 
 /**
+ * 发送会员卡密码到会员手机
+ * id: 会员卡id
+ */
+export const sendPasswordSms = (id) => fetch('/api/v1/cards/'+id+'/send_password_sms' );
+
+
+/**
  * 登陆
  *
  */

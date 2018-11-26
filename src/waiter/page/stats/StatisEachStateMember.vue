@@ -99,7 +99,7 @@
     <!-- 统计数据  START -->
     <div class="statisdatarechargemoney">
       <h4 style="display: inline-block;">合计充值金额:</h4>
-      <h4 class="recordnum">{{totalSum}}</h4>
+      <h4 class="recordnum">¥{{totalSum}}</h4>
     </div>
     <!-- 统计数据  END -->
 
@@ -200,7 +200,7 @@ export default {
       let params = this.buildParams()
       getOrderCount(params).then((res) => {
         this.totalCount = res.total_count
-        this.totalSum = res.total_sum
+        this.totalSum = parseInt(res.total_sum)
       })
       let result = await findOrders(params)
 

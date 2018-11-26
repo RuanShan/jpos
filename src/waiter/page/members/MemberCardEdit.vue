@@ -36,7 +36,7 @@
           </el-form-item>
           <el-form-item label="会员密码" prop="paymentPassword">
             <el-input v-model="formData.paymentPassword" placeholder="如果不想修改保持为空" >
-              <el-button slot="append" icon="el-icon-mobile-phone">发送密码找回短信</el-button>
+              <el-button slot="append" icon="el-icon-mobile-phone" :disabled="passwordSms.disabled" >{{passwordSms.text}}</el-button>
             </el-input>
           </el-form-item>
 
@@ -69,7 +69,13 @@ export default {
     return {
       paymentMethodList: [],
       cardTypeList: [],
-      formData: {}
+      formData: {},
+      passwordSms:{
+        countdown: 60,
+        text: '发送密码找回短信',
+        disabled: false
+      }
+
     }
   },
   computed: {
@@ -116,6 +122,24 @@ export default {
           return false;
         }
       });
+    },
+    sendPassword(){
+      sendPasswordSms(this.cardData.id).then((response) => {
+        console.log('收到的response = ', response)
+        if (response.ret == 1) {
+          let timer = setInterval(() => {
+            this.passwordSms.disabled = true
+            this.passwordSms.countdown--
+            this.passwordSms.text = `${this.passwordSms.countdown}秒后可以重发`
+            if (this.passwordSms.countdown == 0) {
+              this.passwordSms.disabled = false // 免费获取验证码按钮打开
+              this.passwordSms.text = '发送密码找回短信'
+              this.passwordSms.countdown = 60
+              clearInterval(timer)
+            }
+          }, 1000)
+        }
+      })
     },
     resetForm() {
       this.$refs['cardForm'].resetFields();
