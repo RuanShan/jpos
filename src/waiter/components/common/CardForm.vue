@@ -168,7 +168,7 @@ export default {
           let cardParams = {code: this.cardFormData.code,
             payment_password: this.cardFormData.paymentPassword,
             expire_at: this.cardFormData.expireAt,
-            memo: this.cardForm.memo
+            memo: this.cardFormData.memo
           }
           checkout( {order: orderParams, card: cardParams} ).then((result)=>{
             if( result.id ){

@@ -35,7 +35,7 @@
             </el-form-item>
           </el-form-item>
           <el-form-item label="会员密码" prop="paymentPassword">
-            <el-input v-model="formData.paymentPassword" placeholder="如果不想修改保持为空" >
+            <el-input type="password" v-model="formData.paymentPassword" placeholder="如果不想修改保持为空" >
               <el-button slot="append" icon="el-icon-mobile-phone"  @click="sendPassword">{{passwordSms.text}}</el-button>
             </el-input>
           </el-form-item>
@@ -88,7 +88,7 @@ export default {
   methods: {
     handleOpen() {
       console.log("CardForm..handleOpen", this.cardData)
-      this.formData = Object.assign({}, this.cardData, { payment_password: '' } )
+      this.formData = Object.assign({}, this.cardData, { paymentPassword: '' } )
     },
     handleClose() {
       this.resetForm()
