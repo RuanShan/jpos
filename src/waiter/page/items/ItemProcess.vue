@@ -264,7 +264,8 @@
                       list-type="picture-card"
                       :with-credentials="true"
                       :on-preview="handlePictureCardPreview"
-                      :on-remove="handleRemove">
+                      :on-remove="handleImageRemoved"
+                      :on-success="handleImageAdded">
                       <i class="el-icon-plus"></i>
                     </el-upload>
 
@@ -453,9 +454,7 @@ export default {
         this.orderCustomer = this.orderDetail.customer
         this.orderDetail.lineItemGroups.forEach((group)=>{
           group.imageUploadPath = getLineItemGroupImageUploadPath( group.id)
-          group.uploadedImages = group.images.map((img)=>{
-            return Object.assign( img, {name: img.attachmentFileName, url: img.bigUrl}  )
-          })
+
         })
         console.log('orderDetail', row.orderDetail)
 
@@ -485,12 +484,33 @@ export default {
         })
       })
     },
-    handleRemove(file, fileList) {
+    handleImageRemoved(file, fileList) {
       deleteGroupImage( file.groupId, file.id ).then(()=>{
+        // 删除图片从group.images
+        this.orderDetail.lineItemGroups.forEach((group)=>{
+          if( group.id == file.groupId){
+            group.images.splice(group.images.indexOf( file ),1)
+          }
+        })
         console.log(file, fileList);
       })
     },
+    handleImageAdded(response, file, fileList){
+      const image = this.buildGroupImage( response )
+      this.orderDetail.lineItemGroups.forEach((group)=>{
+        if( group.id == image.groupId){
+          //设置 image.group，以便handlePictureCardPreview 查找group.images
+          image.group = group
+          group.images.push( image )
+          // 更新filelist中相应image
+          fileList.splice(fileList.indexOf( file ), 1, image)
+        }
+      })
+      console.log(response, file, fileList);
+
+    },
     handlePictureCardPreview(file) {
+      console.log("file:", file );
       let images = file.group.images
       this.carouselImages = images
       //this.dialogImageUrl = file.originalUrl;

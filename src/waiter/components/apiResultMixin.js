@@ -195,19 +195,11 @@ export var apiResultMixin = {
         images: []
       }
       if( item.images ){
-        item.images.forEach(function(imageResult) {
-          const image = {
-            type: "GroupImage",
-            id: imageResult.id,
-            position: imageResult.position,
-            group: group, // it is required for group image el-carousel, ItemProcess.vue
-            viewableId: imageResult.viewable_id,
-            miniUrl: imageResult.mini_url,
-            bigUrl: imageResult.big_url,
-            originalUrl: imageResult.original_url
-          }
-          image.groupId = image.viewableId
-          image.url = image.bigUrl
+        item.images.forEach((imageResult)=> {
+
+          const image = this.buildGroupImage( imageResult )
+           // it is required for group image el-carousel, ItemProcess.vue
+          image.group = group
           group.images.push(image)
         })
       }
@@ -219,7 +211,7 @@ export var apiResultMixin = {
       group.displayPaymentState = this.getGroupDisplayPaymentState( group.paymentState )
 
       if( item.line_items ){
-        item.line_items.forEach(function(lineItemResult) {
+        item.line_items.forEach((lineItemResult)=> {
           const lineItem = {
             id: lineItemResult.id,
             orderId: lineItemResult.order_id,
@@ -236,6 +228,19 @@ export var apiResultMixin = {
       }
 
       return group
+    },
+    buildGroupImage( result){
+      const image = {
+        type: "GroupImage",
+        id: result.id,
+        position: result.position,
+        viewableId: result.viewable_id,
+        miniUrl: result.mini_url,
+        bigUrl: result.big_url
+      }
+      image.groupId = image.viewableId
+      image.url = image.bigUrl
+      return image
     },
     buildUsers: function(result) {
 
