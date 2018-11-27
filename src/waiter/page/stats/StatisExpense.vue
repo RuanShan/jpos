@@ -235,7 +235,7 @@ export default {
       expenseItems.forEach((item)=>{
         item.lightboxImages = item.images.map((image)=>{
           return {  thumb: image.miniUrl,
-                    src: image.bigUrl}
+                    src: image.largeUrl}
         })
       })
     }

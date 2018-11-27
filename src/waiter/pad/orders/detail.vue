@@ -314,7 +314,7 @@ console.log( "initData->", result)
       order.lineItemGroups.forEach((group)=>{
         group.imageUploadPath = getLineItemGroupImageUploadPath( group.id)
         group.uploadedImages = group.images.map((img)=>{
-          return Object.assign( img, {name: img.attachmentFileName, url: img.bigUrl}  )
+          return Object.assign( img, {name: img.attachmentFileName, url: img.largeUrl}  )
         })
       })
       this.orderDetail = order

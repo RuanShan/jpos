@@ -236,10 +236,10 @@ export var apiResultMixin = {
         position: result.position,
         viewableId: result.viewable_id,
         miniUrl: result.mini_url,
-        bigUrl: result.big_url
+        largeUrl: result.large_url
       }
       image.groupId = image.viewableId
-      image.url = image.bigUrl
+      image.url = image.largeUrl
       return image
     },
     buildUsers: function(result) {
@@ -578,10 +578,10 @@ export var apiResultMixin = {
               expense: item,
               viewableId: imageResult.viewable_id,
               miniUrl: imageResult.mini_url,
-              bigUrl: imageResult.big_url,
+              largeUrl: imageResult.large_url,
               originalUrl: imageResult.original_url
             }
-            image.url= image.bigUrl // el-upload required
+            image.url= image.largeUrl // el-upload required
             item.images.push(image)
           })
         }
