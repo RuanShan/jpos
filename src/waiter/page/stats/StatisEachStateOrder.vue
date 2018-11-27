@@ -85,7 +85,7 @@
         </el-table-column>
         <el-table-column label="消费金额" prop="total">
         </el-table-column>
-        <el-table-column label="订单状态" prop="displayGroupState">
+        <el-table-column label="订单状态" prop="displayState">
         </el-table-column>
         <el-table-column label="支付信息">
           <template slot-scope="scope">
@@ -266,6 +266,8 @@ export default {
       console.log(`当前页: ${val}`)
       this.currentPage = val
       console.log(this.currentPage)
+      this.initData()
+
     },
     handleClear(){
       console.log( " Selected paymentMethodId = ", this.formData.paymentMethodId)

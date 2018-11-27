@@ -60,7 +60,7 @@ export var apiResultMixin = {
         userName: orderResult.user_name,
         storeName: orderResult.store_name,
         creatorName: orderResult.creator_name,
-        shipmentState: orderResult.shipment_state,
+        state: orderResult.state,
         groupState: orderResult.group_state,
         paymentState: orderResult.payment_state, // 支付状态 pending:欠款， paid:已经支付
         paymentTotal: orderResult.payment_total, // 一共支付了多少
@@ -72,6 +72,7 @@ export var apiResultMixin = {
       }
       order.payments = this.buildPayments( orderResult.payments )
       order.displayCreatedAt = this.getDisplayDateTime(order.createdAt)
+      order.displayState = this.getOrderDisplayState( order.state )
       order.displayPaymentState = this.getOrderDisplayPaymentState( order.paymentState )
       orderResult.line_item_groups.forEach((groupResult, i) => {
         let group = this.buildLineItemGroup( groupResult )
@@ -207,7 +208,7 @@ export var apiResultMixin = {
       group.imageUploadPath =  getLineItemGroupImageUploadPath( group.id )
       group.defulatImageUrl = ( group.images.length>0 ? group.images[0].miniUrl : group.missingImageUrl )
       group.displayCreatedAt = this.getDisplayDateTime( group.createdAt )
-      group.displayState = this.getOrderDisplayState(group.state)
+      group.displayState = this.getGroupDisplayState(group.state)
       group.displayPaymentState = this.getGroupDisplayPaymentState( group.paymentState )
 
       if( item.line_items ){
@@ -688,7 +689,7 @@ export var apiResultMixin = {
       if( state == "replaced") return "已转卡";
       return "未知"
     },
-    getOrderDisplayState(state) {
+    getGroupDisplayState(state) {
       if (state == "pending") {
         return "新订单"
       } else if (state == "ready") {
@@ -708,6 +709,11 @@ export var apiResultMixin = {
     },
     getUserEntryDisplayState(state) {
       return state == "clockin" ? "登入" : "登出" //prepaid 充值卡， counts 次卡
+    },
+    getOrderDisplayState(state){
+      // order.payment_state
+      //支付状态 pending:欠款， paid:已经支付
+      return state == "canceled" ? "取消" : "正常"
     },
     getOrderDisplayPaymentState(state){
       // order.payment_state
