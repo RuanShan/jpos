@@ -225,7 +225,6 @@
             <div class="subtitle"> 物品图片  </div>
             <div class=" ">
               <div v-show="group.images.length==0">  </div>
-
               <el-upload
                 :file-list="group.uploadedImages"
                 :action="group.imageUploadPath"
@@ -233,11 +232,19 @@
                 list-type="picture-card"
                 :with-credentials="true"
                 :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove">
+                :on-remove="handleImageRemoved">
                 <i class="el-icon-plus"></i>
               </el-upload>
-
             </div>
+            <el-dialog  append-to-body :visible.sync="imageDialogVisible">
+              <el-carousel :initial-index="0"	 arrow="always" :autoplay="false">
+                <el-carousel-item v-for="item in carouselImages" :key="item.id">
+                  <div  style="text-align:center;">
+                   <img :src="item.url">
+                  </div>
+                </el-carousel-item>
+              </el-carousel>
+            </el-dialog>
           </div>
           </div>
         </div>
@@ -274,10 +281,9 @@ export default {
         payments: [],
         lineItemGroups: []
       },
-      fileList: [], //图片文件列表
-      dialogImageUrl: '',
-      dialogVisible: false,
+      carouselImages: [],//图片文件列表
       lineItemGroupNumber: null,
+      imageDialogVisible: false,
     };
   },
   beforeRouteUpdate (to, from, next) {
@@ -331,17 +337,40 @@ console.log( "initData->", result)
     handleDone(){
       this.$router.push({ name: 'orders' })
     },
-    handlePictureCardPreview(file) {
-      this.dialogVisible = true;
-      this.dialogImageUrl = file.url;
-      // console.log(this.dialogImageUrl);
-      // console.log(file);
-    },
-    handleRemove(file, fileList) {
+
+    handleImageRemoved(file, fileList) {
       deleteGroupImage( file.groupId, file.id ).then(()=>{
+        // 删除图片从group.images
+        this.orderDetail.lineItemGroups.forEach((group)=>{
+          if( group.id == file.groupId){
+            group.images.splice(group.images.indexOf( file ),1)
+          }
+        })
         console.log(file, fileList);
       })
     },
+    handleImageAdded(response, file, fileList){
+      const image = this.buildGroupImage( response )
+      this.orderDetail.lineItemGroups.forEach((group)=>{
+        if( group.id == image.groupId){
+          //设置 image.group，以便handlePictureCardPreview 查找group.images
+          image.group = group
+          group.images.push( image )
+          // 更新filelist中相应image
+          fileList.splice(fileList.indexOf( file ), 1, image)
+        }
+      })
+      console.log(response, file, fileList);
+
+    },
+    handlePictureCardPreview(file) {
+      console.log("file:", file );
+      let images = file.group.images
+      this.carouselImages = images
+      //this.dialogImageUrl = file.originalUrl;
+      this.imageDialogVisible = true;
+    },
+
     handleAvatarSuccess(response, file, fileList) {
       console.log("ON-SUCCEED CALL-BACK");
       console.log(response);
