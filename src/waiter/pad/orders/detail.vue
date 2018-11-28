@@ -226,7 +226,7 @@
             <div class=" ">
               <div v-show="group.images.length==0">  </div>
               <el-upload
-                :file-list="group.images"
+                :file-list="group.uploadImages"
                 :action="group.imageUploadPath"
                 name="image[attachment]"
                 list-type="picture-card"
@@ -286,6 +286,7 @@ export default {
       carouselImages: [],//图片文件列表
       lineItemGroupNumber: null,
       imageDialogVisible: false,
+      uploadedFileUidGroupIdMap: {}
     };
   },
   beforeRouteUpdate (to, from, next) {
@@ -317,9 +318,12 @@ export default {
       }else{
         result = await getOrder( this.orderId )
       }
-console.log( "initData->", result)
+      console.log( "initData->", result)
       const order = this.buildOrder(result)
       order.lineItemGroups.forEach((group)=>{
+        // should not change uploadImages manually, or upload multiple would be malefunction
+        // require fields id, groupId, url, type, group
+        group.uploadImages = group.images.map((image)=>{ return Object.assign({}, image) })
         group.imageUploadPath = getLineItemGroupImageUploadPath( group.id)
       })
       this.orderDetail = order
@@ -338,11 +342,12 @@ console.log( "initData->", result)
     },
 
     handleImageRemoved(file, fileList) {
-      deleteGroupImage( file.groupId, file.id ).then(()=>{
+      let image = this.getGroupImageOfUploadedFile( file )
+      deleteGroupImage( image.groupId, image.id ).then(()=>{
         // 删除图片从group.images
         this.orderDetail.lineItemGroups.forEach((group)=>{
-          if( group.id == file.groupId){
-            group.images.splice(group.images.indexOf( file ),1)
+          if( group.id == image.groupId){
+            group.images.splice(group.images.indexOf( image ),1)
           }
         })
         console.log(file, fileList);
@@ -356,30 +361,23 @@ console.log( "initData->", result)
           image.group = group
           group.images.push( image )
           // 更新filelist中相应image
-          fileList.splice(fileList.indexOf( file ), 1, image)
+          this.uploadedFileUidGroupIdMap[file.uid] = image
+          //fileList.splice(fileList.indexOf( file ), 1, image)
         }
       })
-      console.log(response, file, fileList);
-
+      console.log(response, file, fileList)
     },
+
     handlePictureCardPreview(file) {
       console.log("file:", file );
-      let images = file.group.images
+      let image = this.getGroupImageOfUploadedFile( file )
+      let images = image.group.images
       this.carouselImages = images
       //this.dialogImageUrl = file.originalUrl;
       this.imageDialogVisible = true;
     },
-
-    handleAvatarSuccess(response, file, fileList) {
-      console.log("ON-SUCCEED CALL-BACK");
-      console.log(response);
-      console.log(file);
-      console.log(fileList);
-
-      this.res = response;
-      this.file = file;
-      this.fileList = fileList;
-      this.imageUrl = URL.createObjectURL(file.raw);
+    getGroupImageOfUploadedFile( file ){
+      return file.type == "GroupImage" ? file : this.uploadedFileUidGroupIdMap[file.uid]
     },
     handleXeditableChanged(newValue, xeditableName) {
       console.log("newValue=" + newValue + " xeditableName=" + xeditableName)
