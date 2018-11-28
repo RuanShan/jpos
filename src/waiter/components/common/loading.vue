@@ -48,7 +48,7 @@
     }
     .load_img{
       @include wh(100%, 100%);
-      background: url(../../images/icon_loading.png) no-repeat 0 0;
+      background: #000 no-repeat 0 0;
       background-size: 2.5rem auto;
       transform: translateY(0px);
       animation: load .6s infinite ease-in-out;

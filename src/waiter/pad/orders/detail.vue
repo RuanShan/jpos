@@ -226,13 +226,15 @@
             <div class=" ">
               <div v-show="group.images.length==0">  </div>
               <el-upload
-                :file-list="group.uploadedImages"
+                :file-list="group.images"
                 :action="group.imageUploadPath"
                 name="image[attachment]"
                 list-type="picture-card"
                 :with-credentials="true"
+                :multiple = "true"
                 :on-preview="handlePictureCardPreview"
-                :on-remove="handleImageRemoved">
+                :on-remove="handleImageRemoved"
+                :on-success="handleImageAdded">
                 <i class="el-icon-plus"></i>
               </el-upload>
             </div>
@@ -319,9 +321,6 @@ console.log( "initData->", result)
       const order = this.buildOrder(result)
       order.lineItemGroups.forEach((group)=>{
         group.imageUploadPath = getLineItemGroupImageUploadPath( group.id)
-        group.uploadedImages = group.images.map((img)=>{
-          return Object.assign( img, {name: img.attachmentFileName, url: img.largeUrl}  )
-        })
       })
       this.orderDetail = order
       this.orderCustomer = order.customer
