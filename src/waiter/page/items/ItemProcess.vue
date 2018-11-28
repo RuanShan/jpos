@@ -541,7 +541,7 @@ export default {
       this.initData()
     },
     handlePrintLabel(){
-      let printParams = { order: this.orderDetail }
+      let printParams = { order: this.orderDetail, labelPrinter: this.storeInfo.labelPrinter }
       PrintUtil.printLabel( printParams )
     }
   }

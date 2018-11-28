@@ -16,7 +16,7 @@ export function printLabel ( params ){
     console.log(err);
    }else{
 
-     let printName = params.labelPrinter||''
+     let printName = params.labelPrinter 
      let printers =  getPrinters()
 
      console.log( "printers", printers )
@@ -33,12 +33,9 @@ export function printLabel ( params ){
      // 根据物品数量打印编码
      var order = params.order;
      order.lineItemGroups.forEach((group)=>{
-       var itemMemos = group.lineItems.map((item)=>{ return item.memo}).join( ' ')
+       var itemMemos = group.lineItems.map((item)=>{ return item.memo}).join( "\n")
        var lableParams = { 'label_title': '永峰皮具养护中心', 'store_name': '西安路店', 'group_number': group.number, 'item_memos': itemMemos, 'item1_icon':'','item2_icon':'','item3_icon':'' }
 
-       group.lineItems.forEach((item,i)=>{
-         lableParams['item'+(i+1)+'_icon'] = item.labelIconName
-       })
        data = iconv.encode( compiled(lableParams), encoding);
        console.log("raw data", data, printer)
        if( printer ){
