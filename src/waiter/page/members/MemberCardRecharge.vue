@@ -185,6 +185,7 @@ export default {
         store_id: this.storeId,
         user_id: this.customerData.id,
         order_type: this.OrderTypeEnum.deposit,
+        enable_mp_msg: this.formData.enableMpMsg,
         line_items: [
           { variant_id: this.cardData.variantId, quantity: 1,  card_id: this.cardData.id, price: this.formData.inputMoney, cname: "会员卡充值" }
         ],
