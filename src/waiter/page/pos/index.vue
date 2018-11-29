@@ -296,7 +296,7 @@
                     <table style="width:100%">
                       <tr>
                         <th>客户类型</th>
-                        <td>{{currentCustomer.customerType}}</td>
+                        <td>{{currentCustomer.customerType}} <span v-show="isCustomerFromOtherStore">({{currentCustomer.storeName}}) </span></td>
                         <th>移动电话</th>
                         <td>{{currentCustomer.mobile}}</td>
                         <th>消费金额</th>
@@ -603,6 +603,9 @@ export default {
       //以便检验用户是否打卡，是否可以下单
       let entry = this.userEntries.find((entry)=>{ return entry.state=='clockin' })
       return entry != null
+    },
+    isCustomerFromOtherStore(){
+      return this.currentCustomer && this.currentCustomer.storeId && this.currentCustomer.storeId!=this.storeId
     }
   },
   created() {
