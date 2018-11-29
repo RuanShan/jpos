@@ -205,7 +205,7 @@ export default {
       lineItemGroupList: [],
       itemList: [],
       transferedItemIds: [],
-      perPage: 100,
+      perPage: 500,
       formData: {
         keyword: '',
         startEndTime: null,
@@ -342,6 +342,7 @@ export default {
         page: this.currentPage,
         per_page: this.perPage,
         q: {
+          order_state_eq: this.OrderStateEnum.cart,
           state_in: [this.orderState, this.nextOrderState]
         }
       }

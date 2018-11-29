@@ -380,6 +380,7 @@ export default {
         page: this.currentPage,
         per_page: this.perPage,
         q:{
+          order_state_eq: this.OrderStateEnum.cart,
           state_eq: this.orderState
         }
       }
