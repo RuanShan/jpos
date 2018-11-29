@@ -99,7 +99,7 @@ export default {
     var validPhone = (rule, value, callback) => {
 
       customerMobileValidate(value, this.memberFormData.id).then(function (response) {
-        if (response.result) {
+        if (response.ret) {
           callback();
         } else {
           callback(new Error("电话号码已经注册过。"))

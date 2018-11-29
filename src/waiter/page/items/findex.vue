@@ -504,7 +504,7 @@ export default {
       console.log( "itemflows -> beforeRouteEnter->")
     },
     async initData() {
-      let q = { }
+      let q = { order_state_eq: this.OrderStateEnum.cart }
       if( this.formData.storeId > 0){
         q['store_id_eq'] = this.formData.storeId
       }

@@ -102,10 +102,8 @@
       <el-row type="flex" justify="center">
         <el-col :span="10">
           <div class="actions">
-            <el-button @click="resetForm('memberFormData')">重置</el-button>
             <el-button type="primary" @click="addCustomer">立即创建</el-button>
             <el-button @click="closeDialog">关闭</el-button>
-            <el-button @click="fillIn" type="danger">测试填入</el-button>
           </div>
         </el-col>
       </el-row>
@@ -123,7 +121,7 @@
 // **********
 import moment from 'moment'
 
-import { createCustomer, customerMobileValidate } from "@/api/getData";
+import { createCustomer, customerMobileValidate, isCodeAvailable } from "@/api/getData";
 
 import {
   DialogMixin
@@ -134,22 +132,23 @@ export default {
   mixins: [DialogMixin],
   data() {
     //验证卡号--1.不能空;2.必须是数字;3.四至十一个字符
-    // var checkmemberNum = (rule, value, callback) => {
-    //   if (!value) {
-    //     return callback(new Error("不能为空"));
-    //   }
-    //   if (!isvalidNumber(value)) {
-    //     callback(new Error("请输入数字值"));
-    //   } else {
-    //     callback();
-    //   }
-    // };
+    var validateCardCode = (rule, value, callback) => {
+      isCodeAvailable(value).then(function (response) {
+        if (response.ret) {
+          callback();
+        } else {
+          callback(new Error("会员卡号码已经存在。"))
+        }
+      }, function (error) {
+        callback(new Error(error))
+      });
+    };
 
     //验证规则---电话号码
     var validPhone = (rule, value, callback) => {
 
       customerMobileValidate(value).then(function (response) {
-        if (response.result) {
+        if (response.ret) {
           callback();
         } else {
           callback(new Error("电话号码已经注册过。"))
@@ -202,7 +201,7 @@ export default {
             message: "卡号为长度在 4 到 11 个数字和字母",
             trigger: "blur"
           },
-          //{ validator: checkmemberNum, trigger: "blur" }
+          { validator: validateCardCode, trigger: "blur" }
         ],
         paymentPassword: [
           { type: "string", required: true, message: "请输入支付密码"},

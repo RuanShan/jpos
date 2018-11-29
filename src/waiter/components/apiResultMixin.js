@@ -12,6 +12,7 @@ from '@/api/getData'
 export var apiResultMixin = {
   data: function(){
     return {
+      OrderStateEnum: { cart: 'cart', canceled: 'canceled'  },
       OrderTypeEnum: { normal: 'normal', card: 'card', deposit: 'deposit' },
       LineItemGroupPaymentStateEnum: { paid: 'paid', pending: 'pending'},
       CardStyleEnum:{ prepaid: 'prepaid', counts:'counts' }, // prepaid 充值卡， counts 次卡

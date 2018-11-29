@@ -27,6 +27,12 @@ export const validateCardPassword = (id, payment_password) => fetch('/api/v1/car
  */
 export const sendPasswordSms = (id) => fetch('/api/v1/cards/'+id+'/send_password_sms' );
 
+/**
+ * 发送会员卡密码到会员手机
+ * id: 会员卡id
+ */
+export const isCodeAvailable = (code) => fetch('/api/v1/cards/code_available', {code} );
+
 
 /**
  * 登陆

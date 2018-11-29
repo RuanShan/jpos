@@ -356,6 +356,7 @@ export default {
     async initData() {
       let queryParams = {
         q: {
+          order_state_eq: this.OrderStateEnum.cart,
           store_id_eq: this.storeId
         }
       }
