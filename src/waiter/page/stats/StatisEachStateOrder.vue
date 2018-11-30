@@ -65,6 +65,10 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item  >
+          <el-checkbox v-model="formData.oddCardPaid">异店支付</el-checkbox>
+        </el-form-item>
+
         <el-form-item>
           <el-button class="order-ok" type="primary" size="mini" @click="handleSearch">确定</el-button>
         </el-form-item>
@@ -133,6 +137,7 @@ export default {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null,
         paymentMethodId: null, //支付方式选项
+        oddCardPaid: false
       },
       paymentMethodList: [],
       totalPage: 0, //分页器显示的总页数
@@ -227,7 +232,9 @@ export default {
           store_id_eq: this.storeId
         }
       }
-
+      if( this.formData.oddCardPaid ){
+        params.q.odd_card_paid_eq = true
+      }
       if( this.formData.paymentMethodId != null){
         if ( this.formData.paymentMethodId > 0 ){
           //选择了一个支付方式
