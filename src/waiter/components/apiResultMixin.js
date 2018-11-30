@@ -77,7 +77,7 @@ export var apiResultMixin = {
       order.displayPaymentState = this.getOrderDisplayPaymentState( order.paymentState )
       orderResult.line_item_groups.forEach((groupResult, i) => {
         let group = this.buildLineItemGroup( groupResult )
-
+        group.order = order
         order.lineItemGroups.push(group)
         let groupedlineItems = []
         orderResult.line_items.forEach((lineItemResult)=> {
@@ -97,9 +97,12 @@ export var apiResultMixin = {
               cardId: lineItemResult.card_id,
               memo: lineItemResult.memo,
               labelIconName: lineItemResult.label_icon_name,
-              state: lineItemResult.state
+              state: lineItemResult.state,
+              createdAt: moment(lineItemResult.created_at),
+
             }
             lineItem.displayState = this.getLineItemDisplayState(lineItem.state )
+            lineItem.displayCreatedAt = this.getDisplayDateTime(lineItem.createdAt)
             groupedlineItems.push(lineItem)
           }
         })
@@ -188,7 +191,7 @@ export var apiResultMixin = {
         orderId: item.order_id,
         name: item.name,
         number: item.number,
-        price: item.price,
+        price: parseInt(item.price),
         state: item.state,
         paymentState: item.payment_state,
         createdAt: moment(item.created_at),
@@ -198,7 +201,6 @@ export var apiResultMixin = {
       }
       if( item.images ){
         item.images.forEach((imageResult)=> {
-
           const image = this.buildGroupImage( imageResult )
            // it is required for group image el-carousel, ItemProcess.vue
           image.group = group
@@ -223,8 +225,10 @@ export var apiResultMixin = {
             cname: lineItemResult.cname,
             price: lineItemResult.price,
             state: lineItemResult.state,
+            createdAt: moment(lineItemResult.created_at),
             memo: lineItemResult.memo
           }
+          lineItem.displayCreatedAt = this.getDisplayDateTime( lineItem.createdAt )
           group.lineItems.push(lineItem)
         })
       }

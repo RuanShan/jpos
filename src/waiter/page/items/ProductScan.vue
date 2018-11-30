@@ -102,7 +102,7 @@
 
                 <el-table-column label="物品编号" prop="number">
                 </el-table-column>
-                <el-table-column label="订单状态" prop="state">
+                <el-table-column label="物品状态" prop="state">
                 </el-table-column>
 
             </el-table>

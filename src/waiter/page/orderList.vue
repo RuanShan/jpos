@@ -139,12 +139,7 @@ export default {
                 reserveSelection: false,
                 expendRow: [],
                 filters: { keyword: '', startEndTime: null, shipment_state: 'all' },
-                multipleSelection: [],
-                orderStateOptions: [{ value: 'all', label: 'all' },
-                  { value: 'pending', label: 'pending' },
-                  { value: 'partial', label: 'partial' },
-                  { value: 'ready_for_factory', label: 'ready_for_factory' },
-                  { value: 'ready', label: 'ready' }]
+                multipleSelection: []
 
             }
         },

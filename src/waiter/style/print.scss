@@ -37,7 +37,7 @@
   line-height: 1.45;
   color: #000;
   background: none;
-  font-size: 14pt;
+  font-size: 10pt;
   height: auto;
   }
 
@@ -83,8 +83,15 @@
   img,tr {page-break-inside: avoid;}
 
   /*custom, 导致打印空白页*/
-  .item-flow{
+  .wrapper{
     display: none;
+  }
+  .transfer-table-wrap .store-info{
+    padding: 6px 0;
+  }
+  .transfer-table-wrap .sign{
+    padding: 40px 100px 0 0;
+    float: right;
   }
 }
 

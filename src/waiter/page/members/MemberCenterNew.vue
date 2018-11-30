@@ -64,6 +64,17 @@
     .money-wrap{
       line-height: 20px;
     }
+    .wxfollower-cell{
+      position: relative;
+      .discard-wxfollower-button{
+        padding: 0;
+        position: absolute;
+        right: 5px;
+        background-color: #fff;
+        border-color:  transparent;
+      }
+    }
+
 }
 </style>
 
@@ -100,8 +111,11 @@
               <th> 会员性别</th>
               <td> {{customerData.displayGender}}</td>
               <th> 关联微信</th>
-              <td> <span v-show="customerData.wxFollowerNickname"> {{customerData.wxFollowerNickname}} </span>
-                  <span v-show="!customerData.wxFollowerNickname"> 无 </span>
+              <td class="wxfollower-cell">
+                <span v-show="customerData.wxFollowerNickname"> {{customerData.wxFollowerNickname}} </span>
+                <el-button type="danger" icon="el-icon-delete" circle class="discard-wxfollower-button" v-show="customerData.wxFollowerNickname"></el-button>
+                <span v-show="!customerData.wxFollowerNickname"> 无 </span>
+
               </td>
             </tr>
             <tr>

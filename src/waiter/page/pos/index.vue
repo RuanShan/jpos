@@ -476,7 +476,6 @@ export default {
   name: "pos",
   data() {
     return {
-
       showLoading: true, //显示加载动画
       shopDetailData: null, //商铺详情
       menuList: [], //食品列表
@@ -524,6 +523,9 @@ export default {
     cardId () {
       return (this.customerComboId ? this.customerComboId.split('_')[1] : null)
     },
+    currentCard(){
+      return this.currentCustomer.prepaidCard || this.defaultCard
+    },
     selectedTaxonProducts () {
       return this.productList.filter(function (product) {
         //return product.taxon_ids.includes( 0 )
@@ -553,19 +555,7 @@ export default {
       })
       return _.flatten(ops)
     },
-    //当前选择的客户
 
-    currentCard () {
-      let card = this.defaultCard
-      let customer = this.currentCustomer
-      let cid = this.cardId
-      if (customer.cards.length > 0) {
-        card = customer.cards.find((card, index, arr) => {
-          return card.id == cid
-        })
-      }
-      return card
-    },
     totalCount () {
       return this.orderItemList.reduce((total, item) => {
         return total += item.quantity
@@ -766,6 +756,9 @@ export default {
           return customer.id == this.customerId
         })
 
+        //当前选择的客户
+        this.currentCard = this.currentCustomer.prepaidCard
+
         this.orderItemList.forEach((item) => {
           item.discount = this.getDiscountOfVariant(item.variantId)
           this.computePrice(item)
@@ -846,8 +839,8 @@ export default {
       if( indexOfItem>=0){
         this.customerList.splice(indexOfItem, 1, customer)
       }
-
       this.currentCustomer = customer
+
     },
     renderEditableTableHeader(h, {
       column

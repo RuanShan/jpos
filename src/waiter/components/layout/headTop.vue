@@ -71,7 +71,7 @@
             打卡<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="user in computedUserAndEntries" key="user.id">
+            <el-dropdown-item v-for="(user, index) in computedUserAndEntries" :key="index">
               <p>{{user.name}} </p>
               <p v-for="entry in user.entries">{{entry.displayCreatedAtTime}} - {{entry.displayState}} </p>
             </el-dropdown-item>

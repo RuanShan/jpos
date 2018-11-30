@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column label="店铺名称" prop="storeName">
       </el-table-column>
-      <el-table-column label="应收金额" prop="saleTotal">
+      <el-table-column label="订单状态" prop="displayState">
       </el-table-column>
       <el-table-column label="实收金额" prop="total">
       </el-table-column>

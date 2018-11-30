@@ -83,7 +83,7 @@
             </el-option>
           </el-select>
           工作:
-          <el-select v-model="currentProductIds" multiple placeholder="All" class="product-select">
+          <el-select v-model="currentProductIds" multiple placeholder="全部" class="product-select">
             <el-option v-for="item in productList" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
@@ -103,7 +103,7 @@
           </el-table-column>
           <el-table-column label="工作内容" prop="cname">
           </el-table-column>
-          <el-table-column label="订单状态" prop="group.state">
+          <el-table-column label="物品状态" prop="group.displayState">
           </el-table-column>
           <el-table-column label="订单时间" prop="displayCreatedAt">
           </el-table-column>
@@ -127,8 +127,8 @@
         <el-button @click="ChangeCurrentGroupState(true)" type="primary">Receive</el-button>
       </div>
       <div class="actions" v-if="orderState=='processing'">
-        <el-button @click="handleCloseDialog()">关闭窗口</el-button>
         <el-button type="primary" @click="handleFulfillLineItems()">确认工作量</el-button>
+        <el-button @click="handleCloseDialog()">关闭窗口</el-button>
       </div>
     </div>
   </el-dialog>
@@ -220,7 +220,7 @@ export default {
       let lineItemIds = this.multipleSelection.map((lineItem) => lineItem.id)
       if (lineItemIds.length == 0) {
         this.$message({
-          message: '警告哦，Please select a order at least',
+          message: '请选择需要确认工作量的工作，请检查复选框状态！',
           type: 'warning'
         });
         return;

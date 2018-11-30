@@ -3,13 +3,40 @@
     .images{
       img{ width: 100%; }
     }
+    table {
+      width: 100%;
+      td,th{
+        padding: 6px 10px;
+        border: 1px solid #ebeef5;
+      }
+      tr {
+        vertical-align: top;
+      }
+    }
+    .head{
+      span{
+        display: inline-block;
+        padding: 6px;
+        color: #fff;
+        background-color: #6a3906;
+        border-radius: 3px;
+      }
+      i{
+        color: #fff;
+      }
+      padding: 10px 0 10px 0;
+    }
+    .subtitle {
+        padding: 6px;
+        color: #6a3906;        
+    }
   }
 </style>
 
 <template>
 <div class="order-detail-wrap" v-if="orderDetail">
   <div class="customer box">
-    <div class="box-head"> 客户信息</div>
+    <div class="head">  <span> <i class="fa fa-user">  客户信息</i> </span> </div>
     <div>
       <table border="1" cellspacing="0">
         <tr>
@@ -32,9 +59,9 @@
     </div>
   </div>
   <div class="box">
-    <div class=""> 订单信息 {{orderDetail.number}} </div>
+    <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{orderDetail.number}}</i> </span> </div>
     <div class="box">
-      <div class="box-head"> 支付信息 </div>
+      <div class="subtitle"> 支付信息 </div>
       <div>
         <table border="1" cellspacing="0" style="width: 100%">
           <tr >
@@ -54,7 +81,7 @@
     </div>
 
     <div v-for="group in orderDetail.lineItemGroups" class="box line-item-group">
-      <div class="box-head"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
+      <div class="subtitle"> 物品编号: {{group.number}}  <div class="right"> 状态: {{group.displayState}} </div></div>
       <div class="box-body">
         <table border="1"   cellspacing="0" style="width: 100%">
         <tr>
@@ -75,7 +102,7 @@
         </template>
       </table>
       </div>
-      <div class="box-head"> 物品图片 </div>
+      <div class="subtitle"> 物品图片 </div>
       <div class="box-body clear">
         <div v-show="group.images.length==0">  </div>
         <el-row :gutter="20" class="images">

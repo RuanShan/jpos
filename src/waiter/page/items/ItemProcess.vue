@@ -182,7 +182,7 @@
 
               <el-table-column label="订单ID" prop="orderId">
               </el-table-column>
-              <el-table-column label="总价格" prop="price">
+              <el-table-column label="金额" prop="price">
               </el-table-column>
               <el-table-column label="物品状态" prop="displayState">
               </el-table-column>

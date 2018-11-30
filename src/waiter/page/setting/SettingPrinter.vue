@@ -57,7 +57,7 @@
     </el-form>
     <div class="button-sett">
       <el-button  type="danger" @click="submit" size="mini" >保存</el-button>
-      <el-button  type=""  @click="clearSelect" size="mini" >取消</el-button>
+      <el-button  type=""  @click="resetForm" size="mini" >取消</el-button>
     </div>
   </div>
 </template>
@@ -82,7 +82,7 @@ export default {
       form: {
         receiptPrinter: "", //小票打印机
         docPrinter: "", //门店打印机
-        labelPrinter: "", //工厂打印机
+        labelPrinter: "", //水洗唛打印机
         receiptTitle: "",
         receiptFooter: ""
       },
@@ -125,9 +125,9 @@ export default {
     changeForFactory(){
 
     },
-    clearSelect() {
-      this.initData()
+    resetForm() {
       this.$refs['form'].resetFields();
+      this.initData()
     },
     buildParams(){
       let params = { store: { doc_printer_name: this.form.docPrinter,
@@ -143,7 +143,7 @@ export default {
         if( res.id ){
           let store = this.buildStore( res )
           this.$store.commit('saveStore', store)
-
+          console.log( "saveStore=", store)
           this.$message({
             type: 'success',
             message: "恭喜你，配置提交成功"

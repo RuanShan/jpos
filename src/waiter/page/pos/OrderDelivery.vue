@@ -59,11 +59,10 @@
         <i>数量：</i>
         <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
         <i>金额：</i>
-        <span>{{totalMoney}}</span>&nbsp;
-        <i>元</i>
+        <span>￥{{totalMoney}}</span>&nbsp;
       </div>
       <div class=" font-color"  >
-        <el-button type="success" @click="handleDeliverOrders()" class="check-button">确认取单 ：&nbsp;￥&nbsp;{{totalMoney}}</el-button>
+        <el-button type="success" @click="handleDeliverOrders()" class="check-button">确认取单 ：&nbsp;￥{{totalMoney}}</el-button>
       </div>
     </div>
 
@@ -165,9 +164,9 @@ export default {
     //物品价格
     totalMoney: function(){
       let t = this.computedLineItemGroups.reduce((total, item)=>{
-        return total += item.price
+        return total += parseInt( item.price )
       }, 0)
-      return Number(t).toFixed(2)
+      return Number(t)
     },
     checkoutRequiredLineItems: function(){
       let items = this.checkoutRequiredLineItemGroups.map((group) => { return group.lineItems } )

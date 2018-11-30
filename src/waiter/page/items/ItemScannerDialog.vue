@@ -39,8 +39,8 @@
         </el-table>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="handleCloseDialog">取 消</el-button>
         <el-button type="primary" @click="sumit">确 定</el-button>
+        <el-button @click="handleCloseDialog">取 消</el-button>
       </div>
     </el-dialog>
 </template>

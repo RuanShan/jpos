@@ -459,24 +459,7 @@ export default {
         startEndTime: null,
         storeId: 0
       },
-      multipleSelection: [],
-      orderStateOptions: [{
-        value: 'all',
-        label: 'all'
-      }, {
-        value: 'pending',
-        label: 'pending'
-      }, {
-        value: 'partial',
-        label: 'partial'
-      }, {
-        value: 'ready_for_factory',
-        label: 'ready_for_factory'
-      }, {
-        value: 'ready',
-        label: 'ready'
-      }]
-
+      multipleSelection: []
     }
   },
   created() {

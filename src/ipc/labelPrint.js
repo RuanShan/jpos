@@ -1,22 +1,17 @@
 import { getPrinters, printDirect } from 'printer'
-import fs from 'fs'
 import _ from 'lodash'
 import iconv from 'iconv-lite'
-
+import { te310_20x50_barcode_label_tspl } from './templates/te310/20x50_barcode_label'
 //  let printParams = { receiptTitle: this.storeInfo.receiptTitle, receiptFooter: this.storeInfo.receiptFooter, storeName: this.storeInfo.name,  order: order }
 export function printLabel ( params ){
   const encoding="gb2312"
   // Select the adapter based on your printer type
   // {title, code, memo}
-  let path = __dirname + '/templates/te310/20x50_barcode_label.tspl'
-  console.log('path', path, 'params', params)
+  //let path = __dirname + '/templates/te310/20x50_barcode_label.tspl'
+  //console.log('path', path, 'params', params)
 
-  fs.readFile(path,'ascii', function(err,data){
-   if(err){
-    console.log(err);
-   }else{
-
-     let printName = params.labelPrinter 
+  let data = te310_20x50_barcode_label_tspl
+     let printName = params.labelPrinter
      let printers =  getPrinters()
 
      console.log( "printers", printers )
@@ -52,8 +47,5 @@ export function printLabel ( params ){
        }
 
      })
-
-   }
-  })
 
 }
