@@ -652,6 +652,8 @@ export var apiResultMixin = {
          variantId: model.variant_id,
          stockLocationId: model.stock_location_id,
          variantName: model.variant.name,
+         quantity: model.quantity,
+         memo: model.memo,
          variantPrice: parseInt( model.variant.price )
        }
        return item
