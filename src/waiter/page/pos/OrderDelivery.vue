@@ -187,7 +187,8 @@ export default {
     },
     isDeliverable(){
       let states = this.computedLineItemGroups.map((group)=>{ return group.state })
-      return states.length ==1 && states[0] == this.LineItemGroupStateEnum.ready
+      console.log( "isDeliverable=", states)
+      return _.uniq(states).length ==1 && states[0] == this.LineItemGroupStateEnum.ready
     }
   },
   methods:{
