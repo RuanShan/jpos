@@ -130,7 +130,7 @@
             <statis-member-case  v-if="memberTabVisible"  > </statis-member-case>
           </el-tab-pane>
           <el-tab-pane label="库存统计">
-            <StatisStockItems  ></StatisStockItems>
+            <StatisStockMovement  ></StatisStockMovement>
           </el-tab-pane>
           <el-tab-pane label="员工打卡统计">
             <statis-staff-clock-in  ></statis-staff-clock-in>
@@ -153,7 +153,7 @@ import StatisMemberCase from './StatisMemberCase.vue';
 import StatisStaffClockIn from './StatisStaffClockIn.vue';
 import StatisExpense from './StatisExpense.vue';
 import StatisWorker from './StatisWorker.vue';
-import StatisStockItems from './StatisStockItems.vue';
+import StatisStockMovement from './StatisStockMovement.vue';
 
 export default {
   components: {
@@ -167,7 +167,7 @@ export default {
     "statis-staff-clock-in": StatisStaffClockIn,
     StatisExpense,
     StatisWorker,
-    StatisStockItems
+    StatisStockMovement
   },
   data() {
     return {

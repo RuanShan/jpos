@@ -1,17 +1,17 @@
 <style lang="scss">
-.statis-stock-items {
+.statis-stock-movement {
 
     .select-options {
         width: 120px;
     }
-    .stock-items-time-select {
+    .stock-movement-time-select {
         width: 230px;
     }
 
     .order-ok {
 
     }
-    .stock-items-line-three-row {
+    .stock-movement-line-three-row {
         position: absolute;
         left: 10px;
         right: 10px;
@@ -40,12 +40,12 @@
 </style>
 
 <template>
-<div class="statis-stock-items">
+<div class="statis-stock-movement">
   <el-form ref="form" :model="formData"  :inline="true">
-    <fieldset class="stock-items-field-set filters">
+    <fieldset class="stock-movement-field-set filters">
       <legend>查询条件</legend>
-      <el-form-item class="stock-items-form-item" label="创建日期">
-        <el-date-picker class="stock-items-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+      <el-form-item class="stock-movement-form-item" label="创建日期">
+        <el-date-picker class="stock-movement-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
 
@@ -56,17 +56,15 @@
   </el-form>
 
   <!-- 会员统计表   START -->
-  <div class="stock-items-line-three-row ">
+  <div class="stock-movement-line-three-row ">
     <el-table class="cel-scrollable-table" :data="tableData"  border>
       <el-table-column prop="id" label="ID" width="80">
-      </el-table-column>
-      <el-table-column prop="storeName" label="所属门店" width="140">
       </el-table-column>
       <el-table-column prop="variantName" label="库存商品" width="140">
       </el-table-column>
       <el-table-column prop="quantity" label="数量" width="140">
       </el-table-column>
-      <el-table-column prop="userName" label="操作人" width="80">
+      <el-table-column prop="createdByName" label="操作人" width="80">
       </el-table-column>
 
       <el-table-column prop="displayCreatedAt" label="发生时间" width="140"></el-table-column>
@@ -93,15 +91,12 @@
 <script>
 import moment from 'moment'
 import {
-  findStockItems
+  findStockMovements
 } from '@/api/getData'
-
-import LightBox from 'vue-image-lightbox'
 
 
 export default {
   components: {
-    LightBox,
   },
   data() {
     return {
@@ -174,19 +169,18 @@ export default {
   methods: {
     async initData() {
       let params = this.buildParams()
-      let result = await findStockItems(params)
+      let result = await findStockMovements(params)
 
       this.totalPage = result.total_count
-      this.tableData = this.buildStockItems(result)
+      this.tableData = this.buildStockMovements(result)
       console.log("result=", result, "this.tableData = ", this.tableData)
     },
     buildParams() {
       let params = { //查询条件
         page: this.currentPage, //分页器选择的当前页数
         per_page: this.perPage, //每页显示12行数据
-        q: {
-          store_id_eq: this.storeId
-        }
+        q: {        },
+        stock_location_id: this.storeInfo.stockLocationId,
       }
 
       if ( this.computedStartAt && this.computedEndAt){

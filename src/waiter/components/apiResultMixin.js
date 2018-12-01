@@ -652,20 +652,25 @@ export var apiResultMixin = {
          variantId: model.variant_id,
          stockLocationId: model.stock_location_id,
          variantName: model.variant.name,
-         quantity: model.quantity,
-         memo: model.memo,
          variantPrice: parseInt( model.variant.price )
        }
        return item
     },
     buildStockMovements( result ){
       const models = result.stock_movements.map((model)=>{
-        let item = this.buildStockItem( model.stock_item )
-        item.id = model.id
-        item.quantity = model.quantity
-        item.stockItemId = model.stock_item_id
-        item.day = model.day
-        item.createdByName = model.created_by_name
+        let item = {
+          id: model.id,
+          quantity: model.quantity,
+          stockItemId: model.stock_item_id,
+          day: model.day,
+          memo: model.memo,
+          createdByName: model.created_by_name,
+          createdAt: moment(model.created_at),
+          stockItem: this.buildStockItem( model.stock_item )
+        }
+        item.variantName = item.stockItem.variantName
+        item.stockLocationId = item.stockItem.stockLocationId
+        item.displayCreatedAt = this.getDisplayDateTime( item.createdAt )
         return item
       })
       return models

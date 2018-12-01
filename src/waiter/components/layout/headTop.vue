@@ -174,6 +174,7 @@ export default {
     handleUserEntryCreated( newEntry){
       this.localUserEntries.push( newEntry)
       console.log( "emit user-entry-created-gevent")
+      this.$store.commit( 'saveUserEntries', this.localUserEntries )
       this.$bus.$emit('user-entry-created-gevent', this.localUserEntries)
     }
   }
