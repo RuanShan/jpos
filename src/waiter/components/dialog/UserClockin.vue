@@ -140,7 +140,7 @@ export default {
               } else {
                 this.$message({
                   type: 'error',
-                  message: res.error
+                  message: "用户名和密码不匹配"
                 })
               }
             } else {
