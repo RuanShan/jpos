@@ -48,7 +48,11 @@
         <el-date-picker class="stock-movement-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
-
+      <el-form-item label="商品" prop="stockItemId">
+        <el-select v-model="formData.stockItemId" placeholder="全部"  clearable size="mini" >
+          <el-option  v-for="item in stockItems" :key="item.id"  :label="item.variantName"  :value="item.id">  </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button class="order-ok" type="primary" size="mini" @click="handleSearch">确定</el-button>
       </el-form-item>
@@ -91,7 +95,7 @@
 <script>
 import moment from 'moment'
 import {
-  findStockMovements
+  findStockItems, findStockMovements
 } from '@/api/getData'
 
 
@@ -104,6 +108,7 @@ export default {
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null,
+        stockItemId: null
       },
       //*********** UI需要的变量 ***************/
 
@@ -137,7 +142,8 @@ export default {
           }
         }]
       },
-      tableData: [  ],
+      tableData: [],
+      stockItems: [],
       //*********** 逻辑需要的变量 ***************/
       returnServerCustomerData: {}, //调用接口,返回的数据
       customerData: {}, //整理過的顧客數據
@@ -156,6 +162,14 @@ export default {
     let end = moment()
     this.formData.selectedDates = [start.toDate(), end.toDate()]
     this.formData.storeId = this.storeId
+    let queryParams = {
+      stock_location_id: this.storeInfo.stockLocationId,
+      q: { variant_track_inventory_eq: 1  }
+    }
+    findStockItems( queryParams ).then( (result) => {
+      this.stockItems = this.buildStockItems( result )
+    })
+
     this.initData()
   },
   computed: {
@@ -186,6 +200,10 @@ export default {
       if ( this.computedStartAt && this.computedEndAt){
         params.q.created_at_gteq= this.computedStartAt
         params.q.created_at_lteq= this.computedEndAt
+      }
+
+      if( this.formData.stockItemId ){
+        params.q.stock_item_id_eq = this.formData.stockItemId
       }
       return params
     },

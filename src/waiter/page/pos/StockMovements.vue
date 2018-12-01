@@ -77,7 +77,6 @@
 
 
 <script>
-import _ from "lodash"
 import moment from "moment"
 import {
   findStockMovements, addStockMovement, findStockItems //
@@ -121,19 +120,6 @@ export default {
   },
   computed:{
 
-    computedOrderOptions: function() {
-      console.log("orderList", this.orderList)
-      let ops = this.orderList.map((order) => {
-        return order.lineItemGroups.map((group)=>{
-          return {
-            value: [order.id, group.id ].join('_') ,
-            label: order.number + '(#'+ group.number +')'
-          }
-        })
-      })
-      return _.flatten( ops )
-    },
-
     //物品数量
     totalCount: function(){
       return this.stockMovments.length
@@ -162,7 +148,7 @@ export default {
       let result = await findStockItems( queryParams )
       this.stockItems = this.buildStockItems( result )
       let params = this.buildPrams()
-      params.stock_item_id_in = this.stockItems.map((item)=>{ return item.id })
+      //params.stock_item_id_in = this.stockItems.map((item)=>{ return item.id })
       result = await findStockMovements( { stock_location_id: this.storeInfo.stockLocationId, q: params} )
       this.count = result.total_count
       this.stockMovments = this.buildStockMovements(result)
