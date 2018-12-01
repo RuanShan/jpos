@@ -134,7 +134,7 @@
             </el-col>
             <el-col :span="3">
               <div class="data_list">
-                <span class="data_num">{{statis.depositTotal}}</span> 会员充值金额</div>
+                <span class="data_num">{{statis.depositTotal}}</span> 充值金额</div>
             </el-col>
           </el-row>
           <el-row :gutter="20">
@@ -161,7 +161,7 @@
             </el-col>
             <el-col :span="3">
               <div class="data_list">
-                <span class="data_num">{{statis.allDepositTotal}}</span> 会员充值金额</div>
+                <span class="data_num">{{statis.allDepositTotal}}</span> 充值金额</div>
             </el-col>
           </el-row>
         </section>
