@@ -90,6 +90,7 @@
           <el-input type="textarea" v-model="formData.memo"></el-input>
         </el-form-item>
         <el-form-item>
+
             <el-checkbox label="打印条码" v-model="formData.isPrintLabel"></el-checkbox>
             <el-checkbox label="打印小票" v-model="formData.isPrintReceipt"></el-checkbox>
             <el-checkbox label="公众号电子小票" v-model="formData.enableMpMsg"></el-checkbox>
@@ -284,11 +285,17 @@ export default {
             this.$emit('update:dialogVisible', false)
             //if( this.formData.isPrintReceipt ){
             order.displayCreatedDateTime = order.createdAt.format('YYYY年MM月DD日 HH时 mm分 ss秒') //'2018年07月11日 20时 35分 05秒'
-            let printParams = { labelPrinter: this.storeInfo.labelPrinter, receiptTitle: this.storeInfo.receiptTitle, receiptFooter: this.storeInfo.receiptFooter, storeName: this.storeInfo.name,  order: order }
-            PrintUtil.printReceipt( printParams )
-            PrintUtil.printLabel( printParams )
+            let printParams = { labelPrinter: this.storeInfo.labelPrinter,
+              labelPrintCount: this.storeInfo.labelPrintCount, // 打印多少个条码
+              receiptTitle: this.storeInfo.receiptTitle, receiptFooter: this.storeInfo.receiptFooter,
+              storeName: this.storeInfo.name,  order: order }
+            if( this.formData.isPrintLabel ){
+              PrintUtil.printLabel( printParams )
+            }
+            if( this.formData.isPrintReceipt ){
+              PrintUtil.printReceipt( printParams )
+            }
 
-            //}
             this.$message({
               type: 'success',
               message: "恭喜你，订单提交成功"

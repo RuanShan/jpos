@@ -174,7 +174,8 @@ export default {
         page: this.currentPage, //分页器选择的当前页数
         per_page: this.perPage, //每页显示12行数据
         q: {
-          line_item_group_state_in: ['processing', 'processed', 'ready_for_store']
+          order_state_eq: this.OrderStateEnum.cart, //过滤掉取消的
+          work_at_not_null: true//
         }
       }
       if(!this.isLocationFactory()){

@@ -53,6 +53,10 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item class="member-form-item" label="小票数量">
+          <el-input v-model="form.labelPrintCount" placeholder="" size="mini" ></el-input>
+        </el-form-item>
+
       </fieldset>
     </el-form>
     <div class="button-sett">
@@ -112,6 +116,7 @@ export default {
       this.form.labelPrinter = this.storeInfo.labelPrinter
       this.form.receiptTitle = this.storeInfo.receiptTitle
       this.form.receiptFooter = this.storeInfo.receiptFooter
+      this.form.labelPrintCount = this.storeInfo.labelPrintCount
     },
     //小票打印机
     changeForReceipt(){

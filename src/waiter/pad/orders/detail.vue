@@ -232,6 +232,7 @@
                 list-type="picture-card"
                 :with-credentials="true"
                 :multiple = "true"
+                :before-remove="handleImageRemoveConfirm"              
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleImageRemoved"
                 :on-success="handleImageAdded">
@@ -394,6 +395,13 @@ export default {
       })
       console.log(" old=", lineItem, "new=", newAttribute)
       //this.orderItemList.splice(index, 1, newLineItem)
+    },
+    handleImageRemoveConfirm(file, fileList){
+      return this.$confirm('此操作将永久删除该图片, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
     },
   }
 };

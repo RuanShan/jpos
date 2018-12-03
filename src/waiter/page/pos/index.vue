@@ -157,9 +157,11 @@
         }
     }
     .order-sum {
-        height: 30px;
-        text-align: center;
-        i {
+      line-height: 30px;
+      height: 30px;
+      text-align: center;
+      margin: 0 10px;
+      i {
             font-size: 12px;
         }
     }
@@ -262,7 +264,7 @@
   <headTop></headTop>
   <leftNav></leftNav>
   <!-- 结账组件 Start-->
-  <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible" @order-created-event="handleOrderCreated"></CheckoutDialog>
+  <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalPrice" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible" @order-created-event="handleOrderCreated"></CheckoutDialog>
   <!-- 结账组件 End-->
 
   <!-- 添加会员组件 Start-->
@@ -328,7 +330,7 @@
                </template>
                 </el-table-column>
                 <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
-                <el-table-column prop="discount" label="折扣%" width="65">折扣</el-table-column>
+                <el-table-column prop="displayDiscount" label="折扣" width="65">折扣</el-table-column>
                 <el-table-column prop="price" label="金额" width="50">金额</el-table-column>
                 <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
                   <template slot-scope="scope">
@@ -343,15 +345,22 @@
                 </el-table>
               </div>
               <div class="order-final">
-                <div class="order-sum">
-                  <i>数量：</i>
-                  <span>{{totalCount}}</span>&nbsp;&nbsp;&nbsp;
-                  <i>金额：</i>
-                  <span>¥{{totalMoney}}</span>&nbsp;
-                  <el-button type="danger" size="mini" @click="clearAllGoods">清空</el-button>
+                <div class="order-sum clear">
+                  <div class="count left" >
+                    <i>物品数量：</i> <span>{{totalGroupCount}}</span>&nbsp;&nbsp;&nbsp;
+                    <i>工作数量：</i> <span>{{totalItemCount}}</span>&nbsp;&nbsp;&nbsp;
+                  </div>
+                  <el-button type="danger" size="mini" @click="clearAllGoods" class="right" >清空</el-button>
                 </div>
                 <div>
-                  <el-button class="check-button" @click="openCheckoutDialog()"> 收款 ：&nbsp;¥&nbsp;{{totalMoney}}</el-button>
+                  <el-button class="check-button" @click="openCheckoutDialog()">
+                    <div  v-show="currentCard.id" >
+                      <span > 应收：¥ {{totalSalePrice}} </span>&nbsp;&nbsp;&nbsp;<span> 实收：¥ {{totalPrice}}</span>
+                    </div>
+                    <div  v-show="!currentCard.id" >
+                      <span> 收款：¥ {{totalPrice}}</span>
+                    </div>
+                  </el-button>
                 </div>
               </div>
             </el-tab-pane>
@@ -498,6 +507,7 @@ export default {
       memberAddWindowVisible: false,
       customerList: [], //按关键字搜索到的客户列表
       currentCustomer: null,
+      currentCard: null,
       //由于搜索列表的每一项是 会员+会员卡，即如果会员有两个卡就有两项，
       //所以select的值为customerId+cardId, 当没有会员卡时，只有customerId
       customerComboId: null,
@@ -522,9 +532,6 @@ export default {
     },
     cardId () {
       return (this.customerComboId ? this.customerComboId.split('_')[1] : null)
-    },
-    currentCard(){
-      return this.currentCustomer.prepaidCard || this.defaultCard
     },
     selectedTaxonProducts () {
       return this.productList.filter(function (product) {
@@ -556,14 +563,25 @@ export default {
       return _.flatten(ops)
     },
 
-    totalCount () {
+    totalItemCount () {
       return this.orderItemList.reduce((total, item) => {
         return total += item.quantity
       }, 0)
     },
-    totalMoney () {
+    totalGroupCount () {
+      return  _.uniq( this.orderItemList.map((item) => {
+        return item.groupPosition
+      })).length
+    },
+    totalPrice () { // 实收
       let t = this.orderItemList.reduce((total, item) => {
         return total += item.price
+      }, 0)
+      return Number(t).toFixed(2)
+    },
+    totalSalePrice () { // 应收
+      let t = this.orderItemList.reduce((total, item) => {
+        return total += ( item.unitPrice * item.quantity )
       }, 0)
       return Number(t).toFixed(2)
     },
@@ -600,6 +618,7 @@ export default {
   },
   created() {
     this.currentCustomer = this.defaultCustomer
+    this.currentCard = this.defaultCard
     this.initData();
     //新订单创建以后，需要更新当前选择客户的会员卡余额数据
     this.$bus.$on('order-created-gevent', () => {
@@ -656,6 +675,7 @@ export default {
         memo: "",
         discount: this.getDiscountOfVariant(vid) //计算选择商品对应当前客户会员卡的折扣率
       }
+      newGoods.displayDiscount = this.getDisplayDiscount( newGoods.discount )
       this.computePrice(newGoods)
       this.orderItemList.push(newGoods);
       console.log("orderItemList", this.orderItemList)
@@ -673,7 +693,7 @@ export default {
     },
 
     clearAllGoods() {
-      if (!this.totalCount) {
+      if (!this.totalItemCount) {
         // 这个条件应该是根据后台返回的数据判断
         this.$message({
           message: "已经为空咯",
@@ -690,7 +710,7 @@ export default {
 
     checkout() {
       // 模拟结账
-      if (!this.totalCount) {
+      if (!this.totalItemCount) {
         // 这个条件应该是根据后台返回的数据判断
         this.$message({
           message: "还没有商品哦，请添加后在结账",
@@ -699,7 +719,7 @@ export default {
         return;
       }
       this.$message({
-        message: "结账成功，已到账￥" + this.totalMoney + "，感谢使用",
+        message: "结账成功，已到账￥" + this.totalPrice + "，感谢使用",
         type: "success"
       });
       this.orderItemList = [];
@@ -710,14 +730,16 @@ export default {
       //示例：groupnumber_0_xeditable
       let [column, index] = xeditableName.split('_')
       index = parseInt(index)
-      let newOrderItem = Object.assign({}, this.orderItemList[index], {
-        [column]: newValue
-      })
+      let item = this.orderItemList[index]
+      item[column] = newValue
       if (column == 'unitPrice') {
-        this.computePrice(newOrderItem)
+        this.computePrice(item)
       }
-      console.log(" old=", this.orderItemList[index], "new=", newOrderItem)
-      this.orderItemList.splice(index, 1, newOrderItem)
+      if (column == 'groupPosition') {
+        item.groupPosition = parseInt( item.groupPosition )
+      }
+      console.log(" new=", item)
+      this.$set(this.orderItemList, index, item )
     },
     // select order tabs
     handleTabClick(tab, event) {
@@ -761,6 +783,7 @@ export default {
 
         this.orderItemList.forEach((item) => {
           item.discount = this.getDiscountOfVariant(item.variantId)
+          item.displayDiscount =this.getDisplayDiscount( item.discount )
           this.computePrice(item)
         })
       } else {
@@ -829,6 +852,10 @@ export default {
       })
       // 找到商品对应用户会员卡的打折信息，设置折扣率
       return discount
+    },
+    getDisplayDiscount( discount ){
+      // 显示几折， 60， 6折
+      return  discount==100 ? '无' : `${discount/10}折`
     },
     computePrice(item) {
       item.price = item.discount * item.unitPrice * item.quantity / 100

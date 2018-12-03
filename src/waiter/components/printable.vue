@@ -1,5 +1,21 @@
 <style lang="scss" >
 @import '../style/print.scss';
+.print-only{
+  .transfer-table-wrap{
+    .store-info{
+      padding: 6px 0;
+    }
+    .sign{
+      padding: 40px 100px 0 0;
+      float: right;
+      p{
+        font-size: larger;
+        padding: 0 0 1.5em;
+      }
+    }
+  }
+}
+
 </style>
 
 <template>
@@ -7,7 +23,7 @@
   <div class="transfer-table-wrap">
     <h1> 汪永峰皮具养护中心物品交接单 </h1>
     <div class="clear store-info">
-      <span class="left">{{storeInfo.name}} </span><span class="right">制表日期 {{displayDate()}}</span>
+      <span class="left">{{storeInfo.name}} </span><span class="right">制表日期 {{displayDateTime()}}</span>
     </div>
 
     <table style="width:100%;">

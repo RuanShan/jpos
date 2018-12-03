@@ -24,26 +24,30 @@ export function printLabel ( params ){
      //PUTBMP 46,250,"qq40.BMP"
      //Append linebreak (\r) to all commands
      data = data + "\r" //Use double quotes to interpolate
-     var compiled = _.template( data );
+     let compiled = _.template( data )
      // 根据物品数量打印编码
-     var order = params.order;
-     order.lineItemGroups.forEach((group)=>{
-       var itemMemos = group.lineItems.map((item)=>{ return item.memo}).join( "\n")
-       var lableParams = { 'label_title': '永峰皮具养护中心', 'store_name': '西安路店', 'group_number': group.number, 'item_memos': itemMemos, 'item1_icon':'','item2_icon':'','item3_icon':'' }
+     let order = params.order
+     let labelPrintCount = params.labelPrintCount || 2 //默认打印2个
+     order.lineItemGroups.forEach((group, i)=>{
+       let itemMemos = group.lineItems.map((item)=>{ return item.memo}).join( "\n")
+       let lableParams = { 'label_title': '永峰皮具养护中心', 'store_name': '西安路店', 'group_number': group.number, 'item_memos': itemMemos, 'item1_icon':'','item2_icon':'','item3_icon':'' }
 
        data = iconv.encode( compiled(lableParams), encoding);
        console.log("raw data", data, printer)
-       if( printer ){
-         printDirect({
-           printer: printer.name
-           , data: data// or simple String: "some text"
-           //, printer:'Foxit Reader PDF Printer' // printer name, if missing then will print to default printer
-           , type: 'RAW' // type: RAW, TEXT, PDF, JPEG, .. depends on platform
-           , success:function(jobID){
-             console.log("sent to printer with ID: "+jobID);
-           }
-           , error:function(err){console.log(err);}
-         });
+       for( let j = 0; j< labelPrintCount; j++){
+         //一个物品条码打印多次
+         if( printer ){
+           printDirect({
+             printer: printer.name
+             , data: data// or simple String: "some text"
+             //, printer:'Foxit Reader PDF Printer' // printer name, if missing then will print to default printer
+             , type: 'RAW' // type: RAW, TEXT, PDF, JPEG, .. depends on platform
+             , success:function(jobID){
+               console.log("sent to printer with ID: "+jobID);
+             }
+             , error:function(err){console.log(err);}
+           });
+         }
        }
 
      })

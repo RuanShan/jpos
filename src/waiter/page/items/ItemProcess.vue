@@ -9,7 +9,7 @@
     top: 70px;
     bottom: 10px;
     left: 0;
-    width: 40%;
+    width: 45%;
     .item-list {
       position: absolute;
       top: 0;
@@ -56,7 +56,7 @@
     }
 
     position: absolute;
-    width: 60%;
+    width: 55%;
     top: 70px;
     bottom: 0;
     right: 0;
@@ -171,7 +171,7 @@
         <div class="item-list-wrap">
           <div class="item-list" >
             <el-table class="cel-scrollable-table"   max-height="100%" border :data="itemList" highlight-current-row @current-change="handleCurrentRowChange" :row-key="row => row.index" style="width: 100%">
-              <el-table-column  label="物品"  width="180">
+              <el-table-column  label="物品"  width="120">
                 <template slot-scope="scope">
                   <div class="image-wrap">
                     <img :src="scope.row.defulatImageUrl" alt="">
@@ -182,11 +182,16 @@
 
               <el-table-column label="订单ID" prop="orderId">
               </el-table-column>
-              <el-table-column label="金额" prop="price">
+              <el-table-column label="金额" prop="price"  width="70">
               </el-table-column>
               <el-table-column label="物品状态" prop="displayState">
               </el-table-column>
               <el-table-column label="订单时间" prop="displayCreatedAt">
+              </el-table-column>
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <el-button size="mini" @click="handlePrintGroupLabel(scope.$index, scope.row)">打印条码</el-button>
+                </template>
               </el-table-column>
             </el-table>
           </div>
@@ -277,6 +282,7 @@
                       list-type="picture-card"
                       :with-credentials="true"
                       :multiple = "true"
+                      :before-remove="handleImageRemoveConfirm"
                       :on-preview="handlePictureCardPreview"
                       :on-remove="handleImageRemoved"
                       :on-success="handleImageAdded">
@@ -291,14 +297,14 @@
           </div>
           <div class="actions" v-show="orderDetail">
             <el-button size="mini" @click="cancelOrder()">取消订单</el-button>
-            <el-button size="mini" @click="handlePrintLabel()" type="primary">打印条码</el-button>
+            <el-button size="mini" @click="handlePrintLabel()" type="primary">打印所有条码</el-button>
             <!-- <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
             <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button> -->
           </div>
         </div>
       </div>
     </el-dialog>
-    <el-dialog  append-to-body :visible.sync="imageDialogVisible">
+    <el-dialog  append-to-body :visible.sync="imageDialogVisible" width="70%">
       <el-carousel :initial-index="0"	 arrow="always" :autoplay="false">
         <el-carousel-item v-for="item in carouselImages" :key="item.id">
           <div  style="text-align:center;">
@@ -536,6 +542,13 @@ export default {
       //this.dialogImageUrl = file.originalUrl;
       this.imageDialogVisible = true;
     },
+    handleImageRemoveConfirm(file, fileList){
+      return this.$confirm('此操作将永久删除该图片, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+    },
     getGroupImageOfUploadedFile( file ){
       return file.type == "GroupImage" ? file : this.uploadedFileUidGroupIdMap[file.uid]
     },
@@ -564,7 +577,15 @@ export default {
       this.initData()
     },
     handlePrintLabel(){
-      let printParams = { order: this.orderDetail, labelPrinter: this.storeInfo.labelPrinter }
+      let printParams = { order: this.orderDetail, labelPrinter: this.storeInfo.labelPrinter, labelPrintCount: this.storeInfo.labelPrintCount }
+      PrintUtil.printLabel( printParams )
+    },
+    handlePrintGroupLabel( i, lineItemGroup){
+      // 打印当前group的条码
+      let order = Object.assign( {}, lineItemGroup.order )
+      order.lineItemGroups = [ lineItemGroup ]
+
+      let printParams = { order, labelPrinter: this.storeInfo.labelPrinter, labelPrintCount: this.storeInfo.labelPrintCount }
       PrintUtil.printLabel( printParams )
     }
   }

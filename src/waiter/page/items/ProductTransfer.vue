@@ -381,10 +381,6 @@ export default {
         window.print()
       })
     },
-    displayDate(){
-      let date = new Date()
-      return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
-    },
     handleSearch(){
       this.currentPage = 1
       this.initData()

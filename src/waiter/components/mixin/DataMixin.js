@@ -93,6 +93,10 @@ export var orderDataMixin = {
       let date = new Date()
       return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
     },
+    displayDateTime(){
+      let date = new Date()
+      return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+    },
     //判断软件设置的地点是否为工厂
     isLocationFactory(){
       return /Factory/.test(this.storeInfo.type)
