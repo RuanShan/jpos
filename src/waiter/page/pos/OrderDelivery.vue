@@ -203,7 +203,7 @@ export default {
     //需要付款的物品
     checkoutRequiredLineItemGroups: function(){
       return this.computedLineItemGroups.filter( (item)=>{
-        return item.paymentState== this.LineItemGroupPaymentStateEnum.pending
+        return item.paymentState== this.LineItemGroupPaymentStateEnum.unpaid
       })
     },
     //需要付款的金额
@@ -245,6 +245,7 @@ export default {
       let q = { line_item_groups_number_or_number_cont: keyword }
       findOrders({ q }).then((ordersResult) => {
         vm.orderList = vm.buildOrders(ordersResult)
+        console.log( " vm.orderList =", vm.orderList )
       })
     }, 450),
     //店员改变当前选择客户,更新订单列表折扣率

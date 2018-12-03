@@ -14,7 +14,7 @@ export var apiResultMixin = {
     return {
       OrderStateEnum: { cart: 'cart', canceled: 'canceled'  },
       OrderTypeEnum: { normal: 'normal', card: 'card', deposit: 'deposit' },
-      LineItemGroupPaymentStateEnum: { paid: 'paid', pending: 'pending'},
+      LineItemGroupPaymentStateEnum: { paid: 'paid', unpaid: 'unpaid'},
       CardStyleEnum:{ prepaid: 'prepaid', counts:'counts' }, // prepaid 充值卡， counts 次卡
       UserEntryStateEnum:{ clockin: 'clockin', clockout:'clockout' }, // 打卡 登入， 登出
       LineItemGroupStateEnum: {
@@ -63,7 +63,7 @@ export var apiResultMixin = {
         creatorName: orderResult.creator_name,
         state: orderResult.state,
         groupState: orderResult.group_state,
-        paymentState: orderResult.payment_state, // 支付状态 pending:欠款， paid:已经支付
+        paymentState: orderResult.payment_state, // 支付状态 unpaid:欠款， paid:已经支付
         paymentTotal: orderResult.payment_total, // 一共支付了多少
         createdAt: moment(orderResult.created_at),
         orderType: orderResult.order_type,
@@ -722,13 +722,13 @@ export var apiResultMixin = {
     },
     getOrderDisplayPaymentState(state){
       // order.payment_state
-      //支付状态 pending:欠款， paid:已经支付
-      return state == "pending" ? "未付" : "已付"
+      //支付状态 unpaid:欠款， paid:已经支付
+      return state == "paid" ?  "已付" : "未付"
     },
     getGroupDisplayPaymentState(state){
       // order.payment_state
-      //支付状态 pending:欠款， paid:已经支付
-      return state == "pending" ? "未付" : "已付"
+      //支付状态 unpaid:欠款， paid:已经支付
+      return state == "paid" ?  "已付" : "未付"
     },
     getPaymentDisplayState(state){
       // payment.state
