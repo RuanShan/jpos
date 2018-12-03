@@ -78,7 +78,7 @@ export var orderDataMixin = {
           }else{
             return false
           }
-        }else if( userRole == 'worker'){
+        }else if( userRole == 'qa'){
           if(  permission == 'fitems' ||  permission == 'statistics'){
             return true
           }else{
