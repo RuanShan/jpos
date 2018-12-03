@@ -10,7 +10,7 @@
       </div>
 
       <div  @click.capture="handleBlur" >
-        <el-form :model="form" v-auto-focus="focusCtrl" :data-current="currentIndex" :data-action="actionType" label-width="80px">
+        <el-form :model="form"  label-width="80px">
           <el-form-item label="物品编码">
             <div class="el-input">
               <input type="text" v-model="form.number" auto-complete="off"
@@ -94,8 +94,8 @@ export default {
     handleScannerInput() {
       console.log("---handleScannerInput---")
       const number = this.form.number
-      this.form.number = null
-      if( this.scanedNumbers.indexOf( number ) <0){
+      if( number){
+        this.form.number = null
         this.findGroupByNumber(number)
         this.scanedNumbers.push(number)
       }
@@ -111,13 +111,21 @@ export default {
       // find in orderDetailList
       const result = await getLineItemGroupByNumber(number)
       const lineItemGroup = this.buildLineItemGroup(result)
-      this.lineItemGroups.push(lineItemGroup)
+      // 如果重复录入，把以前的替换掉
+      let index = this.lineItemGroups.findIndex((group)=>{
+        return group.id == lineItemGroup.id
+      })
+      if( index >=0){
+        this.lineItemGroups.splice(index,1, lineItemGroup)        
+      }else{
+        this.lineItemGroups.push(lineItemGroup)
+      }
     },
     delOrderItem(selectedItem) {
       // 删除当前商品
       console.log( "selectedItem=", selectedItem)
       let group = this.lineItemGroups.find(o => {
-        return ( (o.number == selectedItem.groupNumber));
+        return ( (o.id == selectedItem.groupId));
       })
       let index = group.lineItems.indexOf( selectedItem )
       group.lineItems.splice(index,1)

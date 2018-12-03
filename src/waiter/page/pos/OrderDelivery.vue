@@ -1,3 +1,24 @@
+<style lang="scss">
+
+
+.order-delivery-container{
+  .order-sum{
+    line-height: 30px;
+  }
+  .font-color{
+    color: white;
+  }
+  .image-wrap {
+    text-align: center;
+    img{
+      max-width: 60px;
+      max-height: 60px;
+      vertical-align: middle;
+    }
+  }
+}
+</style>
+
 <template>
 <!--
 为了便于查看订单状态，这里允许查看搜索任意状态的物品
@@ -41,7 +62,14 @@
     <div class="order-item-list">
       <el-table :data="computedLineItemGroups" border stripe style="width:100%;" class="fillcontain" highlight-current-row  @current-change="handleCurrentGroupChange">
         <el-table-column prop="displayCreatedAt" label="订单日期"></el-table-column>
-        <el-table-column prop="number" label="物品条码"> </el-table-column>
+        <el-table-column label="物品条码" width="110">
+          <template slot-scope="scope">
+            <div class="image-wrap">
+              <img :src="scope.row.imageUrl" alt="">
+            </div>
+            <div class="group-number">{{scope.row.number}} </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="order.number" label="订单号"></el-table-column>
         <el-table-column prop="name" label="服务项目"></el-table-column>
         <el-table-column prop="displayState" label="物品状态"></el-table-column>
@@ -327,16 +355,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-
-.order-delivery-container{
-  .order-sum{
-    line-height: 30px;
-  }
-  .font-color{
-    color: white;
-  }
-}
-</style>

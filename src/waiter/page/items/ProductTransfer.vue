@@ -142,10 +142,10 @@
           <el-transfer v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name'}" :titles="[orderStateText, nextOrderStateText]" @change="handleTransferItems">
             <div slot-scope="{ option }" class="item">
               <div class="image-wrap">
-                <img :src="option.defulatImageUrl" alt="">
+                <img :src="option.imageUrl" alt="">
               </div>
               <div class="title">
-                <p class="">{{ option.number }} </p>
+                <p class="">{{ option.storeName }} {{ option.number }} </p>
                 <p class="">{{ option.name }}</p>
                </div>
             </div>

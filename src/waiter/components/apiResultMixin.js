@@ -82,10 +82,11 @@ export var apiResultMixin = {
         let groupedlineItems = []
         orderResult.line_items.forEach((lineItemResult)=> {
 
-          if (groupResult.number == lineItemResult.group_number) {
+          if (groupResult.id == lineItemResult.group_id) {
             const lineItem = {
               id: lineItemResult.id,
               orderId: lineItemResult.order_id,
+              groupId: lineItemResult.group_id,
               group: group,
               order: order,
               groupNumber: lineItemResult.group_number,
@@ -189,6 +190,8 @@ export var apiResultMixin = {
       let group = {
         id: item.id,
         orderId: item.order_id,
+        storeId: item.store_id,
+        storeName: item.store_name,
         name: item.name,
         number: item.number,
         price: parseInt(item.price),
@@ -209,26 +212,15 @@ export var apiResultMixin = {
       }
       //有很多地方使用物品图片，
       group.imageUploadPath =  getLineItemGroupImageUploadPath( group.id )
-      group.defulatImageUrl = ( group.images.length>0 ? group.images[0].miniUrl : group.missingImageUrl )
+      group.imageUrl = ( group.images.length>0 ? group.images[0].miniUrl : group.missingImageUrl )
       group.displayCreatedAt = this.getDisplayDateTime( group.createdAt )
       group.displayState = this.getGroupDisplayState(group.state)
       group.displayPaymentState = this.getGroupDisplayPaymentState( group.paymentState )
 
       if( item.line_items ){
         item.line_items.forEach((lineItemResult)=> {
-          const lineItem = {
-            id: lineItemResult.id,
-            orderId: lineItemResult.order_id,
-            group: group,
-            groupNumber: lineItemResult.group_number,
-            worker_id: lineItemResult.worker_id,
-            cname: lineItemResult.cname,
-            price: lineItemResult.price,
-            state: lineItemResult.state,
-            createdAt: moment(lineItemResult.created_at),
-            memo: lineItemResult.memo
-          }
-          lineItem.displayCreatedAt = this.getDisplayDateTime( lineItem.createdAt )
+          const lineItem = this.buildLineItem(lineItemResult )
+          lineItem.group = group
           group.lineItems.push(lineItem)
         })
       }
@@ -606,6 +598,7 @@ export var apiResultMixin = {
       const item = {
         id: model.id,
         orderId: model.order_id,
+        groupId: model.group_id,
         groupNumber: model.group_number,
         workerId: model.worker_id,
         workAt: model.work_at,

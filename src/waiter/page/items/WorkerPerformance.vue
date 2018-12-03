@@ -78,7 +78,7 @@
 
         <div class="filter">
           工人:
-          <el-select v-model="currentWorkerId" placeholder="All">
+          <el-select v-model="currentWorkerId" placeholder="全部">
             <el-option v-for="item in workerList" :key="item.id" :label="item.username" :value="item.id">
             </el-option>
           </el-select>

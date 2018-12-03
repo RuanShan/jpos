@@ -174,7 +174,7 @@
               <el-table-column  label="物品"  width="120">
                 <template slot-scope="scope">
                   <div class="image-wrap">
-                    <img :src="scope.row.defulatImageUrl" alt="">
+                    <img :src="scope.row.imageUrl" alt="">
                   </div>
                   <div class="group-number">{{scope.row.number}} </div>
                 </template>

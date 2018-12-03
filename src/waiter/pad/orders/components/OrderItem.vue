@@ -87,7 +87,7 @@
 
       <div class="shop_header">
         <div class="image-wrap">
-          <img :src="group.defulatImageUrl" alt="">
+          <img :src="group.imageUrl" alt="">
         </div>
         <div class="group-items">
           <p v-for="item in group.lineItems" class="fn-15 fw-2">
