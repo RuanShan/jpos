@@ -113,6 +113,7 @@
         width: 16.6666%
       }
     }
+    .vue-xeditable input{ width: 95%;}
   }
   table.bordered {
     width: 100%;
@@ -362,7 +363,6 @@ export default {
       multipleSelection: [],
       imageUploadPath: null,
       imageDialogVisible: false,
-      itemListMaxHeight: 100,
       carouselImages: [],
       uploadedFileUidGroupIdMap: {}
     }
@@ -562,10 +562,23 @@ export default {
       let params = { order_number: lineItem.order.number, line_item: newAttribute }
       updateLineItem(lineItem.id, params).then((res)=>{
         if( res.id ){
+          // 更新orderDetail中的值
+          console.log(" old1=", lineItem, "new=", newAttribute)
+
           Object.assign( lineItem, newAttribute)
+          // 更新groupList中lineItem的值
+          this.itemList.forEach((group)=>{
+            if(group.id== lineItem.groupId){
+              group.lineItems.forEach((item)=>{
+                if( item.id == lineItem.id){
+                  console.log(" old2=", item, "new=", newAttribute)
+                  Object.assign( item, newAttribute )
+                }
+              })
+            }
+          })
         }
       })
-      console.log(" old=", lineItem, "new=", newAttribute)
       //this.orderItemList.splice(index, 1, newLineItem)
     },
     handleSearch(){
@@ -584,7 +597,7 @@ export default {
       // 打印当前group的条码
       let order = Object.assign( {}, lineItemGroup.order )
       order.lineItemGroups = [ lineItemGroup ]
-
+console.log( "handlePrintGroupLabel=", lineItemGroup.lineItems)
       let printParams = { order, labelPrinter: this.storeInfo.labelPrinter, labelPrintCount: this.storeInfo.labelPrintCount }
       PrintUtil.printLabel( printParams )
     }

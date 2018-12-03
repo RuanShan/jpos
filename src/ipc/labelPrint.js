@@ -29,9 +29,10 @@ export function printLabel ( params ){
      let order = params.order
      let labelPrintCount = params.labelPrintCount || 2 //默认打印2个
      order.lineItemGroups.forEach((group, i)=>{
-       let itemMemos = group.lineItems.map((item)=>{ return item.memo}).join( "\n")
-       let lableParams = { 'label_title': '永峰皮具养护中心', 'store_name': '西安路店', 'group_number': group.number, 'item_memos': itemMemos, 'item1_icon':'','item2_icon':'','item3_icon':'' }
-
+       let itemMemos = group.lineItems.map((item)=>{ return item.memo })
+       console.log( "lableParams=",itemMemos)
+       itemMemos = _.compact(itemMemos).map((memo, i)=>{ return '('+i+')'+memo }).join(" ")
+       let lableParams = { 'label_title': '永峰皮具养护中心', 'store_name': '西安路店', 'group_number': group.number, 'item_memos': itemMemos }
        data = iconv.encode( compiled(lableParams), encoding);
        console.log("raw data", data, printer)
        for( let j = 0; j< labelPrintCount; j++){
