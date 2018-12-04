@@ -83,27 +83,9 @@ export var apiResultMixin = {
         orderResult.line_items.forEach((lineItemResult)=> {
 
           if (groupResult.id == lineItemResult.group_id) {
-            const lineItem = {
-              id: lineItemResult.id,
-              orderId: lineItemResult.order_id,
-              groupId: lineItemResult.group_id,
-              group: group,
-              order: order,
-              groupNumber: lineItemResult.group_number,
-              cname: lineItemResult.cname,
-              price: lineItemResult.price,
-              quantity: lineItemResult.quantity,
-              saleUnitPrice: lineItemResult.sale_unit_price,
-              discountPercent: lineItemResult.discount_percent,
-              cardId: lineItemResult.card_id,
-              memo: lineItemResult.memo,
-              labelIconName: lineItemResult.label_icon_name,
-              state: lineItemResult.state,
-              createdAt: moment(lineItemResult.created_at),
-
-            }
-            lineItem.displayState = this.getLineItemDisplayState(lineItem.state )
-            lineItem.displayCreatedAt = this.getDisplayDateTime(lineItem.createdAt)
+            const lineItem = this.buildLineItem( lineItemResult )
+            lineItem.group = group
+            lineItem.order = order
             groupedlineItems.push(lineItem)
           }
         })
@@ -118,14 +100,7 @@ export var apiResultMixin = {
       // 其它子订单 如：购买商品订单，充值订单，购买打折卡订单
       orderResult.line_items.forEach((lineItemResult) => {
         if (!lineItemResult.group_number) {
-          const lineItem = {
-            id: lineItemResult.id,
-            cname: lineItemResult.cname,
-            price: lineItemResult.price,
-            cardId: lineItemResult.card_id,
-            state: lineItemResult.state,
-            memo: lineItemResult.memo
-          }
+          const lineItem = this.buildLineItem( lineItemResult )
           order.extraLineItems.push(lineItem)
         }
       })
@@ -603,13 +578,18 @@ export var apiResultMixin = {
         workerId: model.worker_id,
         workAt: model.work_at,
         cname: model.cname,
-        price: model.price,
+        price: parseInt(model.price),
+        quantity: model.quantity,
         state: model.state,
         memo: model.memo,
         workerName: model.worker_name,
         storeName: model.store_name,
+        saleUnitPrice: model.sale_unit_price,
+        discountPercent: model.discount_percent,
+        cardId: model.card_id,
         createdAt: moment(model.created_at)
       }
+
       item.displayCreatedAt = this.getDisplayDateTime( item.createdAt )
       item.displayState = this.getLineItemDisplayState(item.state )
       if( item.workAt){

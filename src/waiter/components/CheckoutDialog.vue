@@ -123,7 +123,7 @@ import {
 } from '@/components/mixin/DialogMixin'
 
 export default {
-  props: ["dialogVisible", "orderItemList", "totalMoney", "customer", "disableCheckoutWidthoutPayment"],
+  props: ["dialogVisible", "orderItemList", "totalMoney", "customer"],
   components: {  },
   data() {
     return {
@@ -255,6 +255,7 @@ export default {
           this.formData.enablePrepaidCard = true
         }
       }
+      console.log( "handleDialogOpened-orderItemList = ", this.orderItemList)
       this.computePaymentAmount()
     },
     computePaymentAmount(){
@@ -310,8 +311,9 @@ export default {
         })
     },
     //创建支付，客户领取物品时付款
-    CreatePayment( orderId, payments ) {
-        addPayments( orderId, payments ).then((res)=>{
+    CreatePayment( orderId, params ) {
+      // params = { payments, line_item_ids}
+        addPayments( orderId, params ).then((res)=>{
           if( res.count> 0){
             //发送支付创建时间
             this.$emit('payment-created-event', res )
@@ -358,7 +360,8 @@ export default {
       console.log( "handleCreateOrderAndPayment", that.existedOrderId )
       if( that.existedOrderId != null){
         let payments = params.order.payments
-        that.CreatePayment( that.existedOrderId, payments )
+        let line_item_ids = that.orderItemList.map((item)=>{ return item.id })
+        that.CreatePayment( that.existedOrderId, { payments, line_item_ids } )
       }else{
         that.CreateOrder( params )
       }

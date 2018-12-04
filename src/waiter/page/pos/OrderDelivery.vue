@@ -207,7 +207,7 @@ export default {
       })
     },
     //需要付款的金额
-    checkoutTotal: function(){
+    checkoutRequiredTotal: function(){
       let t = this.checkoutRequiredLineItemGroups.reduce((total, item)=>{
         return total += item.price
       }, 0)
@@ -321,9 +321,10 @@ export default {
     },
     // 交付客户订单
     handleDeliverOrders(){
+      console.log( "checkoutRequiredLineItems=", this.checkoutRequiredLineItems)
       if( this.isDeliverable){
         //检查每件物品对应的Order用户是否付款， 如果没有，弹出结账对话框,
-        if( this.checkoutTotal > 0){
+        if( this.checkoutRequiredTotal > 0){
           this.checkoutDialogVisible = true
         }else{
           //检查所有物品是否为待交付状态，如果是，弹出确认框

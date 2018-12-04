@@ -185,6 +185,7 @@ export default {
     },
     isDeliverable(){
       let states = this.computedLineItemGroups.map((group)=>{ return group.state })
+      states = _.uniq( states)
       return states.length ==1 && states[0] == this.LineItemGroupStateEnum.ready
     }
   },
@@ -283,9 +284,11 @@ export default {
       this.completeOrders()
     },
     handleDeliverOrders(){
+      console.log( "checkoutRequiredLineItemGroups=", checkoutRequiredLineItemGroups)
       if( this.isDeliverable){
         //检查每件物品对应的Order用户是否付款， 如果没有，弹出结账对话框,
         if( this.checkoutTotal > 0){
+          console.log( "checkoutRequiredLineItemGroups=", checkoutRequiredLineItemGroups)
           this.checkoutDialogVisible = true
         }else{
           //检查所有物品是否为待交付状态，如果是，弹出确认框
