@@ -46,6 +46,11 @@ const mutations = {
     state.storeInfo = storeInfo
     state.storeId = storeInfo.id
     state.storeType = storeInfo.type
+    // update store in stores
+    let index = state.stores.findIndex((store)=>{ return store.id == storeInfo.id})
+    if( index >=0 ){
+      state.stores.splice( index, 1, storeInfo )
+    }
   },
   saveStores(state, stores) {
     state.stores = stores

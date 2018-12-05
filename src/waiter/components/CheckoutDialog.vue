@@ -60,23 +60,33 @@
     </div>
 
     <div class="checkout-form-wrap">
-      <el-form :model="formData" :rules="rules" ref="formData" label-width="100px" class="checkout-form">
+      <el-form :model="formData" :rules="rules" ref="formData" label-width="120px" class="checkout-form">
         <el-form-item label="应收金额">
           <el-input v-model="totalMoney" readonly class="money align-right">
           </el-input>
         </el-form-item>
-        <el-form-item label="会员卡支付" v-if="isShowPrepaidCard" required  prop="prepaidCardAmount">
+        <el-form-item label="会员充值卡支付" v-if="isShowPrepaidCard"  prop="prepaidCardAmount">
           <el-input v-model="formData.prepaidCardAmount" placeholder="" class="payment-card money align-right"  :disabled="!formData.enablePrepaidCard">
             <template slot="prepend">
               <div>
-                <p>{{availablePrepaidCard.name}}</p>
-                <p>卡号{{availablePrepaidCard.code}}余额{{availablePrepaidCard.amountRemaining}}</p>
+                <p>{{currentCard.name}}</p>
+                <p>卡号{{currentCard.code}} 余额{{currentCard.amountRemaining}}</p>
               </div>
             </template>
           </el-input>
           <el-checkbox label="使用会员卡"  v-model="formData.enablePrepaidCard" @change="handleEnablePrepaidCard"></el-checkbox>
         </el-form-item>
-
+        <el-form-item label="会员次卡支付" v-if="isShowTimesCard" required  prop="timesCardAmount">
+          <el-input v-model="formData.timesCardAmount" placeholder="" class="payment-card money align-right"  :disabled="!formData.enableTimesCard">
+            <template slot="prepend">
+              <div>
+                <p>{{currentCard.name}}</p>
+                <p>卡号{{currentCard.code}} 剩余次数{{currentCard.amountRemaining}}</p>
+              </div>
+            </template>
+          </el-input>
+          <el-checkbox label="使用会员卡"  v-model="formData.enableTimesCard" @change="handleEnablePrepaidCard"></el-checkbox>
+        </el-form-item>
 
         <el-form-item label="支付方式"  class="payment">
           <el-input v-model="formData.paymentAmount" placeholder="" class="money">
@@ -132,9 +142,11 @@ export default {
       paymentMethodList: [      ],
       formData:{
         prepaidCardAmount: 0,
+        timesCardAmount: 0,
         paymentAmount: 0,
         paymentPassword: null,
         enablePrepaidCard: false,
+        enableTimesCard: false,
         selectPaymentMethodId: null,
         checkList:[],
         isPrintLabel: true,
@@ -165,23 +177,29 @@ export default {
       }, 0)
       return t.toFixed(0)
     },
-    availablePrepaidCard: function(){
-      let card = this.card
+    currentCard: function(){
+      // card maybe nil, it would cause error, card.code
+      return this.card == null ? {} : this.card
+    },
+    currentPrepaidCard: function(){
+      let card = this.currentCard
       // 充值卡 && 可用状态 && 余额>0
-      if( card.style == 'prepaid' && card.state == 'enabled' && card.amountRemaining > 0 ){
+      if( card.style == this.CardStyleEnum.prepaid && card.state == this.CardStateEnum.enabled && card.amountRemaining > 0 ){
         return card
       }else{
         return null
-      }    
+      }
     },
     isShowPrepaidCard: function(){
-      return this.availablePrepaidCard != null
+      return this.currentPrepaidCard != null
+    },
+    isShowTimesCard: function(){
+      return this.currentCard.style == this.CardStyleEnum.times
     },
     isPasswordRequired(){
-
       let isCardBelongsOtherStore = false
-      if( this.availablePrepaidCard ){
-        isCardBelongsOtherStore = (this.availablePrepaidCard.storeId != this.storeId)
+      if( this.currentPrepaidCard ){
+        isCardBelongsOtherStore = (this.currentPrepaidCard.storeId != this.storeId)
       }
       //使用会员卡支付 && （店铺设置必须支付密码 || 这张卡是其它店铺的卡）
       console.log("store.checkoutPasswordRequired=",this.storeInfo.checkoutPasswordRequired, isCardBelongsOtherStore)
@@ -201,7 +219,7 @@ export default {
     },
     //结账请求参数
     checkoutParams: function(){
-      //"payment_source": {this.availablePrepaidCard.id
+      //"payment_source": {this.currentPrepaidCard.id
       //  "1": {
       //    "number": "4111111111111111",
       //  }
@@ -209,7 +227,7 @@ export default {
       let paymentsAttributes = []
       console.log(" prepaidCardPaymentMethod =", this.prepaidCardPaymentMethod)
       if( this.formData.enablePrepaidCard ){
-        paymentsAttributes.push( { source_id: this.availablePrepaidCard.id, source_type: "Spree::Card",
+        paymentsAttributes.push( { source_id: this.currentPrepaidCard.id, source_type: "Spree::Card",
           amount: this.formData.prepaidCardAmount, payment_method_id: this.prepaidCardPaymentMethod.id } )
       }
       console.log( "this.orderRemainder=",this.orderRemainder)
@@ -251,9 +269,9 @@ export default {
       this.formData.paymentAmount = 0
       this.formData.prepaidCardAmount = 0
 
-      if( this.availablePrepaidCard != null){
+      if( this.currentPrepaidCard != null){
         //会员卡的余额是否够用
-        if( this.availablePrepaidCard.amountRemaining>0){
+        if( this.currentPrepaidCard.amountRemaining>0){
           this.formData.enablePrepaidCard = true
         }
       }
@@ -263,7 +281,7 @@ export default {
     computePaymentAmount(){
       console.log( "this.formData.enablePrepaidCard=", this.formData.enablePrepaidCard )
       if( this.formData.enablePrepaidCard ){
-        let card = this.availablePrepaidCard
+        let card = this.currentPrepaidCard
         this.formData.prepaidCardAmount = ( card.amountRemaining >= this.totalPrice ? this.totalPrice : (this.totalPrice - card.amountRemaining) )
       }else{
         this.formData.prepaidCardAmount = 0
@@ -379,7 +397,7 @@ export default {
           inputType: 'password',
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          inputValidator: (value)=>{  return value== this.availablePrepaidCard.paymentPassword  },
+          inputValidator: (value)=>{  return value== this.currentPrepaidCard.paymentPassword  },
           inputErrorMessage: '会员支付密码不正确'
         }).then(({ value }) => {
           console.log( " $prompt then ", value)
@@ -390,7 +408,7 @@ export default {
     },
     async handleValidateCardPassword( password ){
 
-       let response = await validateCardPassword(this.availablePrepaidCard.id, password )
+       let response = await validateCardPassword(this.currentPrepaidCard.id, password )
        console.log( "handleValidateCardPassword=",password, response, response.result == true )
        return response.result == true
     },
