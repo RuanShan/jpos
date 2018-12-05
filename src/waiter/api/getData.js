@@ -382,7 +382,7 @@ export const addPayments = (id, data) => fetch('/api/v1/pos_orders/' + id +'/add
  * 获取Customer信息
  */
 
-export const getCustomer = user_id => { console.log('getCustomer', user_id); return fetch('/api/v1/customers/' + user_id)}
+export const getCustomer = user_id => fetch('/api/v1/customers/' + user_id)
 
 /**
  * 根据条件搜索客户信息

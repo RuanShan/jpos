@@ -264,7 +264,7 @@
   <headTop></headTop>
   <leftNav></leftNav>
   <!-- 结账组件 Start-->
-  <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalPrice" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible" @order-created-event="handleOrderCreated"></CheckoutDialog>
+  <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalPrice" :customer="currentCustomer" :card="currentCard" :dialog-visible.sync="checkoutDialogVisible" @order-created-event="handleOrderCreated"></CheckoutDialog>
   <!-- 结账组件 End-->
 
   <!-- 添加会员组件 Start-->
@@ -547,7 +547,9 @@ export default {
     computedCustomerOptions () {
       let ops = this.customerList.map((customer) => {
         if (customer.cards.length > 0) {
-          return customer.cards.map((card) => {
+          return customer.cards.filter((card)=>{
+            return card.state == this.CardStateEnum.enabled
+          }).map((card) => {
             return {
               value: [customer.id, card.id].join('_'),
               label: customer.mobile + '(#' + card.code + ')'
@@ -563,12 +565,12 @@ export default {
       return _.flatten(ops)
     },
 
-    totalItemCount () {
+    totalItemCount () { // 工作数量
       return this.orderItemList.reduce((total, item) => {
         return total += item.quantity
       }, 0)
     },
-    totalGroupCount () {
+    totalGroupCount () { //物品数量
       return  _.uniq( this.orderItemList.map((item) => {
         return item.groupPosition
       })).length
@@ -621,12 +623,8 @@ export default {
     this.currentCard = this.defaultCard
     this.initData();
     //新订单创建以后，需要更新当前选择客户的会员卡余额数据
-    this.$bus.$on('order-created-gevent', () => {
+    this.$bus.$on('order-created-gevent', (newOrder) => {
       console.log('order-created-gevent', 'this.currentCustomer', this.currentCustomer, this.currentCustomer.id)
-      getCustomer(this.currentCustomer.id).then(result => {
-        const customer = this.buildCustomer(result)
-        this.setCurrentCustomer(customer)
-      })
     })
 
   },
@@ -778,8 +776,13 @@ export default {
           return customer.id == this.customerId
         })
 
-        //当前选择的客户
-        this.currentCard = this.currentCustomer.prepaidCard
+        //当前选择的会员卡
+        if( this.cardId ){
+          this.currentCard = this.currentCustomer.cards.find((card)=>{
+            return card.id == this.cardId
+          })
+        }
+
 
         this.orderItemList.forEach((item) => {
           item.discount = this.getDiscountOfVariant(item.variantId)
@@ -787,17 +790,23 @@ export default {
           this.computePrice(item)
         })
       } else {
-        this.currentCustomer = this.defaultCustomer
+        this.setCurrentCustomer( this.defaultCustomer )
 
         this.orderItemList.forEach((item) => {
           item.discount = 100
+          item.displayDiscount =this.getDisplayDiscount( item.discount )
           this.computePrice(item)
         })
       }
     },
     handleOrderCreated(newOrder) {
       this.orderItemList = []
-      this.$bus.$emit('order-created-gevent')
+      this.$bus.$emit('order-created-gevent', newOrder)
+      getCustomer(this.currentCustomer.id).then(result => {
+        const customer = this.buildCustomer(result)
+        const card = customer.cards.find((c)=>{ return c.id== this.currentCard.id })
+        this.setCurrentCustomer(customer, card)
+      })
     },
     // in ready group tab, current group change event
     handleCurrentGroupChanged(selectedGroup){
@@ -821,7 +830,8 @@ export default {
       console.log(" handleCustomerCreatedEvent", customer)
       //如果创建了用户，选择新创建的客户
       if (customer) {
-        this.setCurrentCustomer(customer)
+        //如果创建了会员卡，同时设置会员卡
+        this.setCurrentCustomer(customer, customer.card)
       }
     },
     handlePreviewImage(file){
@@ -840,8 +850,7 @@ export default {
       const product = this.findProductByVariantId(variantId)
 
       // 找到会员卡的分类ID，每个分类对应一些打折产品
-      this.currentCustomer.cards.forEach((card) => {
-        let pid = card.productId
+        let pid = this.currentCard.productId
         product.relateds.forEach((related) => {
           if (related.relatableId == pid) {
             if (related.discountPercent < discount) {
@@ -849,7 +858,6 @@ export default {
             }
           }
         })
-      })
       // 找到商品对应用户会员卡的打折信息，设置折扣率
       return discount
     },
@@ -860,14 +868,10 @@ export default {
     computePrice(item) {
       item.price = item.discount * item.unitPrice * item.quantity / 100
     },
-    setCurrentCustomer(customer) {
-      //
-      let indexOfItem = this.customerList.findIndex(( item)=>{ return item.id == customer.id })
-      if( indexOfItem>=0){
-        this.customerList.splice(indexOfItem, 1, customer)
-      }
+    setCurrentCustomer(customer, card) {
       this.currentCustomer = customer
-
+      // card 可能为空
+      this.currentCard = card ? card : this.defaultCard
     },
     renderEditableTableHeader(h, {
       column
@@ -877,17 +881,6 @@ export default {
         class: "el-icon-edit"
       })])
     }
-  },
-  watch: {
-    // userInfo(newValue) {
-    //   if (!newValue.id) {
-    //     this.$message({
-    //       type: "error",
-    //       message: "检测到您的登录信息过期, 请重新登录"
-    //     });
-    //     this.$router.push("login");
-    //   }
-    // }
   }
 };
 </script>

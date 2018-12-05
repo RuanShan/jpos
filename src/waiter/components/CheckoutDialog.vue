@@ -123,7 +123,7 @@ import {
 } from '@/components/mixin/DialogMixin'
 
 export default {
-  props: ["dialogVisible", "orderItemList", "totalMoney", "customer"],
+  props: ["dialogVisible", "orderItemList", "totalMoney", "customer", "card"],
   components: {  },
   data() {
     return {
@@ -166,11 +166,13 @@ export default {
       return t.toFixed(0)
     },
     availablePrepaidCard: function(){
-      let card = this.customer.cards.find((card)=>{
-        // 充值卡 && 可用状态 && 余额>0
-        return card.style == 'prepaid' && card.state == 'enabled' && card.amountRemaining > 0
-      })
-      return card
+      let card = this.card
+      // 充值卡 && 可用状态 && 余额>0
+      if( card.style == 'prepaid' && card.state == 'enabled' && card.amountRemaining > 0 ){
+        return card
+      }else{
+        return null
+      }    
     },
     isShowPrepaidCard: function(){
       return this.availablePrepaidCard != null

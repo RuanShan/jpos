@@ -86,7 +86,8 @@ const actions = {
     const result = await getCardTypes()
     const list = []
     result.products.forEach((obj)=>{
-        list.push({id:obj.id, name:obj.name, price: obj.price})
+      // master 是 variant, 购买会员卡时，需要使用variant.id
+      list.push({ id: obj.master.id, productId:obj.id, name:obj.name, price: obj.price  })
     })
     store.commit('saveMemberCardTypes', list)
     return store.state.cardTypes

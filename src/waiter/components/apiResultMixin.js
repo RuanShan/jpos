@@ -15,7 +15,8 @@ export var apiResultMixin = {
       OrderStateEnum: { cart: 'cart', canceled: 'canceled'  },
       OrderTypeEnum: { normal: 'normal', card: 'card', deposit: 'deposit' },
       LineItemGroupPaymentStateEnum: { paid: 'paid', unpaid: 'unpaid'},
-      CardStyleEnum:{ prepaid: 'prepaid', counts:'counts' }, // prepaid 充值卡， counts 次卡
+      CardStateEnum:{ enabled: 'enabled', disabled:'disabled', replaced: 'replaced' }, // enabled 可用, disabled 不可用
+      CardStyleEnum:{ prepaid: 'prepaid', times:'times' }, // prepaid 充值卡， times 次卡
       UserEntryStateEnum:{ clockin: 'clockin', clockout:'clockout' }, // 打卡 登入， 登出
       LineItemGroupStateEnum: {
         pending: 'pending',
@@ -350,7 +351,9 @@ export var apiResultMixin = {
           user.cards.push(card)
         })
         // 选择第一个可用的card作为 缺省会员卡
-        user.prepaidCard = user.cards.find((card)=>{ return (card.state == 'enabled' && card.style== this.CardStyleEnum.prepaid)})
+        user.prepaidCard = user.cards.find((card)=>{ return (card.state == this.CardStateEnum.enabled && card.style== this.CardStyleEnum.prepaid)})
+        user.timesCard = user.cards.find((card)=>{ return (card.state == this.CardStateEnum.enabled && card.style== this.CardStyleEnum.times)})
+        user.card = user.prepaidCard || user.timesCard
       }
 
       if( ! user.prepaidCard ){
@@ -441,7 +444,7 @@ export var apiResultMixin = {
         id: model.id,
         storeId: model.store_id,
         name: model.name,
-        style: model.style, // prepaid 充值卡， counts 次卡
+        style: model.style, // prepaid 充值卡， times 次卡
         amountRemaining: parseInt(model.amount_remaining),
         amount: parseInt(model.amount), // 充值钱数
         amountUsed: parseInt(model.amount_used), // 使用钱数
@@ -666,12 +669,12 @@ export var apiResultMixin = {
       return gender == "male" ? "男" : "女"
     },
     getCardDisplayStyle(style) {
-      return style == "prepaid" ? "充值卡" : "次卡" //prepaid 充值卡， counts 次卡
+      return style == "prepaid" ? "充值卡" : "次卡" //prepaid 充值卡， times 次卡
     },
     getCardDisplayState(state) {
-      if( state == "enabled") return "可用";
-      if( state == "disabled") return "不可用";
-      if( state == "replaced") return "已转卡";
+      if( state == this.CardStateEnum.enabled) return "可用";
+      if( state == this.CardStateEnum.disabled) return "不可用";
+      if( state == this.CardStateEnum.replaced) return "已转卡";
       return "未知"
     },
     getGroupDisplayState(state) {
@@ -693,7 +696,7 @@ export var apiResultMixin = {
       return "未知"
     },
     getUserEntryDisplayState(state) {
-      return state == "clockin" ? "登入" : "登出" //prepaid 充值卡， counts 次卡
+      return state == "clockin" ? "登入" : "登出" //clockin 登入 clockout 登出
     },
     getOrderDisplayState(state){
       // order.payment_state

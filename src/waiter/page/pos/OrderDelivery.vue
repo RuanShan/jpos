@@ -151,7 +151,9 @@ export default {
     computedCustomerOptions: function() {
       let ops = this.customerList.map((customer) => {
         if( customer.cards.length > 0 ){
-          return customer.cards.map((card)=>{
+          return customer.cards.filter((card)=>{
+            return card.state == this.CardStateEnum.enabled
+          }).map((card)=>{
             return { value: [customer.id,card.id].join('_'),
               label: customer.mobile + '(#'+card.code+')'
             }
