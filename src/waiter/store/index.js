@@ -92,7 +92,7 @@ const actions = {
     const list = []
     result.products.forEach((obj)=>{
       // master 是 variant, 购买会员卡时，需要使用variant.id
-      list.push({ id: obj.master.id, productId:obj.id, name:obj.name, price: obj.price  })
+      list.push({ id: obj.master.id, masterId: obj.master.id, productId: obj.id, name:obj.name, price: obj.price, type: obj.type  })
     })
     store.commit('saveMemberCardTypes', list)
     return store.state.cardTypes

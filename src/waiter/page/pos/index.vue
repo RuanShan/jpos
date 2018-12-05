@@ -310,7 +310,7 @@
                         <th>会员卡类型</th>
                         <td>{{currentCard.name}}</td>
                         <th>会员卡余额</th>
-                        <td>{{currentCard.amountRemaining}}</td>
+                        <td><span v-show="currentCard.style=='times'">{{currentCard.cardTimesRemaining}}</span><span v-show="currentCard.style=='prepaid'">{{currentCard.amountRemaining}}</span></td>
                       </tr>
                     </table>
                   </div>

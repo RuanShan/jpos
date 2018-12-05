@@ -51,7 +51,7 @@
             <el-form :model="formData" :rules="rules" ref="formData" status-icon label-width="100px" style="margin-top:20px;">
               <el-form-item label="会员卡类型" prop="variantId"  required>
                 <el-select v-model="formData.variantId"   >
-                  <el-option v-for="item in cardTypeList" :key="item.id" :label="item.name" :value="item.id">
+                  <el-option v-for="item in cardTypeList" :key="item.masterId" :label="item.name" :value="item.masterId">
                   </el-option>
                 </el-select>
               </el-form-item>

@@ -450,6 +450,10 @@ export var apiResultMixin = {
         amountUsed: parseInt(model.amount_used), // 使用钱数
         discountPercent: parseInt(model.discount_percent),
         discountAmount: parseInt(model.discount_amount),
+        cardTimesRemaining: parseInt(model.card_times_remaining),
+        cardTimes: parseInt(model.card_times), // 充值钱数
+        cardTimesUsed: parseInt(model.card_times_used), // 使用钱数
+
         //status: model.status, //enabled:可用， disabled：不可用
         state: model.state, //enabled:可用， disabled：不可用, replaced: 已转卡
         code: (model.code.length < 12 ? model.code : model.code.slice(0, 12)), // 显示前12位

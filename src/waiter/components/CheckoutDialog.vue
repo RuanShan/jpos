@@ -74,18 +74,18 @@
               </div>
             </template>
           </el-input>
-          <el-checkbox label="使用会员卡"  v-model="formData.enablePrepaidCard" @change="handleEnablePrepaidCard"></el-checkbox>
+          <el-checkbox label="使用充值卡"  v-model="formData.enablePrepaidCard" @change="handleEnablePrepaidCard"></el-checkbox>
         </el-form-item>
         <el-form-item label="会员次卡支付" v-if="isShowTimesCard" required  prop="timesCardAmount">
-          <el-input v-model="formData.timesCardAmount" placeholder="" class="payment-card money align-right"  :disabled="!formData.enableTimesCard">
+          <el-input v-model="formData.timesCardAmount" placeholder="" class="payment-card money align-right"  :disabled="!formData.enableTimesCard"  @change="handleTimesCardAmountChanged">
             <template slot="prepend">
               <div>
                 <p>{{currentCard.name}}</p>
-                <p>卡号{{currentCard.code}} 剩余次数{{currentCard.amountRemaining}}</p>
+                <p>卡号{{currentCard.code}} 剩余次数{{currentCard.cardTimesRemaining}}</p>
               </div>
             </template>
           </el-input>
-          <el-checkbox label="使用会员卡"  v-model="formData.enableTimesCard" @change="handleEnablePrepaidCard"></el-checkbox>
+          <el-checkbox label="使用次卡"  v-model="formData.enableTimesCard" @change="handleEnablePrepaidCard"></el-checkbox>
         </el-form-item>
 
         <el-form-item label="支付方式"  class="payment">
@@ -190,6 +190,15 @@ export default {
         return null
       }
     },
+    currentTimesCard: function(){
+      let card = this.currentCard
+      // 充值卡 && 可用状态 && 余额>0
+      if( card.style == this.CardStyleEnum.times && card.state == this.CardStateEnum.enabled && card.cardTimesRemaining > 0 ){
+        return card
+      }else{
+        return null
+      }
+    },
     isShowPrepaidCard: function(){
       return this.currentPrepaidCard != null
     },
@@ -230,11 +239,17 @@ export default {
         paymentsAttributes.push( { source_id: this.currentPrepaidCard.id, source_type: "Spree::Card",
           amount: this.formData.prepaidCardAmount, payment_method_id: this.prepaidCardPaymentMethod.id } )
       }
+      if( this.formData.enableTimesCard ){
+        let amount = this.totalMoney - this.formData.paymentAmount
+        paymentsAttributes.push( { source_id: this.currentTimesCard.id, source_type: "Spree::Card",
+          amount: amount, card_times: this.formData.timesCardAmount, 
+          payment_method_id: this.prepaidCardPaymentMethod.id } )
+      }
+
       console.log( "this.orderRemainder=",this.orderRemainder)
       console.log( "this.orderItemList=",this.orderItemList)
-      let remain = this.formData.prepaidCardAmount - this.totalMoney
       //需要其他支付方式
-      if( remain < 0 ){
+      if( this.formData.paymentAmount > 0 ){
         paymentsAttributes.push( { payment_method_id: this.formData.selectPaymentMethodId, amount: this.formData.paymentAmount } )
       }
       //  index  cname  discount  groupPosition memo name  price productId quantity
@@ -252,7 +267,11 @@ export default {
     // 除了会员支付方式之外，其他支付方式余额
     orderRemainder() {
       let remainder = this.totalMoney
-      return remainder - this.formData.prepaidCardAmount - this.formData.paymentAmount
+      if( this.currentTimesCard ){
+        return (this.formData.timesCardAmount == 0 ? (remainder - this.formData.paymentAmount) : 0)
+      }else {
+        return remainder - this.formData.prepaidCardAmount - this.formData.paymentAmount
+      }
     }
   },
   methods: {
@@ -271,9 +290,10 @@ export default {
 
       if( this.currentPrepaidCard != null){
         //会员卡的余额是否够用
-        if( this.currentPrepaidCard.amountRemaining>0){
-          this.formData.enablePrepaidCard = true
-        }
+        this.formData.enablePrepaidCard = true
+      }
+      if( this.currentTimesCard != null){
+        this.formData.enableTimesCard = true
       }
       console.log( "handleDialogOpened-orderItemList = ", this.orderItemList)
       this.computePaymentAmount()
@@ -288,6 +308,8 @@ export default {
       }
       if( this.orderRemainder>0){
         this.formData.paymentAmount = this.orderRemainder
+      }else{
+        this.formData.paymentAmount = 0
       }
 
       console.log( "handleDialogOpened customer=",this.customer, this.paymentMethodList,this.activePaymentMethods )
@@ -411,6 +433,9 @@ export default {
        let response = await validateCardPassword(this.currentPrepaidCard.id, password )
        console.log( "handleValidateCardPassword=",password, response, response.result == true )
        return response.result == true
+    },
+    handleTimesCardAmountChanged( newValue){
+      this.computePaymentAmount()
     },
     messageBox(string1, string2) {
       this.$alert(string1, string2, {

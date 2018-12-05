@@ -202,7 +202,7 @@ export default {
       this.cardTypeList = await this.getCardTypes()
 
       if (this.cardTypeList.length > 0) {
-        this.cardFormData.variantId = this.cardTypeList[0].id
+        this.cardFormData.variantId = this.cardTypeList[0].masterId
       }
 
       this.$nextTick(function () {
