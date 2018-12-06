@@ -53,7 +53,7 @@
               <th>消费金额</th><td>{{currentCustomer.normalOrderTotal}}元</td>
             </tr>
             <tr ><th>会员卡号</th><td>{{currentCard.code}}</td><th>会员卡类型</th><td>{{currentCard.name}}</td>
-              <th>会员卡余额</th><td>{{currentCard.amount_remaining}}</td>
+              <th>会员卡余额</th><td>{{currentCard.amountRemaining}}</td>
             </tr>
           </table>
         </div>
