@@ -31,7 +31,7 @@ export function printLabel ( params ){
      order.lineItemGroups.forEach((group, i)=>{
        let itemMemos = group.lineItems.map((item)=>{ return item.memo })
        console.log( "lableParams=",itemMemos)
-       itemMemos = _.compact(itemMemos).map((memo, i)=>{ return '('+i+')'+memo }).join(" ")
+       itemMemos = _.compact(itemMemos).map((memo, i)=>{ return '('+(i+1)+')'+memo }).join(" ")
        let lableParams = { 'label_title': '永峰皮具养护中心', 'store_name': '西安路店', 'group_number': group.number, 'item_memos': itemMemos }
        data = iconv.encode( compiled(lableParams), encoding);
        console.log("raw data", data, printer)

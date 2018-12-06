@@ -249,8 +249,9 @@ export default {
       console.log('handleFulfillLineItems', queryParams)
       const response = await fulfillLineItems(queryParams)
       if (response.count > 0) {
-        this.lineItems.forEach((item)=>{
-          item.worker_id = this.currentWorkerId
+        this.lineItems.forEach((item,index)=>{
+          let newLineItem = Object.assign( item, { worker_id: this.currentWorkerId })
+          this.$set(this.lineItems, index, newLineItem )
         })
         //this.handleDiscardSelection()
 
