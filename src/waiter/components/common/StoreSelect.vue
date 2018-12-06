@@ -12,7 +12,7 @@
 <script>
 export default {
 
-  props: ['value'],
+  props: ['value', 'disableAll'],
   data(){
     return {
       selectedStoreId:null
@@ -20,9 +20,10 @@ export default {
   },
   computed:{
     storeOptions(){
-      let options= []
-      let stores = this.stores.map((item) => { return { id: item.id, name: item.name } })
-      options = [{ id: null, name: "全部" }].concat(stores)
+      let options = this.stores.map((item) => { return { id: item.id, name: item.name } })
+      if( !this.disableAll){
+        options.unshift( { id: null, name: "全部" } )
+      }
       return options
     }
   },

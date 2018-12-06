@@ -92,11 +92,11 @@
     <fieldset class="filters">
       <legend>查询条件</legend>
       <el-form :inline="true" :model="formData" class="demo-form-inline">
+        <store-select  v-bind:value.sync="formData.storeId"  v-if="authorizeMultiStore()"/>
         <el-form-item label="时间区间">
           <el-date-picker class="date-picker" v-model="selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
-        <store-select  v-bind:value.sync="formData.storeId"  v-if="authorizeMultiStore()"/>
         <el-form-item>
           <el-button type="primary" class="order-ok" size="mini" @click="onSubmit">确定</el-button>
         </el-form-item>
@@ -196,7 +196,7 @@ export default {
       //*********** 过滤条件 ***************/
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
-        storeId: 0
+        storeId: null
       },
       storeOptions: [{ //门店方式选项
         value: '全部',
@@ -269,7 +269,7 @@ export default {
     },
     computedDayParam: function () {
       let params = { q: { day_eq: this.computedEndAt } }
-      if( this.formData.storeId > 0){
+      if( parseInt(this.formData.storeId) > 0){
         params.q.store_id_eq = this.formData.storeId
       }
       return params

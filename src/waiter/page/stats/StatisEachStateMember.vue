@@ -55,13 +55,12 @@
     <el-form ref="form" :model="formData"  :inline="true">
       <fieldset class="member-field-set filters">
         <legend>查询条件</legend>
+        <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
 
         <el-form-item class="member-form-item" label="充值日期">
           <el-date-picker class="member-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
-
-        <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
 
       <el-form-item>
         <el-button class="order-ok" type="primary" size="mini" @click="handleSearch">查询</el-button>
@@ -129,7 +128,7 @@ export default {
       //*********** 过滤条件 ***************/
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
-        storeId: null
+        storeId: 0
       },
       selectedDates: "", //选择的日期时间
 
@@ -181,6 +180,7 @@ export default {
     let start = moment().subtract(6, "days")
     let end = moment()
     this.formData.selectedDates = [start.toDate(), end.toDate()]
+    this.formData.storeId = this.storeId
     this.initData()
     this.$bus.$on('deposit-order-created-gevent', () => {
       this.initData()
@@ -215,9 +215,11 @@ export default {
         q: {
           created_at_gteq: this.computedStartAt,
           created_at_lteq: this.computedEndAt,
-          order_type_in: [1,2],
-          store_id_eq: this.storeId
+          order_type_in: [1,2]
         }
+      }
+      if( parseInt(this.formData.storeId) > 0){
+        params.q.store_id_eq = this.formData.storeId
       }
       return params
     },

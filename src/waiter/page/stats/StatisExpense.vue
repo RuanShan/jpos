@@ -44,6 +44,7 @@
   <el-form ref="form" :model="formData"  :inline="true">
     <fieldset class="expense-field-set filters">
       <legend>查询条件</legend>
+      <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
       <el-form-item class="expense-form-item" label="创建日期">
         <el-date-picker class="expense-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
         </el-date-picker>
@@ -110,11 +111,13 @@ import {
 } from '@/api/getData'
 
 import LightBox from 'vue-image-lightbox'
+import StoreSelect from '@/components/common/StoreSelect.vue'
 
 
 export default {
   components: {
     LightBox,
+    StoreSelect
   },
   data() {
     return {
@@ -198,11 +201,11 @@ export default {
       let params = { //查询条件
         page: this.currentPage, //分页器选择的当前页数
         per_page: this.perPage, //每页显示12行数据
-        q: {
-          store_id_eq: this.storeId
-        }
+        q: { }
       }
-
+      if( parseInt(this.formData.storeId) > 0){
+        params.q.store_id_eq = this.formData.storeId
+      }
       if ( this.computedStartAt && this.computedEndAt){
         params.q.created_at_gteq= this.computedStartAt
         params.q.created_at_lteq= this.computedEndAt

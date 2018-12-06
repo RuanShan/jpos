@@ -44,6 +44,7 @@
   <el-form ref="form" :model="formData"  :inline="true">
     <fieldset class="stock-movement-field-set filters">
       <legend>查询条件</legend>
+      <store-select  v-bind:value.sync="formData.storeId" :disableAll="true"  v-if="authorizeMultiStore()"/>
       <el-form-item class="stock-movement-form-item" label="创建日期">
         <el-date-picker class="stock-movement-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
         </el-date-picker>
@@ -97,17 +98,19 @@ import moment from 'moment'
 import {
   findStockItems, findStockMovements
 } from '@/api/getData'
+import StoreSelect from '@/components/common/StoreSelect.vue'
 
 
 export default {
   components: {
+    StoreSelect
   },
   data() {
     return {
       //*********** 过滤条件 ***************/
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
-        storeId: null,
+        storeId: null, // 必须选择一个店铺
         stockItemId: null
       },
       //*********** UI需要的变量 ***************/
@@ -196,7 +199,10 @@ export default {
         q: {        },
         stock_location_id: this.storeInfo.stockLocationId,
       }
-
+      if( parseInt(this.formData.storeId) > 0){
+        let store = this.stores.find((store)=>{ return store.id == this.formData.storeId })
+        params.stock_location_id = store.stockLocationId
+      }
       if ( this.computedStartAt && this.computedEndAt){
         params.q.created_at_gteq= this.computedStartAt
         params.q.created_at_lteq= this.computedEndAt

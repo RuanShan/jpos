@@ -69,7 +69,7 @@ export default {
             type: 'success',
             message: '检测到您之前登录过，将自动登录'
           })
-          this.redirectDefaultPage()          
+          this.redirectDefaultPage()
         })
       }
     }))
@@ -150,9 +150,9 @@ export default {
       }
     },
     redirectDefaultPage(){
-      if( this.userAuthorize('setting')){
+      if( this.userAuthorize('*')){ // 管理员
         this.$router.push({
-          name: 'setting'
+          name: 'pos'
         })
       }else if( this.userAuthorize('fitems')){
         this.$router.push({

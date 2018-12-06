@@ -43,6 +43,7 @@
   <el-form ref="form" :model="formData"  :inline="true">
     <fieldset class="expense-field-set filters">
       <legend>查询条件</legend>
+      <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
       <el-form-item class="expense-form-item" label="创建日期">
         <el-date-picker class="expense-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
         </el-date-picker>
@@ -96,8 +97,12 @@ import moment from 'moment'
 import {
   findLineItems
 } from '@/api/getData'
+import StoreSelect from '@/components/common/StoreSelect.vue'
 
 export default {
+  components: {
+    StoreSelect
+  },
   data() {
     return {
       //*********** 过滤条件 ***************/
@@ -180,7 +185,9 @@ export default {
       }
       if(!this.isLocationFactory()){
         //如果不是工厂，添加当前店铺作为查询条件
-        params.q.store_id_eq = this.formData.storeId
+        if( parseInt(this.formData.storeId) > 0){
+          params.q.store_id_eq = this.formData.storeId
+        }
       }
 
       if ( this.computedStartAt && this.computedEndAt){

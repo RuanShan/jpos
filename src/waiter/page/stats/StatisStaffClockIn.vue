@@ -31,6 +31,7 @@
   <el-form ref="form" :model="form"   :inline="true">
     <fieldset class="member-field-set filters">
       <legend>查询条件</legend>
+      <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
       <el-form-item class="member-form-item" label="时间选择">
         <el-date-picker class="member-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
         </el-date-picker>
@@ -77,8 +78,12 @@
 <script>
 import moment from 'moment'
 import { findUserAndEntries } from '@/api/getData'
+import StoreSelect from '@/components/common/StoreSelect.vue'
 
 export default {
+  components: {
+    StoreSelect
+  },
   data() {
     return {
       //*********** 过滤条件 ***************/
@@ -164,11 +169,11 @@ export default {
       let params = { //查询条件
         page: this.currentPage, //分页器选择的当前页数
         per_page: this.perPage, //每页显示12行数据
-        eq: {
-          store_id_eq: this.formData.storeId
-        }
+        eq: { }
       }
-
+      if( parseInt(this.formData.storeId) > 0){
+        params.eq.store_id_eq = this.formData.storeId
+      }
       if( this.computedStartAt && this.computedEndAt){
         params.eq.day_gteq = this.computedStartAt
         params.eq.day_lteq = this.computedEndAt

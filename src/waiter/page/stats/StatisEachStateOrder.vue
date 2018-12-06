@@ -54,6 +54,7 @@
     <el-form ref="form" :model="formData"  :inline="true">
       <fieldset class="order-field-set filters">
         <legend>查询条件</legend>
+        <store-select  v-bind:value.sync="formData.storeId"  v-if="authorizeMultiStore()"/>
         <el-form-item class="oreder-form-item" label="消费日期">
           <el-date-picker class="order-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
           </el-date-picker>
@@ -128,14 +129,18 @@ import moment from 'moment'
 import {
   findOrders, getOrderCount
 } from '@/api/getData'
+import StoreSelect from '@/components/common/StoreSelect.vue'
 
 export default {
+  components: {
+    StoreSelect
+  },
   data() {
     return {
       //*********** 过滤条件 ***************/
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
-        storeId: null,
+        storeId: null,  // 必须为空，否则缺省情况 显示 0
         paymentMethodId: null, //支付方式选项
         oddCardPaid: false
       },
@@ -229,8 +234,10 @@ export default {
           created_at_gteq: this.computedStartAt,
           created_at_lteq: this.computedEndAt,
           order_type_eq: 0,
-          store_id_eq: this.storeId
         }
+      }
+      if( parseInt(this.formData.storeId) > 0){
+        params.q.store_id_eq = this.formData.storeId
       }
       if( this.formData.oddCardPaid ){
         params.q.odd_card_paid_eq = true
