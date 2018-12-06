@@ -18,7 +18,7 @@
             </el-form-item>
             <el-form-item label="会员卡类型" prop="variantId"  required>
               <el-select v-model="cardFormData.variantId" placeholder="请选择会员卡类型" >
-                <el-option v-for="item in cardTypeList" :key="item.id" :label="item.name" :value="item.id">
+                <el-option v-for="item in cardTypeList" :key="item.masterId" :label="item.name" :value="item.masterId">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -142,7 +142,7 @@ export default {
       this.cardTypeList = await this.getCardTypes()
 
       if( this.cardTypeList.length > 0){
-        this.cardFormData.variantId = this.cardTypeList[0].id
+        this.cardFormData.variantId = this.cardTypeList[0].masterId
       }
 
     },
