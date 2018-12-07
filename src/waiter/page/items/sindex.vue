@@ -31,13 +31,13 @@
         bottom: 100px;
         display: flex;
         .locations{
-          width: 160vmin;
+          width: 90vw;
           margin: auto;
         }
         .heads-wrap{
           .head{
             background: #f4b22c;
-            width: 70vmin;
+            width: 38vw;
             float: left;
             text-align: center;
             padding: 8px;
@@ -47,10 +47,10 @@
         .location {
             position: relative;
             float: left;
-            width: 70vmin;
+            width: 38vw;
             height: 60vmin;
             &.ship {
-                width: 20vmin;
+                width: 14vw;
                 border-color: transparent;
                 text-align: center;
                 .step{
@@ -334,10 +334,11 @@
 
               <div class="location ship">
                 <div class="step step0" style="width:100%;">
-                  <div class="title">  <img src="../../assets/img/order/states/truck1.png"> 运输 </div>
+                  <div class="title">  <img src="../../assets/img/order/states/truck1.png">
+                    <p>运输 </p></div>
                 </div>
                 <div class="step step0" style="width:100%;">
-                  <div class="title">  <img src="../../assets/img/order/states/truck2.png">运输 </div>
+                  <div class="title">  <img src="../../assets/img/order/states/truck2.png"><p>运输 </p> </div>
                 </div>
               </div>
 
