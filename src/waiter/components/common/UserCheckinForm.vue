@@ -4,13 +4,13 @@
 
     <el-form :model="clockinForm" :rules="rules" ref="clockinForm">
       <el-form-item prop="username">
-        <el-input v-model="clockinForm.username" placeholder="用户名"><span>dsfsf</span></el-input>
+        <el-input ref="tabindex1" tabindex="1"  v-model="clockinForm.username" placeholder="用户名" autofocus @keyup.enter.native="handleKeyupEnter"> </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" placeholder="密码" v-model="clockinForm.password"></el-input>
+        <el-input ref="tabindex2" tabindex="2"  type="password" placeholder="密码" v-model="clockinForm.password" @keyup.enter.native="handleSubmitForm"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('clockinForm')" class="submit_btn">打卡</el-button>
+        <el-button type="primary" @click="handleSubmitForm" class="submit_btn">打卡</el-button>
       </el-form-item>
     </el-form>
     <p class="tip"> </p>
@@ -48,7 +48,8 @@ export default {
   mounted() {},
   methods: {
 
-    async submitForm(formName) {
+    async handleSubmitForm() {
+      let formName = 'clockinForm'
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           let params = {
@@ -85,6 +86,12 @@ export default {
     initializeApp() {
       console.log("..initializeApp..")
       this.getStores()
+    },
+    handleKeyupEnter(event){
+      console.log( "handleKeyupEnter->", event)
+      const i = event.target.tabIndex
+      const nextDOM = this.$refs['tabindex'+(i+1)]
+      nextDOM.focus()
     }
   }
 

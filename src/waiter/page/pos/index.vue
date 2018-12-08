@@ -694,7 +694,7 @@ export default {
       if (!this.totalItemCount) {
         // 这个条件应该是根据后台返回的数据判断
         this.$message({
-          message: "已经为空咯",
+          message: "已经为空!",
           type: "warning"
         });
         return;

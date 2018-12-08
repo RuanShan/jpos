@@ -18,6 +18,7 @@
                 ref="scannerInput" class="el-input__inner" data-index="0"></input>
             </div>
           </el-form-item>
+          <input type="text" name="disableentrykeysubmit" style="display:nono">
         </el-form>
       </div>
       <div class="dialog-content-wrap"  @click.capture="handleBlur" >
@@ -116,7 +117,7 @@ export default {
         return group.id == lineItemGroup.id
       })
       if( index >=0){
-        this.lineItemGroups.splice(index,1, lineItemGroup)        
+        this.lineItemGroups.splice(index,1, lineItemGroup)
       }else{
         this.lineItemGroups.push(lineItemGroup)
       }

@@ -10,13 +10,13 @@
       <el-form :model="loginForm" :rules="rules" ref="loginForm">
         <input name="mockpassword1" type="password" class="hide-password">
         <el-form-item prop="username">
-          <el-input v-model="loginForm.username" placeholder="请输入用户名" suffix-icon="fa fa-user"><span>dsfsf</span></el-input>
+          <el-input ref="tabindex1" tabindex="1" v-model="loginForm.username" placeholder="请输入用户名" suffix-icon="fa fa-user" autofocus @keyup.enter.native="handleKeyupEnter"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" placeholder="请输入密码" v-model="loginForm.password" suffix-icon="fa fa-keyboard-o"></el-input>
+          <el-input ref="tabindex2" tabindex="2" type="password" placeholder="请输入密码" v-model="loginForm.password" suffix-icon="fa fa-keyboard-o" @keyup.enter.native="handleSubmitForm"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('loginForm')" class="submit_btn">登陆</el-button>
+          <el-button tabindex="3" type="primary" @click="handleSubmitForm" class="submit_btn">登陆</el-button>
         </el-form-item>
         <input name="mockpassword2" type="password" class="hide-password">
       </el-form>
@@ -81,7 +81,9 @@ export default {
   },
   methods: {
 
-    async submitForm(formName) {
+    async handleSubmitForm() {
+      console.log( " haha handleSubmitForm work...")
+      let formName = "loginForm"
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           const res = await login({
@@ -163,19 +165,16 @@ export default {
           name: 'pos'
         })
       }
+    },
+    handleKeyupEnter(event){
+      console.log( "handleKeyupEnter->", event)
+      const i = event.target.tabIndex
+      const nextDOM = this.$refs['tabindex'+(i+1)]
+      nextDOM.focus()
     }
-  },
-  watch: {
-    //userInfo: function (newValue) {
-    // if (newValue.id) {
-    //   this.$message({
-    //     type: 'success',
-    //     message: '检测到您之前登录过，将自动登录'
-    //   })
-    //   this.$router.push('first')
-    // }
-    //}
+
   }
+
 }
 </script>
 
