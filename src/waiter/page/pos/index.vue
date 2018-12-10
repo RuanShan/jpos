@@ -319,14 +319,14 @@
               <div class="order-item-list">
                 <el-table class="fillcontain" :data="sortedOrderItemList" border style="width:100%;">
                 <el-table-column label="物品序号" :render-header="renderEditableTableHeader" width="100">
-                  <template slot-scope="scope">
-                 <vue-xeditable  :name="'groupPosition_'+scope.row.index+'_xeditable'" v-model="scope.row.groupPosition" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
+                  <template slot-scope="scope">{{scope.row.uid}}
+                 <vue-xeditable  :name="'groupPosition_'+scope.row.uid+'_xeditable'" v-model="scope.row.groupPosition" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
                </template>
                 </el-table-column>
                 <el-table-column prop="cname" label="服务项目" width="160"></el-table-column>
                 <el-table-column prop="unitPrice" label="单价" :render-header="renderEditableTableHeader" width="80">
                   <template slot-scope="scope">
-                 <vue-xeditable  :name="'unitPrice_'+scope.row.index+'_xeditable'" v-model="scope.row.unitPrice" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
+                 <vue-xeditable  :name="'unitPrice_'+scope.row.uid+'_xeditable'" v-model="scope.row.unitPrice" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
                </template>
                 </el-table-column>
                 <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
@@ -334,7 +334,7 @@
                 <el-table-column prop="price" label="金额" width="50">金额</el-table-column>
                 <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
                   <template slot-scope="scope">
-                 <vue-xeditable  :name="'memo_'+scope.row.index+'_xeditable'" v-model="scope.row.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
+                 <vue-xeditable  :name="'memo_'+scope.row.uid+'_xeditable'" v-model="scope.row.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
                 </template>
                 </el-table-column>
                 <el-table-column label="操作" width="60" align="center">
@@ -662,9 +662,9 @@ export default {
 
       // 根据判断的值编写业务逻辑
       let newGoods = {
-        // index用来命名xeditable, 根据名称查找 orderItem, 修改对应值
-        // [column]_[index]_[suffix] 示例：groupnumber_0_xeditable
-        index: this.orderItemList.length,
+        // uid用来命名xeditable, 根据名称查找 orderItem, 修改对应值
+        // [column]_[uid]_[suffix] 示例：groupnumber_0_xeditable
+        uid: new Date().getTime(),
         productId: goods.id,
         variantId: vid,
         name: goods.name,
@@ -686,7 +686,7 @@ export default {
     delOrderItem(selectedOrderItem) {
       // 删除当个商品
       this.orderItemList = this.orderItemList.filter(o => {
-        return !((o.variantId == selectedOrderItem.variantId) && (o.groupPosition == selectedOrderItem.groupPosition));
+        return !(o == selectedOrderItem)
       });
       this.$message({
         message: selectedOrderItem.cname + " > 删除成功",
@@ -729,9 +729,11 @@ export default {
     // 更新groupPosition后，更新订单列表，
     handleXeditableChanged(newValue, xeditableName) {
       console.log("newValue=" + newValue + " xeditableName=" + xeditableName)
-      //示例：groupnumber_0_xeditable
-      let [column, index] = xeditableName.split('_')
-      index = parseInt(index)
+      //示例：groupPosition_0_xeditable
+      // here should be uid, index would not work.
+      let [column, uid] = xeditableName.split('_')
+      uid = parseInt(uid)
+      let index = this.orderItemList.findIndex((item)=>{ return item.uid == uid})
       let item = this.orderItemList[index]
       item[column] = newValue
       if (column == 'unitPrice') {
