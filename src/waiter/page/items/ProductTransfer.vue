@@ -139,7 +139,7 @@
           <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>
 
           <el-button class="print" type="primary" @click="handlePrint" size="mini">打印</el-button>
-          <el-button class="print" type="danger" @click="handleTransferItems" size="mini">订单确认</el-button>
+          <el-button class="print" type="danger" @click="handleTransferItemsConfirm" size="mini">订单确认</el-button>
         </div>
         <!-- formData end -->
 
@@ -173,6 +173,10 @@ import {
 from '@/api/getData'
 
 import {
+  CelUIMixin
+} from '@/components/mixin/CelUIMixin';
+
+import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
 
@@ -195,7 +199,7 @@ export default {
       rightCheckedGroups: [],
     }
   },
-  mixins: [DialogMixin],
+  mixins: [DialogMixin, CelUIMixin],
   props: ['selectedStoreId', 'dialogVisible', 'dialogTitle', 'orderState', 'nextOrderState', 'orderCounts'],
   created() {},
   computed: {
@@ -285,6 +289,17 @@ export default {
       console.log( "currentRightSideKeys, direction, changedKeys =", currentRightSideKeys, direction, changedKeys )
       this.transferedItemIds = currentRightSideKeys
     },
+    async handleTransferItemsConfirm( ) {
+
+      this.actionConfirm( "确定改变订单状态吗?", ()=>{
+        this.handleTransferItems().then(()=>{
+          this.$message({
+            type: 'success',
+            message: '已操作成功.'
+          })
+        })
+      })
+    },
     async handleTransferItems( ) {
 
       let changeToPrevious = []
@@ -300,23 +315,24 @@ export default {
       //     }
       //   }
       // })
-      if (changeToPrevious.length > 0) {
-        let ids = changeToPrevious.map((item) => {
-          return item.id
-        })
-        this.changeGroupToNextState(ids, false).then(() => {
-          changeToPrevious.forEach((item) => {
-            item.state = this.orderState
-          })
-        })
-      }
+      // if (changeToPrevious.length > 0) {
+      //   let ids = changeToPrevious.map((item) => {
+      //     return item.id
+      //   })
+      //   this.changeGroupToNextState(ids, false).then(() => {
+      //     changeToPrevious.forEach((item) => {
+      //       item.state = this.orderState
+      //     })
+      //   })
+      // }
       if (changeToNext.length > 0) {
         let ids = changeToNext.map((item) => {
           return item.id
         })
-        this.changeGroupToNextState(ids, true).then(() => {
+        await this.changeGroupToNextState(ids, true).then(() => {
           changeToNext.forEach((item) => {
             item.state = this.nextOrderState
+            item.transferDisabled = true
           })
         })
       }

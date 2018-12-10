@@ -18,7 +18,7 @@ export var CelUIMixin = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: '已取消操作.'
         });
       });
     }

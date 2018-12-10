@@ -74,7 +74,7 @@
         <!-- 表格     END -->
         <div class="member-list grid-content">
               <el-table class="cel-scrollable-table" :data="customerList" style="width:100%;" border>
-                <el-table-column prop="id" label="ID" width="50">
+                <el-table-column prop="id" label="ID" width="80" align="center">
                 </el-table-column>
                 <el-table-column prop="storeName" label="注册门店">
                 </el-table-column>
@@ -82,7 +82,7 @@
                 </el-table-column>
                 <el-table-column prop="mobile" label="电话" width="125">
                 </el-table-column>
-                <el-table-column prop="displayGender" label="性别" width="70">
+                <el-table-column prop="displayGender" label="性别" width="70" align="center">
                 </el-table-column>
                 <el-table-column  label="卡号" >
                   <template slot-scope="scope">
@@ -94,7 +94,7 @@
                     </el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column prop="displayCreatedDate" label="注册日期">
+                <el-table-column prop="displayCreatedDate" label="注册日期" width="120" align="center">
                 </el-table-column>
                 <el-table-column label="操作" width="160">
                   <template slot-scope="scope">
