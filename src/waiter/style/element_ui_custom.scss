@@ -11,7 +11,7 @@
     .title-wrap{
       text-align: center;
       line-height: 50px;
-      .el-icon-back{
+      .el-icon-back, .el-icon-close{
         margin: 0 10px;
       }
     }
@@ -40,8 +40,8 @@
 
 .scrollable{
   &::-webkit-scrollbar{
-    width: 10px;
-    height: 10px;
+    width: 5px;
+    height: 5px;
   }
 }
 /*ele 对话框 非全屏 样式 自定义*/
@@ -68,8 +68,8 @@
       bottom: 0;
       overflow-y: auto;
       &::-webkit-scrollbar{
-        width: 10px;
-        height: 10px;
+        width: 5px;
+        height: 5px;
       }
   }
   td {  padding: 6px;  }
@@ -106,8 +106,8 @@
       max-height: 70vh;
       overflow-y: auto;
       &::-webkit-scrollbar{
-        width: 10px;
-        height: 10px;
+        width: 5px;
+        height: 5px;
       }
     }
   }

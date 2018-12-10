@@ -1,5 +1,4 @@
 <style lang="scss">
-@import '../../style/print';
 
 .transfer-product-container {
     position: relative;
@@ -33,6 +32,10 @@
               bottom: 0;
               height: auto;
               overflow-y: auto;
+              &::-webkit-scrollbar{
+                width: 5px;
+                height: 5px;
+              }
               .el-transfer-panel__list{
                 height: auto;
               }
@@ -114,7 +117,8 @@
     <el-dialog :visible="computedVisible" @open="handleDialogOpen"  :show-close="false"  :top="top" :modal="false">
 
       <div slot="title" class="title-wrap">
-        <div class="left back"> <i class="el-icon-back" @click="handleCloseDialog()"></i> </div>
+        <div class="left "> <i class="el-icon-back" @click="handleCloseDialog()"></i> </div>
+        <div class="right "> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
         <div> 订单处理</div>
       </div>
 
@@ -135,11 +139,14 @@
           <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>
 
           <el-button class="print" type="primary" @click="handlePrint" size="mini">打印</el-button>
+          <el-button class="print" type="danger" @click="handleTransferItems" size="mini">订单确认</el-button>
         </div>
         <!-- formData end -->
 
         <div class="order-list">
-          <el-transfer v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name'}" :titles="[orderStateText, nextOrderStateText]" @change="handleTransferItems">
+          <el-transfer v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name', disabled: 'transferDisabled'}"
+            :titles="[orderStateText, nextOrderStateText]" target-order="unshift"
+            @change="handleTransferChanged" @right-check-change="handleRightCheckChange"	>
             <div slot-scope="{ option }" class="item">
               <div class="image-wrap">
                 <img :src="option.imageUrl" alt="">
@@ -177,7 +184,6 @@ export default {
       currentGroup: null, // a order may have several line_item_groups
       orderDetailList: [],
       lineItemGroupList: [],
-      itemList: [],
       transferedItemIds: [],
       perPage: 500,
       formData: {
@@ -186,7 +192,7 @@ export default {
         groupState: '',
         storeId: 0
       },
-      multipleSelection: [],
+      rightCheckedGroups: [],
     }
   },
   mixins: [DialogMixin],
@@ -208,7 +214,11 @@ export default {
       }
     },
     nextOrderStateText: function(){
-      return this.getOrderStateText( this.nextOrderState)
+      if( this.nextOrderState ==="ready" ){
+        return "门店待验收"
+      }else{
+        return this.getOrderStateText( this.nextOrderState)
+      }
     },
 
   },
@@ -255,9 +265,9 @@ export default {
         this.findOrderByGroupNumber(value)
       }
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-      console.log("handleSelectionChange=", this.multipleSelection)
+    handleRightCheckChange(checkedIds) {
+      this.rightCheckedGroups =  this.lineItemGroupList.filter(( item)=>{ return checkedIds.includes( item.id )})
+      console.log("handleRightCheckChange=", checkedIds, this.rightCheckedGroups)
     },
     async handleCurrentRowChange(row) {
       if (row) {
@@ -270,21 +280,26 @@ export default {
         this.currentOrder = null
       }
     },
-    async handleTransferItems() {
+    handleTransferChanged( currentRightSideKeys, direction, changedKeys) {
+      // trigger when transfer right size changed
+      console.log( "currentRightSideKeys, direction, changedKeys =", currentRightSideKeys, direction, changedKeys )
+      this.transferedItemIds = currentRightSideKeys
+    },
+    async handleTransferItems( ) {
+
       let changeToPrevious = []
-      let chagneToNext = []
-      console.log("handleTransferItems", this.transferedItemIds)
-      this.lineItemGroupList.forEach((item) => {
-        if (this.transferedItemIds.includes(item.id)) {
-          if (item.state !== this.nextOrderState) {
-            chagneToNext.push(item)
-          }
-        } else {
-          if (item.state !== this.orderState) {
-            changeToPrevious.push(item)
-          }
-        }
-      })
+      let changeToNext = this.rightCheckedGroups
+      // this.lineItemGroupList.forEach((item) => {
+      //   if (this.transferedItemIds.includes(item.id)) {
+      //     if (item.state !== this.nextOrderState) {
+      //       changeToNext.push(item)
+      //     }
+      //   } else {
+      //     if (item.state !== this.orderState) {
+      //       changeToPrevious.push(item)
+      //     }
+      //   }
+      // })
       if (changeToPrevious.length > 0) {
         let ids = changeToPrevious.map((item) => {
           return item.id
@@ -295,18 +310,19 @@ export default {
           })
         })
       }
-      if (chagneToNext.length > 0) {
-        let ids = chagneToNext.map((item) => {
+      if (changeToNext.length > 0) {
+        let ids = changeToNext.map((item) => {
           return item.id
         })
         this.changeGroupToNextState(ids, true).then(() => {
-          chagneToNext.forEach((item) => {
+          changeToNext.forEach((item) => {
             item.state = this.nextOrderState
           })
         })
       }
-
+      console.log("handleTransferItems, changeToPrevious, changeToNext", this.transferedItemIds, changeToPrevious, changeToNext)
     },
+
     async getLineItemGroups() {
       let params = {
         page: this.currentPage,
@@ -327,16 +343,15 @@ export default {
 
       const itemsResult = await findLineItemGroups(params)
       this.count = itemsResult.total_count
-      this.lineItemGroupList.splice(0, this.lineItemGroupList.length, ...this.buildLineItemGroups(itemsResult))
-      this.lineItemGroupList.forEach((item) => {
+      const groups = this.buildLineItemGroups(itemsResult)
+      groups.forEach((item) => {
         if (item.state === this.nextOrderState) {
+          item.transferDisabled = true
           this.transferedItemIds.push(item.id)
         }
       })
-
-      this.$store.commit('savePrintableOrders', this.printableData)
-
-      console.log("itemsResult", itemsResult, "itemList", this.itemList)
+      this.lineItemGroupList = groups
+      console.log("itemsResult", itemsResult)
     },
     async findOrderByGroupNumber(number) {
       // find in orderDetailList
@@ -373,8 +388,10 @@ export default {
 
     },
     handlePrint() {
-      this.$store.commit('savePrintableOrders', this.printableData)
-      console.log("printableOrders", this.printableOrders,  this.printableData)
+
+      this.$store.commit('savePrintableOrders', this.rightCheckedGroups)
+      // print selected lineItemGroup only
+      console.log("printableOrders", this.printableOrders, this.rightCheckedGroups)
       //console.log("printableData", this.printableData)
       //等待打印内容渲染完成后打印
       this.$nextTick(function () {

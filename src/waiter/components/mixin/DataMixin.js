@@ -44,17 +44,17 @@ export var orderDataMixin = {
 
     getOrderStateText(state) {
       if (state == "pending") {
-        return "新订单"
+        return "门店新订单"
       } else if (state == "ready") {
-        return "待交付"
+        return "待交付客户"
       } else if (state == "ready_for_factory") {
-        return "准备发工厂"
+        return "门店发工厂"
       } else if (state == "processing") {
-        return "专业服务"
+        return "工厂专业服务"
       } else if (state == "processed") {
         return "工厂验收"
       } else if (state == "ready_for_store") {
-        return "工厂发货"
+        return "工厂发门店"
       } else if (state == "shipped") {
         return "已交付客户"
       }

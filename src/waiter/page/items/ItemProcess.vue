@@ -153,9 +153,10 @@
   <div class="process-item-container cel-window">
     <el-dialog :visible="computedVisible" @open="handleDialogOpen" :show-close="false" :top="top" :modal="false">
       <div slot="title" class="title-wrap">
-        <div class="left back">
+        <div class="left">
           <i class="el-icon-back" @click="handleCloseDialog()"></i>
         </div>
+        <div class="right "> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
         <div> 订单处理</div>s
       </div>
 
