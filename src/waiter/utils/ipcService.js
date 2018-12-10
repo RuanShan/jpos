@@ -38,9 +38,29 @@ let printReceiptFunction = function(  ){
   }
 }
 
+let downloadFileFunction = function(  ){
+  if (!process.env.IS_WEB){
+    const ipcRenderer = require('electron').ipcRenderer
+    return function(params){
+      ipcRenderer.send('download-file', params)
+      console.log("send download-file")
+      if( params.downloadDone ){
+        ipcRenderer.on('download-file-done', (event, arg) => {
+          console.log('download-file-done', arg)
+          params.downloadDone( arg )
+        })
+      }
 
+    }
+  }else{
+    return function(){  console.warn("please run in electron, now is web."); return {}  }
+  }
+}
 export var PrintUtil = {
   getPrinters: getPrintersFunction(),
   printLabel: printLabelFunction( ),
   printReceipt: printReceiptFunction( ),
+}
+export var DownloadUtil = {
+  downloadFile: downloadFileFunction(),
 }

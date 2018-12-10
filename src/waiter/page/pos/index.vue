@@ -371,7 +371,7 @@
             </el-tab-pane>
             <el-tab-pane label="支出"  name="expenseItemTab" class="ready-order">
               <!-- 取单组件 Start-->
-              <ExpenseItems @current-item-changed="handleCurrentGroupChanged"></ExpenseItems>
+              <ExpenseItems @current-item-changed="handleCurrentExpenseItemChanged"></ExpenseItems>
               <!-- 取单组件 End-->
             </el-tab-pane>
             <el-tab-pane label="库存"  name="stockMovementTab" class="ready-order">
@@ -427,9 +427,7 @@
                   :file-list="computedGroupImages" :on-preview="handlePreviewImage">
                   <i class="el-icon-plus"></i>
                 </el-upload>
-                <el-dialog :visible.sync="dialogVisible">
-                  <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
+
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -442,8 +440,10 @@
                   name="image[attachment]"
                   list-type="picture-card"
                   :with-credentials="true"
+                  :before-remove="handleImageRemoveConfirm"
                   :on-remove="handleRemoveImage"
-                  :on-preview="handlePreviewImage" v-show="computedImageUploadPath">
+                  :on-change="handleExpenseItemImagesChanged"
+                  :on-preview="handlePreviewExpenseItemImage" v-show="computedImageUploadPath">
                   <i class="el-icon-plus"></i>
                 </el-upload>
               </div>
@@ -454,20 +454,22 @@
     </el-row>
   </div>
   <div class="pos-cover" v-show="!isUserEntryExist"> <span> 请先打卡，再处理业务！</span> </div>
-
+  <CelSwiper :carousel-images="carouselImages" :dialog-visible.sync="carouselDialogVisible"> </CelSwiper>
 </div>
 </template>
 
 <script>
+import _ from "lodash"
 import leftNav from "@/components/layout/LeftNav.vue"
 import headTop from "@/components/layout/headTop.vue";
+import CelSwiper from "@/components/dialog/CelSwiper.vue";
 
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
 import MemberAdd from "./MemberAdd.vue"
 import OrderDelivery from "./OrderDelivery.vue"
 import ExpenseItems from "./ExpenseItems.vue"
 import StockMovements from "./StockMovements.vue"
-import _ from "lodash"
+
 
 import {
   foodMenu,
@@ -502,7 +504,7 @@ export default {
         code: "无"
       },
       orderItemList: [], //订单 {variantId, price, quantity}
-      selectedItems: {}, // { tabname: selectedItem}
+      selectedItems: {}, // 当前选择的物品/费用 { readyOrderTab: lineItemGropu, expenseItemTab: expenseItem}
       checkoutDialogVisible: false,
       memberAddWindowVisible: false,
       customerList: [], //按关键字搜索到的客户列表
@@ -511,8 +513,9 @@ export default {
       //由于搜索列表的每一项是 会员+会员卡，即如果会员有两个卡就有两项，
       //所以select的值为customerId+cardId, 当没有会员卡时，只有customerId
       customerComboId: null,
-      dialogImageUrl: '',
-      dialogVisible: false
+      carouselImages: [],//图片走马灯
+      carouselDialogVisible: false,
+      currentExpenseItemImages: [] // 允许编辑费用图片，所以在图片改变事件中设置当前费用图片列表
     };
   },
   components: {
@@ -523,7 +526,8 @@ export default {
     MemberAdd,
     OrderDelivery,
     ExpenseItems,
-    StockMovements
+    StockMovements,
+    CelSwiper
   },
   computed: {
     customerId () {
@@ -809,9 +813,16 @@ export default {
       })
     },
     // in ready group tab, current group change event
-    handleCurrentGroupChanged(selectedGroup){
-      console.log( "selectedGroup=", selectedGroup)
-      this.$set(this.selectedItems, this.selectedTabName, selectedGroup)
+    handleCurrentGroupChanged(selected){
+      console.log( "selectedGroup=", selected)
+      this.$set(this.selectedItems, this.selectedTabName, selected)
+    },
+    handleCurrentExpenseItemChanged(selected){
+      console.log( "selectedExpenseItem=", selected)
+      this.$set(this.selectedItems, this.selectedTabName, selected)
+      if( selected ){
+        this.currentExpenseItemImages = selected.images
+      }
     },
 
     findProductByVariantId(variantId) {
@@ -836,13 +847,30 @@ export default {
     },
     handlePreviewImage(file){
       console.log(" handlePreviewImage", file)
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+      this.carouselDialogVisible = true
+    },
+    handlePreviewExpenseItemImage(file){
+      console.log(" handlePreviewImage", this.currentExpenseItemImages)
+      this.carouselImages = this.currentExpenseItemImages
+      this.carouselDialogVisible = true
+    },
+    handleImageRemoveConfirm(file, fileList){
+      return this.$confirm('此操作将永久删除该图片, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
     },
     handleRemoveImage(file, fileList) {
-      deleteExpenseItemImage( file.viewableId, file.id ).then(()=>{
-        console.log(file, fileList);
-      })
+         deleteExpenseItemImage( file.viewableId, file.id ).then(()=>{
+          console.log(file, fileList);
+        })
+    },
+    handleExpenseItemImagesChanged(file, fileList){
+      //费用图片改变时，重新设置当前费用图片列表
+      // OrderDelivery,重新读取expenseItem数据，并发送事件current-item-changed
+      this.$bus.$emit('expense-item-image-changed-gevent')
+
     },
     getDiscountOfVariant(variantId) {
       // 找到这个订单对应的商品

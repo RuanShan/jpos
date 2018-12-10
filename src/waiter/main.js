@@ -31,6 +31,10 @@ require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
 import VueLazyLoad from 'vue-lazyload'
 Vue.use(VueLazyLoad)
 
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+// require styles
+import 'swiper/dist/css/swiper.css'
+Vue.use(VueAwesomeSwiper, /* { default global options } */)
 
 import {
   apiResultMixin

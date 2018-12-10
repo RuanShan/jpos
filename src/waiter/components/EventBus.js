@@ -6,4 +6,5 @@ import Vue from 'vue'
 // deposit-order-created-gevent
 // session-expired-gevent
 // user-entry-created-gevent
+// expense-item-image-changed-gevent #created, removed
 export const EventBus = new Vue()

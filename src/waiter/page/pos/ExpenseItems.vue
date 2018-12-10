@@ -132,7 +132,12 @@ export default {
     }
   },
   created: function(){
+    this.$bus.$on('expense-item-image-changed-gevent', () => {
+      console.log('on expense-item-image-changed-gevent')
+      this.handleCurrentGroupChange( this.currentRow )
+    })
     this.newExpenseItem = this.defaultExpenseItem
+    // pos#index 可能会修改费用图片，这里接收图片修改事件，然后更新expenseItem.images
     this.initData()
   },
   computed:{
