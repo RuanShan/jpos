@@ -38,6 +38,8 @@
          <el-button
            size="mini"  type="success"
            @click="handleShowDetail( scope.row)">详情</el-button>
+         <el-button
+             size="mini" type="danger" @click="handleCancel( scope.row)" :disabled="scope.row.state!='cart'">取消</el-button>
 
        </template>
      </el-table-column>
@@ -47,7 +49,7 @@
 
   <!-- 分页器 START-->
   <div class="pagination-wrap" style="">
-    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="totalCount">
+    <el-pagination @current-change="handlePageChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="totalCount">
     </el-pagination>
   </div>
   <!-- 分页器 END-->
@@ -61,17 +63,22 @@
 
 <script>
 import {
-  findOrders
+  findOrders,
+  cancelOrder
 } from "@/api/getData"
 import  OrderDetail from '@/components/common/OrderDetail.vue'
+import {
+  CelUIMixin
+} from '@/components/mixin/CelUIMixin';
 
 
 export default {
   //如果cardData 为空，表示非会员卡消费列表
   props: ["customerData", "cardData"],
   components:{
-    OrderDetail
+    OrderDetail, CelUIMixin
   },
+  mixins: [ CelUIMixin],
   data() {
     return {
       dateSection: "", //选择的日期时间
@@ -117,7 +124,7 @@ export default {
       return params
     },
     //分页器的改变选择时事件处理函数
-    handleCurrentChange(val) {
+    handlePageChange(val) {
       console.log(`当前页: ${val}`)
       this.currentPage = val
       console.log(this.currentPage)
@@ -127,6 +134,27 @@ export default {
       this.dialogVisible = true
       console.log("显示当前订单的详细信息...", row);
       this.orderDetail = row
+    },
+    handleCancel( row ){
+        let id = row.id
+console.log( "handleCancel row =", row)
+        this.cancelOrderConfirm( ( )=>{
+          cancelOrder( id ).then((res)=>{
+            if( res.id ){
+              this.$emit('order-state-changed')
+
+              if( this.itemList.length == 1 && this.currentPage > 1 ){
+                this.handlePageChange( this.currentPage -1 )
+              }else{
+                this.initData()
+              }
+              this.$message({
+                type: 'success',
+                message: "恭喜你，订单取消成功"
+              })
+            }
+          })
+        })
     }
   }
 };

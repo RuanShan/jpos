@@ -298,7 +298,7 @@
             <div class="el-table__empty-block" v-if="!orderDetail"> <p class=" el-table__empty-text "> 暂无数据 </p></div>
           </div>
           <div class="actions" v-show="orderDetail">
-            <el-button size="mini" @click="cancelOrder">取消订单</el-button>
+            <el-button size="mini" @click="cancelOrder" class="hide">取消订单</el-button>
             <el-button size="mini" @click="handlePrintLabel" type="primary">打印所有条码</el-button>
             <!-- <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
             <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button> -->

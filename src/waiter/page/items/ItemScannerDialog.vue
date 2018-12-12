@@ -1,5 +1,12 @@
 <style lang="scss">
-
+.dialog-content-wrap{
+  .el-table__body-wrapper{
+    &::-webkit-scrollbar{
+      width: 5px;
+      height: 5px;
+    }
+  }
+}
 </style>
 
 <template>
@@ -25,13 +32,14 @@
         <el-table :data="computedLineItems" height="250" border style="width: 100%">
           <el-table-column type="index" width="60" label="序号">
           </el-table-column>
-          <el-table-column prop="groupNumber" label="物品编码" width="180">
+          <el-table-column prop="groupNumber" label="物品编码" width="120">
           </el-table-column>
-          <el-table-column prop="cname" label="服务项目" width="180">
+          <el-table-column prop="cname" label="服务项目[备注]" >
+            <template slot-scope="scope">
+              <div>{{scope.row.cname}}<span v-show="scope.row.memo">[{{scope.row.memo}}] </span></div>
+            </template>
           </el-table-column>
-          <el-table-column prop="memo" label="备注">
-          </el-table-column>
-          <el-table-column  label="操作">
+          <el-table-column  label="操作" width="80">
             <template slot-scope="scope">
               <el-button type="danger" icon="el-icon-delete" circle @click="delOrderItem(scope.row)" size="mini"></el-button>
             </template>
@@ -40,6 +48,7 @@
         </el-table>
       </div>
       <div slot="footer" class="dialog-footer">
+        <div class="left" v-show="computedLineItems.length>0"> 服务项目数量: {{computedLineItems.length}}</div>
         <el-button type="primary" @click="sumit">确 定</el-button>
         <el-button @click="handleCloseDialog">取 消</el-button>
       </div>

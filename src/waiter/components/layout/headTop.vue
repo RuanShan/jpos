@@ -39,6 +39,12 @@
           align-items: center;
         }
     }
+    .checkinout{
+      padding-right: 20px;
+      button *{
+        color: #fff;
+      }
+    }
   }
   .avator{
     @include wh(36px, 36px);
@@ -66,18 +72,11 @@
     </div>
     <div class="header-right ">
       <div class="header-user-con">
-        <el-dropdown @command="handleCheckinCommand" >
-          <span class="el-dropdown-link">
-            打卡<i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(user, index) in computedUserAndEntries" :key="index">
-              <p>{{user.name}} </p>
-              <p v-for="entry in user.entries">{{entry.displayCreatedAtTime}} - {{entry.displayState}} </p>
-            </el-dropdown-item>
-            <el-dropdown-item divided command="new">添加</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <el-button-group class="checkinout">
+          <el-button type="success" size="small" icon="el-icon-time" @click="handleCheckinCommand('new')">上班</el-button>
+          <el-button type="success" size="small" @click="handleCheckinCommand('new')">下班 <i class="el-icon-bell" ></i></el-button>
+        </el-button-group>
+
 
         <div> <img :src="userAvatarUrl" class="avator"></div>
         <el-dropdown @command="handleCommand" class='right'>

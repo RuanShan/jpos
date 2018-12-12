@@ -31,7 +31,7 @@
 
     <div class="customer-container clear">
       <el-form ref="customerForm" size="mini"  :inline="true" class="search-form">
-        <el-form-item label="会员搜索">
+        <el-form-item label="客户搜索">
           <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入手机/会员号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
             <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
@@ -60,9 +60,14 @@
       </div>
     </div>
     <div class="order-item-list">
-      <el-table :data="computedLineItemGroups" border stripe style="width:100%;" class="fillcontain" highlight-current-row  @current-change="handleCurrentGroupChange">
-        <el-table-column prop="displayCreatedAt" label="订单日期"></el-table-column>
-        <el-table-column label="物品条码" width="110">
+      <el-table :data="computedLineItemGroups" border stripe style="width:100%;" class="fillcontain cel-scrollable-table" highlight-current-row  @current-change="handleCurrentGroupChange">
+        <el-table-column prop="displayCreatedAt" label="订单日期" align="center" width="100" >
+          <template slot-scope="scope">
+            <div>{{scope.row.createdAt.format("YYYY-MM-DD")}}</div>
+              <div>{{scope.row.createdAt.format("H:mm")}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="物品条码" width="110" align="center">
           <template slot-scope="scope">
             <div class="image-wrap">
               <img :src="scope.row.imageUrl" alt="">
@@ -70,11 +75,15 @@
             <div class="group-number">{{scope.row.number}} </div>
           </template>
         </el-table-column>
-        <el-table-column prop="order.number" label="订单号"></el-table-column>
-        <el-table-column prop="name" label="服务项目"></el-table-column>
-        <el-table-column prop="displayState" label="物品状态"></el-table-column>
-        <el-table-column prop="displayPaymentState" label="支付状态"></el-table-column>
-        <el-table-column prop="price" label="金额">金额</el-table-column>
+        <el-table-column prop="order.number" label="订单号" width="120" align="center"></el-table-column>
+        <el-table-column prop="name" label="服务项目[备注]">
+          <template slot-scope="scope">
+            <div v-for="item in scope.row.lineItems">{{item.cname}}<span v-show="item.memo">[{{item.memo}}] </span></div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="displayState" sortable label="物品状态" width="120" ></el-table-column>
+        <el-table-column prop="displayPaymentState" label="支付状态" width="80" ></el-table-column>
+        <el-table-column prop="price" label="金额" width="60">金额</el-table-column>
         <el-table-column label="操作" width="50">
           <template slot-scope="scope">
             <el-button type="danger" icon="el-icon-delete"  circle @click="discardLineItemGroup(scope.row)" size="mini"></el-button>
@@ -323,6 +332,13 @@ export default {
     },
     // 交付客户订单
     handleDeliverOrders(){
+      if( this.computedLineItemGroups.length == 0 ){
+        this.$message({
+          message: '请输入客户手机或者订单编号！',
+          type: 'error'
+        });
+        return
+      }
       console.log( "checkoutRequiredLineItems=", this.checkoutRequiredLineItems)
       if( this.isDeliverable){
         //检查每件物品对应的Order用户是否付款， 如果没有，弹出结账对话框,

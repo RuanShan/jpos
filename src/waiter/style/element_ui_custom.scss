@@ -64,7 +64,7 @@
   height: 100%;
   >.el-table__body-wrapper {
       position: absolute;
-      top: 36px;
+      top: 48px;
       bottom: 0;
       overflow-y: auto;
       &::-webkit-scrollbar{
@@ -73,7 +73,8 @@
       }
   }
   td {  padding: 6px;  }
-  th {  padding: 6px;  }
+  th{ padding: 12px 0; }
+
 }
 
 .cel-scrollable-tabs{

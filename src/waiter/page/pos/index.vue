@@ -187,6 +187,9 @@
             .el-upload.el-upload--picture-card{
               display: none;
             }
+            .el-icon-delete{
+              display: none;
+            }
           }
         }
     }
@@ -248,13 +251,18 @@
   left: 50px;
   right: 0;
   bottom: 0;
-  background-color: #000000;
-  opacity: 0.3;
+  background-color: #fff;
+  opacity: 0.8;
   z-index: 10;
   color: red;
-  span{
-    @include ctt();
+ .msg{
+      @include center();
+      background-color: #E6A23C;
+       color: #fff;
+       display: inline-block;
+       padding: 15px;
   }
+
   text-align: center;
 }
 </style>
@@ -317,11 +325,11 @@
                 </div>
               </div>
               <div class="order-item-list">
-                <el-table class="fillcontain" :data="sortedOrderItemList" border style="width:100%;">
+                <el-table class="fillcontain cel-scrollable-table" :data="sortedOrderItemList" border style="width:100%;">
                 <el-table-column label="物品序号" :render-header="renderEditableTableHeader" width="100">
-                  <template slot-scope="scope">{{scope.row.uid}}
-                 <vue-xeditable  :name="'groupPosition_'+scope.row.uid+'_xeditable'" v-model="scope.row.groupPosition" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
-               </template>
+                  <template slot-scope="scope">
+                  <vue-xeditable  :name="'groupPosition_'+scope.row.uid+'_xeditable'" v-model="scope.row.groupPosition" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
+                  </template>
                 </el-table-column>
                 <el-table-column prop="cname" label="服务项目" width="160"></el-table-column>
                 <el-table-column prop="unitPrice" label="单价" :render-header="renderEditableTableHeader" width="80">
@@ -453,7 +461,7 @@
       </el-col>
     </el-row>
   </div>
-  <div class="pos-cover" v-show="!isUserEntryExist"> <span> 请先打卡，再处理业务！</span> </div>
+  <div class="pos-cover" v-show="!isUserEntryExist"> <span class="msg"> 请先打卡，再处理业务！</span> </div>
   <CelSwiper :carousel-images="carouselImages" :dialog-visible.sync="carouselDialogVisible"> </CelSwiper>
 </div>
 </template>
