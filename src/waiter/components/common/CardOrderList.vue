@@ -21,19 +21,32 @@
     <el-table class="cel-scrollable-table" :data="expenseTableData" border :row-key="row => row.id">
       <!-- <el-table id="expensecalendartable" :data="expenseTableData" border style="width: 100%;margin-top: 10px" @cell-mouse-enter="mouseEnter" :row-key="row => row.id"> -->
 
-      <el-table-column label="订单编号" prop="number">
+      <el-table-column label="订单编号" prop="number" width="120">
       </el-table-column>
-      <el-table-column label="消费日期" prop="displayCreatedAt">
+      <el-table-column label="消费日期" prop="displayCreatedAt" width="120">
       </el-table-column>
-      <el-table-column label="店铺名称" prop="storeName">
+      <el-table-column label="店铺名称" prop="storeName" width="150">
       </el-table-column>
-      <el-table-column label="订单状态" prop="displayState">
+      <el-table-column label="订单状态" prop="displayState" width="80">
       </el-table-column>
-      <el-table-column label="实收金额" prop="total">
+      <el-table-column label="物品-服务项目[备注]" >
+        <template slot-scope="scope">
+          <dl v-for="group in scope.row.lineItemGroups" class="clear">
+            <dt class="left">
+              {{group.number}} -
+            </dt>
+            <dd class="left">
+              <div v-for="item in group.lineItems">{{item.cname}}<span v-show="item.memo">[{{item.memo}}] </span></div>
+            </dd>
+          </dl>
+        </template>
       </el-table-column>
-      <el-table-column label="操作员" prop="creatorName">
+      <el-table-column label="实收金额" prop="total" width="80">
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作员" prop="creatorName" width="80">
+      </el-table-column>
+
+      <el-table-column label="操作" width="160">
        <template slot-scope="scope">
          <el-button
            size="mini"  type="success"
@@ -110,7 +123,8 @@ export default {
         per_page: this.perPage, //每页显示12行数据
         q: {
           order_type_eq: 0,
-          user_id_eq: this.customerData.id //根据顾客的id
+          user_id_eq: this.customerData.id, //根据顾客的id
+          s:[ 'created_at desc']
         }
       }
       //会员卡订单

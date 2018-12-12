@@ -687,15 +687,17 @@ export var apiResultMixin = {
       } else if (state == "ready") {
         return "待交付"
       } else if (state == "ready_for_factory") {
-        return "准备发工厂"
+        return "门店发工厂"
       } else if (state == "processing") {
-        return "专业服务"
+        return "工厂专业服务"
       } else if (state == "processed") {
         return "工厂验收"
       } else if (state == "ready_for_store") {
         return "工厂发货"
       } else if (state == "shipped") {
         return "已交付客户"
+      } else if (state == "canceled") {
+        return "服务取消"
       }
       return "未知"
     },
@@ -719,8 +721,9 @@ export var apiResultMixin = {
     },
     getPaymentDisplayState(state){
       // payment.state
-      console.log( " payment.state =", state)
-      return state == "completed" ?  "已付" : "未付"
+      if( state == 'completed') return "已付";
+      if( state == 'void') return "取消";
+      return "未付"
     },
     getLineItemDisplayState(state){
       // :pending,  :done

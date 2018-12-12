@@ -68,6 +68,7 @@
                 <el-form-item>
                   <el-button type="primary" @click="handleSearch()" size="mini">搜索</el-button>
                 </el-form-item>
+                <input type="text" name="disableentrykeysubmit" style="display:none">
               </el-form>
           </el-form>
         </div>

@@ -25,7 +25,7 @@
                 ref="scannerInput" class="el-input__inner" data-index="0"></input>
             </div>
           </el-form-item>
-          <input type="text" name="disableentrykeysubmit" style="display:nono">
+          <input type="text" name="disableentrykeysubmit" style="display:none">
         </el-form>
       </div>
       <div class="dialog-content-wrap"  @click.capture="handleBlur" >
@@ -96,6 +96,7 @@ export default {
   },
   methods: {
     handleDialogOpen() {
+      this.form.number=""
       this.scanedNumbers = []
       this.lineItemGroups = []
       //this.$refs.scannerInput.focus()

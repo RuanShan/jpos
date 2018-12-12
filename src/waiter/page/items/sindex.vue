@@ -365,7 +365,7 @@
                   <div class="title">
                     <button  class="order-state-btn" @click="handleTransferProducts('ready_for_factory', 'processing')">
                       <img src="../../assets/img/order/states/ready_for_factory2.png">
-                      <div class=""> <span> 工厂待收货 </span>
+                      <div class=""> <span> 工厂待接收 </span>
                          <el-badge :value="itemCounts.ready_for_factory" />
                        </div>
                     </button>

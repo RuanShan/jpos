@@ -3,14 +3,19 @@
     .images{
       img{ width: 100%; }
     }
-    table {
+    .customer table, .payments table  {
       width: 100%;
       td,th{
-        padding: 6px 10px;
+        padding: 12px 10px;
         border: 1px solid #ebeef5;
       }
       tr {
         vertical-align: top;
+      }
+    }
+    .el-table {
+      td,th{
+        padding: 10px 0;
       }
     }
     .head{
@@ -28,7 +33,7 @@
     }
     .subtitle {
         padding: 6px;
-        color: #6a3906;        
+        color: #6a3906;
     }
   }
 </style>
@@ -60,7 +65,7 @@
   </div>
   <div class="box">
     <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{orderDetail.number}}</i> </span> </div>
-    <div class="box">
+    <div class="box payments">
       <div class="subtitle"> 支付信息 </div>
       <div>
         <table border="1" cellspacing="0" style="width: 100%">
@@ -81,26 +86,24 @@
     </div>
 
     <div v-for="group in orderDetail.lineItemGroups" class="box line-item-group">
-      <div class="subtitle"> 物品编号: {{group.number}}  <div class="right"> 状态: {{group.displayState}} </div></div>
+      <div class="subtitle"> 物品编号: {{group.number}} 状态: {{group.displayState}}  <div class="right">
+        <el-button  type="danger" size="mini" :disabled="isReworkDisabled(group.state)" @click="handleRework(group.number)">返工</el-button></div></div>
       <div class="box-body">
-        <table border="1"   cellspacing="0" style="width: 100%">
-        <tr>
-          <th style="width:8em">序号</th>
-          <th>服务项目</th>
-          <th>项目备注<i class="el-icon-edit"></i></th>
-          <th style="width:8em">状态</th>
-        </tr>
-        <template v-for="(lineItem,index ) in group.lineItems">
-          <tr>
-            <td>{{ index+1 }}</td>
-            <td>{{ lineItem.cname }}</td>
-            <td>
-              {{ lineItem.memo }}
-            </td>
-            <td>{{ lineItem.displayState }}</td>
-          </tr>
-        </template>
-      </table>
+
+        <el-table :data="group.lineItems" border :row-key="row => row.id">
+          <el-table-column label="序号"  type="index" width="80">
+          </el-table-column>
+          <el-table-column label="服务项目[备注]"  >
+            <template slot-scope="scope">
+              <div >{{scope.row.cname}}<span v-show="scope.row.memo">[{{scope.row.memo}}] </span></div>
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="displayState" label="状态" width="120" align="center"></el-table-column>
+
+
+        </el-table>
+
       </div>
       <div class="subtitle"> 物品图片 </div>
       <div class="box-body clear">
@@ -116,6 +119,10 @@
 </template>
 
 <script>
+import {
+reworkLineItemGroup
+}
+from '@/api/getData'
 
 export default {
   data() {
@@ -126,6 +133,48 @@ export default {
   computed:{
     orderCustomer(){
       return this.orderDetail ? this.orderDetail.customer : {}
+    }
+  },
+  methods:{
+    isReworkDisabled(state){
+      //isReworkDisabled(scope.row.state)
+      return !( state == this.LineItemGroupStateEnum.ready || state == this.LineItemGroupStateEnum.shipped )
+    },
+
+    handleRework(groupNumber){
+      console.log( "handleRework(groupNumber)=", groupNumber)
+      let validateReturnedMemo = (val)=>{
+        return val && val.length >=2
+      }
+      this.$prompt('请输入返工理由', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValidator: validateReturnedMemo,
+        inputErrorMessage: '请输入2-128个字符的返工理由'
+      }).then(({ value }) => {
+        reworkLineItemGroup( groupNumber, {line_item_group: { returned_memo: value }} ).then((res)=>{
+          if( res.id ){
+            //this.$emit('order-state-changed')
+
+            let group = this.buildLineItemGroup( res )
+            let index = this.orderDetail.lineItemGroups.findIndex( (g)=>{ return g.number==groupNumber})
+            this.$set( this.orderDetail.lineItemGroups, index, group)
+
+            this.$message({
+              type: 'success',
+              message: "恭喜你，物品退回成功"
+            })
+          }
+        })
+
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消返工'
+        });
+      });
+
+
     }
   }
 

@@ -242,7 +242,7 @@ export default {
       if( this.formData.enableTimesCard ){
         let amount = this.totalMoney - this.formData.paymentAmount
         paymentsAttributes.push( { source_id: this.currentTimesCard.id, source_type: "Spree::Card",
-          amount: amount, card_times: this.formData.timesCardAmount, 
+          amount: amount, card_times: this.formData.timesCardAmount,
           payment_method_id: this.prepaidCardPaymentMethod.id } )
       }
 
@@ -291,9 +291,13 @@ export default {
       if( this.currentPrepaidCard != null){
         //会员卡的余额是否够用
         this.formData.enablePrepaidCard = true
+      }else{
+        this.formData.enablePrepaidCard = false
       }
       if( this.currentTimesCard != null){
         this.formData.enableTimesCard = true
+      }else{
+        this.formData.enableTimesCard = false        
       }
       console.log( "handleDialogOpened-orderItemList = ", this.orderItemList)
       this.computePaymentAmount()

@@ -139,7 +139,7 @@
           <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>
 
           <el-button class="print" type="primary" @click="handlePrint" size="mini">打印</el-button>
-          <el-button class="print" type="danger" @click="handleTransferItemsConfirm" size="mini">订单确认</el-button>
+          <el-button class="print" type="danger" @click="handleTransferItemsConfirm" size="mini">物品状态确认</el-button>
         </div>
         <!-- formData end -->
 

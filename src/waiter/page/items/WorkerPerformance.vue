@@ -188,6 +188,11 @@ export default {
   computed: {
     computedVisible: function() {
       return this.dialogVisible
+    },
+    computedCurrentWorkName(){
+      let worker = this.workerList.find((w)=>{ return w.id == this.currentWorkerId })
+      console.log( " computedCurrentWorkName=", worker)
+      return worker ? worker.username : ''
     }
   },
   methods: {
@@ -256,6 +261,11 @@ export default {
         //this.handleDiscardSelection()
 
         this.$emit('order-state-changed')
+
+        this.$message({
+          message: `${this.computedCurrentWorkName}的${response.count}项工作内容已经验收成功！`,
+          type: 'success'
+        });
       }
     },
 

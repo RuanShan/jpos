@@ -92,7 +92,8 @@ export default {
         q: {
           order_type_in: [1,2], //充值订单
           user_id_eq: this.customerData.id, //根据顾客的id
-          line_items_card_id_eq: this.cardData.id
+          line_items_card_id_eq: this.cardData.id,
+          s:[ 'created_at desc']
         }
       }
       return queryParams

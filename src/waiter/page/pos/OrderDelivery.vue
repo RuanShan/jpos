@@ -76,7 +76,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="order.number" label="订单号" width="120" align="center"></el-table-column>
-        <el-table-column prop="name" label="服务项目[备注]">
+        <el-table-column prop="name" label="物品-服务项目[备注]">
           <template slot-scope="scope">
             <div v-for="item in scope.row.lineItems">{{item.cname}}<span v-show="item.memo">[{{item.memo}}] </span></div>
           </template>

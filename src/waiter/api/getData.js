@@ -532,6 +532,11 @@ export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/' + nu
  */
 export const getLineItemGroupByNumber = number => fetch('/api/v1/line_item_groups/' + number)
 
+/**
+ * update change lineItemGroup.state to pending
+ */
+export const reworkLineItemGroup = (number, data) => fetch('/api/v1/line_item_groups/' + number + '/rework', data, 'PUT')
+
 
 /**
  * 查询 LineItem, 工作量统计
