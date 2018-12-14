@@ -216,7 +216,7 @@
                       <th>客户类型 </th>
                       <td> {{ orderCustomer.displayType }} </td>
                     </tr>
-                    <tr>
+                    <tr  v-show="orderCustomer.prepaidCard.id">
                       <th>会员卡号 </th>
                       <td> {{ orderCustomer.prepaidCard.code }} </td>
                       <th>会员卡类型 </th>
@@ -225,12 +225,13 @@
                       <td> {{ orderCustomer.prepaidCard.amountRemaining }} </td>
                     </tr>
                   </table>
+
                 </div>
               </div>
               <div class="box">
                 <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{orderDetail.number}}</i> </span> </div>
 
-                <div class="box">
+                <div class="box" v-show="caller=='store'">
                   <div class="subtitle"> 支付信息  状态: {{orderDetail.displayPaymentState}}  </div>
                   <div >
                     <table border="1" cellspacing="0" style="width: 100%">
@@ -277,6 +278,7 @@
                     <div v-show="group.images.length==0">  </div>
 
                     <el-upload
+                      :disabled="isCallerFactory"
                       :file-list="group.uploadImages"
                       :action="group.imageUploadPath"
                       name="image[attachment]"
@@ -362,11 +364,16 @@ export default {
     }
   },
   mixins: [DialogMixin, CelUIMixin],
-  props: ['selectedStoreId','dialogVisible', 'orderState', 'itemCounts'],
+  props: ['selectedStoreId','dialogVisible', 'orderState', 'caller'],
   components:{  CelSwiper },
   created() {  },
   before_update() {
     console.log( "itemProcess->before_update")
+  },
+  computed:{
+    isCallerFactory(){
+      return this.caller == 'factory'
+    }
   },
   methods: {
     async initData() {

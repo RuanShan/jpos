@@ -256,7 +256,7 @@
     <div class="item-flow-container page-content">
 
       <product-scan  :selected-store-id="formData.storeId" :order-state="currentOrderState" :dialog-visible.sync="scanProductDialogVisible" @order-state-changed="orderStateChanged"> </product-scan>
-      <item-process  :selected-store-id="formData.storeId" :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged"> </item-process>
+      <item-process  :selected-store-id="formData.storeId" :order-state="currentOrderState" :dialog-visible.sync="processItemDialogVisible" @order-state-changed="orderStateChanged" caller="store"> </item-process>
       <product-transfer  :selected-store-id="formData.storeId" :order-state="currentOrderState" :next-order-state="nextOrderState" :dialog-visible.sync="transferProductDialogVisible" @order-state-changed="orderStateChanged"> </product-transfer>
       <WorkerPerformance  :selected-store-id="formData.storeId" :order-state="currentOrderState" :dialog-visible.sync="workerPermormanceDialogVisible" @order-state-changed="orderStateChanged"> </WorkerPerformance>
 
