@@ -1,7 +1,6 @@
 <style lang="scss">
 .statis-each-member {
 
-
   .member-time-select {
     width: 230px;
   }

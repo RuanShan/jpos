@@ -523,7 +523,8 @@ export default {
       customerComboId: null,
       carouselImages: [],//图片走马灯
       carouselDialogVisible: false,
-      currentExpenseItemImages: [] // 允许编辑费用图片，所以在图片改变事件中设置当前费用图片列表
+      currentExpenseItemImages: [], // 允许编辑费用图片，所以在图片改变事件中设置当前费用图片列表
+      currentGroupImages: []
     };
   },
   components: {
@@ -826,6 +827,9 @@ export default {
     handleCurrentGroupChanged(selected){
       console.log( "selectedGroup=", selected)
       this.$set(this.selectedItems, this.selectedTabName, selected)
+      if( selected ){
+        this.currentGroupImages = selected.images
+      }
     },
     handleCurrentExpenseItemChanged(selected){
       console.log( "selectedExpenseItem=", selected)
@@ -857,6 +861,7 @@ export default {
     },
     handlePreviewImage(file){
       console.log(" handlePreviewImage", file)
+      this.carouselImages = this.currentGroupImages
       this.carouselDialogVisible = true
     },
     handlePreviewExpenseItemImage(file){

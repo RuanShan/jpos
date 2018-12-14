@@ -64,10 +64,13 @@
       </el-table-column>
       <el-table-column prop="displayCreatedAt" label="订单日期" width="140">
       </el-table-column>
-      <el-table-column prop="cname" label="工作内容" >
+
+      <el-table-column label="工作内容[备注]"  >
+        <template slot-scope="scope">
+          <div >{{scope.row.cname}}<span v-show="scope.row.memo">[{{scope.row.memo}}] </span></div>
+        </template>
       </el-table-column>
-      <el-table-column prop="memo" label="备注">
-      </el-table-column>
+    
       <el-table-column prop="displayState" label="工作状态" width="120">
       </el-table-column>
       <el-table-column prop="workerName" label="工人" width="120">

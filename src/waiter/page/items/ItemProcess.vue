@@ -305,15 +305,8 @@
         </div>
       </div>
     </el-dialog>
-    <el-dialog  append-to-body :visible.sync="imageDialogVisible" width="70%">
-      <el-carousel :initial-index="0"	 arrow="always" :autoplay="false">
-        <el-carousel-item v-for="item in carouselImages" :key="item.id">
-          <div  style="text-align:center;">
-           <img :src="item.url">
-          </div>
-        </el-carousel-item>
-      </el-carousel>
-    </el-dialog>
+    <CelSwiper :carousel-images="carouselImages" :dialog-visible.sync="imageDialogVisible"> </CelSwiper>
+
   </div>
 </template>
 
@@ -341,6 +334,7 @@ import {
   PrintUtil
 } from '@/utils/ipcService'
 
+import CelSwiper from "@/components/dialog/CelSwiper.vue";
 
 export default {
   data() {
@@ -369,7 +363,7 @@ export default {
   },
   mixins: [DialogMixin, CelUIMixin],
   props: ['selectedStoreId','dialogVisible', 'orderState', 'itemCounts'],
-  components:{  },
+  components:{  CelSwiper },
   created() {  },
   before_update() {
     console.log( "itemProcess->before_update")

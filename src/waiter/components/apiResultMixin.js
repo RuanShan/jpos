@@ -120,7 +120,7 @@ export var apiResultMixin = {
            const model = {
               id:  result.id,
               cardId: result.card_id,
-              amount: result.amount,
+              amount: parseInt( result.amount ),
               amountLeft: result.amount_left,
               position: result.position,
               createdAt: moment(result.created_at)
