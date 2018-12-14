@@ -379,6 +379,13 @@ export const findOrderByGroupNumber = groupNumber => fetch('/api/v1/pos_orders/f
 export const addPayments = (id, data) => fetch('/api/v1/pos_orders/' + id +'/add_payments', data, 'POST')
 
 /**
+ * 订单后付款，重新支付
+ */
+
+export const repay = (id, data) => fetch('/api/v1/pos_orders/' + id +'/repay', data, 'POST')
+
+
+/**
  * 获取Customer信息
  */
 

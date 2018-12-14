@@ -81,8 +81,8 @@
             <div v-for="item in scope.row.lineItems">{{item.cname}}<span v-show="item.memo">[{{item.memo}}] </span></div>
           </template>
         </el-table-column>
-        <el-table-column prop="displayState" sortable label="物品状态" width="120" ></el-table-column>
-        <el-table-column prop="displayPaymentState" label="支付状态" width="80" ></el-table-column>
+        <el-table-column prop="displayState" label="物品状态" width="120" ></el-table-column>
+        <el-table-column prop="order.displayPaymentState" label="支付状态" width="80" ></el-table-column>
         <el-table-column prop="price" label="金额" width="60">金额</el-table-column>
         <el-table-column label="操作" width="50">
           <template slot-scope="scope">
@@ -189,8 +189,10 @@ export default {
       return _.flatten( ops )
     },
     computedLineItemGroups: function(){
-      let ops = this.currentOrders.map((order) => { return order.lineItemGroups } )
-      return _.flatten( ops )
+      let ligs = this.currentOrders.map((order) => { return order.lineItemGroups.filter((g)=>{ return !g.deliveryDiscarded }) } )
+      ligs = _.chain(ligs).flatten().orderBy('state').value()
+      console.log("computedLineItemGroups=", ligs)
+      return ligs
     },
     computedLineItems: function(){
       let ops = this.currentOrders.map((order) => { return order.lineItems } )
@@ -208,8 +210,9 @@ export default {
       return Number(t)
     },
     checkoutRequiredLineItems: function(){
-      let items = this.checkoutRequiredLineItemGroups.map((group) => { return group.lineItems } )
-      return _.flatten( items )
+      // checkout all lineItems of order
+      let items = this.checkoutRequiredLineItemGroups.map((group) => { return group.order.lineItems } )
+      return _.chain(items).flatten().uniq().sortBy(['orderId','groupId']).value()
     },
     //需要付款的物品
     checkoutRequiredLineItemGroups: function(){
@@ -319,12 +322,14 @@ export default {
       }
     },
     discardLineItemGroup( row ){
-      console.log( "row=",row)
       let order = this.currentOrders.find((o)=>{  return o.id == row.orderId })
       let i = order.lineItemGroups.indexOf( row )
       if( i >= 0 ){
-        order.lineItemGroups.splice( i, 1)
+        row.deliveryDiscarded = true
+        // refresh view
+        order.lineItemGroups.splice( i, 1, row)
       }
+
     },
 
     handlePaymentCreated(){

@@ -39,34 +39,40 @@
 </style>
 
 <template>
-<div class="order-detail-wrap" v-if="orderDetail">
+<div class="order-detail-wrap" v-if="currentOrder">
+  <CheckoutDialog :order-item-list="currentOrder.lineItems" :customer="currentCustomer" :card="currentCard" :dialog-visible.sync="checkoutDialogVisible"
+   @payment-created-event="handlePaymentCreated" > </CheckoutDialog>
+
+
   <div class="customer box">
     <div class="head">  <span> <i class="fa fa-user">  客户信息</i> </span> </div>
     <div>
       <table border="1" cellspacing="0">
         <tr>
           <th>客户电话 </th>
-          <td> {{ orderCustomer.mobile }} </td>
+          <td> {{ currentCustomer.mobile }} </td>
           <th>客户姓名 </th>
-          <td> {{ orderCustomer.userName }} </td>
+          <td> {{ currentCustomer.userName }} </td>
           <th>客户类型 </th>
-          <td> {{ orderCustomer.displayType }} </td>
+          <td> {{ currentCustomer.displayType }} </td>
         </tr>
         <tr>
           <th>会员卡号 </th>
-          <td> {{ orderCustomer.prepaidCard.code }} </td>
+          <td> {{ currentCustomer.prepaidCard.code }} </td>
           <th>会员卡类型 </th>
-          <td> {{ orderCustomer.prepaidCard.name }} </td>
+          <td> {{ currentCustomer.prepaidCard.name }} </td>
           <th>会员卡余额 </th>
-          <td> {{ orderCustomer.prepaidCard.amountRemaining }} </td>
+          <td> {{ currentCustomer.prepaidCard.amountRemaining }} </td>
         </tr>
       </table>
     </div>
   </div>
   <div class="box">
-    <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{orderDetail.number}}</i> </span> </div>
+    <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{currentOrder.number}}</i> </span> </div>
     <div class="box payments">
-      <div class="subtitle"> 支付信息 </div>
+      <div class="subtitle"> 支付信息
+        <div class="right hide"> <el-button  type="danger" size="mini"  :disabled="isRepayDisabled()" @click="openCheckoutDialog">重新支付</el-button></div>
+      </div>
       <div>
         <table border="1" cellspacing="0" style="width: 100%">
           <tr >
@@ -75,7 +81,7 @@
             <th style="width:8em">状态</th>
             <th style="width:8em">支付时间</th>
           </tr>
-          <tr v-for="(payment,index ) in orderDetail.payments">
+          <tr v-for="(payment,index ) in currentOrder.payments">
             <td>{{payment.cname}}</td>
             <td>{{payment.amount}}</td>
             <td style="width:8em">{{payment.displayState}}</td>
@@ -85,9 +91,10 @@
       </div>
     </div>
 
-    <div v-for="group in orderDetail.lineItemGroups" class="box line-item-group">
-      <div class="subtitle"> 物品编号: {{group.number}} 状态: {{group.displayState}}  <div class="right">
-        <el-button  type="danger" size="mini" :disabled="isReworkDisabled(group.state)" @click="handleRework(group.number)">返工</el-button></div></div>
+    <div v-for="group in currentOrder.lineItemGroups" class="box line-item-group">
+      <div class="subtitle"> 物品编号: {{group.number}} 状态: {{group.displayState}}
+        <div class="right"> <el-button  type="danger" size="mini" :disabled="isReworkDisabled(group.state)" @click="handleRework(group.number)">返工</el-button></div>
+      </div>
       <div class="box-body">
 
         <el-table :data="group.lineItems" border :row-key="row => row.id">
@@ -100,7 +107,6 @@
           </el-table-column>
 
           <el-table-column prop="displayState" label="状态" width="120" align="center"></el-table-column>
-
 
         </el-table>
 
@@ -120,27 +126,58 @@
 
 <script>
 import {
-reworkLineItemGroup
+  getCustomer,
+  reworkLineItemGroup
 }
 from '@/api/getData'
+
+import CheckoutDialog from "@/components/CheckoutDialog.vue"
 
 export default {
   data() {
     return {
+      checkoutDialogVisible: false
     }
   },
-  props: ['orderDetail'],
+  props: ['customerData','orderData'], // customerData is newest, card could be updated, ex. disabled
+  components: { CheckoutDialog },
   computed:{
-    orderCustomer(){
-      return this.orderDetail ? this.orderDetail.customer : {}
+    currentOrder(){
+      return this.orderData
+    },
+    currentCustomer(){
+      return this.customerData
+    },
+    currentCard(){
+      return this.customerData.card
     }
   },
   methods:{
+
+    isRepayDisabled(){
+      //isReworkDisabled(scope.row.state)
+      return !( this.currentOrder.paymentState == this.OrderPaymentStateEnum.paid  )
+    },
     isReworkDisabled(state){
       //isReworkDisabled(scope.row.state)
       return !( state == this.LineItemGroupStateEnum.ready || state == this.LineItemGroupStateEnum.shipped )
     },
+    // 客户搜索事件处理
+    openCheckoutDialog() {
+      console.log("openCheckoutDialog")
 
+      this.checkoutDialogVisible = true
+    },
+    handlePaymentCreated(newOrder) {
+      // update card order list
+      this.$bus.$emit('order-changed-gevent', newOrder)
+
+      getCustomer(this.currentCustomer.id).then(result => {
+        const newCustomer = this.buildCustomer(result)
+        // update customer card amount
+        this.$bus.$emit('customer-changed-gevent', newCustomer)
+      })
+    },
     handleRework(groupNumber){
       console.log( "handleRework(groupNumber)=", groupNumber)
       let validateReturnedMemo = (val)=>{
@@ -157,8 +194,8 @@ export default {
             //this.$emit('order-state-changed')
 
             let group = this.buildLineItemGroup( res )
-            let index = this.orderDetail.lineItemGroups.findIndex( (g)=>{ return g.number==groupNumber})
-            this.$set( this.orderDetail.lineItemGroups, index, group)
+            let index = this.currentOrder.lineItemGroups.findIndex( (g)=>{ return g.number==groupNumber})
+            this.$set( this.currentOrder.lineItemGroups, index, group)
 
             this.$message({
               type: 'success',

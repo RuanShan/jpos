@@ -83,7 +83,6 @@
       padding: 10px 0 10px 0;
     }
     .subtitle {
-        display: inline-block;
         padding: 6px;
         color: #6a3906;
     }
@@ -232,8 +231,8 @@
                 <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{orderDetail.number}}</i> </span> </div>
 
                 <div class="box">
-                  <div class="subtitle"> 支付信息 </div>
-                  <div>
+                  <div class="subtitle"> 支付信息  状态: {{orderDetail.displayPaymentState}}  </div>
+                  <div >
                     <table border="1" cellspacing="0" style="width: 100%">
                       <tr >
                         <th>支付方式</th>
@@ -252,7 +251,7 @@
                 </div>
 
                 <div v-for="group in orderDetail.lineItemGroups" class="box line-item-group">
-                  <div class="subtitle"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
+                  <div class="subtitle"> 物品编号: {{group.number}}   状态: {{group.displayState}}  </div>
                   <div class="box-body">
                     <table border="1"   cellspacing="0" style="width: 100%">
                     <tr>

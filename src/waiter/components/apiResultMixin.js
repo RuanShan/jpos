@@ -12,8 +12,10 @@ from '@/api/getData'
 export var apiResultMixin = {
   data: function(){
     return {
+      PaymentStateEnum: { completed: 'completed'},
       OrderStateEnum: { cart: 'cart', canceled: 'canceled'  },
       OrderTypeEnum: { normal: 'normal', card: 'card', deposit: 'deposit' },
+      OrderPaymentStateEnum:{ paid: 'paid', unpaid:'unpaid' }, // 打卡 登入， 登出
       LineItemGroupPaymentStateEnum: { paid: 'paid', unpaid: 'unpaid'},
       CardStateEnum:{ enabled: 'enabled', disabled:'disabled', replaced: 'replaced' }, // enabled 可用, disabled 不可用
       CardStyleEnum:{ prepaid: 'prepaid', times:'times' }, // prepaid 充值卡， times 次卡
@@ -385,40 +387,6 @@ export var apiResultMixin = {
     // updated_at:"2018-05-16T10:47:32.000+08:00"
     // username:"刘德华"
 
-    //顾客数据整理
-    buildCustomerInfo: function(customerResult) {
-      const customer = {
-        address: "",
-        birth: "",
-        displayBirth: "",
-        cards: [],
-        createdAt: "",
-        displayCreatedAt: "",
-        email: "",
-        id: 0,
-        memo: "",
-        mobile: "",
-        updatedAt: "",
-        displayUpdatedAt: "",
-        userName: ""
-      };
-      customer.address = customerResult.address;
-      customer.birth = moment(customerResult.birth);
-      customer.displayBirth = customer.birth.format('MM-DD');
-      customer.cards = customerResult.cards;
-      customer.createdAt = moment(customerResult.created_at);
-      customer.displayCreatedAt = this.getDisplayDateTime( customer.createdAt)
-
-      customer.email = customerResult.email;
-      customer.id = customerResult.id;
-      customer.memo = customerResult.memo;
-      customer.mobile = customerResult.mobile;
-      customer.updatedAt = moment(customerResult.updated_at);
-      customer.displayUpdatedAt = customer.updatedAt.format('YYYY-MM-DD , hh:mm:ss');
-      customer.userName = customerResult.username;
-      customer.sex = customerResult.sex;
-      return customer;
-    },
 
     buildCustomers: function(customersResult) {
       const customers = customersResult.users.map((productResult) => {
@@ -430,10 +398,11 @@ export var apiResultMixin = {
 
     //构造客户统计信息
     buildCustomerStatis:  function(result) {
-      // normalOrderTotal：一般订单消费金额 cardOrderTotal：充值金额
+      // normalOrderTotal：一般订单消费金额 cardOrderTotal：充值金额, nocardOrderTotal:非会员卡消费金额
       const statis = { orderTotal: 0, normalOrderTotal: 0, cardOrderTotal: 0 }
       statis.normalOrderTotal = parseInt(result.normal_order_total)
       statis.cardOrderTotal = parseInt(result.card_order_total)
+      statis.nocardOrderTotal = parseInt( result.nocard_order_total )
       console.log( "buildCustomerStatis=", result, statis)
       return statis
     },

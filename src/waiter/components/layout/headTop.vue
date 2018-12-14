@@ -62,7 +62,7 @@
       <img v-bind:src='logoImage' >
     </div>
 
-    <UserClockin :dialog-visible.sync="userCheckinDialogVisible" @user-entry-created="handleUserEntryCreated" ></UserClockin>
+    <UserClockin :dialog-visible.sync="userCheckinDialogVisible" :clock-state="clockState" @user-entry-created="handleUserEntryCreated" ></UserClockin>
 
     <div class="title left">
       <el-breadcrumb separator="/">
@@ -73,8 +73,8 @@
     <div class="header-right ">
       <div class="header-user-con">
         <el-button-group class="checkinout">
-          <el-button type="success" size="small" icon="el-icon-time" @click="handleCheckinCommand('new')">上班</el-button>
-          <el-button type="success" size="small" @click="handleCheckinCommand('new')">下班 <i class="el-icon-bell" ></i></el-button>
+          <el-button type="success" size="small" icon="el-icon-time" @click="handleCheckinCommand('clockin')">上班</el-button>
+          <el-button type="success" size="small" @click="handleCheckinCommand('clockout')">下班 <i class="el-icon-bell" ></i></el-button>
         </el-button-group>
 
 
@@ -112,6 +112,7 @@ export default {
       logoImage: require('@assets/img/logo-t.png'),
       userCheckinDialogVisible: false,
       baseImgPath,
+      clockState: 'clockin',
       localUserEntries: []
     }
   },
@@ -163,9 +164,9 @@ export default {
       }
     },
     handleCheckinCommand(command){
-        if( command=='new'){
-          this.openCheckinDialog()
-        }
+        this.clockState = command
+        this.openCheckinDialog()
+
     },
     openCheckinDialog(){
       this.userCheckinDialogVisible = true

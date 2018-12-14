@@ -30,7 +30,7 @@
 
   <div class="dialog-content-wrap clockin_container">
     <section class="form_contianer">
-
+      <p> {{greeting}}</p>
       <el-form :model="clockinForm" :rules="rules" ref="clockinForm">
         <input name="mockpassword1" type="password" class="hide-password">
 
@@ -74,6 +74,7 @@ import {
 export default {
   data() {
     return {
+      greeting: '',
       clockinForm: {
         username: '',
         password: ''
@@ -93,7 +94,7 @@ export default {
     }
   },
   mixins: [DialogMixin],
-  props: ['dialogVisible'],
+  props: ['dialogVisible', 'clockState'],
   computed: {
     computedLineItems() {
       return _.flatten(this.lineItemGroups.map((group) => {
@@ -108,6 +109,11 @@ export default {
       this.lineItemGroups = []
       // Cannot read property 'resetFields' of undefined
       console.log(" this.$refs.clockinForm=", this.$refs.clockinForm)
+      if( this.clockState == 'clockin'){
+        this.greeting = "世界那么大，人生那么长，总会有那么一个人，让你想要温柔以待。早安！"
+      }else{
+        this.greeting = "每天都有一个时刻，让我们为之振奋不已，每天都有两个字，让我们如沐春风，心情格外大好，那就是 下班 ，下班快乐！"
+      }
       this.$refs.clockinForm.resetFields()
       this.$refs.tabindex1.focus()
     },

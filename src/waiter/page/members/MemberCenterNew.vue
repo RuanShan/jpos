@@ -196,16 +196,8 @@
             <el-tab-pane label="无卡消费" name="">
               <div class="clear ">
                 <div class="left money-wrap">
-                  <span>当前余额</span>
-                  <span>¥ {{ordersWithoutCard.amountRemaining}}</span>
-                </div>
-                <div class="left money-wrap">
-                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充值金额</span>
-                  <span>¥ {{ordersWithoutCard.amount}}</span>
-                </div>
-                <div class="left money-wrap">
-                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消费金额</span>
-                  <span>¥ {{ordersWithoutCard.amountUsed}}</span>
+                  <span>消费金额</span>
+                  <span>¥ {{this.statis.nocardOrderTotal}}</span>
                 </div>
 
               </div>
@@ -286,6 +278,14 @@ export default {
         amountUsed:0
       }
     };
+  },
+  created(){
+    // handle user repay
+    this.$bus.$on('customer-changed-gevent', (newCustomer) => {
+      console.log('on customer-changed-gevent')
+      this.handleCustomerChanged(newCustomer)
+      this.initData()
+    })
   },
   computed: {
     cards: function () {
@@ -392,11 +392,16 @@ export default {
       let index = newCustomer.cards.findIndex((card) => {
         return changedCard.id == card.id
       })
+      console.log( " handleCardChanged: ", changedCard)
       if( index >=0){ //修改
-        newCustomer.cards[index]= changedCard
+        this.$set( newCustomer.cards, index, changedCard)
       }else{// 添加
         newCustomer.cards.push( changedCard )
       }
+      // update newCustomer.prepaidCard
+      newCustomer.prepaidCard = newCustomer.cards.find((card)=>{ return (card.state == this.CardStateEnum.enabled && card.style== this.CardStyleEnum.prepaid)})
+      newCustomer.timesCard = newCustomer.cards.find((card)=>{ return (card.state == this.CardStateEnum.enabled && card.style== this.CardStyleEnum.times)})
+      newCustomer.card = newCustomer.prepaidCard || newCustomer.timesCard
       this.handleCustomerChanged(newCustomer)
     },
     handleDepositOrderCreated(changedCard) {
@@ -404,14 +409,8 @@ export default {
       this.$bus.$emit('deposit-order-created-gevent')
       this.handleCardChanged(changedCard)
     },
-    //接收到会员编辑窗口子组件发射来的事件处理函数-----
-    memberEditOnOff() {
-      this.displayMemberEdit = false;
-    },
+
     //接收到会员卡卡卡编辑窗口子组件发射来的事件处理函数-----
-    memberCardEditOnOff() {
-      this.displayMemberCardEdit = false;
-    },
 
   }
 };

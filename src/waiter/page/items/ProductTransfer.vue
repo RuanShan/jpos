@@ -213,13 +213,15 @@ export default {
       // '准备发工厂', 在 工厂接收 界面 显示 "工厂待接收"
       if( this.orderState ==="ready_for_factory" ){
         return "工厂待接收"
+      }else  if( this.orderState ==="processed" ){
+          return "工厂已验收"
       }else{
         return this.getOrderStateText( this.orderState)
       }
     },
     nextOrderStateText: function(){
       if( this.nextOrderState ==="ready" ){
-        return "门店待验收"
+        return "门店已接收"
       }else{
         return this.getOrderStateText( this.nextOrderState)
       }

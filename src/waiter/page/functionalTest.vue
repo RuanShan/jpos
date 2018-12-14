@@ -294,7 +294,7 @@ export default {
             // console.log("会员消费记录");
             let id = 8;
             this.getSverVerCustomer(id).then(() => {
-                this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
+                this.customerData = this.buildCustomer(this.returnServerCustomerData);
                 this.returnServerCustomerData = {};
                 this.memberExpCalWindowVisible = true;  //打開會員消費記錄窗口
             });
@@ -303,7 +303,7 @@ export default {
             console.log("会员中心记录");
             let id = 8;
             this.getSverVerCustomer(id).then(() => {
-                this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
+                this.customerData = this.buildCustomer(this.returnServerCustomerData);
                 this.returnServerCustomerData = {};
                 this.memberCenterNewWindowVisible = true;  //打開會員中心窗口
             });
@@ -311,7 +311,7 @@ export default {
         openRechargeRecordButton() {
             let id = 8;
             this.getSverVerCustomer(id).then(() => {
-                this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
+                this.customerData = this.buildCustomer(this.returnServerCustomerData);
                 this.returnServerCustomerData = {};
                 this.memberRechargeRecordWindowVisible = true;
             });
@@ -319,7 +319,7 @@ export default {
         openMemberEdit() {
             let id = 8;
             this.getSverVerCustomer(id).then(() => {
-                this.customerData = this.buildCustomerInfo(this.returnServerCustomerData);
+                this.customerData = this.buildCustomer(this.returnServerCustomerData);
                 this.returnServerCustomerData = {};
                 this.memberEditWindowVisible = true;
             });

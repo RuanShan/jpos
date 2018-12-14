@@ -69,7 +69,9 @@ export default {
     return {
       paymentMethodList: [],
       cardTypeList: [],
-      formData: {},
+      formData: {
+        paymentPassword: null
+      },
       passwordSms:{
         countdown: 60,
         text: '发送密码找回短信',
@@ -100,14 +102,14 @@ export default {
           let params = {
             card: { state: this.formData.state,  memo: this.formData.memo, expire_at: this.formData.expireAt  }
           }
-          //如果payment_password存在，则更新payment_password
-          if( this.formData.payment_password.length>0){
-            params.card.payment_password = this.formData.payment_password
+          //如果paymentPassword存在，则更新paymentPassword
+          if( this.formData.paymentPassword && this.formData.paymentPassword.length>0){
+            params.card.payment_password = this.formData.paymentPassword
           }
           updateCard( this.cardData.id, params ).then((result) => {
             if (result.id) {
               let card = this.buildCard(result)
-              console.log( " updateCard =", card, "params=",params )
+              console.log( " updateCard =", card, "params=",params)
               this.$emit('card-changed-event', card)
               this.$message({
                 message: '恭喜你，会员卡更新成功',

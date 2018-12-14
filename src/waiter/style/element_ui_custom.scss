@@ -4,7 +4,7 @@
     top: 50px;
     left: 50px;
   }
-  .el-dialog{
+  >.el-dialog__wrapper >.el-dialog{
     width: 100%;
     height: 100%;
     margin: 0;
@@ -16,13 +16,13 @@
       }
     }
 
-    .el-dialog__header{
+    >.el-dialog__header{
       position: relative;
       height: 46px;
       background-color: #cecece;
       padding: 0;
     }
-    .el-dialog__body{
+    >.el-dialog__body{
       position: absolute;
       top: 46px;
       left: 0;
@@ -98,13 +98,13 @@
 }
 
 // 内容要有滚动条
-.cel-body-dialog{
+.cel-scrollable-dialog{
   .el-dialog__header  {
     border-bottom: 1px solid silver;
   }
   .el-dialog{
     .el-dialog__body{
-      max-height: 70vh;
+      max-height: 60vh;
       overflow-y: auto;
       &::-webkit-scrollbar{
         width: 5px;

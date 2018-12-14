@@ -7,65 +7,110 @@
         height: 40px;
         line-height: 40px;
     }
-    .checkout-form-wrap{
-      .checkout-form{
-        width: 600px;
-        margin: 0 auto;
-        .align-right input{
-          text-align: right;
-        }
-        .el-form-item__content{
-          margin-right: 50px;
-        }
-        .input-with-select .el-select {
-            min-width: 100px;
-        }
-        .el-checkbox+.el-checkbox {
-            margin-left: 20px;
-        }
-      }
-      table{
-        width: 440px;
-        margin: 0 auto;
-        th{
-          width: 8em;
-        }
-      }
-    }
-    .payment-card{
-      .el-input-group__prepend{
-        width: 110px;
-      }
-      .card-extra-info{
-        position: absolute;
-        right: 0;
-      }
-    }
-    .payment{
-      .el-select{
-        width: 110px;
-      }
-      .el-input-group > .el-input__inner {
-          text-align: right;
-      }
-    }
+
+
 }
+.checkout-form-wrap{
+  .checkout-form{
+    width: 600px;
+    margin: 0 auto;
+    .align-right input{
+      text-align: right;
+    }
+    .el-form-item__content{
+      margin-right: 50px;
+    }
+    .input-with-select .el-select {
+        min-width: 100px;
+    }
+    .el-checkbox+.el-checkbox {
+        margin-left: 20px;
+    }
+  }
+  .el-table{
+    line-height: 1;
+    .el-table__body-wrapper {
+      &::-webkit-scrollbar{
+        width: 5px;
+        height: 5px;
+      }
+    }
+  }
+  .image-wrap {
+    text-align: center;
+    img{
+      max-width: 60px;
+      max-height: 60px;
+      vertical-align: middle;
+    }
+  }
+  .payment{
+    .el-select{
+      width: 110px;
+    }
+    .el-input-group > .el-input__inner {
+        text-align: right;
+    }
+  }
+  .payment-card{
+    .el-input-group__prepend{
+      width: 110px;
+    }
+    .card-extra-info{
+      position: absolute;
+      right: 0;
+    }
+  }
+}
+
 </style>
 <template>
 <div class="checkout-container">
-  <el-dialog :visible="computedVisible" :show-close="false" @open="handleDialogOpened" @close="handleDialogClosed" class="cel-dialog">
+  <el-dialog :visible="computedVisible" :append-to-body="true"	:show-close="false" @open="handleDialogOpened"  class="cel-dialog">
     <div slot="title" class="dialog-title-wrap">
-      <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog()"></i> </div>
+      <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog"></i> </div>
       <div> 结账 </div>
     </div>
 
     <div class="checkout-form-wrap">
       <el-form :model="formData" :rules="rules" ref="formData" label-width="120px" class="checkout-form">
+        <el-form-item label="订单信息" v-if="existedOrderId">
+          <el-table :data="existedLineItemGroups" border max-height="240">
+            <el-table-column prop="displayCreatedAt" label="订单日期" align="center" width="100" >
+              <template slot-scope="scope">
+                <div>{{scope.row.createdAt.format("YYYY-MM-DD")}}</div>
+                  <div>{{scope.row.createdAt.format("H:mm")}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="物品条码" width="110" align="center">
+              <template slot-scope="scope">
+                <div class="image-wrap">
+                  <img :src="scope.row.imageUrl" alt="">
+                </div>
+                <div class="group-number">{{scope.row.number}} </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="name" label="服务项目[备注]">
+              <template slot-scope="scope">
+                <div v-for="item in scope.row.lineItems">{{item.cname}}<span v-show="item.memo">[{{item.memo}}] </span></div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="price" label="金额" width="60">
+              <template slot-scope="scope">
+                <span>{{computeGroupPrice( scope.row )}} </span>
+
+              </template>
+            </el-table-column>
+
+          </el-table>
+
+        </el-form-item>
+
         <el-form-item label="应收金额">
-          <el-input v-model="totalMoney" readonly class="money align-right">
+          <el-input v-model="totalPrice" readonly class="money align-right">
           </el-input>
         </el-form-item>
-        <el-form-item label="会员充值卡支付" v-if="isShowPrepaidCard"  prop="prepaidCardAmount">
+        <el-form-item label="会员充值卡支付" v-if="currentPrepaidCard"  prop="prepaidCardAmount">
           <el-input v-model="formData.prepaidCardAmount" placeholder="" class="payment-card money align-right"  :disabled="!formData.enablePrepaidCard">
             <template slot="prepend">
               <div>
@@ -110,7 +155,7 @@
           <el-button type="warning" @click="handleCreateOrderWithoutPayment" v-show="!existedOrderId">取单时结账</el-button>
           <div class="right">
             <el-button type="success" @click="handleCreateOrderAndPayment" :disabled="disableCheckoutButton">结账</el-button>
-            <el-button @click="handleCloseDialog()">取消</el-button>
+            <el-button @click="handleCloseDialog">取消</el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -123,7 +168,7 @@
 <script>
 import _ from "lodash"
 
-import { checkout, addPayments, validateCardPassword } from "@/api/getData"
+import { checkout, repay, validateCardPassword } from "@/api/getData"
 import {
   PrintUtil
 } from '@/utils/ipcService'
@@ -131,6 +176,7 @@ import {
 import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
+
 
 export default {
   props: ["dialogVisible", "orderItemList", "totalMoney", "customer", "card"],
@@ -173,9 +219,14 @@ export default {
     // 订单总价
     totalPrice: function() {
       let t = this.orderItemList.reduce((total, item)=>{
-        return total += item.price
+        if( this.currentPrepaidCard  && this.formData.enablePrepaidCard ){
+          total+= ( item.saleUnitPrice * item.quantity * this.currentPrepaidCard.discountPercent /100 )
+        }else{
+          total+= ( item.saleUnitPrice * item.quantity   )
+        }
+        return total
       }, 0)
-      return t.toFixed(0)
+      return parseInt(t)
     },
     currentCard: function(){
       // card maybe nil, it would cause error, card.code
@@ -199,9 +250,7 @@ export default {
         return null
       }
     },
-    isShowPrepaidCard: function(){
-      return this.currentPrepaidCard != null
-    },
+
     isShowTimesCard: function(){
       return this.currentCard.style == this.CardStyleEnum.times
     },
@@ -212,7 +261,7 @@ export default {
       }
       //使用会员卡支付 && （店铺设置必须支付密码 || 这张卡是其它店铺的卡）
       console.log("store.checkoutPasswordRequired=",this.storeInfo.checkoutPasswordRequired, isCardBelongsOtherStore)
-      return this.isShowPrepaidCard && (this.storeInfo.checkoutPasswordRequired || isCardBelongsOtherStore)
+      return this.currentPrepaidCard && this.formData.enablePrepaidCard && (this.storeInfo.checkoutPasswordRequired || isCardBelongsOtherStore)
     },
     prepaidCardPaymentMethod: function(){
       return this.paymentMethodList.find((pm)=>{
@@ -225,6 +274,12 @@ export default {
         return item.orderId != null
       })
       return ( item != null ? item.orderId : null )
+    },
+    existedLineItemGroups(){
+
+      let groups = this.orderItemList.map((item)=>{ return item.group})
+      return _.chain(groups).uniq().compact(  ).value()
+
     },
     //结账请求参数
     checkoutParams: function(){
@@ -240,7 +295,7 @@ export default {
           amount: this.formData.prepaidCardAmount, payment_method_id: this.prepaidCardPaymentMethod.id } )
       }
       if( this.formData.enableTimesCard ){
-        let amount = this.totalMoney - this.formData.paymentAmount
+        let amount = this.totalPrice - this.formData.paymentAmount
         paymentsAttributes.push( { source_id: this.currentTimesCard.id, source_type: "Spree::Card",
           amount: amount, card_times: this.formData.timesCardAmount,
           payment_method_id: this.prepaidCardPaymentMethod.id } )
@@ -252,13 +307,13 @@ export default {
       if( this.formData.paymentAmount > 0 ){
         paymentsAttributes.push( { payment_method_id: this.formData.selectPaymentMethodId, amount: this.formData.paymentAmount } )
       }
-      //  index  cname  discount  groupPosition memo name  price productId quantity
-      //  unitPrice  variantId  variantName
+      //  index  cname  discountPercent  groupPosition memo name  price productId quantity
+      //  saleUnitPrice  variantId  variantName
       let order =  { store_id: this.storeId, user_id: this.customer.id,  payments: paymentsAttributes, enable_sms: this.formData.enableSms, enable_mp_msg: this.formData.enableMpMsg }
       order.line_items_attributes = this.orderItemList.map((item)=>{
         return { quantity: item.quantity, variant_id: item.variantId, cname: item.cname,
           group_position: item.groupPosition, memo: item.memo,
-          sale_unit_price: item.unitPrice, discount_percent: item.discount, price: item.price,
+          sale_unit_price: item.saleUnitPrice, discount_percent: item.discountPercent, price: item.price,
         }
       })
 
@@ -266,7 +321,7 @@ export default {
     },
     // 除了会员支付方式之外，其他支付方式余额
     orderRemainder() {
-      let remainder = this.totalMoney
+      let remainder = this.totalPrice
       if( this.currentTimesCard ){
         return (this.formData.timesCardAmount == 0 ? (remainder - this.formData.paymentAmount) : 0)
       }else {
@@ -297,7 +352,7 @@ export default {
       if( this.currentTimesCard != null){
         this.formData.enableTimesCard = true
       }else{
-        this.formData.enableTimesCard = false        
+        this.formData.enableTimesCard = false
       }
       console.log( "handleDialogOpened-orderItemList = ", this.orderItemList)
       this.computePaymentAmount()
@@ -318,9 +373,7 @@ export default {
 
       console.log( "handleDialogOpened customer=",this.customer, this.paymentMethodList,this.activePaymentMethods )
     },
-    handleDialogClosed() {
-      this.paymentMethodList = [];
-    },
+
     //创建订单
     CreateOrder( params ) {
       console.log( " CreateOrder params=", params )
@@ -359,10 +412,12 @@ export default {
     //创建支付，客户领取物品时付款
     CreatePayment( orderId, params ) {
       // params = { payments, line_item_ids}
-        addPayments( orderId, params ).then((res)=>{
-          if( res.count> 0){
+        repay( orderId, params ).then((res)=>{
+          if( res.id){
             //发送支付创建时间
-            this.$emit('payment-created-event', res )
+            let order = this.buildOrder( res )
+
+            this.$emit('payment-created-event',  order )
             this.$emit('update:dialogVisible', false)
             this.$message({
               type: 'success',
@@ -451,6 +506,17 @@ export default {
           });
         }
       });
+    },
+    computeGroupPrice(group){
+      let total = group.lineItems.reduce((sum, item)=>{
+        if( this.currentPrepaidCard ){
+          sum+= ( item.saleUnitPrice * item.quantity * this.currentPrepaidCard.discountPercent /100 )
+        }else{
+          sum+= ( item.saleUnitPrice * item.quantity   )
+        }
+        return sum
+      }, 0)
+      return parseInt( total )
     },
     testPrint(){
       PrintUtil.printLabel()

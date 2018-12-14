@@ -187,7 +187,7 @@ export default {
         order_type: this.OrderTypeEnum.deposit,
         enable_mp_msg: this.formData.enableMpMsg,
         line_items: [
-          { variant_id: this.cardData.variantId, quantity: 1,  card_id: this.cardData.id, price: this.formData.inputMoney, cname: "会员卡充值" }
+          { variant_id: this.formData.variantId, quantity: 1,  card_id: this.cardData.id, price: this.formData.inputMoney, cname: "会员卡充值" }
         ],
         payments_attributes: [
           {

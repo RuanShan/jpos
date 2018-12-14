@@ -1,4 +1,4 @@
-<style lang="scss" >
+saleUnitPrice<style lang="scss" >
 @import '~@/style/mixin';
 
 .pos {
@@ -332,9 +332,9 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="cname" label="服务项目" width="160"></el-table-column>
-                <el-table-column prop="unitPrice" label="单价" :render-header="renderEditableTableHeader" width="80">
+                <el-table-column prop="saleUnitPrice" label="单价" :render-header="renderEditableTableHeader" width="80">
                   <template slot-scope="scope">
-                 <vue-xeditable  :name="'unitPrice_'+scope.row.uid+'_xeditable'" v-model="scope.row.unitPrice" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
+                 <vue-xeditable  :name="'saleUnitPrice_'+scope.row.uid+'_xeditable'" v-model="scope.row.saleUnitPrice" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
                </template>
                 </el-table-column>
                 <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
@@ -595,7 +595,7 @@ export default {
     },
     totalSalePrice () { // 应收
       let t = this.orderItemList.reduce((total, item) => {
-        return total += ( item.unitPrice * item.quantity )
+        return total += ( item.saleUnitPrice * item.quantity )
       }, 0)
       return Number(t).toFixed(2)
     },
@@ -678,14 +678,14 @@ export default {
         name: goods.name,
         variantName: goods.variants[index].optionsText,
         cname: goods.name + goods.variants[index].optionValueTexts.join(),
-        unitPrice: Number(goods.variants[index].price), // 单价
+        saleUnitPrice: Number(goods.variants[index].price), // 单价
         price: Number(goods.variants[index].price), // 金额
         groupPosition: this.nextGroupPosition,
         quantity: 1,
         memo: "",
-        discount: this.getDiscountOfVariant(vid) //计算选择商品对应当前客户会员卡的折扣率
+        discountPercent: this.getDiscountOfVariant(vid) //计算选择商品对应当前客户会员卡的折扣率
       }
-      newGoods.displayDiscount = this.getDisplayDiscount( newGoods.discount )
+      newGoods.displayDiscount = this.getDisplayDiscount( newGoods.discountPercent )
       this.computePrice(newGoods)
       this.orderItemList.push(newGoods);
       console.log("orderItemList", this.orderItemList)
@@ -744,7 +744,7 @@ export default {
       let index = this.orderItemList.findIndex((item)=>{ return item.uid == uid})
       let item = this.orderItemList[index]
       item[column] = newValue
-      if (column == 'unitPrice') {
+      if (column == 'saleUnitPrice') {
         this.computePrice(item)
       }
       if (column == 'groupPosition') {
@@ -799,16 +799,16 @@ export default {
 
 
         this.orderItemList.forEach((item) => {
-          item.discount = this.getDiscountOfVariant(item.variantId)
-          item.displayDiscount =this.getDisplayDiscount( item.discount )
+          item.discountPercent = this.getDiscountOfVariant(item.variantId)
+          item.displayDiscount =this.getDisplayDiscount( item.discountPercent )
           this.computePrice(item)
         })
       } else {
         this.setCurrentCustomer( this.defaultCustomer )
 
         this.orderItemList.forEach((item) => {
-          item.discount = 100
-          item.displayDiscount =this.getDisplayDiscount( item.discount )
+          item.discountPercent = 100
+          item.displayDiscount =this.getDisplayDiscount( item.discountPercent )
           this.computePrice(item)
         })
       }
@@ -904,7 +904,7 @@ export default {
       return  discount==100 ? '无' : `${discount/10}折`
     },
     computePrice(item) {
-      item.price = item.discount * item.unitPrice * item.quantity / 100
+      item.price = item.discountPercent * item.saleUnitPrice * item.quantity / 100
     },
     setCurrentCustomer(customer, card) {
       this.currentCustomer = customer
