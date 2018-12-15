@@ -27,13 +27,17 @@
       </el-table-column>
       <el-table-column label="店铺名称" prop="storeName" width="150">
       </el-table-column>
-      <el-table-column label="订单状态" prop="displayState" width="80">
+      <el-table-column label="订单状态" prop="displayState" width="120">
+          <template slot-scope="scope">
+            <p type="danger" v-if="scope.row.state=='canceled'">{{scope.row.displayState}}({{scope.row.memo}}) </p>
+            <p v-else>{{scope.row.displayState}} </p>
+          </template>
       </el-table-column>
       <el-table-column label="物品-服务项目[备注]" >
         <template slot-scope="scope">
           <dl v-for="group in scope.row.lineItemGroups" class="clear">
             <dt class="left">
-              {{group.number}} -
+              {{scope.row.id}}{{group.number}} -
             </dt>
             <dd class="left">
               <div v-for="item in group.lineItems">{{item.cname}} <span class="memo" v-show="item.memo"> [ {{item.memo}} ] </span></div>
@@ -82,14 +86,14 @@ import {
 import  OrderDetail from '@/components/common/OrderDetail.vue'
 import {
   CelUIMixin
-} from '@/components/mixin/CelUIMixin';
+} from '@/components/mixin/CelUIMixin'
 
 
 export default {
   //如果cardData 为空，表示非会员卡消费列表
   props: ["customerData", "cardData"],
   components:{
-    OrderDetail, CelUIMixin
+    OrderDetail
   },
   mixins: [ CelUIMixin],
   data() {
@@ -117,6 +121,7 @@ export default {
       let queryParams =  this.buildParams()
       findOrders(queryParams).then((result) => {
         const orders = this.buildOrders(result)
+        console.log( "findOrders ", queryParams, orders)
         this.totalCount = result.total_count; //得到当前共计多少页
         this.orderList = orders
       });
@@ -128,7 +133,7 @@ export default {
         q: {
           order_type_eq: 0,
           user_id_eq: this.customerData.id, //根据顾客的id
-          payments_state_eq: this.PaymentStateEnum.completed,// filter out void
+          //payments_state_eq: this.PaymentStateEnum.completed,// when we want to filter out void?
           s:[ 'created_at desc']
         }
       }
@@ -158,6 +163,7 @@ export default {
     handleCancel( row ){
         let id = row.id
         this.cancelOrderConfirm( ( {memo} )=>{
+          console.log( " handleCancel=", memo)
           cancelOrder( id, { order:{ memo}} ).then((res)=>{
             if( res.id ){
               this.$emit('order-state-changed')

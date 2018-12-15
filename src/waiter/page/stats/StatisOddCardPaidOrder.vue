@@ -1,5 +1,5 @@
 <style lang="scss">
-.statis-each-orders {
+.statis-odd-card-paid-orders {
 
   .oreder-form-item {
     margin-bottom: 0;
@@ -49,7 +49,7 @@
 </style>
 
 <template>
-  <div class="statis-each-orders">
+  <div class="statis-odd-card-paid-orders">
     <el-form ref="form" :model="formData"  :inline="true">
       <fieldset class="order-field-set filters">
         <legend>查询条件</legend>
@@ -157,26 +157,26 @@ export default {
         shortcuts: [{
           text: '最近一周',
           onClick(picker) {
-            const end = moment().endOf('day')
-            const endDate = end.toDate()
-            const startDate =end.subtract( 6, 'days').startOf('day').toDate()
-            picker.$emit('pick', [startDate, endDate])
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
           }
         }, {
           text: '最近一个月',
           onClick(picker) {
-            const end = moment().endOf('day')
-            const endDate = end.toDate()
-            const startDate =end.subtract( 1, 'months').startOf('day').toDate()
-            picker.$emit('pick', [startDate, endDate])
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
           }
         }, {
           text: '最近三个月',
           onClick(picker) {
-            const end = moment().endOf('day')
-            const endDate = end.toDate()
-            const startDate =end.subtract( 3, 'months').startOf('day').toDate()
-            picker.$emit('pick', [startDate, endDate])
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
           }
         }]
       },

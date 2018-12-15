@@ -9,7 +9,7 @@ export var CelUIMixin = {
       let validateReturnedMemo = (val)=>{
         return val && val.length >=2
       }
-      this.$prompt('请输入取消订单的理由', '此操作将取消订单', {
+      this.$prompt('请输入取消的理由', '此操作将取消订单', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputValidator: validateReturnedMemo,

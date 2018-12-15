@@ -70,7 +70,7 @@
           <div >{{scope.row.cname}}<span v-show="scope.row.memo">[{{scope.row.memo}}] </span></div>
         </template>
       </el-table-column>
-    
+
       <el-table-column prop="displayState" label="工作状态" width="120">
       </el-table-column>
       <el-table-column prop="workerName" label="工人" width="120">
@@ -122,26 +122,26 @@ export default {
         shortcuts: [{
           text: '最近一周',
           onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
+            const end = moment().endOf('day')
+            const endDate = end.toDate()
+            const startDate =end.subtract( 6, 'days').startOf('day').toDate()
+            picker.$emit('pick', [startDate, endDate])
           }
         }, {
           text: '最近一个月',
           onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
+            const end = moment().endOf('day')
+            const endDate = end.toDate()
+            const startDate =end.subtract( 1, 'months').startOf('day').toDate()
+            picker.$emit('pick', [startDate, endDate])
           }
         }, {
           text: '最近三个月',
           onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
+            const end = moment().endOf('day')
+            const endDate = end.toDate()
+            const startDate =end.subtract( 3, 'months').startOf('day').toDate()
+            picker.$emit('pick', [startDate, endDate])
           }
         }]
       },

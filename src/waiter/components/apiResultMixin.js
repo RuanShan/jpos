@@ -70,6 +70,7 @@ export var apiResultMixin = {
         paymentTotal: orderResult.payment_total, // 一共支付了多少
         createdAt: moment(orderResult.created_at),
         orderType: orderResult.order_type,
+        memo: orderResult.memo,
         lineItemGroups: [],
         extraLineItems: [],
         cardTransactions: []
@@ -339,6 +340,7 @@ export var apiResultMixin = {
       user.wxFollowerNickname = userResult.wx_follower_nickname
       user.wxFollowerHeadimgurl = userResult.wx_follower_headimgurl
       user.number = userResult.number
+      user.storeName = userResult.store_name
       user.cards = []
       if( user.birth ){
         user.birth = moment( user.birth )
@@ -696,7 +698,7 @@ export var apiResultMixin = {
     },
     getLineItemDisplayState(state){
       // :pending,  :done
-      console.log( " lineitem.state =", state)
+      //console.log( " lineitem.state =", state)
       return state == "done" ?   "已完成" : "待处理"
     },
     getDisplayTime( datetime){ // datetime is instance moment

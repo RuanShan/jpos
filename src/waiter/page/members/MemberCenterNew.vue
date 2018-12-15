@@ -193,7 +193,7 @@
                     <card-order-list :customer-data="customerData" :card-data="item"></card-order-list>
                   </el-tab-pane>
                   <el-tab-pane label="充值记录" name="deposits"  v-if="item.code.length>0">
-                    <card-deposit-list :customer-data="customerData" :card-data="item"></card-deposit-list>
+                    <card-deposit-list :customer-data="customerData" :card-data="item" @card-changed-event="handleCardChanged"></card-deposit-list>
                   </el-tab-pane>
                 </el-tabs>
               </div>
