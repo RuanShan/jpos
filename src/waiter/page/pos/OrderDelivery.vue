@@ -306,7 +306,7 @@ export default {
     async findOrderByCustomer(){
       let cid = this.selectedCustomerId
 
-      let q = { user_id_eq: cid, group_state_in: this.lineItemGroupProgressStates }
+      let q = { user_id_eq: cid, state_eq: this.OrderStateEnum.cart, group_state_in: this.lineItemGroupProgressStates }
       const ordersResult = await findOrders({ q })
       this.orderList = this.buildOrders(ordersResult)
       this.currentOrders = this.orderList

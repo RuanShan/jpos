@@ -164,7 +164,7 @@
         <div class="formData">
           <div class="filter">
             关键字:
-            <el-input label="Keyword" placeholder="请输入物品编号" v-model="formData.keyword" class="search-input" clearable @clear="handleClear" size="mini"></el-input>
+            <el-input label="Keyword" placeholder="请输入物品编号" v-model="formData.keyword" class="search-input" clearable @clear="handleClear" size="mini" minlength="2"></el-input>
           </div>
           <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>
         </div>

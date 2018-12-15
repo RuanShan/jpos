@@ -83,7 +83,7 @@
         border: 1px #efefef solid;
         background: #f9f9f9;
         .filter {
-            display: inline-block;
+            display: none;
             width: auto;
             padding: 10px;
             border-radius: 5px;
@@ -124,27 +124,21 @@
 
       <div class="transfer-product-container fillcontain clear">
         <!-- formData start -->
-        <div class="formData">
-          <div class="filter">
+        <div class="formData clear">
+          <div class="filter ">
             关键字:
-            <el-input label="Keyword" placeholder="请输入物品编号" v-model="formData.keyword" clearable @clear="handleSearch" size="mini"></el-input>
+            <el-input label="Keyword" placeholder="请输入物品编号" v-model="formData.keyword" clearable @clear="handleSearch" size="mini" minlength="2" ></el-input>
+            <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>
           </div>
-          <!-- <div class="filter">
-            状态:
-            <el-select v-model="formData.groupState" placeholder="All">
-              <el-option v-for="item in orderStateOptions" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </div> -->
-          <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>
 
-          <el-button class="print" type="primary" @click="handlePrint" size="mini">打印</el-button>
-          <el-button class="print" type="danger" @click="handleTransferItemsConfirm" size="mini">物品状态确认</el-button>
+
+          <el-button class="print" type="primary" @click="handlePrint" size="mini" :disabled="this.rightCheckedGroups.length==0">打印</el-button>
+          <el-button class="print" type="danger" @click="handleTransferItemsConfirm" size="mini"  :disabled="!orderStateChangable">物品状态确认</el-button>
         </div>
         <!-- formData end -->
 
         <div class="order-list">
-          <el-transfer v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name', disabled: 'transferDisabled'}"
+          <el-transfer ref="lineItemGroupTransfer" v-model="transferedItemIds" :data="lineItemGroupList" :props="{key:'id', label:'name', disabled: 'transferDisabled'}"
             :titles="[orderStateText, nextOrderStateText]" target-order="unshift"
             @change="handleTransferChanged" @right-check-change="handleRightCheckChange"	>
             <div slot-scope="{ option }" class="item">
@@ -196,6 +190,7 @@ export default {
         groupState: '',
         storeId: 0
       },
+      printed: false,
       rightCheckedGroups: [],
     }
   },
@@ -226,7 +221,9 @@ export default {
         return this.getOrderStateText( this.nextOrderState)
       }
     },
-
+    orderStateChangable(){
+       return this.rightCheckedGroups.length>0 && this.printed
+    }
   },
   methods: {
     initData() {
@@ -261,7 +258,9 @@ export default {
       this.formData.keyword = ""
       this.lineItemGroupList.length = 0
       this.transferedItemIds.length = 0
+      this.rightCheckedGroups.length = 0
       this.formData.storeId = this.selectedStoreId
+      this.printed = false
       this.initData()
       console.log('handleDialogOpen yeah')
     },
@@ -292,9 +291,11 @@ export default {
       this.transferedItemIds = currentRightSideKeys
     },
     async handleTransferItemsConfirm( ) {
-
-      this.actionConfirm( "确定改变订单状态吗?", ()=>{
+      this.$refs.lineItemGroupTransfer.addToRight() // uncheck all checkeck, or may transfer again.
+console.log("this.$refs.lineItemGroupTransfer.addToRight")
+      this.actionConfirm( "请确认订单已经打印,并且改变订单状态吗?", ()=>{
         this.handleTransferItems().then(()=>{
+
           this.$message({
             type: 'success',
             message: '已操作成功.'
@@ -406,7 +407,14 @@ export default {
 
     },
     handlePrint() {
-
+      if(  this.rightCheckedGroups.length == 0){
+        this.$message({
+          message: '请选择需要打印内容',
+          type: 'warning'
+        });
+        return
+      }
+      this.printed = true
       this.$store.commit('savePrintableOrders', this.rightCheckedGroups)
       // print selected lineItemGroup only
       console.log("printableOrders", this.printableOrders, this.rightCheckedGroups)
