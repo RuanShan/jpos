@@ -29,28 +29,33 @@ export function printLabel ( params ){
      let order = params.order
      let labelPrintCount = params.labelPrintCount || 2 //默认打印2个
      order.lineItemGroups.forEach((group, i)=>{
-       let itemMemos = group.lineItems.map((item)=>{ return item.memo })
+       let delay = (i == 0 ? 0 : 10000)
+       let itemMemos = group.lineItems.map((item)=>{ return (item.memo&&item.memo.length>0)? item.memo : item.cname })
        console.log( "lableParams=",itemMemos)
        itemMemos = _.compact(itemMemos).map((memo, i)=>{ return '('+(i+1)+')'+memo }).join(" ")
        let lableParams = { 'label_title': '永峰皮具养护中心', 'store_name': '西安路店', 'group_number': group.number, 'item_memos': itemMemos }
        data = iconv.encode( compiled(lableParams), encoding);
-       console.log("raw data", data, printer)
-       for( let j = 0; j< labelPrintCount; j++){
-         //一个物品条码打印多次
-         if( printer ){
-           printDirect({
-             printer: printer.name
-             , data: data// or simple String: "some text"
-             //, printer:'Foxit Reader PDF Printer' // printer name, if missing then will print to default printer
-             , type: 'RAW' // type: RAW, TEXT, PDF, JPEG, .. depends on platform
-             , success:function(jobID){
-               console.log("sent to printer with ID: "+jobID);
-             }
-             , error:function(err){console.log(err);}
-           });
-         }
-       }
+       console.log("raw data=", delay, data, printer)
+       setTimeout(handlePrint, delay, data, printer, labelPrintCount)
 
      })
 
+}
+
+function handlePrint(data, printer, printTimes){
+  for( let j = 0; j< printTimes; j++){
+    //一个物品条码打印多次
+    if( printer ){
+      printDirect({
+        printer: printer.name
+        , data: data// or simple String: "some text"
+        //, printer:'Foxit Reader PDF Printer' // printer name, if missing then will print to default printer
+        , type: 'RAW' // type: RAW, TEXT, PDF, JPEG, .. depends on platform
+        , success:function(jobID){
+          console.log("sent to printer with ID: "+jobID);
+        }
+        , error:function(err){console.log(err);}
+      });
+    }
+  }
 }

@@ -352,8 +352,10 @@ export const getOrder = id => fetch('/api/v1/pos_orders/' + id)
 
 /**
  * 取消订单
+ * 参数- id
+ *       data - { memo：取消理由 }
  */
-export const cancelOrder = id => fetch('/api/v1/pos_orders/' + id+ '/cancel', {}, 'PUT')
+export const cancelOrder = (id, data) => fetch('/api/v1/pos_orders/' + id+ '/cancel', data, 'PUT')
 
 /**
  * 取消订单

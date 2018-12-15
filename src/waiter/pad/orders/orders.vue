@@ -232,8 +232,9 @@ export default {
         page: this.currentPage,
         per_page: this.perPage,
         q: {
-          group_state_eq: 'pending',
+          group_state_eq: this.LineItemGroupStateEnum.pending,
           store_id_eq: this.storeId,
+          state_eq: this.OrderStateEnum.cart,
           s: ["created_at desc"]
         },
 

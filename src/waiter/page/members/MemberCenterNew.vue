@@ -66,10 +66,16 @@
     }
     .wxfollower-cell{
       position: relative;
+      .nickname{
+        display: inline-block;
+        max-width: 14em;
+        padding-right: 1em;
+      }
       .discard-wxfollower-button{
         padding: 0;
         position: absolute;
         right: 5px;
+        top: 6px;
         background-color: #fff;
         border-color:  transparent;
       }
@@ -112,7 +118,7 @@
               <td> {{customerData.displayGender}}</td>
               <th> 关联微信</th>
               <td class="wxfollower-cell">
-                <span v-show="customerData.wxFollowerNickname"> {{customerData.wxFollowerNickname}} </span>
+                <span v-show="customerData.wxFollowerNickname" class="nickname ellipsis"> {{customerData.wxFollowerNickname}} </span>
                 <el-button type="danger" icon="el-icon-delete" circle class="discard-wxfollower-button" v-show="customerData.wxFollowerNickname"></el-button>
                 <span v-show="!customerData.wxFollowerNickname"> 无 </span>
 

@@ -94,6 +94,9 @@ saleUnitPrice<style lang="scss" >
                     bottom: 0;
                     right: 0;
                 }
+                .card-type{
+                  max-width: 8em;
+                }
                 .cards {
                     position: relative;
                     border: 1px solid #ebeef5;
@@ -118,8 +121,9 @@ saleUnitPrice<style lang="scss" >
             }
             table {
                 td {
-                    width: 20%;
+                    max-width: 20%;
                 }
+                th{ width: 9em;}
                 td,
                 th {
                     border: 1px solid #ebeef5;
@@ -129,6 +133,7 @@ saleUnitPrice<style lang="scss" >
                     white-space: normal;
                     line-height: 23px;
                 }
+                th span{ font-weight: bold;}
             }
         }
         .order-item-list {
@@ -310,15 +315,15 @@ saleUnitPrice<style lang="scss" >
                         <th>移动电话</th>
                         <td>{{currentCustomer.mobile}}</td>
                         <th>消费金额</th>
-                        <td>{{currentCustomer.normalOrderTotal}}元</td>
+                        <td> <span v-show="currentCustomer.normalOrderTotal">¥</span> {{currentCustomer.normalOrderTotal}}</td>
                       </tr>
                       <tr>
                         <th>会员卡号</th>
                         <td>{{currentCard.code}}</td>
                         <th>会员卡类型</th>
-                        <td>{{currentCard.name}}</td>
+                        <td><span class="ellipsis card-type">{{currentCard.name}}</span></td>
                         <th>会员卡余额</th>
-                        <td><span v-show="currentCard.style=='times'">{{currentCard.cardTimesRemaining}}</span><span v-show="currentCard.style=='prepaid'">{{currentCard.amountRemaining}}</span></td>
+                        <td><span v-show="currentCard.style=='times'">{{currentCard.cardTimesRemaining}}次</span><span v-show="currentCard.style=='prepaid'">¥ {{currentCard.amountRemaining}}</span></td>
                       </tr>
                     </table>
                   </div>
@@ -339,7 +344,7 @@ saleUnitPrice<style lang="scss" >
                 </el-table-column>
                 <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
                 <el-table-column prop="displayDiscount" label="折扣" width="65">折扣</el-table-column>
-                <el-table-column prop="price" label="金额" width="50">金额</el-table-column>
+                <el-table-column prop="price" label="金额" width="80">金额</el-table-column>
                 <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
                   <template slot-scope="scope">
                  <vue-xeditable  :name="'memo_'+scope.row.uid+'_xeditable'" v-model="scope.row.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
@@ -461,7 +466,7 @@ saleUnitPrice<style lang="scss" >
       </el-col>
     </el-row>
   </div>
-  <div class="pos-cover" v-show="!isUserEntryExist"> <span class="msg"> 请先打卡，再处理业务！</span> </div>
+  <div class="pos-cover" v-show="(!isUserEntryExist)&&(storeId>0)"> <span class="msg"> 请先打卡，再处理业务！</span> </div>
   <CelSwiper :carousel-images="carouselImages" :dialog-visible.sync="carouselDialogVisible"> </CelSwiper>
 </div>
 </template>
@@ -509,7 +514,7 @@ export default {
         cards: []
       }, //改变当前选择会员，显示会员相关信息
       defaultCard: {
-        code: "无"
+        code: ""
       },
       orderItemList: [], //订单 {variantId, price, quantity}
       selectedItems: {}, // 当前选择的物品/费用 { readyOrderTab: lineItemGropu, expenseItemTab: expenseItem}
@@ -763,10 +768,6 @@ export default {
     openCheckoutDialog() {
       console.log("openCheckoutDialog")
       this.checkoutDialogVisible = true
-    },
-    //MemberKeyWord组件关闭后事件处理-----传过来memberData对象
-    MemberData(memberData) {
-      //this.customer = memberData;
     },
     //根据关键字查找客户
     //从SerVer上获取模糊搜索的用户数据,异步获取

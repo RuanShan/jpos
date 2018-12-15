@@ -36,7 +36,7 @@
               {{group.number}} -
             </dt>
             <dd class="left">
-              <div v-for="item in group.lineItems">{{item.cname}}<span v-show="item.memo">[{{item.memo}}] </span></div>
+              <div v-for="item in group.lineItems">{{item.cname}} <span class="memo" v-show="item.memo"> [ {{item.memo}} ] </span></div>
             </dd>
           </dl>
         </template>
@@ -157,8 +157,8 @@ export default {
     },
     handleCancel( row ){
         let id = row.id
-        this.cancelOrderConfirm( ( )=>{
-          cancelOrder( id ).then((res)=>{
+        this.cancelOrderConfirm( ( {memo} )=>{
+          cancelOrder( id, { order:{ memo}} ).then((res)=>{
             if( res.id ){
               this.$emit('order-state-changed')
               const order = this.buildOrder( res )

@@ -50,10 +50,14 @@
         <div >
           <table style="width:100%">
             <tr><th>客户类型</th><td>{{currentCustomer.customerType}}</td><th>移动电话</th><td>{{currentCustomer.mobile}}</td>
-              <th>消费金额</th><td>{{currentCustomer.normalOrderTotal}}元</td>
+              <th>消费金额</th>
+              <td> <span v-show="currentCustomer.normalOrderTotal">¥</span> {{currentCustomer.normalOrderTotal}}</td>
             </tr>
-            <tr ><th>会员卡号</th><td>{{currentCard.code}}</td><th>会员卡类型</th><td>{{currentCard.name}}</td>
-              <th>会员卡余额</th><td>{{currentCard.amountRemaining}}</td>
+            <tr ><th>会员卡号</th><td>{{currentCard.code}}</td>
+              <th>会员卡类型</th>
+              <td><span class="ellipsis card-type">{{currentCard.name}}</span></td>
+              <th>会员卡余额</th>
+              <td><span v-show="currentCard.style=='times'">{{currentCard.cardTimesRemaining}}次</span><span v-show="currentCard.style=='prepaid'">¥ {{currentCard.amountRemaining}}</span></td>
             </tr>
           </table>
         </div>
@@ -61,13 +65,13 @@
     </div>
     <div class="order-item-list">
       <el-table :data="computedLineItemGroups" border stripe style="width:100%;" class="fillcontain cel-scrollable-table" highlight-current-row  @current-change="handleCurrentGroupChange">
-        <el-table-column prop="displayCreatedAt" label="订单日期" align="center" width="100" >
+        <el-table-column prop="displayCreatedAt" label="订单日期" align="center" width="120" >
           <template slot-scope="scope">
             <div>{{scope.row.createdAt.format("YYYY-MM-DD")}}</div>
               <div>{{scope.row.createdAt.format("H:mm")}}</div>
           </template>
         </el-table-column>
-        <el-table-column label="物品条码" width="110" align="center">
+        <el-table-column label="物品条码" width="120" align="center">
           <template slot-scope="scope">
             <div class="image-wrap">
               <img :src="scope.row.imageUrl" alt="">
@@ -75,13 +79,12 @@
             <div class="group-number">{{scope.row.number}} </div>
           </template>
         </el-table-column>
-        <el-table-column prop="order.number" label="订单号" width="120" align="center"></el-table-column>
         <el-table-column prop="name" label="物品-服务项目[备注]">
           <template slot-scope="scope">
             <div v-for="item in scope.row.lineItems">{{item.cname}}<span v-show="item.memo">[{{item.memo}}] </span></div>
           </template>
         </el-table-column>
-        <el-table-column prop="displayState" label="物品状态" width="120" ></el-table-column>
+        <el-table-column prop="displayState" label="物品状态" width="80" ></el-table-column>
         <el-table-column prop="order.displayPaymentState" label="支付状态" width="80" ></el-table-column>
         <el-table-column prop="price" label="金额" width="60">金额</el-table-column>
         <el-table-column label="操作" width="50">

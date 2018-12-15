@@ -78,7 +78,7 @@ export function printReceipt(params) {
       let line = '--------------------------------'
       //内容
       let line1 =  `门店:${params.storeName}  员工:${params.order.creatorName}`
-      let line2 =  `订单:${params.order.number} 会员:${params.order.customer.number}`
+      let line2 =  `订单:${params.order.number} 顾客:${params.order.customer.number}`
       // print line
       let line4 =  '项目       单价 数量 折扣率 金额'
       let line4x = params.order.lineItems.map((item)=>{

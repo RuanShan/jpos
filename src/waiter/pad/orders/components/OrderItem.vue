@@ -91,7 +91,7 @@
         </div>
         <div class="group-items">
           <p v-for="item in group.lineItems" class="fn-15 fw-2">
-            <span > {{item.cname}}</span>
+            <span > {{item.cname}}</span> &nbsp; <span v-if="item.memo">[ {{item.memo}} ]</span>
           </p>
         </div>
       </div>

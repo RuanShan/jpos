@@ -153,9 +153,11 @@ export default {
     },
     redirectDefaultPage(){
       if( this.userAuthorize('*')){ // 管理员
-        this.$router.push({
-          name: 'pos'
-        })
+        if( this.localStoreId>0 ){
+          this.$router.push({ name: 'pos'   })
+        }else{
+          this.$router.push({ name: 'setting'   })
+        }
       }else if( this.userAuthorize('fitems')){
         this.$router.push({
           name: 'fitems'

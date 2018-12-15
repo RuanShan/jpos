@@ -256,10 +256,10 @@
                   <div class="box-body">
                     <table border="1"   cellspacing="0" style="width: 100%">
                     <tr>
-                      <th style="width:8em">序号</th>
+                      <th style="width:3em">序号</th>
                       <th>服务项目</th>
                       <th>项目备注<i class="el-icon-edit"></i></th>
-                      <th style="width:8em">状态</th>
+                      <th style="width:6em">状态</th>
                     </tr>
                     <template v-for="(lineItem,index ) in group.lineItems">
                       <tr>
@@ -317,7 +317,6 @@ import {
   getOrder,
   findLineItemGroups,
   evolveLineItemGroups,
-  cancelOrder,
   deleteGroupImage,
   getLineItemGroupImageUploadPath,
   updateLineItem
@@ -488,25 +487,6 @@ export default {
       }
     },
     cancelOrder(){
-      let id = this.orderDetail.id
-
-      this.cancelOrderConfirm( ( )=>{
-        cancelOrder( id ).then((res)=>{
-          if( res.id ){
-            this.$emit('order-state-changed')
-
-            if( this.itemList.length == 1 && this.currentPage > 1 ){
-              this.handlePageChange( this.currentPage -1 )
-            }else{
-              this.initData()
-            }
-            this.$message({
-              type: 'success',
-              message: "恭喜你，订单取消成功"
-            })
-          }
-        })
-      })
     },
     handleImageRemoved(file, fileList) {
       let image = this.getGroupImageOfUploadedFile( file )
