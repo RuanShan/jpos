@@ -22,7 +22,7 @@ const state = {
   cardTypes: null,
   stores: null, // 设置为空数组,列表显示时不会
   prepaidPaymentMethodId: 1,
-  printableOrders:[],
+  printData:{}, // { orders:[] }
   userEntries: [] //用户的打卡信息，有打卡信息，才能处理业务
 }
 
@@ -61,8 +61,8 @@ const mutations = {
   saveStoreId( state, storeId){
     state.storeId = storeId
   },
-  savePrintableOrders( state, orders ){
-    state.printableOrders = orders
+  savePrintData( state, orders ){
+    state.printData = orders
   },
   saveUserEntries( state, entries){
     state.userEntries = entries

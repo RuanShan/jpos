@@ -199,11 +199,6 @@ export default {
   created() {},
   computed: {
 
-    printableData: function() {
-      return this.lineItemGroupList.filter((item) => {
-        return item.state === this.nextOrderState
-      })
-    },
     orderStateText: function(){
       // '准备发工厂', 在 工厂接收 界面 显示 "工厂待接收"
       if( this.orderState ==="ready_for_factory" ){
@@ -414,11 +409,11 @@ console.log("this.$refs.lineItemGroupTransfer.addToRight")
         });
         return
       }
+      var fromto =  this.getOrderStateText( this.nextOrderState)
       this.printed = true
-      this.$store.commit('savePrintableOrders', this.rightCheckedGroups)
+      this.$store.commit('savePrintData', { orders: this.rightCheckedGroups, fromto } )
       // print selected lineItemGroup only
-      console.log("printableOrders", this.printableOrders, this.rightCheckedGroups)
-      //console.log("printableData", this.printableData)
+      console.log("savePrintData", this.printData, this.rightCheckedGroups)
       //等待打印内容渲染完成后打印
       this.$nextTick(function () {
         window.print()

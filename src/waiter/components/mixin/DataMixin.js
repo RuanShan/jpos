@@ -11,7 +11,7 @@ export var orderDataMixin = {
       'cardTypes',
       'stores',
       'prepaidPaymentMethodId',
-      'printableOrders',
+      'printData',
       'userEntries'
     ])
 
