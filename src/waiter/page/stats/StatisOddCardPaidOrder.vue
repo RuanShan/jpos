@@ -59,14 +59,11 @@
           </el-date-picker>
         </el-form-item>
 
-        <el-form-item label="支付方式">
-          <el-select class="select-options" v-model="formData.paymentMethodId"  size="mini" clearable placeholder="不限" @clear="handleClear">
-            <el-option v-for="item in paymentMethodOptions" :key="item.id" :value="item.id" :label="item.name">
+        <el-form-item label="其他店铺">
+          <el-select class="select-options" v-model="formData.oddStoreId"  size="mini" clearable placeholder="不限" @clear="handleClear">
+            <el-option v-for="item in storeOptions" :key="item.id" :value="item.id" :label="item.name">
             </el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item  >
-          <el-checkbox v-model="formData.oddCardPaid">异店支付</el-checkbox>
         </el-form-item>
 
         <el-form-item>
@@ -79,9 +76,9 @@
     <div class="order-line-three-row">
       <el-table class="cel-scrollable-table" border  :data="tableData" style="width: 100%">
 
-        <el-table-column label="订单 ID" prop="number">
+        <el-table-column label="订单ID" prop="number" width="120">
         </el-table-column>
-        <el-table-column label="店铺" prop="storeName">
+        <el-table-column label="消费店铺" prop="storeName">
         </el-table-column>
         <el-table-column label="客户电话"  >
           <template slot-scope="scope">
@@ -91,11 +88,11 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="消费日期" prop="displayCreatedAt">
+        <el-table-column label="消费日期" prop="displayCreatedAt" width="120">
         </el-table-column>
-        <el-table-column label="消费金额" prop="total">
+        <el-table-column label="消费金额" prop="total" width="100">
         </el-table-column>
-        <el-table-column label="订单状态" prop="displayState">
+        <el-table-column label="订单状态" prop="displayState" width="100">
         </el-table-column>
         <el-table-column label="支付信息">
           <template slot-scope="scope">
@@ -103,8 +100,10 @@
               {{ item.description }}
             </el-tag>
           </template>
-
         </el-table-column>
+        <el-table-column label="会员卡所属店铺" prop="oddStoreName" >
+        </el-table-column>
+
         <el-table-column label="操作员" prop="creatorName" width="90">
         </el-table-column>
 
@@ -146,7 +145,7 @@ export default {
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null,  // 必须为空，否则缺省情况 显示 0
-        paymentMethodId: null, //支付方式选项
+        oddStoreId: null, //支付方式选项
         oddCardPaid: false
       },
       paymentMethodList: [],
@@ -197,12 +196,13 @@ export default {
     this.initData()
   },
   computed: {
-    paymentMethodOptions: function(){
+    storeOptions: function(){
 
-      let ps =  this.paymentMethodList.map((payment)=>{
-        return {id: payment.id, name: payment.name}
+      let ps = this.$store.getters.onlyStores.filter((item)=>{
+        return item.id != this.storeId
+      }).map((item)=>{
+        return {id: item.id, name: item.name}
       })
-      ps.push( {id: 0, name: '未付'})
       return ps
     },
     computedStartAt: function () {
@@ -232,6 +232,7 @@ export default {
       console.log("result=", result, "this.tableData = ", this.tableData)
     },
     buildParams() {
+      let paymentMethodId = this.$store.getters.prepaidCardPaymentMethodId
       let params = { //查询条件
         page: this.currentPage, //分页器选择的当前页数
         per_page: this.perPage, //每页显示12行数据
@@ -239,22 +240,21 @@ export default {
           created_at_gteq: this.computedStartAt,
           created_at_lteq: this.computedEndAt,
           order_type_eq: 0,
+          payments_payment_method_id_eq: paymentMethodId
+
         }
       }
       if( parseInt(this.formData.storeId) > 0){
         params.q.store_id_eq = this.formData.storeId
       }
-      if( this.formData.oddCardPaid ){
-        params.q.odd_card_paid_eq = true
-      }
-      if( this.formData.paymentMethodId != null){
-        if ( this.formData.paymentMethodId > 0 ){
-          //选择了一个支付方式
-          params.q.payments_payment_method_id_eq =  this.formData.paymentMethodId
-        }else{
-          //所有未交款的
-          params.q.payment_state_eq = 'pending'
+
+      if( this.formData.oddStoreId ){
+        if ( this.formData.oddStoreId > 0 ){
+          //选择了一个店铺
+          params.q.odd_store_id_eq = this.formData.oddStoreId
         }
+      }else{
+        params.q.odd_store_id_not_eq = 0
       }
       return params
     },
@@ -278,6 +278,11 @@ export default {
             payment.description = method.name + ' 支付 ¥' + payment.amount
           }
         })
+        let store = this.stores.find( item =>{ return item.id == order.oddStoreId})
+        if( store ){
+          order.oddStoreName = store.name
+        }
+
       })
     },
     //分页器的改变选择时事件处理函数
@@ -289,8 +294,8 @@ export default {
 
     },
     handleClear(){
-      console.log( " Selected paymentMethodId = ", this.formData.paymentMethodId)
-      this.formData.paymentMethodId = null
+      console.log( " Selected oddStoreId = ", this.formData.oddStoreId)
+      this.formData.oddStoreId = null
     }
   }
 };

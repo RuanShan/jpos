@@ -120,6 +120,9 @@
           <el-tab-pane label="订单统计">
             <statis-each-state-order  v-if="orderTabVisible" ></statis-each-state-order>
           </el-tab-pane>
+          <el-tab-pane label="异店消费订单统计">
+            <statis-odd-card-paid-order  v-if="oddCardPaidOrderVisible" ></statis-odd-card-paid-order>
+          </el-tab-pane>
           <el-tab-pane label="费用统计">
             <StatisExpense  v-if="expenseTabVisible" ></StatisExpense>
           </el-tab-pane>
@@ -154,6 +157,7 @@ import StatisStaffClockIn from './StatisStaffClockIn.vue';
 import StatisExpense from './StatisExpense.vue';
 import StatisWorker from './StatisWorker.vue';
 import StatisStockMovement from './StatisStockMovement.vue';
+import StatisOddCardPaidOrder from './StatisOddCardPaidOrder.vue';
 
 export default {
   components: {
@@ -167,7 +171,8 @@ export default {
     "statis-staff-clock-in": StatisStaffClockIn,
     StatisExpense,
     StatisWorker,
-    StatisStockMovement
+    StatisStockMovement,
+    StatisOddCardPaidOrder
   },
   data() {
     return {
@@ -178,6 +183,7 @@ export default {
       cardTabVisible: true, //窗口显示标志位
       expenseTabVisible: false,
       workerTabVisible: false,
+      oddCardPaidOrderVisible: false,
       tabsNumber: '0', //字符串，从0开始，标签页的顺序值
       // stateValue: "", //門店選項
       // payValue: "", //支付方式选项
@@ -201,12 +207,15 @@ export default {
           this.orderTabVisible = true;
           break;
         case "3":
-          this.expenseTabVisible = true;
+          this.oddCardPaidOrderVisible = true;
           break;
         case "4":
-          this.workerTabVisible = true;
+          this.expenseTabVisible = true;
           break;
         case "5":
+          this.workerTabVisible = true;
+          break;
+        case "6":
           this.memberTabVisible = true;
           break;
         default:

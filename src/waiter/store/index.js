@@ -26,6 +26,14 @@ const state = {
   userEntries: [] //用户的打卡信息，有打卡信息，才能处理业务
 }
 
+const getters = {
+  onlyStores: state => {
+    return state.stores.filter(item => item.type != 'Spree::Factory')
+  },
+  onlyFactories: state => {
+    return state.stores.filter(item => item.type == 'Spree::Factory')
+  }  
+}
 const mutations = {
   resetUser(state){
     state.userInfo = {
@@ -118,6 +126,7 @@ const actions = {
 
 export default new Vuex.Store({
   state,
+  getters,
   actions,
   mutations
 })

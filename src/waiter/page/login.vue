@@ -13,7 +13,7 @@
           <el-input ref="tabindex1" tabindex="1" v-model="loginForm.username" placeholder="请输入用户名" suffix-icon="fa fa-user" autofocus @keyup.enter.native="handleKeyupEnter"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input ref="tabindex2" tabindex="2" type="password" placeholder="请输入密码" v-model="loginForm.password" suffix-icon="fa fa-keyboard-o" @keyup.enter.native="handleSubmitForm"></el-input>
+          <el-input ref="tabindex2" tabindex="2" type="password" placeholder="请输入密码" v-model="loginForm.password" suffix-icon="fa fa-lock" @keyup.enter.native="handleSubmitForm"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button tabindex="3" type="primary" @click="handleSubmitForm" class="submit_btn">登陆</el-button>

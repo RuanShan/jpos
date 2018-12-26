@@ -43,7 +43,7 @@
         </el-form-item>
         <el-form-item prop="password">
           <el-input ref="tabindex2" tabindex="2"  type="password" placeholder="密码" v-model="clockinForm.password" @keyup.enter.native="handleSubmitForm">
-            <i class="fa fa-keyboard-o" slot="suffix">  </i></el-input>
+            <i class="fa fa-lock" slot="suffix">  </i></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSubmitForm" class="submit_btn">打卡</el-button>

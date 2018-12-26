@@ -58,6 +58,7 @@ export var apiResultMixin = {
         createdById: orderResult.created_by_id,
         userId: orderResult.user_id,
         storeId: orderResult.store_id,
+        oddStoreId: orderResult.odd_store_id,
         number: orderResult.number,
         total: parseInt(orderResult.total), //实收价格
         saleTotal: parseInt(orderResult.sale_total), //应收价格

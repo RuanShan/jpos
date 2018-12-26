@@ -65,9 +65,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item  >
-          <el-checkbox v-model="formData.oddCardPaid">异店支付</el-checkbox>
-        </el-form-item>
+
 
         <el-form-item>
           <el-button class="order-ok" type="primary" size="mini" @click="handleSearch">确定</el-button>
@@ -244,16 +242,16 @@ export default {
       if( parseInt(this.formData.storeId) > 0){
         params.q.store_id_eq = this.formData.storeId
       }
-      if( this.formData.oddCardPaid ){
-        params.q.odd_card_paid_eq = true
-      }
+      //if( this.formData.oddCardPaid ){
+      //  params.q.odd_store_id_not_eq = 0
+      //}
       if( this.formData.paymentMethodId != null){
         if ( this.formData.paymentMethodId > 0 ){
           //选择了一个支付方式
           params.q.payments_payment_method_id_eq =  this.formData.paymentMethodId
         }else{
           //所有未交款的
-          params.q.payment_state_eq = 'pending'
+          params.q.payment_state_eq = this.OrderPaymentStateEnum.unpaid
         }
       }
       return params
