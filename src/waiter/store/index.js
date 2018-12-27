@@ -32,7 +32,7 @@ const getters = {
   },
   onlyFactories: state => {
     return state.stores.filter(item => item.type == 'Spree::Factory')
-  }  
+  }
 }
 const mutations = {
   resetUser(state){
@@ -116,7 +116,7 @@ const actions = {
           receiptPrinter: obj.receipt_printer_name, labelPrinter: obj.label_printer_name,
           receiptTitle: obj.receipt_title, receiptFooter: obj.receipt_footer, type: obj.type,
           stockLocationId: obj.stock_location_id, checkoutPasswordRequired: obj.checkout_password_required,
-          labelPrintCount: obj.label_print_count
+          labelPrintCount: obj.label_print_count, siteSmsTemplate: obj.site_sms_templates
          })
     })
     store.commit('saveStores', list)

@@ -57,6 +57,7 @@
   <leftNav></leftNav>
   <div class="members-container page-content">
     <member-center-new :dialog-visible.sync="memberCenterNewWindowVisible" :customer-data.sync="customerData" @customer-changed-event="handleCustomerChanged"></member-center-new>
+    <sms-center  :dialog-visible.sync="smsCenterWindowVisible" ></sms-center>
     <div class="members">
       <div class="member-list-wrap">
         <div class="filters">
@@ -66,9 +67,13 @@
                   <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="handleSearch()" size="mini">搜索</el-button>
+                  <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>
                 </el-form-item>
                 <input type="text" name="disableentrykeysubmit" style="display:none">
+                <el-form-item class="right">
+                  <el-button type="primary" @click="handleSmsCenter" size="mini">短信群发</el-button>
+                </el-form-item>
+
               </el-form>
           </el-form>
         </div>
@@ -128,6 +133,7 @@ import headTop from "@/components/layout/headTop.vue";
 
 import StoreSelect from '@/components/common/StoreSelect.vue'
 import MemberCenterNew from "./MemberCenterNew.vue";
+import SmsCenter from "./SmsCenter.vue";
 import {
   findCustomers, deleteCustomer
 } from "@/api/getData";
@@ -143,11 +149,13 @@ export default {
     leftNav,
     headTop,
     StoreSelect,
-    "member-center-new": MemberCenterNew
+    "member-center-new": MemberCenterNew,
+    "sms-center": SmsCenter
   },
   data() {
     return {
       memberCenterNewWindowVisible: false,
+      smsCenterWindowVisible: false,
       customerList: [],
       perPage: 12,
       count: 0, // 当前页有多少行
@@ -258,6 +266,9 @@ export default {
     handleResetForm(){
       this.currentPage = 1
       this.initData()
+    },
+    handleSmsCenter(){
+      this.smsCenterWindowVisible = true;  //打開Sms中心窗口
     }
   }
 };
