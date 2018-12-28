@@ -40,6 +40,7 @@
               right: 18px;
               bottom: 60px;
               background-color: #ffffff;
+              overflow: auto;
               &.nocard-records-wrap{
                 top:34px;
               }
@@ -105,7 +106,7 @@
                 </el-form>
             </el-form>
           </div>
-          <div class="customer-records-wrap" style=" ">
+          <div class="customer-records-wrap scrollable"  >
             <div class="empty" v-if="customerList.length==0"> </div>
             <el-checkbox-group v-model="checkedCustomerList" @change="handleCheckedCustomersChange" class="clear">
               <div class="customer" v-for="customer in customerList" :key="customer.id">
@@ -131,14 +132,14 @@
                   <el-form ref="form" :model="formData" label-width="70px" :inline="true">
                     <el-form-item label="短信模板">
 
-                      <el-select v-model="formData.templateId" placeholder="请选择" size="mini">
+                      <el-select v-model="formData.templateCode" placeholder="请选择" size="mini">
                         <el-option
                           v-for="item in smsTemplates"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                          <span style="float: left">{{ item.label }}</span>
-                          <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                          :key="item.code"
+                          :label="item.cname"
+                          :value="item.code">
+                          <span style="float: left">{{ item.cname }}</span>
+                          <span style="float: right; color: #8492a6; font-size: 13px">{{ item.desc }}</span>
                         </el-option>
                       </el-select>
                     </el-form-item>
@@ -168,13 +169,17 @@ import {
 } from "@/components/mixin/DialogMixin";
 
 import {
-  findCustomers
+  CelUIMixin
+} from "@/components/mixin/CelUIMixin";
+
+import {
+  findCustomers, sendSms
 } from "@/api/getData";
 
 
 export default {
   props: ["dialogVisible", "customerData"],
-  mixins: [DialogMixin],
+  mixins: [DialogMixin, CelUIMixin],
   components: {
 
   },
@@ -185,14 +190,11 @@ export default {
       formData: {
         keyword: '',
         storeId: null,
-        templateId: null,
+        templateCode: null,
         checkAll: false,
-        isIndeterminate: true
+        isIndeterminate: false
       },
-      smsTemplates: [{
-         value: 'Beijing',
-         label: '北京'
-       }],
+      smsTemplates: [],
       perPage: 100,
       pageSize: 1,
       count: 0
@@ -208,10 +210,11 @@ export default {
   computed: {
   },
   methods: {
-
     openWindow() {
       this.formData.storeId = this.storeId
       this.pageSize = 1
+      console.log( "this.storeInfo.siteSmsTemplate= ", this.storeInfo.siteSmsTemplate)
+      this.smsTemplates = this.storeInfo.siteSmsTemplate
     },
 
     async initData() {
@@ -236,6 +239,11 @@ export default {
       if( this.formData.keyword.length>0){
         params.q.mobile_or_username_or_cards_code_cont = this.formData.keyword
       }
+      // 是否必须会员卡
+      if( this.formData.cardRequired){
+        params.q.cards_status_eq = 1
+      }
+
       return params
     },
 
@@ -258,7 +266,27 @@ export default {
       this.handleSearch()
     },
     handleSendSms(){
+      if( this.checkedCustomerList.length ==0){
+        this.$message.error('请选择发送短信的客户！')
+        return
+      }
+      if( this.formData.templateCode  ==null){
+        this.$message.error('请选择发送短信的模板！')
+        return
+      }
+      this.actionConfirm("确定发送短信吗?", ()=>{
+        let template_code = this.formData.templateCode
+        sendSms( { ids: this.checkedCustomerList, template_code} ).then((response) => {
+          console.log('收到的response = ', response)
+          if (response.ret) {
+            this.$message.success('短信发送成功！')
+          }else{
+            this.$message.success('短信发送失败，请联系系统管理员！')
+          }
+        })
+        console.log( "handleSendSms = ", this.checkedCustomerList)
 
+      })
     },
     handleCheckAllChange(val) {
       this.checkedCustomerList = val ? this.customerList.map((item)=>item.id) : [];

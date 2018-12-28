@@ -34,6 +34,7 @@ const getters = {
     return state.stores.filter(item => item.type == 'Spree::Factory')
   }
 }
+
 const mutations = {
   resetUser(state){
     state.userInfo = {

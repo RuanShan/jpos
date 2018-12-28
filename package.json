@@ -1,8 +1,8 @@
 {
   "name": "jpos",
   "version": "0.1.0",
-  "author": "qinghe <david@getstore.cn>",
-  "description": "An electron-vue project",
+  "author": "RuanShan <david@getstore.cn>",
+  "description": "汪永峰皮具养护中心订单管理系统",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {

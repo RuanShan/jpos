@@ -19,6 +19,9 @@
             height: 0;
             opacity: 0;
         }
+        .el-select{
+          width: 100%;
+        }
     }
 }
 </style>
@@ -38,12 +41,12 @@
 
         <el-form-item prop="username">
           <el-input ref="tabindex1" tabindex="1"  v-model="clockinForm.username" placeholder="用户名" autofocus @keyup.enter.native="handleKeyupEnter">
-            <i class="fa fa-user" slot="suffix">  </i>
+            <i class="el-input__icon fa fa-user" slot="suffix">  </i>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input ref="tabindex2" tabindex="2"  type="password" placeholder="密码" v-model="clockinForm.password" @keyup.enter.native="handleSubmitForm">
-            <i class="fa fa-lock" slot="suffix">  </i></el-input>
+          <el-input autofocus ref="tabindex2" tabindex="2"  type="password" placeholder="密码" v-model="clockinForm.password" @keyup.enter.native="handleSubmitForm">
+            <i class="el-input__icon fa fa-lock" slot="suffix">  </i></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSubmitForm" class="submit_btn">打卡</el-button>
@@ -98,17 +101,17 @@ export default {
   mixins: [DialogMixin],
   props: ['dialogVisible', 'clockState'],
   computed: {
-    computedLineItems() {
-      return _.flatten(this.lineItemGroups.map((group) => {
-        return group.lineItems
-      }))
-    }
+    computedUserOptions() {
+      const users = this.userEntries.map( (entry)=>{ return { id: entry.userId, name: entry.username} })
+      const uniqUsers = _.uniqWith( users, _.isEqual)
+      return uniqUsers
+    },
+
   },
 
   methods: {
     handleDialogOpen() {
       this.scanedNumbers = []
-      this.lineItemGroups = []
       // Cannot read property 'resetFields' of undefined
       console.log(" this.$refs.clockinForm=", this.$refs.clockinForm)
       if( this.clockState == 'clockin'){
@@ -117,7 +120,8 @@ export default {
         this.greeting = "每天都有一个时刻，让我们为之振奋不已，每天都有两个字，让我们如沐春风，心情格外大好，那就是'下班' ，下班快乐！"
       }
       this.$refs.clockinForm.resetFields()
-      this.$refs.tabindex1.focus()
+      this.clockinForm.username = this.userInfo.name//设置为当前登录用户的用户名
+      this.$refs.tabindex2.focus()
     },
 
     async handleSubmitForm() {

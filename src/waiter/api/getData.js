@@ -39,6 +39,13 @@ export const isCodeAvailable = (code) => fetch('/api/v1/cards/code_available', {
  */
 export const discardWxfollower = (id) => fetch('/api/v1/customers/'+id+'/discard_wxfollower' );
 
+/**
+ * 客户短信群发
+ * ids: 会员id
+ * template_code: 阿里云模板code
+ */
+export const sendSms = (data) => fetch('/api/v1/customers/send_sms', data, 'POST' );
+
 
 /**
  * 登陆

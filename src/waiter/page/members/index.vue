@@ -63,6 +63,8 @@
         <div class="filters">
           <el-form :inline="true" class="demo-form-inline">
               <el-form ref="form" :model="formData" label-width="70px" :inline="true">
+                <store-select  v-bind:value.sync="formData.storeId" disable-all="true" v-if="authorizeMultiStore()"/>
+
                 <el-form-item label="关键字">
                   <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
                 </el-form-item>
@@ -171,6 +173,7 @@ export default {
     };
   },
   created: function(){
+    this.formData.storeId = this.storeId
     this.initData();
     //新订单创建以后，需要更新当前选择客户的会员卡余额数据
     this.$bus.$on('customer-created-gevent', () => {
@@ -189,11 +192,10 @@ export default {
           page: this.currentPage,
           per_page: this.perPage,
           q:{
-            store_id_eq: this.storeId
+            store_id_eq: this.formData.storeId
           }
       }
-      // storeId 永远为系统设置store
-      params["q[store_id_eq]"] = this.storeId //查询说有店铺的客户信息
+      // storeId 永远为当前选择的，由store-select 更新
 
       // 会员 电话号码或卡号 关键字
       if( this.formData.keyword.length>0){
