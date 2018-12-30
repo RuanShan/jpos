@@ -65,7 +65,7 @@
 
 <template>
 <div class="worker-performance-container cel-window">
-  <item-scanner-dialog :dialog-visible.sync="scannerDialogVisible" @lineItemGroupsSelected="handleLineItemGroupsSelected"></item-scanner-dialog>
+  <item-scanner-dialog :dialog-visible.sync="scannerDialogVisible" @lineItemGroupsSelected="handleLineItemGroupsSelected" :state-filter="lineItemGroupStateFilter"></item-scanner-dialog>
 
   <el-dialog  :visible="computedVisible" @open="handleDialogOpen" :show-close="false" :top="top" :modal="false">
     <div slot="title" class="title-wrap">
@@ -179,7 +179,8 @@ export default {
         lineItemGroupState: '',
       },
       multipleSelection: [],
-      scannerDialogVisible: false
+      scannerDialogVisible: false,
+      lineItemGroupStateFilter: []
     }
   },
   created() {

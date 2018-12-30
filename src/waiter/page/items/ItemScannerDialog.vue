@@ -86,7 +86,7 @@ export default {
     }
   },
   mixins: [DialogMixin, apiResultMixin],
-  props: ['dialogVisible'],
+  props: ['dialogVisible', 'stateFilter'], //lineItemGroupStateFilter:只有符合条件的才可扫码
   computed: {
     computedLineItems() {
       return _.flatten(this.lineItemGroups.map((group) => {
@@ -122,6 +122,7 @@ export default {
       // find in orderDetailList
       const result = await getLineItemGroupByNumber(number)
       const lineItemGroup = this.buildLineItemGroup(result)
+      // 如果物品在专业服务状态，加入到列表中
       // 如果重复录入，把以前的替换掉
       let index = this.lineItemGroups.findIndex((group)=>{
         return group.id == lineItemGroup.id
