@@ -401,7 +401,7 @@ saleUnitPrice<style lang="scss" >
             <el-tab-pane v-for="menu in menuList" :key="menu.id" v-bind:label="menu.name">
               <div>
                 <el-row class="cook-list">
-                  <el-col class="cook-item" :span="6" v-for="goods in getTaxonProducts(menu.id)" :key="goods.id">
+                  <el-col class="cook-item" :span="8" v-for="goods in getTaxonProducts(menu.id)" :key="goods.id">
                     <div class="food-wrapper">
                       <div class="food-img">
                         <img :src="getProductImageUrl(goods)" width="100%" />
@@ -453,9 +453,10 @@ saleUnitPrice<style lang="scss" >
                   name="image[attachment]"
                   list-type="picture-card"
                   :with-credentials="true"
+                  :before-upload="handleBeforeUploadExpenseItemImage"
                   :before-remove="handleImageRemoveConfirm"
                   :on-remove="handleRemoveImage"
-                  :on-change="handleExpenseItemImagesChanged"
+                  :on-success="handleExpenseItemImagesUploadSuccess"
                   :on-preview="handlePreviewExpenseItemImage" v-show="computedImageUploadPath">
                   <i class="el-icon-plus"></i>
                 </el-upload>
@@ -570,7 +571,7 @@ export default {
           }).map((card) => {
             return {
               value: [customer.id, card.id].join('_'),
-              label: customer.mobile + '(#' + card.code + ')'
+              label: `${customer.mobile} (${card.displayStyle} ${card.code})`
             }
           })
         } else {
@@ -829,14 +830,14 @@ export default {
       console.log( "selectedGroup=", selected)
       this.$set(this.selectedItems, this.selectedTabName, selected)
       if( selected ){
-        this.currentGroupImages = selected.images
+        this.currentGroupImages = Array.of( ...selected.images )
       }
     },
     handleCurrentExpenseItemChanged(selected){
       console.log( "selectedExpenseItem=", selected)
       this.$set(this.selectedItems, this.selectedTabName, selected)
       if( selected ){
-        this.currentExpenseItemImages = selected.images
+        this.currentExpenseItemImages = Array.of( ...selected.images )
       }
     },
 
@@ -878,15 +879,31 @@ export default {
       })
     },
     handleRemoveImage(file, fileList) {
-         deleteExpenseItemImage( file.viewableId, file.id ).then(()=>{
-          console.log(file, fileList);
+      // file.id( original file) or file.uid( new uploaded file)
+      let imageIndex = this.currentExpenseItemImages.findIndex((image)=>{
+        return (file.id && file.id==image.id) || (file.uid && file.uid==image.uid)
+      })
+      if( imageIndex >=0 ){
+        let foundImage = this.currentExpenseItemImages[imageIndex]
+        deleteExpenseItemImage( foundImage.viewableId, foundImage.id ).then(()=>{
+          this.currentExpenseItemImages.splice( imageIndex, 1 )
+          console.log("file=",file,"filelist", fileList);
         })
+
+      }
     },
-    handleExpenseItemImagesChanged(file, fileList){
+    handleExpenseItemImagesUploadSuccess(response, file, fileList){
+      // donot call change event, file maybe uploading, so can not get image url for list
       //费用图片改变时，重新设置当前费用图片列表
       // OrderDelivery,重新读取expenseItem数据，并发送事件current-item-changed
-      this.$bus.$emit('expense-item-image-changed-gevent')
-
+      const image = this.buildGroupImage( response )
+      image.uid = file.uid
+      this.currentExpenseItemImages.push( image )
+      console.log( "handleExpenseItemImagesUploadSuccess=", response, file)
+      //this.$bus.$emit('expense-item-image-changed-gevent')
+    },
+    handleBeforeUploadExpenseItemImage( file ){
+      console.log( "handleBeforeUploadExpenseItemImage=", file)
     },
     getDiscountOfVariant(variantId) {
       // 找到这个订单对应的商品

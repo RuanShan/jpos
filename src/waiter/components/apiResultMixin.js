@@ -645,7 +645,7 @@ export var apiResultMixin = {
       return gender == "male" ? "男" : "女"
     },
     getCardDisplayStyle(style) {
-      return style == "prepaid" ? "充值卡" : "次卡" //prepaid 充值卡， times 次卡
+      return style == "prepaid" ? "储值卡" : "次卡" //prepaid 充值卡， times 次卡
     },
     getCardDisplayState(state) {
       if( state == this.CardStateEnum.enabled) return "可用";
