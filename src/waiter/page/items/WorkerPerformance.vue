@@ -184,7 +184,7 @@ export default {
     }
   },
   created() {
-
+    this.lineItemGroupStateFilter = [ this.LineItemGroupStateEnum.processing, this.LineItemGroupStateEnum.processed, this.LineItemGroupStateEnum.ready_for_store ]
   },
   computed: {
     computedVisible: function() {

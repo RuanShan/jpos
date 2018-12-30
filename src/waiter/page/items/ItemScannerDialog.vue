@@ -123,6 +123,16 @@ export default {
       const result = await getLineItemGroupByNumber(number)
       const lineItemGroup = this.buildLineItemGroup(result)
       // 如果物品在专业服务状态，加入到列表中
+      console.log( "this.stateFilter=", this.stateFilter, lineItemGroup )
+      if( this.stateFilter && lineItemGroup){
+        if( !this.stateFilter.includes( lineItemGroup.state)){
+          this.$message({
+            message: `条码是${number}的物品状态不符合录入条件!`,
+            type: 'warning'
+          });
+          return
+        }
+      }
       // 如果重复录入，把以前的替换掉
       let index = this.lineItemGroups.findIndex((group)=>{
         return group.id == lineItemGroup.id
