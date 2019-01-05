@@ -113,7 +113,7 @@ export default {
       paymentMethodList: [],
       cardTypeList: [],
       memberFormData: {
-        username: "",
+        userName: "",
         mobile: "",
         birth: "",
         address: "",
@@ -260,7 +260,7 @@ export default {
     //转换成SerVer需要的数据
     buildParams() {
       let user = {
-        username: this.memberFormData.username,
+        username: this.memberFormData.userName,
         mobile: this.memberFormData.mobile,
         paymentPassword: this.memberFormData.paymentPassword,
         address: this.memberFormData.address,
