@@ -219,6 +219,7 @@ saleUnitPrice<style lang="scss" >
                 }
                 .good-info {
                     text-align: center;
+                    padding: 6px 6px;
                 }
                 .food-name {
                     color: brown;
@@ -229,6 +230,11 @@ saleUnitPrice<style lang="scss" >
                     display: block;
                     font-size: 12px;
                     padding-top: 4px;
+                }
+                .variants-wrapper{
+                  display: flex;
+                  justify-content: center;
+                  .item{ margin: 4px;}
                 }
             }
 
@@ -412,13 +418,11 @@ saleUnitPrice<style lang="scss" >
                       </div>
 
                       <div class="variants-wrapper">
-                        <div class="clear">
-                          <div v-for="(variant,index) in goods.variants" :key="index" class="left">
+                          <div v-for="(variant,index) in goods.variants" :key="index" class="item">
                             <el-button size="mini" @click="addOrderItem(goods,index)">
-                              <span>{{variant.optionValueTexts.join()}}({{variant.price}})</span>
+                              <span>{{variant.optionValueTexts.join()}}</span>
                             </el-button>
                           </div>
-                        </div>
                       </div>
                     </div>
 

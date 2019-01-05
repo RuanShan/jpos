@@ -1,9 +1,44 @@
 <style lang="scss">
-.clockin_container {
-  .greeting{
-        line-height: 1.5em;
+.checkin-dialog {
+  .el-dialog{
+    background-color: #F2F6FC;
   }
-    .form_contianer {
+  .el-dialog__header{
+    position: relative;
+    z-index: 10;
+    border-bottom: none;
+    .el-icon-close{ color: #fff;}
+  }
+  .el-dialog__footer{
+    border-top: none;
+  }
+  .bg{
+    position: absolute;
+    top: 0;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+    background-image:  url('../../assets/img/checkin-bg.jpg');
+    background-size: cover;
+  }
+  .logo-wrap{
+    position: relative;
+    width: 30%;
+    margin: auto;
+    img{ width: 100%; }
+  }
+  .greeting{
+    position: relative;
+    line-height: 1.5em;
+    color: #fff;
+    padding: 12px;
+    text-align: center;
+  }
+}
+.clockin_container {
+  position: relative;
+  padding: 12px 0;
+  .form_contianer {
         max-width: 320px;
         margin: auto;
         padding: 25px;
@@ -27,15 +62,23 @@
 </style>
 
 <template>
-<el-dialog :visible="computedVisible" @opened="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog">
+<el-dialog :visible="computedVisible" @opened="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog checkin-dialog">
   <div slot="title" class="title-wrap">
     <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog"></i> </div>
     <div> 打卡</div>
   </div>
+  <div class="bg">
+  </div>
+  <div class="manage_tip">
+    <div class="logo-wrap">
+      <img src="@assets/img/logo-w.png"/>
+    </div>
+  </div>
+  <p class="greeting"> {{greeting}}</p>
 
   <div class="dialog-content-wrap clockin_container">
     <section class="form_contianer">
-      <p class="greeting"> {{greeting}}</p>
+      <div class="form-title"> {{formtitle}} </div>
       <el-form :model="clockinForm" :rules="rules" ref="clockinForm">
         <input name="mockpassword1" type="password" class="hide-password">
 
@@ -59,7 +102,9 @@
     </section>
 
   </div>
-
+  <div slot="footer" class=" ">
+    &nbsp;
+  </div>
 </el-dialog>
 </template>
 
@@ -80,6 +125,7 @@ export default {
   data() {
     return {
       greeting: '',
+      formtitle: '',
       clockinForm: {
         username: '',
         password: ''
@@ -115,9 +161,11 @@ export default {
       // Cannot read property 'resetFields' of undefined
       console.log(" this.$refs.clockinForm=", this.$refs.clockinForm)
       if( this.clockState == 'clockin'){
-        this.greeting = "世界那么大，人生那么长，总会有那么一个人，让你想要温柔以待。早安！"
+        this.greeting = "世界那么大，人生那么长，总会有那么一个人，让你想要温柔以待。"
+        this.formtitle = "早安"
       }else{
-        this.greeting = "每天都有一个时刻，让我们为之振奋不已，每天都有两个字，让我们如沐春风，心情格外大好，那就是'下班' ，下班快乐！"
+        this.greeting = "每天都有一个时刻，让我们为之振奋不已，每天都有两个字，让我们如沐春风，心情格外大好，那就是'下班'"
+        this.formtitle = "下班快乐"
       }
       this.$refs.clockinForm.resetFields()
       this.clockinForm.username = this.userInfo.name//设置为当前登录用户的用户名

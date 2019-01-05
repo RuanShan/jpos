@@ -1,7 +1,16 @@
+<style lang="scss">
+.clockin_container{
+
+}
+</style>
 <template>
 <div class="clockin_container fillcontain">
   <section class="form_contianer">
-
+    <div class="manage_tip">
+      <div class="logo-wrap">
+        <img src="@assets/img/logo-w.png"/>
+      </div>
+    </div>
     <el-form :model="clockinForm" :rules="rules" ref="clockinForm">
       <el-form-item prop="username">
         <el-input ref="tabindex1" tabindex="1"  v-model="clockinForm.username" placeholder="用户名" autofocus @keyup.enter.native="handleKeyupEnter"> </el-input>
