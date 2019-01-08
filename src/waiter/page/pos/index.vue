@@ -1,4 +1,4 @@
-saleUnitPrice<style lang="scss" >
+<style lang="scss" >
 @import '~@/style/mixin';
 
 .pos {
@@ -235,6 +235,10 @@ saleUnitPrice<style lang="scss" >
                   display: flex;
                   justify-content: center;
                   .item{ margin: 4px;}
+                  height: 34px;
+                }
+                .el-button--mini{
+                  padding: 6px;
                 }
             }
 
@@ -511,7 +515,6 @@ export default {
       menuIndex: 0, //已选菜单索引值，默认为0
       selectedTabName: 'newOrderTab',
       productList: [],
-      baseImgPath,
       defaultCustomer: {
         customerType: "无", //客户类型：无，散客，会员
         name: "来宾",
@@ -672,7 +675,7 @@ export default {
     getProductImageUrl (product) {
       let image = product.master.images[0];
       return image ?
-        baseImgPath + image.product_url :
+        image.large_url :
         baseImgPath + "/img/noimage/product.jpg";
     },
     addOrderItem(goods, index) {
