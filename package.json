@@ -1,6 +1,6 @@
 {
   "name": "jpos",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "RuanShan <david@getstore.cn>",
   "description": "汪永峰皮具养护中心订单管理系统",
   "license": null,
@@ -27,10 +27,16 @@
   },
   "build": {
     "productName": "jpos",
-    "appId": "org.ruanshan.electron-vue",
+    "appId": "org.ruanshan.jpos",
     "directories": {
       "output": "build"
     },
+    "publish": [
+       {
+         "provider": "generic",
+         "url": "http://**.**.**.**:3002/download/",
+       }
+    ],
     "files": [
       "dist/electron/**/*"
     ],
@@ -66,6 +72,7 @@
     "axios": "^0.16.1",
     "echarts": "^3.8.0",
     "electron-dl": "^1.12.0",
+    "electron-updater": "^4.0.6",
     "element-ui": "^2.4.11",
     "es6-promise": "^4.2.4",
     "escpos": "^2.4.9",
