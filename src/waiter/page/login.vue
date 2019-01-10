@@ -20,7 +20,7 @@
         </el-form-item>
         <input name="mockpassword2" type="password" class="hide-password">
       </el-form>
-      <p class="tip"> </p>
+      <p class="tip"> Ver : {{version}}</p>
     </section>
   </transition>
 </div>

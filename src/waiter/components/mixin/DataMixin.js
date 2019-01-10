@@ -5,7 +5,7 @@ import {
 
 export var orderDataMixin = {
   computed: {
-    ...mapState([
+    ...mapState(['version',
       'userInfo', 'storeId','storeInfo',
       'paymentMethods',
       'cardTypes',

@@ -7,6 +7,7 @@ import {
 Vue.use(Vuex)
 
 const state = {
+  version: '0', // read from package.json
   userInfo: {
     avatar: 'default.jpg',
     apiKey: '',

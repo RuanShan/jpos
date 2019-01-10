@@ -65,6 +65,10 @@ router.beforeEach(function (to, from, next) {
     }
 });
 
+import PACKAGE from '../../package.json'
+
+store.state.version = PACKAGE['version']
+console.debug( "store.state.version= ", store.state.version)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

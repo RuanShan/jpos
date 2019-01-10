@@ -1,6 +1,6 @@
 {
   "name": "jpos",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "RuanShan <david@getstore.cn>",
   "description": "汪永峰皮具养护中心订单管理系统",
   "license": null,
@@ -32,10 +32,10 @@
       "output": "build"
     },
     "publish": [
-       {
-         "provider": "generic",
-         "url": "http://**.**.**.**:3002/download/",
-       }
+      {
+        "provider": "generic",
+        "url": "https://jpos-updates.oss-cn-beijing-internal.aliyuncs.com/win/1"
+      }
     ],
     "files": [
       "dist/electron/**/*"
@@ -72,6 +72,7 @@
     "axios": "^0.16.1",
     "echarts": "^3.8.0",
     "electron-dl": "^1.12.0",
+    "electron-log": "^2.2.17",
     "electron-updater": "^4.0.6",
     "element-ui": "^2.4.11",
     "es6-promise": "^4.2.4",

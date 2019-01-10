@@ -85,7 +85,7 @@ app.on('certificate-error', function(event, webContents, url, error, certificate
 // })
 
 import { autoUpdater } from "electron-updater"
-import log = from "electron-log"
+import log from "electron-log"
  app.on('ready', () => {
    if (process.env.NODE_ENV === 'production'){
     log.transports.file.level = "debug"
