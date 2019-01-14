@@ -376,7 +376,7 @@
                   <el-button type="danger" size="mini" @click="clearAllGoods" class="right" >清空</el-button>
                 </div>
                 <div>
-                  <el-button class="check-button" @click="openCheckoutDialog()">
+                  <el-button class="check-button" @click="openCheckoutDialog">
                     <div  v-show="currentCard.id" >
                       <span > 应收：¥ {{totalSalePrice}} </span>&nbsp;&nbsp;&nbsp;<span> 实收：¥ {{totalPrice}}</span>
                     </div>
@@ -774,6 +774,14 @@ export default {
     },
     // 客户搜索事件处理
     openCheckoutDialog() {
+      //检查是否真的有订单
+      if( this.totalItemCount == 0){
+        return
+      }
+      //检查是否选择了人
+      if( this.totalItemCount == 0){
+        return
+      }
       console.log("openCheckoutDialog")
       this.checkoutDialogVisible = true
     },

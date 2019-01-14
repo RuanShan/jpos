@@ -17,6 +17,7 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+
 function createWindow () {
   Menu.setApplicationMenu(null)
 
@@ -110,18 +111,14 @@ autoUpdater.on('update-downloaded', (info) => {
 });
 
 function sendStatusToWindow(text) {
-  console.debug(text);
+  log.info(text);
   //win.webContents.send('message', text);
 }
 app.on('ready', () => {
-  //if (process.env.NODE_ENV === 'production'){
+  if (process.env.NODE_ENV === 'production'){
     log.transports.file.level = "debug"
     autoUpdater.logger = log
 
-    log.info( "autoUpdater=", autoUpdater )
-
-    autoUpdater.checkForUpdatesAndNotify().then((info)=>{
-      log.info( "autoUpdater checkForUpdatesAndNotify=", info )
-    })
-  //}
+    autoUpdater.checkForUpdatesAndNotify() 
+  }
 })
