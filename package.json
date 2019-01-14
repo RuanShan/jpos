@@ -1,6 +1,6 @@
 {
   "name": "jpos",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "author": "RuanShan <david@getstore.cn>",
   "description": "汪永峰皮具养护中心订单管理系统",
   "license": null,
@@ -31,10 +31,12 @@
     "directories": {
       "output": "build"
     },
+    "artifactName": "${productName}-Setup-${version}.${ext}",
     "publish": [
       {
         "provider": "generic",
-        "url": "https://jpos-updates.oss-cn-beijing-internal.aliyuncs.com/win/1"
+        "url": "http://jpos-updates.oss-cn-beijing.aliyuncs.com/win32/",
+        "channel": "latest"
       }
     ],
     "files": [
