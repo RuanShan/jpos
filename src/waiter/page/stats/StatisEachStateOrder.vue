@@ -100,6 +100,10 @@
         <el-table-column label="消费金额" prop="total">
         </el-table-column>
         <el-table-column label="订单状态" prop="displayState">
+          <template slot-scope="scope">
+            {{scope.row.displayState}} <span v-show="scope.row.memo">({{scope.row.memo}})</span>
+          </template>
+
         </el-table-column>
         <el-table-column label="支付信息">
           <template slot-scope="scope">
