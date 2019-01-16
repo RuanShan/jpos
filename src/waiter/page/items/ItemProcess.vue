@@ -181,7 +181,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label="订单ID" prop="orderId">
+              <el-table-column label="订单" prop="order.number">
               </el-table-column>
               <el-table-column label="金额" prop="price"  width="70">
               </el-table-column>

@@ -21,6 +21,11 @@ Vue.use(EventBus)
 Vue.config.productionTip = false;
 Vue.use(Mint);
 
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+// require styles
+import 'swiper/dist/css/swiper.css'
+Vue.use(VueAwesomeSwiper, /* { default global options } */)
+
 // 点击编辑
 import VueXeditable from '@onekiloparsec/vue-xeditable'
 import '@onekiloparsec/vue-xeditable/dist/vue-xeditable.min.css'

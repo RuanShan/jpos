@@ -79,7 +79,7 @@
         <div class="right-date">订单时间: {{order.displayCreatedAt}}</div>
       </div>
       <div class="base-row">
-        <div class="">客户信息: {{order.customer.mobile}}(卡号:{{order.customer.displayCardCode }}) </div>
+        <div class="" v-if="order.customer">客户信息: {{order.customer.mobile}}(卡号:{{order.customer.displayCardCode }}) </div>
         <div class="right-date">订单金额: {{order.total}}元 </div>
       </div>
     </div>

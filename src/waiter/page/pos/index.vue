@@ -78,6 +78,9 @@
                 .el-form-item {
                     margin-bottom: 5px;
                 }
+                .customer-search-input{
+                  width: 18em;
+                }
             }
 
             .search-result {
@@ -307,7 +310,7 @@
               <div class="customer-container clear">
                 <el-form ref="customerForm" size="mini" :inline="true" class="search-form">
                   <el-form-item label="会员搜索">
-                    <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入会员/手机号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
+                    <el-select class="customer-search-input" v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入手机号/会员卡号/会员姓名" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
                       <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
                       </el-option>
                     </el-select>
@@ -320,8 +323,8 @@
                   <div>
                     <table style="width:100%">
                       <tr>
-                        <th>客户类型</th>
-                        <td>{{currentCustomer.customerType}} <span v-show="isCustomerFromOtherStore">({{currentCustomer.storeName}}) </span></td>
+                        <th>客户</th>
+                        <td>{{currentCustomer.userName}}  <span v-show="currentCustomer.customerType"> [{{currentCustomer.customerType}}] </span> <span v-show="isCustomerFromOtherStore">[{{currentCustomer.storeName}}] </span></td>
                         <th>移动电话</th>
                         <td>{{currentCustomer.mobile}}</td>
                         <th>消费金额</th>
@@ -516,7 +519,7 @@ export default {
       selectedTabName: 'newOrderTab',
       productList: [],
       defaultCustomer: {
-        customerType: "无", //客户类型：无，散客，会员
+        customerType: null, //客户类型：无，散客，会员
         name: "来宾",
         balance: 0,
         cards: []
@@ -578,7 +581,7 @@ export default {
           }).map((card) => {
             return {
               value: [customer.id, card.id].join('_'),
-              label: `${customer.mobile} (${card.displayStyle} ${card.code})`
+              label: `${customer.userName} ${customer.mobile} (${card.displayStyle} ${card.code})`
             }
           })
         } else {
@@ -802,7 +805,7 @@ export default {
     searchCustomersAsync: _.debounce((keyword, vm) => {
       findCustomers({
         q: {
-          mobile_or_username_cont: keyword
+          mobile_or_username_or_cards_code_cont: keyword
         }
       }).then((customersResult) => {
         vm.customerList = vm.buildCustomers(customersResult)

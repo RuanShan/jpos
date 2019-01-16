@@ -192,6 +192,7 @@ export default {
       },
       printed: false,
       rightCheckedGroups: [],
+      transferButtonLoading: false,
     }
   },
   mixins: [DialogMixin, CelUIMixin],
@@ -289,12 +290,15 @@ export default {
       this.$refs.lineItemGroupTransfer.addToRight() // uncheck all checkeck, or may transfer again.
 console.log("this.$refs.lineItemGroupTransfer.addToRight")
       this.actionConfirm( "请确认订单已经打印,并且改变订单状态吗?", ()=>{
+        this.transferButtonLoading = true
         this.handleTransferItems().then(()=>{
 
           this.$message({
             type: 'success',
             message: '已操作成功.'
           })
+          this.rightCheckedGroups = [] // disable transferButton
+          this.transferButtonLoading = false
         })
       })
     },

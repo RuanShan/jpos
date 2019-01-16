@@ -205,6 +205,11 @@ export var apiResultMixin = {
         })
       }
 
+      //
+      if( item.order){
+        let orderResult = item.order
+        group.order = { id: orderResult.id, number: orderResult.number, state: orderResult.state }
+      }
       return group
     },
     buildGroupImage( result){

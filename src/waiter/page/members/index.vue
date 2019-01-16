@@ -66,7 +66,7 @@
                 <store-select  v-bind:value.sync="formData.storeId" disable-all="true" v-if="authorizeMultiStore()"/>
 
                 <el-form-item label="关键字">
-                  <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
+                  <el-input class="customer-search-input" placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>

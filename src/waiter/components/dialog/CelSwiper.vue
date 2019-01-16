@@ -15,7 +15,7 @@
 }
 </style>
 <template>
-  <el-dialog :fullscreen="fullscreen" :visible="computedVisible" @opened="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog"  width="70%">
+  <el-dialog :fullscreen="fullscreen" :visible="computedVisible" @opened="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog"  fullscreen="true">
     <div slot="title" class="title-wrap">
       <div class="right back">
 

@@ -202,53 +202,44 @@
           </div>
           <div class="line-item-groups">
             <div v-for="group in orderDetail.lineItemGroups" class="line-item-group">
-            <div class="subtitle"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
-            <table border="1" cellspacing="0" style="width: 100%">
-              <tr>
-                <th style="width:8em">序号</th>
-                <th>服务项目</th>
-                <th>项目备注<i class="el-icon-edit"></i></th>
-                <th style="width:8em">状态</th>
-              </tr>
-              <template v-for="(lineItem,index ) in group.lineItems">
+              <div class="subtitle"> 物品编号: {{group.number}}  状态: {{group.displayState}} </div>
+              <table border="1" cellspacing="0" style="width: 100%">
                 <tr>
-                  <td>{{ index+1 }}</td>
-                  <td>{{ lineItem.cname }}</td>
-                  <td>
-                    <vue-xeditable  :name="'memo_'+lineItem.id+'_xeditable'" v-model="lineItem.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
-                  </td>
-                  <td>{{ lineItem.displayState }}</td>
+                  <th style="width:8em">序号</th>
+                  <th>服务项目</th>
+                  <th>项目备注<i class="el-icon-edit"></i></th>
+                  <th style="width:8em">状态</th>
                 </tr>
-              </template>
-            </table>
+                <template v-for="(lineItem,index ) in group.lineItems">
+                  <tr>
+                    <td>{{ index+1 }}</td>
+                    <td>{{ lineItem.cname }}</td>
+                    <td>
+                      <vue-xeditable  :name="'memo_'+lineItem.id+'_xeditable'" v-model="lineItem.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
+                    </td>
+                    <td>{{ lineItem.displayState }}</td>
+                  </tr>
+                </template>
+              </table>
 
-            <div class="subtitle"> 物品图片  </div>
-            <div class=" ">
-              <div v-show="group.images.length==0">  </div>
-              <el-upload
-                :file-list="group.uploadImages"
-                :action="group.imageUploadPath"
-                name="image[attachment]"
-                list-type="picture-card"
-                :with-credentials="true"
-                :multiple = "true"
-                :before-remove="handleImageRemoveConfirm"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleImageRemoved"
-                :on-success="handleImageAdded">
-                <i class="el-icon-plus"></i>
-              </el-upload>
+              <div class="subtitle"> 物品图片  </div>
+              <div class=" ">
+                <div v-show="group.images.length==0">  </div>
+                <el-upload
+                  :file-list="group.uploadImages"
+                  :action="group.imageUploadPath"
+                  name="image[attachment]"
+                  list-type="picture-card"
+                  :with-credentials="true"
+                  :multiple = "true"
+                  :before-remove="handleImageRemoveConfirm"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleImageRemoved"
+                  :on-success="handleImageAdded">
+                  <i class="el-icon-plus"></i>
+                </el-upload>
+              </div>
             </div>
-            <el-dialog  append-to-body :visible.sync="imageDialogVisible">
-              <el-carousel :initial-index="0"	 arrow="always" :autoplay="false">
-                <el-carousel-item v-for="item in carouselImages" :key="item.id">
-                  <div  style="text-align:center;">
-                   <img :src="item.url">
-                  </div>
-                </el-carousel-item>
-              </el-carousel>
-            </el-dialog>
-          </div>
           </div>
         </div>
 
@@ -258,6 +249,10 @@
     <div class="footer">
       <mt-button class="back-btn" @click="handleDone">返回</mt-button>
     </div>
+
+
+    <CelSwiper :carousel-images="carouselImages" :dialog-visible.sync="imageDialogVisible"> </CelSwiper>
+
   </section>
 
 </template>
@@ -271,9 +266,11 @@ import {
   getLineItemGroupImageUploadPath,
 }
 from '@/api/getData'
+import CelSwiper from "@/components/dialog/CelSwiper.vue";
 
 export default {
   name: "OrderItem",
+  components:{  CelSwiper },
   data() {
     return {
       elUploadHeader:{},
@@ -301,7 +298,6 @@ export default {
       console.log( "beforeRouteUpdate", to)
       this.initData()
   },
-  components: {},
   computed: {
     orderId(){
        return this.$route.params.id
