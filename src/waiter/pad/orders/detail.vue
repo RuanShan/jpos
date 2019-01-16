@@ -232,7 +232,7 @@
                 list-type="picture-card"
                 :with-credentials="true"
                 :multiple = "true"
-                :before-remove="handleImageRemoveConfirm"              
+                :before-remove="handleImageRemoveConfirm"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleImageRemoved"
                 :on-success="handleImageAdded">
@@ -276,6 +276,7 @@ export default {
   name: "OrderItem",
   data() {
     return {
+      elUploadHeader:{},
       orderCustomer: {
         prepaidCard: {
         }

@@ -776,10 +776,18 @@ export default {
     openCheckoutDialog() {
       //检查是否真的有订单
       if( this.totalItemCount == 0){
+        this.$message({
+          message: "请先选择服务再结账！",
+          type: "error"
+        })
         return
       }
       //检查是否选择了人
-      if( this.totalItemCount == 0){
+      if( this.customerId == null){
+        this.$message({
+          message: "请先选择顾客再结账！",
+          type: "error"
+        });
         return
       }
       console.log("openCheckoutDialog")

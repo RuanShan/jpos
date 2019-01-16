@@ -37,6 +37,14 @@ function createWindow () {
   })
 }
 
+app.on('second-instance', (event, commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, we should focus our window.
+  //if (mainWindow) {
+  //  if (mainWindow.isMinimized()) mainWindow.restore()
+  //  mainWindow.focus()
+  //}
+})
+
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
@@ -119,6 +127,6 @@ app.on('ready', () => {
     log.transports.file.level = "debug"
     autoUpdater.logger = log
 
-    autoUpdater.checkForUpdatesAndNotify() 
+    autoUpdater.checkForUpdatesAndNotify()
   }
 })

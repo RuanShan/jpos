@@ -221,6 +221,7 @@ export default {
 
         if (userResult.id) {
           const user = this.buildUser(userResult)
+          console.log( "user=", user )
           this.$store.commit('saveUser', user)
         } else {
           throw new Error(userResult)
