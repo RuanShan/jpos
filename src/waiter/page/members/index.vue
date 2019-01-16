@@ -14,6 +14,9 @@
     .el-form-item {
       margin: 0;
     }
+    .search-input{
+      width: 24em;
+    }
   }
   .member-list-wrap{
     position: absolute;
@@ -66,8 +69,12 @@
                 <store-select  v-bind:value.sync="formData.storeId" disable-all="true" v-if="authorizeMultiStore()"/>
 
                 <el-form-item label="关键字">
-                  <el-input class="customer-search-input" placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
+                  <el-input class="search-input" placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
                 </el-form-item>
+                <el-form-item label="">
+                  <el-checkbox  size="mini" v-model="formData.cardRequired" > 拥有会员卡</el-checkbox>
+                </el-form-item>
+
                 <el-form-item>
                   <el-button type="primary" @click="handleSearch" size="mini">搜索</el-button>
                 </el-form-item>
@@ -82,7 +89,7 @@
         <!-- 表格     END -->
         <div class="member-list grid-content">
               <el-table class="cel-scrollable-table" :data="customerList" style="width:100%;" border>
-                <el-table-column prop="id" label="ID" width="80" align="center">
+                <el-table-column prop="number" label="会员编号" width="120" align="center">
                 </el-table-column>
                 <el-table-column prop="storeName" label="注册门店">
                 </el-table-column>
@@ -167,6 +174,7 @@ export default {
       inputValue: "", //输入框输入的值
       formData: {
         keyword: '',
+        cardRequired: false,
         storeId: null
       },
       customerData: {}
@@ -196,7 +204,10 @@ export default {
           }
       }
       // storeId 永远为当前选择的，由store-select 更新
-
+      // 是否必须会员卡
+      if( this.formData.cardRequired){
+        params.q.cards_status_eq = 1
+      }
       // 会员 电话号码或卡号 关键字
       if( this.formData.keyword.length>0){
         params.q.mobile_or_username_or_cards_code_cont = this.formData.keyword

@@ -15,7 +15,7 @@
 }
 </style>
 <template>
-  <el-dialog :fullscreen="fullscreen" :visible="computedVisible" @opened="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog"  fullscreen="true">
+  <el-dialog :fullscreen="fullscreen" :visible="computedVisible" @opened="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog"  >
     <div slot="title" class="title-wrap">
       <div class="right back">
 
@@ -52,7 +52,7 @@ export default {
 
   data() {
     return {
-      fullscreen: false,
+      fullscreen: true,
       swiperOption: {
          pagination: {
            el: '.swiper-pagination'

@@ -66,6 +66,12 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item label="订单状态">
+          <el-select class="select-options" v-model="formData.orderState"  size="mini" clearable placeholder="不限" @clear="handleClear">
+            <el-option v-for="item in stateOptions" :key="item.id" :value="item.id" :label="item.name">
+            </el-option>
+          </el-select>
+        </el-form-item>
 
         <el-form-item>
           <el-button class="order-ok" type="primary" size="mini" @click="handleSearch">确定</el-button>
@@ -145,6 +151,7 @@ export default {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null,  // 必须为空，否则缺省情况 显示 0
         paymentMethodId: null, //支付方式选项
+        orderState: null,
         oddCardPaid: false
       },
       paymentMethodList: [],
@@ -203,6 +210,11 @@ export default {
       ps.push( {id: 0, name: '未付'})
       return ps
     },
+    stateOptions: function(){
+      let ps =  [{ id: this.OrderStateEnum.cart, name: this.getOrderDisplayState(this.OrderStateEnum.cart) },
+        { id: this.OrderStateEnum.canceled, name: this.getOrderDisplayState(this.OrderStateEnum.canceled) }]
+      return ps
+    },
     computedStartAt: function () {
       return this.formData.selectedDates[0]
     },
@@ -238,6 +250,9 @@ export default {
           created_at_lteq: this.computedEndAt,
           order_type_eq: 0,
         }
+      }
+      if( this.formData.orderState ){
+        params.q.state_eq = this.formData.orderState
       }
       if( parseInt(this.formData.storeId) > 0){
         params.q.store_id_eq = this.formData.storeId

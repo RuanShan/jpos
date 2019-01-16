@@ -1,9 +1,19 @@
 <style lang="scss">
 .sms-container {
+
     .main-content {
         padding: 18px;
     }
     .box {
+      .filters {
+        padding: 16px;
+        .el-form-item {
+          margin: 0;
+        }
+        .search-input{
+          width: 24em;
+        }
+      }
         border: 1px solid #ebeef5;
         .member-profile {
           position: absolute;
@@ -94,7 +104,7 @@
             <el-form :inline="true" class="demo-form-inline">
                 <el-form ref="form" :model="formData" label-width="70px" :inline="true">
                   <el-form-item label="关键字">
-                    <el-input placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
+                    <el-input class="search-input" placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
                   </el-form-item>
                   <el-form-item label="">
                     <el-checkbox  size="mini" v-model="formData.cardRequired" > 拥有会员卡</el-checkbox>
@@ -192,7 +202,8 @@ export default {
         storeId: null,
         templateCode: null,
         checkAll: false,
-        isIndeterminate: false
+        isIndeterminate: false,
+        cardRequired: false
       },
       smsTemplates: [],
       perPage: 100,

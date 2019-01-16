@@ -78,7 +78,7 @@
                 .el-form-item {
                     margin-bottom: 5px;
                 }
-                .customer-search-input{
+                .search-input{
                   width: 18em;
                 }
             }
@@ -310,7 +310,7 @@
               <div class="customer-container clear">
                 <el-form ref="customerForm" size="mini" :inline="true" class="search-form">
                   <el-form-item label="会员搜索">
-                    <el-select class="customer-search-input" v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入手机号/会员卡号/会员姓名" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
+                    <el-select class="search-input" v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入手机号/会员卡号/会员姓名" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
                       <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
                       </el-option>
                     </el-select>
