@@ -32,7 +32,7 @@
     <div class="customer-container clear">
       <el-form ref="customerForm" size="mini"  :inline="true" class="search-form">
         <el-form-item label="客户搜索">
-          <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入手机/会员号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
+          <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入手机号/姓名/会员卡号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
             <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -248,7 +248,7 @@ export default {
       // 5位为会员卡号
       // YFOxxxx 为订单号
       // YFIxxxx 为物品号 17
-      let q = { mobile_or_username_cont: keyword }
+      let q = { mobile_or_username_or_cards_code_cont: keyword }
       findCustomers({ q }).then((customersResult) => {
         vm.customerList = vm.buildCustomers(customersResult)
       })

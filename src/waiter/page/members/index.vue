@@ -69,7 +69,7 @@
                 <store-select  v-bind:value.sync="formData.storeId" disable-all="true" v-if="authorizeMultiStore()"/>
 
                 <el-form-item label="关键字">
-                  <el-input class="search-input" placeholder="请输入会员编号/会员电话/会员姓名" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
+                  <el-input class="search-input" placeholder="请输入手机号/姓名/会员卡号" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
                 </el-form-item>
                 <el-form-item label="">
                   <el-checkbox  size="mini" v-model="formData.cardRequired" > 拥有会员卡</el-checkbox>
@@ -224,7 +224,7 @@ export default {
       findCustomers({
         q: {
           store_id_eq: vm.storeId,
-          mobile_or_username_cont: keyword
+          mobile_or_username_or_cards_code_cont: keyword
         }
       }).then((result) => {
         vm.customerList = vm.buildCustomers(result)
