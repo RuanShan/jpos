@@ -154,6 +154,7 @@ export default {
       this.$refs['cardForm'].validate((valid) => {
         if (valid) {
           let orderParams = {
+            enable_mp_msg: true,
             store_id: this.storeId,
             user_id: this.customerData.id,
             order_type: 'card',
