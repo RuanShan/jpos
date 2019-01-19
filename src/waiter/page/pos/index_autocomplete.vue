@@ -79,7 +79,7 @@
                     margin-bottom: 5px;
                 }
                 .search-input{
-                  width: 18em;
+                  width: 22em;
                 }
             }
 
@@ -310,17 +310,20 @@
               <div class="customer-container clear">
                 <el-form ref="customerForm" size="mini" :inline="true" class="search-form">
                   <el-form-item label="会员搜索">
-                    <el-select class="search-input" ref="searchInput" v-model="customerComboId"
-                      :remote-method="searchCustomers" :default-first-option="true" :reserve-keyword="true"
-                      placeholder="请输入手机号/姓名/会员卡号" filterable remote clearable
-                      @change="handleCustomerChanged" @clear="handleCustomerChanged"
-                      @keydown.native.enter.prevent="handleEnterKeyDown">
-                      <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
-                      </el-option>
-                    </el-select>
+
+                    <el-autocomplete ref="autocomplete" class="search-input" popper-class="autocomplete-popper"
+                     clearable  placeholder="请输入手机号/姓名/会员卡号"
+                     :trigger-on-focus="false" v-model="customerComboId2"  :fetch-suggestions="searchCustomersAsync2" :select-when-unmatched="true"
+                     @select="handleCustomerChanged" @clear="handleCustomerChanged">
+                      <template slot-scope="{ item }">
+                         <div> {{item.label}} </div>
+                      </template>
+                    </el-autocomplete>
+
                   </el-form-item>
 
-                  <el-button type="" size="mini" @click="handleNewCustomerButtonClicked" class="right">添加会员</el-button>
+                  <el-button type="button" size="mini" @click="handleNewCustomerButtonClicked" class="right">添加会员</el-button>
+                  <input type="text" name="disableentrykeysubmit" style="display:none">
 
                 </el-form>
                 <div class="search-result clear">
@@ -543,6 +546,7 @@ export default {
       //由于搜索列表的每一项是 会员+会员卡，即如果会员有两个卡就有两项，
       //所以select的值为customerId+cardId, 当没有会员卡时，只有customerId
       customerComboId: null,
+      customerComboId2: null,
       carouselImages: [],//图片走马灯
       carouselDialogVisible: false,
       currentExpenseItemImages: [], // 允许编辑费用图片，所以在图片改变事件中设置当前费用图片列表
@@ -803,43 +807,77 @@ export default {
       this.checkoutDialogVisible = true
     },
     //根据关键字查找客户
-    //从SerVer上获取模糊搜索的用户数据,异步获取
-    searchCustomers(keyword) {
-      this.searchCustomersAsync(keyword, this);
-    },
-    //远程搜索输入框函数-----提示功能
-    searchCustomersAsync: _.debounce((keyword, vm) => {
+    searchCustomersAsync2(keyword, cb){
+
       findCustomers({
         q: {
           mobile_or_username_or_cards_code_cont: keyword
         }
       }).then((customersResult) => {
-        vm.customerList = vm.buildCustomers(customersResult)
+        this.customerList = this.buildCustomers(customersResult)
 
+        let ops = this.customerList.map((customer) => {
+          if (customer.cards.length > 0) {
+            return customer.cards.filter((card)=>{
+              return card.state == this.CardStateEnum.enabled
+            }).map((card) => {
+              return {
+                value: keyword,
+                comboid: [customer.id, card.id].join('_'),
+                label: `${customer.userName} ${customer.mobile} (${card.displayStyle} ${card.code})`
+              }
+            })
+          } else {
+            return [{
+              value: keyword,
+              comboid: customer.id.toString(),
+              label: customer.mobile
+            }]
+          }
+        })
+
+        cb(_.flatten(ops))
       })
-    }, 450),
+    },
     //店员改变当前选择客户,更新订单列表折扣率
-    handleCustomerChanged(selectedComboCustomerId) {
-      if (selectedComboCustomerId) {
-        //当前选择的客户
-        this.currentCustomer = this.customerList.find((customer, index, arr) => {
-          return customer.id == this.customerId
-        })
-
-        //当前选择的会员卡
-        if( this.cardId ){
-          this.currentCard = this.currentCustomer.cards.find((card)=>{
-            return card.id == this.cardId
+    handleCustomerChanged( selected  ) {
+      console.log( "handleCustomerChanged selected", selected,  "autocomplete=", this.$refs.autocomplete.value, "customerComboId2", this.customerComboId2 )
+      if (selected) {
+        // { value: "133"} or
+        // { label: "david 13322280797 (储值卡 1004)",  value: "4_16" }
+        if( selected.label ){ // user choose a suggestion
+          this.customerComboId = selected.comboid
+          //当前选择的客户
+          this.currentCustomer = this.customerList.find((customer, index, arr) => {
+            return customer.id == this.customerId
           })
+          //当前选择的会员卡
+          if( this.cardId ){
+            this.currentCard = this.currentCustomer.cards.find((card)=>{
+              return card.id == this.cardId
+            })
+          }
+
+          this.orderItemList.forEach((item) => {
+            item.discountPercent = this.getDiscountOfVariant(item.variantId)
+            item.displayDiscount =this.getDisplayDiscount( item.discountPercent )
+            this.computePrice(item)
+          })
+        }else{
+          let mobile = this.customerComboId2
+          // it is a mobile
+          let mobileRegEx = /^1\d{10}$/
+          if( mobileRegEx.test(mobile) ){
+            customerMobileValidate(mobile).then( (response)=> {
+              if (response.ret) {
+                this.memberMobile = this.customerComboId2
+                this.memberAddWindowVisible = true
+              }
+            })
+          }
+
         }
-
-
-        this.orderItemList.forEach((item) => {
-          item.discountPercent = this.getDiscountOfVariant(item.variantId)
-          item.displayDiscount =this.getDisplayDiscount( item.discountPercent )
-          this.computePrice(item)
-        })
-      } else {
+      }else{
         this.setCurrentCustomer( this.defaultCustomer )
 
         this.orderItemList.forEach((item) => {
@@ -849,25 +887,7 @@ export default {
         })
       }
     },
-    handleEnterKeyDown( e){
-      console.log( "handleEnterKeyDown=", e)
 
-      // if no customer found, open member-add
-      if( this.customerList.length == 0 ){
-        let mobile = this.$refs.searchInput.query
-        //console.log( "mobile=", mobile, "this.$refs.searchInput=",this.$refs.searchInput)
-        // it is a mobile
-        let mobileRegEx = /^1\d{10}$/
-        if( mobileRegEx.test(mobile) ){
-          customerMobileValidate(mobile).then( (response)=> {
-            if (response.ret) {
-              this.memberMobile = mobile
-              this.memberAddWindowVisible = true
-            }
-          })
-        }
-      }
-    },
     handleOrderCreated(newOrder) {
       this.orderItemList = []
       this.$bus.$emit('order-created-gevent', newOrder)

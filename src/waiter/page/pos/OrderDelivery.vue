@@ -32,7 +32,8 @@
     <div class="customer-container clear">
       <el-form ref="customerForm" size="mini"  :inline="true" class="search-form">
         <el-form-item label="客户搜索">
-          <el-select v-model="customerComboId" :remote-method="searchCustomers" placeholder="请输入手机号/姓名/会员卡号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
+          <el-select v-model="customerComboId" :remote-method="searchCustomers" :default-first-option="true"
+          placeholder="请输入手机号/姓名/会员卡号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
             <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>

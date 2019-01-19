@@ -116,7 +116,7 @@
 
 <script>
 // ***接口***
-// 入口:props: ["inputNumber"]
+// 入口:props: ["memberMobile"]
 // 出口:this.$emit("AddMemberReturnData", this.returnData);
 // **********
 import moment from 'moment'
@@ -128,7 +128,7 @@ import {
 } from '@/components/mixin/DialogMixin'
 
 export default {
-  props: ["inputNumber", 'dialogVisible'],
+  props: ["memberMobile", 'dialogVisible'],
   mixins: [DialogMixin],
   data() {
     //验证卡号--1.不能空;2.必须是数字;3.四至十一个字符
@@ -263,10 +263,11 @@ export default {
         this.cardFormData.variantId = this.cardTypeList[0].masterId
       }
 
-      this.$nextTick(function () {
+      //this.$nextTick(function () {
         this.$refs.memberFormData.resetFields();
         this.$refs.cardFormData.resetFields();
-      })
+      //})
+      this.memberFormData.mobile = this.memberMobile
       console.log("MemberAdd handleOpenDialog end")
     },
     closeDialog(){
