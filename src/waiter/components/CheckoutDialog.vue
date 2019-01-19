@@ -12,7 +12,7 @@
 }
 .checkout-form-wrap{
   .checkout-form{
-    width: 600px;
+    width: 680px;
     margin: 0 auto;
     .align-right input{
       text-align: right;
@@ -75,13 +75,16 @@
     <div class="checkout-form-wrap">
       <el-form :model="formData" :rules="rules" ref="formData" label-width="120px" class="checkout-form">
         <el-form-item label="订单信息" v-if="existedOrderId">
-          <el-table :data="existedLineItemGroups" border max-height="240">
+          <el-table ref="multipleTable" :data="existedLineItemGroups" border max-height="240" @selection-change="groupSelectionChange">
+            <el-table-column  type="selection" width="40" label="" :selectable="isGroupUnpaid"> </el-table-column>
+            <el-table-column prop="displayPaymentState" label="支付状态" width="80">  </el-table-column>
             <el-table-column prop="displayCreatedAt" label="订单日期" align="center" width="100" >
               <template slot-scope="scope">
                 <div>{{scope.row.createdAt.format("YYYY-MM-DD")}}</div>
                   <div>{{scope.row.createdAt.format("H:mm")}}</div>
               </template>
             </el-table-column>
+
             <el-table-column label="物品条码" width="110" align="center">
               <template slot-scope="scope">
                 <div class="image-wrap">
@@ -98,7 +101,6 @@
             <el-table-column prop="price" label="金额" width="60">
               <template slot-scope="scope">
                 <span>{{computeGroupPrice( scope.row )}} </span>
-
               </template>
             </el-table-column>
 
@@ -106,9 +108,8 @@
 
         </el-form-item>
 
-        <el-form-item label="应收金额">
-          <el-input v-model="totalPrice" readonly class="money align-right">
-          </el-input>
+        <el-form-item label="应收金额" prop="totalPrice">
+          <el-input v-model.number="formData.totalPrice"  class="money align-right"> </el-input>
         </el-form-item>
         <el-form-item label="会员充值卡支付" v-if="currentPrepaidCard"  prop="prepaidCardAmount">
           <el-input v-model="formData.prepaidCardAmount" placeholder="" class="payment-card money align-right"  :disabled="!formData.enablePrepaidCard">
@@ -154,7 +155,7 @@
         <el-form-item>
           <el-button type="warning" @click="handleCreateOrderWithoutPayment" v-show="!existedOrderId">取单时结账</el-button>
           <div class="right">
-            <el-button type="success" @click="handleCreateOrderAndPayment" :disabled="disableCheckoutButton">结账</el-button>
+            <el-button type="success" @click="handleCreateOrderAndPayment" :disabled="selectedOrderItems.length==0" :loading="checkoutLoading">结账</el-button>
             <el-button @click="handleCloseDialog">取消</el-button>
           </div>
         </el-form-item>
@@ -168,7 +169,7 @@
 <script>
 import _ from "lodash"
 
-import { checkout, repay, validateCardPassword } from "@/api/getData"
+import { checkout, addPayments, validateCardPassword } from "@/api/getData"
 import {
   PrintUtil
 } from '@/utils/ipcService'
@@ -179,7 +180,13 @@ import {
 
 
 export default {
-  props: ["dialogVisible", "orderItemList", "totalMoney", "customer", "card"],
+  props: {
+    dialogVisible: Boolean,
+    orderItemList: { type: Array, default: []},
+    totalMoney: [String,Number],
+    customer: Object,
+    card: Object
+  },
   components: {  },
   data() {
     return {
@@ -199,14 +206,18 @@ export default {
         isPrintReceipt: false,
         enableSms: false,
         enableMpMsg: true,
+        totalPrice: 0
       },
       rules:{
+        totalPrice: [{ required: true, type: 'number', trigger: 'change', message: '请输入应收金额' }],
         paymentAmount:[
           { required: true, type: 'number', trigger: 'change' }
         ]
       },
-      disableCheckoutButton: false
+      checkoutLoading: false,
       //payments: [], //支付被方式选择数字,返回已经被选择的lable,如""现金","微信"等
+      selectedOrderItems: []
+
     };
   },
   mixins: [DialogMixin],
@@ -217,8 +228,8 @@ export default {
       })
     },
     // 订单总价
-    totalPrice: function() {
-      let t = this.orderItemList.reduce((total, item)=>{
+    computedTotalPrice: function() {
+      let t = this.selectedOrderItems.reduce((total, item)=>{
         if( this.currentPrepaidCard  && this.formData.enablePrepaidCard ){
           total+= ( item.saleUnitPrice * item.quantity * this.currentPrepaidCard.discountPercent /100 )
         }else{
@@ -263,13 +274,16 @@ export default {
       console.log("store.checkoutPasswordRequired=",this.storeInfo.checkoutPasswordRequired, isCardBelongsOtherStore)
       return this.currentPrepaidCard && this.formData.enablePrepaidCard && (this.storeInfo.checkoutPasswordRequired || isCardBelongsOtherStore)
     },
-    prepaidCardPaymentMethod: function(){
+    prepaidCardPaymentMethod(){
+      if( this.paymentMethodList == null ) {
+        return []
+      }
       return this.paymentMethodList.find((pm)=>{
         return (pm.type.indexOf('PrepaidCard') >= 0 )
       })
     },
     //检查订单ID是否存在，如果存在结账时，只需要付款，无需创建订单
-    existedOrderId: function(){
+    existedOrderId(){
       let item = this.orderItemList.find( (item)=>{
         return item.orderId != null
       })
@@ -278,6 +292,7 @@ export default {
     existedLineItemGroups(){
 
       let groups = this.orderItemList.map((item)=>{ return item.group})
+      //console.log( "existedLineItemGroups=", groups)
       return _.chain(groups).uniq().compact(  ).value()
 
     },
@@ -295,14 +310,14 @@ export default {
           amount: this.formData.prepaidCardAmount, payment_method_id: this.prepaidCardPaymentMethod.id } )
       }
       if( this.formData.enableTimesCard ){
-        let amount = this.totalPrice - this.formData.paymentAmount
+        let amount = this.formData.totalPrice - this.formData.paymentAmount
         paymentsAttributes.push( { source_id: this.currentTimesCard.id, source_type: "Spree::Card",
           amount: amount, card_times: this.formData.timesCardAmount,
           payment_method_id: this.prepaidCardPaymentMethod.id } )
       }
 
       console.log( "this.orderRemainder=",this.orderRemainder)
-      console.log( "this.orderItemList=",this.orderItemList)
+      console.log( "this.selectedOrderItems=",this.selectedOrderItems)
       //需要其他支付方式
       if( this.formData.paymentAmount > 0 ){
         paymentsAttributes.push( { payment_method_id: this.formData.selectPaymentMethodId, amount: this.formData.paymentAmount } )
@@ -310,7 +325,7 @@ export default {
       //  index  cname  discountPercent  groupPosition memo name  price productId quantity
       //  saleUnitPrice  variantId  variantName
       let order =  { store_id: this.storeId, user_id: this.customer.id,  payments: paymentsAttributes, enable_sms: this.formData.enableSms, enable_mp_msg: this.formData.enableMpMsg }
-      order.line_items_attributes = this.orderItemList.map((item)=>{
+      order.line_items_attributes = this.selectedOrderItems.map((item)=>{
         return { quantity: item.quantity, variant_id: item.variantId, cname: item.cname,
           group_position: item.groupPosition, memo: item.memo,
           sale_unit_price: item.saleUnitPrice, discount_percent: item.discountPercent, price: item.price,
@@ -321,7 +336,7 @@ export default {
     },
     // 除了会员支付方式之外，其他支付方式余额
     orderRemainder() {
-      let remainder = this.totalPrice
+      let remainder = this.formData.totalPrice
       if( this.currentTimesCard ){
         return (this.formData.timesCardAmount == 0 ? (remainder - this.formData.paymentAmount) : 0)
       }else {
@@ -331,7 +346,11 @@ export default {
   },
   methods: {
     handleDialogOpened(){
-      this.disableCheckoutButton = false
+      // user could dicard some lineitem before checkout on post pay situation
+      this.selectedOrderItems = Array.from( this.orderItemList )
+      console.log( "handleDialogOpened-orderItemList = ", this.orderItemList, this.selectedOrderItem, "existedOrderId=", this.existedOrderId)
+
+      this.checkoutLoading = false
       this.getPaymentMethods().then(()=>{
         this.paymentMethodList = this.paymentMethods
         if( this.activePaymentMethods.length>0){
@@ -354,14 +373,23 @@ export default {
       }else{
         this.formData.enableTimesCard = false
       }
-      console.log( "handleDialogOpened-orderItemList = ", this.orderItemList)
+
+      // check all lineItemGroups by default
+      if( this.$refs.multipleTable ){
+        // this.$refs.multipleTable could be null
+        this.$refs.multipleTable.clearSelection()
+        this.$refs.multipleTable.toggleAllSelection()
+      }
+
+      this.formData.totalPrice = this.computedTotalPrice
       this.computePaymentAmount()
+
     },
     computePaymentAmount(){
       console.log( "this.formData.enablePrepaidCard=", this.formData.enablePrepaidCard )
       if( this.formData.enablePrepaidCard ){
         let card = this.currentPrepaidCard
-        this.formData.prepaidCardAmount = ( card.amountRemaining >= this.totalPrice ? this.totalPrice : (this.totalPrice - card.amountRemaining) )
+        this.formData.prepaidCardAmount = ( card.amountRemaining >= this.formData.totalPrice ? this.formData.totalPrice : (this.formData.totalPrice - card.amountRemaining) )
       }else{
         this.formData.prepaidCardAmount = 0
       }
@@ -412,7 +440,7 @@ export default {
     //创建支付，客户领取物品时付款
     CreatePayment( orderId, params ) {
       // params = { payments, line_item_ids}
-        repay( orderId, params ).then((res)=>{
+        addPayments( orderId, params ).then((res)=>{
           if( res.id){
             //发送支付创建时间
             let order = this.buildOrder( res )
@@ -438,7 +466,14 @@ export default {
       if( this.isPasswordRequired){
         this.promptPassword()
       }else{
-        this.handleCreateOrderAndPaymentAsync(this)
+        this.$refs.formData.validate((valid) => {
+          if (valid) {
+            this.handleCreateOrderAndPaymentAsync(this)
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       }
     },
     handleCreateOrderWithoutPayment(){
@@ -456,17 +491,17 @@ export default {
     handleCreateOrderAndPaymentAsync:_.debounce(( vm) => {
       //防抖，防止多次提交
       let that = vm
-      that.disableCheckoutButton = true
+      that.checkoutLoading = true
       let params = that.checkoutParams
       console.log( "handleCreateOrderAndPayment", that.existedOrderId )
       if( that.existedOrderId != null){
         let payments = params.order.payments
-        let line_item_ids = that.orderItemList.map((item)=>{ return item.id })
+        let line_item_ids = that.selectedOrderItems.map((item)=>{ return item.id })
         that.CreatePayment( that.existedOrderId, { payments, line_item_ids } )
       }else{
         that.CreateOrder( params )
       }
-      that.disableCheckoutButton = false
+      that.checkoutLoading = false
     }, 250),
     handleEnablePrepaidCard(newValue){
       //重新计算各个支付方式需要支付多少
@@ -517,6 +552,16 @@ export default {
         return sum
       }, 0)
       return parseInt( total )
+    },
+    isGroupUnpaid(row,index){
+      return row.paymentState == this.LineItemGroupPaymentStateEnum.unpaid
+    },
+    groupSelectionChange( selection){
+      let ids = selection.map((item)=>{ return item.id })
+      console.log( "groupSelectionChange selection=",selection, "ids=",ids, this.orderItemList)
+      this.selectedOrderItems = this.orderItemList.filter((item)=>{ return ids.includes(item.groupId) })
+      this.formData.totalPrice = this.computedTotalPrice
+
     },
     testPrint(){
       PrintUtil.printLabel()

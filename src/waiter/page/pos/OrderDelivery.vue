@@ -26,7 +26,7 @@
 
   <div class="order-delivery-container">
     <!-- 结账组件 Start-->
-    <CheckoutDialog :order-item-list="checkoutRequiredLineItems" :totalMoney="totalMoney" :customer="currentCustomer" :dialog-visible.sync="checkoutDialogVisible" @payment-created-event="handlePaymentCreated"></CheckoutDialog>
+    <CheckoutDialog :order-item-list="checkoutRequiredLineItems" :totalMoney="totalMoney" :customer="currentCustomer"  :card="currentCard"  :dialog-visible.sync="checkoutDialogVisible" @payment-created-event="handlePaymentCreated"></CheckoutDialog>
     <!-- 结账组件 End-->
 
     <div class="customer-container clear">

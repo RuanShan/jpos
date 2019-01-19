@@ -141,18 +141,31 @@
           <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick" class="card-tabs cel-scrollable-tabs">
             <el-tab-pane v-for="(item) in cards" :key="item.code" :label="item.title" :name="item.code">
               <div class="clear ">
-                <div class="left money-wrap">
-                  <span>当前余额</span>
-                  <span>¥ {{item.amountRemaining}}</span>
+                <div class="left clear" v-if="item.style==CardStyleEnum.prepaid">
+                  <div class="left money-wrap">
+                    <span>当前余额</span>
+                    <span>¥ {{item.amountRemaining}}</span>
+                  </div>
+                  <div class="left money-wrap">
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充值金额</span>
+                    <span>¥ {{item.amount}}</span>
+                  </div>
+                  <div class="left money-wrap">
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消费金额</span>
+                    <span>¥ {{item.amountUsed}}</span>
+                  </div>
                 </div>
-                <div class="left money-wrap">
-                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充值金额</span>
-                  <span>¥ {{item.amount}}</span>
+                <div class="left clear" v-if="item.style==CardStyleEnum.times">
+                  <div class="left money-wrap">
+                    <span>剩余次数</span>
+                    <span> {{item.amountRemaining}}</span>
+                  </div>
+                  <div class="left money-wrap">
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消费次数</span>
+                    <span> {{item.amountUsed}}</span>
+                  </div>
                 </div>
-                <div class="left money-wrap">
-                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消费金额</span>
-                  <span>¥ {{item.amountUsed}}</span>
-                </div>
+
                 <div class="right edit-card-buttons">
                   <el-button-group v-show="item.id" >
                     <el-button type="success" size="mini" @click="cardEdit(item)">会员卡编辑</el-button>

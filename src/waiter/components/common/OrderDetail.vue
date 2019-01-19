@@ -35,6 +35,7 @@
         padding: 6px;
         color: #6a3906;
     }
+    .payments .empty{ text-align: center;}
   }
 </style>
 
@@ -70,7 +71,7 @@
   <div class="box">
     <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{currentOrder.number}}</i> </span> </div>
     <div class="box payments">
-      <div class="subtitle"> 支付信息
+      <div class="subtitle"> 支付信息   状态: {{currentOrder.displayPaymentState}}
         <div class="right hide"> <el-button  type="danger" size="mini"  :disabled="isRepayDisabled()" @click="openCheckoutDialog">重新支付</el-button></div>
       </div>
       <div>
@@ -87,7 +88,10 @@
             <td style="width:8em">{{payment.displayState}}</td>
             <td style="width:8em">{{payment.displayCreatedAt}}</td>
           </tr>
+
+          <tr class="empty " v-show="currentOrder.payments.length==0"> <td colspan="4"> 暂无数据 </td></tr>
         </table>
+
       </div>
     </div>
 

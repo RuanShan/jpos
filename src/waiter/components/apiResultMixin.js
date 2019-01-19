@@ -68,7 +68,7 @@ export var apiResultMixin = {
         state: orderResult.state,
         groupState: orderResult.group_state,
         paymentState: orderResult.payment_state, // 支付状态 unpaid:欠款， paid:已经支付
-        paymentTotal: orderResult.payment_total, // 一共支付了多少
+        paymentTotal: parseInt(orderResult.payment_total), // 一共支付了多少
         createdAt: moment(orderResult.created_at),
         orderType: orderResult.order_type,
         memo: orderResult.memo,
