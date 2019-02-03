@@ -232,6 +232,8 @@
                   list-type="picture-card"
                   :with-credentials="true"
                   :multiple = "true"
+                  :data="{id: group.id}"
+                  :http-request="handleDirectUpload"
                   :before-remove="handleImageRemoveConfirm"
                   :on-preview="handlePictureCardPreview"
                   :on-remove="handleImageRemoved"
@@ -258,15 +260,19 @@
 </template>
 
 <script type="text/babel">
+import { directUploadUrl } from '@/config/env'
+
 import {
   getOrder,
   findOrderByGroupNumber,
   updateLineItem,
   deleteGroupImage,
   getLineItemGroupImageUploadPath,
+  createGroupImageForDirectUpload
 }
 from '@/api/getData'
 import CelSwiper from "@/components/dialog/CelSwiper.vue";
+import { ActivestorageUploader } from '@/utils/ActivestorageUploader';
 
 export default {
   name: "OrderItem",
@@ -365,7 +371,21 @@ export default {
       })
       console.log(response, file, fileList)
     },
-
+    handleDirectUpload(option){
+      console.log( "handleDirectUpload option=", option)
+      let file = option.file
+      let id = option.data.id
+      //app.rails_direct_uploads_path
+      let url = directUploadUrl
+      let uploader = new ActivestorageUploader( file, url, option, (blob)=>{
+        // after file uploaded to aliyun, create record of group_image
+         createGroupImageForDirectUpload( id,  { image:{ attachment: blob.signed_id }} ).then((res)=>{
+           option.onSuccess( res, option.file)
+         })
+      } )
+      console.log( "uploader=", uploader)
+      uploader.upload()
+    },
     handlePictureCardPreview(file) {
       console.log("file:", file );
       let image = this.getGroupImageOfUploadedFile( file )

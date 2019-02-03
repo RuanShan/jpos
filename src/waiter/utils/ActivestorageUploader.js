@@ -17,7 +17,7 @@ class ActivestorageUploader {
       } else {
         // Add an appropriately-named hidden input to the form
         // with a value of blob.signed_id
-        this.successCallback(blob)        
+        this.successCallback(blob)
       }
     })
   }
@@ -27,8 +27,10 @@ class ActivestorageUploader {
       event => this.directUploadDidProgress(event))
   }
 
-  directUploadDidProgress(event) {
+  directUploadDidProgress(e) {
     // Use event.loaded and event.total to update the progress bar
+    let wrapEvent = Object.assign( { percentage: e.loaded/e.total}, e )
+    this.uploaderOption.onProgress( wrapEvent )
   }
 }
 
