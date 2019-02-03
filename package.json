@@ -70,6 +70,7 @@
   "dependencies": {
     "@onekiloparsec/vue-xeditable": "^0.4.1",
     "@websanova/vue-auth": "^2.21.3-beta",
+    "activestorage": "^5.2.2",
     "aws-sdk": "^2.234.1",
     "axios": "^0.16.1",
     "echarts": "^3.8.0",

@@ -276,7 +276,7 @@
                   <div class="subtitle"> 物品图片 </div>
                   <div class="box-body clear">
                     <div v-show="group.images.length==0">  </div>
-
+                    <!-- remove http-request for local file storage -->
                     <el-upload
                       :disabled="isCallerFactory"
                       :file-list="group.uploadImages"
@@ -285,6 +285,8 @@
                       list-type="picture-card"
                       :with-credentials="true"
                       :multiple = "true"
+                      :data="{id: group.id}"
+                      :http-request="handleDirectUpload"
                       :before-remove="handleImageRemoveConfirm"
                       :on-preview="handlePictureCardPreview"
                       :on-remove="handleImageRemoved"
@@ -313,11 +315,16 @@
 </template>
 
 <script>
+import { directUploadUrl } from '@/config/env'
+
+import { ActivestorageUploader } from '@/utils/ActivestorageUploader';
+
 import {
   getOrder,
   findLineItemGroups,
   evolveLineItemGroups,
   deleteGroupImage,
+  createGroupImageForDirectUpload,
   getLineItemGroupImageUploadPath,
   updateLineItem
 }
@@ -490,6 +497,7 @@ export default {
     },
     handleImageRemoved(file, fileList) {
       let image = this.getGroupImageOfUploadedFile( file )
+      console.log( "file=", file, "image=", image )
       deleteGroupImage( image.groupId, image.id ).then(()=>{
         // 删除图片从group.images
         this.orderDetail.lineItemGroups.forEach((group)=>{
@@ -501,6 +509,7 @@ export default {
       })
     },
     handleImageAdded(response, file, fileList){
+console.log( "handleImageAdded=", response, file, fileList)
       const image = this.buildGroupImage( response )
       this.orderDetail.lineItemGroups.forEach((group)=>{
         if( group.id == image.groupId){
@@ -532,6 +541,21 @@ export default {
     },
     getGroupImageOfUploadedFile( file ){
       return file.type == "GroupImage" ? file : this.uploadedFileUidGroupIdMap[file.uid]
+    },
+    handleDirectUpload(option){
+      console.log( "handleDirectUpload option=", option)
+      let file = option.file
+      let id = option.data.id
+      //app.rails_direct_uploads_path
+      let url = directUploadUrl
+      let uploader = new ActivestorageUploader( file, url, option, (blob)=>{
+        // after file uploaded to aliyun, create record of group_image
+         createGroupImageForDirectUpload( id,  { image:{ attachment: blob.signed_id }} ).then((res)=>{
+           option.onSuccess( res, option.file)
+         })
+      } )
+      console.log( "uploader=", uploader)
+      uploader.upload()
     },
     handleXeditableChanged(newValue, xeditableName) {
       console.log("newValue=" + newValue + " xeditableName=" + xeditableName)
