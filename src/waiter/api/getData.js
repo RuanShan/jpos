@@ -583,6 +583,12 @@ export const completeLineItemGroups = data => fetch('/api/v1/line_item_groups/al
 export const updateLineItem = ( id, data )=> fetch('/api/v1/line_items/'+id+'/update_extra', data, 'PUT')
 
 /**
+ * create物品图片 for aliyun oss
+ * data - {image[attachment]: blob.signed_id}
+ */
+export const createGroupImageForDirectUpload = (groupId, data) => fetch('/api/v1/line_item_groups/' + groupId+'/images', data, 'POST');
+
+/**
  * 删除物品图片
  */
 export const deleteGroupImage = (groupId, groupImageId) => fetch('/api/v1/line_item_groups/' + groupId+'/images/'+groupImageId, {}, 'DELETE');
