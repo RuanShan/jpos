@@ -424,7 +424,13 @@
                         <img :src="getProductImageUrl(goods)" width="100%" />
                       </div>
                       <div class="good-info">
-                        <span class="food-name">{{goods.name}}</span>
+                        <div v-if="goods.variants.length > 0">
+                          <span class="food-name">{{goods.name}}</span>
+                        </div>
+                        <div v-else>
+                          <el-button type="text" @click="addOrderItem(goods)"> <span class="food-name">{{goods.name}}</span> </el-button>
+                        </div>
+
                         <!-- <span class="food-price">￥&nbsp;{{goods.price}}&nbsp; 元</span> -->
                       </div>
 
@@ -434,6 +440,7 @@
                               <span>{{variant.optionValueTexts.join()}}</span>
                             </el-button>
                           </div>
+
                       </div>
                     </div>
 
@@ -688,8 +695,14 @@ export default {
         baseImgPath + "/img/noimage/product.jpg";
     },
     addOrderItem(goods, index) {
+      console.log( "addOrderItem= ", goods, index )
+
       // 增加商品
-      let vid = goods.variants[index].id
+      let variant = goods.master
+      if( index ){// 如果商品有variants
+        variant = goods.variants[index]
+      }
+      let vid = variant.id
 
       // 根据判断的值编写业务逻辑
       let newGoods = {
@@ -699,10 +712,10 @@ export default {
         productId: goods.id,
         variantId: vid,
         name: goods.name,
-        variantName: goods.variants[index].optionsText,
-        cname: goods.name + goods.variants[index].optionValueTexts.join(),
-        saleUnitPrice: Number(goods.variants[index].price), // 单价
-        price: Number(goods.variants[index].price), // 金额
+        variantName: variant.optionsText,
+        cname: goods.name + variant.optionValueTexts.join(),
+        saleUnitPrice: Number(variant.price), // 单价
+        price: Number(variant.price), // 金额
         groupPosition: this.nextGroupPosition,
         quantity: 1,
         memo: "",
@@ -898,6 +911,7 @@ export default {
         let vids = product.variants.map((v) => {
           return v.id
         })
+        vids.push( product.master.id )
         return vids.indexOf(variantId) >= 0
       })
       return product
