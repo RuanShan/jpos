@@ -29,8 +29,9 @@ class ActivestorageUploader {
 
   directUploadDidProgress(e) {
     // Use event.loaded and event.total to update the progress bar
-    let wrapEvent = Object.assign( { percentage: e.loaded/e.total}, e )
-    this.uploaderOption.onProgress( wrapEvent )
+    e.percent = e.loaded/e.total*100
+    console.log( "directUploadDidProgress= ", e)
+    this.uploaderOption.onProgress( e )
   }
 }
 
