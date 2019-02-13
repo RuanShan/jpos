@@ -2,6 +2,7 @@ import { DirectUpload } from "activestorage"
 
 class ActivestorageUploader {
   constructor(file, url, uploaderOption, successCallback, failureCallback) {
+    this.file = file
     this.directupload = new DirectUpload(file, url, this)
     this.uploaderOption = uploaderOption
     this.successCallback = successCallback
@@ -31,7 +32,7 @@ class ActivestorageUploader {
     // Use event.loaded and event.total to update the progress bar
     e.percent = e.loaded/e.total*100
     console.log( "directUploadDidProgress= ", e)
-    this.uploaderOption.onProgress( e )
+    this.uploaderOption.onProgress( e, this.file )
   }
 }
 
