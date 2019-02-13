@@ -17,9 +17,10 @@
             font-size: 16px;
         }
     }
-    .tip {
-        font-size: 12px;
-        color: red;
+    .tip {      
+      text-align: center;
+      font-size: 12px;
+      color: red;
     }
 
     .el-form {
@@ -100,6 +101,8 @@
           <el-button type="primary" @click.native="submitForm('loginForm')" class="login">登录</el-button>
         </el-form-item>
       </el-form>
+      <p class="tip"> Ver : {{version}}</p>
+
     </div>
     <div class="jpos-ver">
       <h6>汪永峰皮具养护订单系统IPAD版</h6>

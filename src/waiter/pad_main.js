@@ -64,6 +64,9 @@ router.beforeEach(function (to, from, next) {
     next();
 });
 
+import PACKAGE from '../../package.json'
+
+store.state.version = PACKAGE['version']
 /* eslint-disable no-new */
 
 /*********************************移动app插件 ****************** */
