@@ -376,7 +376,7 @@ export default {
       let file = option.file
       let id = option.data.id
       //app.rails_direct_uploads_path
-      let url = directUploadUrl
+      let url = directUploadUrl + "?token="+ this.userInfo.apiKey
       let uploader = new ActivestorageUploader( file, url, option, (blob)=>{
         // after file uploaded to aliyun, create record of group_image
          createGroupImageForDirectUpload( id,  { image:{ attachment: blob.signed_id }} ).then((res)=>{
