@@ -219,7 +219,8 @@ export var apiResultMixin = {
         position: result.position,
         viewableId: result.viewable_id,
         miniUrl: result.mini_url,
-        largeUrl: result.large_url
+        largeUrl: result.large_url,
+        originalUrl: result.original_url
       }
       image.groupId = image.viewableId
       image.url = image.largeUrl

@@ -28,7 +28,8 @@
         <div class="swiper-pagination" slot="pagination"></div>
     </swiper>
     <div slot="footer"  >
-      <el-button  @click="handleDownloadFile "  icon="el-icon-download" > 下载 </el-button>
+      <el-button  @click="handleWebDownloadFile"  icon="el-icon-download" v-show="isWeb"> 网页下载原图 </el-button>
+      <el-button  @click="handleDownloadFile"  icon="el-icon-download" v-show="!isWeb" > 下载原图 </el-button>
 
     </div>
 
@@ -74,7 +75,7 @@ export default {
       let image = this.carouselImages[this.swiper.activeIndex]
       console.log( " handleDownloadFile activeIndex", this.swiper, image)
       if( image  ){
-        DownloadUtil.downloadFile( { url: image.url, downloadDone: ( {savedPath} )=>{
+        DownloadUtil.downloadFile( { url: image.originalUrl, downloadDone: ( {savedPath} )=>{
             this.$message({
                 dangerouslyUseHTMLString: true,
                 message: `图片下载成功！<p>保存路径： ${savedPath}</p>`,
@@ -83,11 +84,28 @@ export default {
          } })
       }
     },
+    handleWebDownloadFile(){
+      let image = this.carouselImages[this.swiper.activeIndex]
+      if( image  ){
+        console.log( "handleWebDownloadFile image", image)
+        var a = document.createElement('a')
+        var event = new MouseEvent('click')
+
+        a.download = '图片'
+        a.href = image.originalUrl
+        a.target="_blank"
+        a.dispatchEvent(event)
+
+      }
+    },
     handleMaximizeDialog(){
       this.fullscreen = true
     },
     handleNormalSizeDialog(){
       this.fullscreen = false
+    },
+    isWeb(){
+      return !!window._jpos.isweb
     }
   }
 }
