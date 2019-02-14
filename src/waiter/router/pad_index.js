@@ -8,6 +8,7 @@ const homePage = r => require.ensure([], () => r(require('@/pad/home')), 'home')
 const ordersPage = r => require.ensure([], () => r(require('@/pad/orders/orders')), 'orders')
 const orderDetailPage = r => require.ensure([], () => r(require('@/pad/orders/detail')), 'orderDetail')
 const profilePage = r => require.ensure([], () => r(require('@/pad/profile')), 'profile')
+const orderDeliveryPage = r => require.ensure([], () => r(require('@/pad/OrderDelivery')), 'orderDelivery')
 
 
 const routes = [{
@@ -29,6 +30,11 @@ const routes = [{
           name: 'orderDetail',
           component: orderDetailPage,
           meta: [],
+    }, {
+        path: '/orderDelivery',
+        name: 'orderDelivery',
+        component: orderDeliveryPage,
+        meta: [],
     }, {
         path: '/profile',
         component: profilePage,

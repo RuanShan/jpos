@@ -45,6 +45,8 @@
           {{userInfo.name}}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="orders">新订单</el-dropdown-item>
+          <el-dropdown-item command="orderDelivery">取订单</el-dropdown-item>
           <el-dropdown-item command="singout">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -64,7 +66,11 @@ export default {
   methods: {
     async handleCommand (command) {
       if (command == 'home') {
-        this.$router.push('/manage')
+        this.$router.push('home')
+      } else if (command == 'orders') {
+        this.$router.push('orders')
+      } else if (command == 'orderDelivery') {
+        this.$router.push('orderDelivery')
       } else if (command == 'singout') {
         const res = await signout()
         if (res.id == null) {
