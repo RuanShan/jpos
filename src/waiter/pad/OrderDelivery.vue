@@ -95,8 +95,7 @@
 
   <div class="order-delivery-container">
     <head-top></head-top>
-
-
+    <CelSwiper :carousel-images="carouselImages" :dialog-visible.sync="imageDialogVisible" :enable-download="false"> </CelSwiper>
     <!-- 结账组件 Start-->
     <CheckoutDialog :order-item-list="checkoutRequiredLineItems" :totalMoney="totalMoney" :customer="currentCustomer"  :card="currentCard"  :dialog-visible.sync="checkoutDialogVisible" @payment-created-event="handlePaymentCreated"></CheckoutDialog>
     <!-- 结账组件 End-->
@@ -147,7 +146,7 @@
           <el-table-column label="物品条码" width="120" align="center">
             <template slot-scope="scope">
               <div class="image-wrap">
-                <img :src="scope.row.imageUrl" alt="">
+                <img :src="scope.row.imageUrl" alt="" @click="handleGroupImageClick(scope.row)" >
               </div>
               <div class="group-number">{{scope.row.number}} </div>
             </template>
@@ -195,6 +194,7 @@ import {
 } from '@/components/mixin/DialogMixin'
 import FooterBar from '@/components/mobile/layout/FooterBar'
 import HeadTop from '@/components/mobile/layout/HeadTop'
+import CelSwiper from "@/components/dialog/CelSwiper.vue";
 
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
 
@@ -204,6 +204,7 @@ export default {
     'head-top': HeadTop,
     'footer-bar': FooterBar,
     CheckoutDialog,
+    CelSwiper
   },
   data() {
     return {
@@ -222,7 +223,9 @@ export default {
       currentCard: null,
       currentRow:null,
       checkoutDialogVisible: false,
-      imageDialogVisible: false
+      imageDialogVisible: false,
+      carouselImages: []//图片文件列表
+
     }
   },
   created: function(){
@@ -443,6 +446,16 @@ export default {
           message: '抱歉，物品无法交付客户，请确认物品状态为“待交付”！',
           type: 'error'
         });
+      }
+    },
+    handleGroupImageClick(group){
+      //
+      let images = group.images
+      console.log("group image clicked..", group)
+      this.carouselImages = images
+      //this.dialogImageUrl = file.originalUrl;
+      if( images.length > 0 ){
+        this.imageDialogVisible = true
       }
     },
     completeOrders(){

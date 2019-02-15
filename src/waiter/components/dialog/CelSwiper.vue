@@ -27,7 +27,7 @@
         </div>
         <div class="swiper-pagination" slot="pagination"></div>
     </swiper>
-    <div slot="footer"  >
+    <div slot="footer" v-show="enableDownload" >
       <el-button  @click="handleWebDownloadFile"  icon="el-icon-download" v-show="isWeb"> 网页下载原图 </el-button>
       <el-button  @click="handleDownloadFile"  icon="el-icon-download" v-show="!isWeb" > 下载原图 </el-button>
 
@@ -48,9 +48,11 @@ import {
 
 export default {
   mixins: [DialogMixin],
-
-  props: ['dialogVisible','carouselImages'],
-
+  props: {
+    dialogVisible: { type: Boolean },
+    carouselImages:{ type: Array, default: []},
+    enableDownload:{ type: Boolean, default: true }
+  },
   data() {
     return {
       fullscreen: true,
