@@ -50,7 +50,7 @@
       <div class="search-result clear">
         <div >
           <table style="width:100%">
-            <tr><th>客户类型</th><td>{{currentCustomer.customerType}}</td><th>移动电话</th><td>{{currentCustomer.mobile}}</td>
+            <tr><th>客户</th><td>{{currentCustomer.userName}}<span > [{{currentCustomer.customerType}}]</span></td><th>移动电话</th><td>{{currentCustomer.mobile}}</td>
               <th>消费金额</th>
               <td> <span v-show="currentCustomer.normalOrderTotal">¥</span> {{currentCustomer.normalOrderTotal}}</td>
             </tr>

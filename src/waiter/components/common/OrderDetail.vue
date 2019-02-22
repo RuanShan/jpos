@@ -41,7 +41,9 @@
 
 <template>
 <div class="order-detail-wrap" v-if="currentOrder">
-  <CheckoutDialog :order-item-list="currentOrder.lineItems" :customer="currentCustomer" :card="currentCard" :dialog-visible.sync="checkoutDialogVisible"
+  <CheckoutDialog :order-item-list="currentOrder.lineItems" :customer="currentCustomer"
+   :card="currentCard" :is-repay="true"
+   :dialog-visible.sync="checkoutDialogVisible"
    @payment-created-event="handlePaymentCreated" > </CheckoutDialog>
 
 
@@ -72,7 +74,9 @@
     <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{currentOrder.number}}</i> </span> </div>
     <div class="box payments">
       <div class="subtitle"> 支付信息   状态: {{currentOrder.displayPaymentState}}
-        <div class="right hide"> <el-button  type="danger" size="mini"  :disabled="isRepayDisabled()" @click="openCheckoutDialog">重新支付</el-button></div>
+        <div class="right">
+          <el-button  type="danger" size="mini"  @click="openCheckoutDialog">重新支付</el-button>
+        </div>
       </div>
       <div>
         <table border="1" cellspacing="0" style="width: 100%">

@@ -109,7 +109,7 @@
         </el-form-item>
 
         <el-form-item label="应收金额" prop="totalPrice">
-          <el-input v-model.number="formData.totalPrice"  class="money align-right"> </el-input>
+          <el-input v-model.number="formData.totalPrice" readonly class="money align-right"> </el-input>
         </el-form-item>
         <el-form-item label="会员充值卡支付" v-if="currentPrepaidCard"  prop="prepaidCardAmount">
           <el-input v-model="formData.prepaidCardAmount" placeholder="" class="payment-card money align-right"  :disabled="!formData.enablePrepaidCard">
@@ -169,7 +169,7 @@
 <script>
 import _ from "lodash"
 
-import { checkout, addPayments, validateCardPassword } from "@/api/getData"
+import { checkout, addPayments, repay, validateCardPassword } from "@/api/getData"
 import {
   PrintUtil
 } from '@/utils/ipcService'
@@ -182,6 +182,7 @@ import {
 export default {
   props: {
     dialogVisible: Boolean,
+    isRepay: { type: Boolean, default: false },
     orderItemList: { type: Array, default: []},
     totalMoney: [String,Number],
     customer: Object,
@@ -189,6 +190,22 @@ export default {
   },
   components: {  },
   data() {
+    var checkPrepaidCardAmount = (rule, value, callback) => {
+      if( this.formData.enablePrepaidCard ){
+        if (value> this.currentCard.amountRemaining) {
+          return callback(new Error('支付金额超过会员卡余额'));
+        }
+      }
+      callback()
+    }
+    var checkTimesCardAmount = (rule, value, callback) => {
+      if( this.formData.enableTimesCard ){
+        if (value> this.currentCard.cardTimesRemaining) {
+          return callback(new Error('支付次数超过次数卡余额'));
+        }
+      }
+      callback()
+    }
     return {
       //微信,支付宝
       //支付方式
@@ -212,7 +229,9 @@ export default {
         totalPrice: [{ required: true, type: 'number', trigger: 'change', message: '请输入应收金额' }],
         paymentAmount:[
           { required: true, type: 'number', trigger: 'change' }
-        ]
+        ],
+        prepaidCardAmount:[{validator: checkPrepaidCardAmount, trigger: 'blur'}],
+        timesCardAmount:[{validator: checkTimesCardAmount, trigger: 'blur'}]
       },
       checkoutLoading: false,
       //payments: [], //支付被方式选择数字,返回已经被选择的lable,如""现金","微信"等
@@ -245,8 +264,8 @@ export default {
     },
     currentPrepaidCard: function(){
       let card = this.currentCard
-      // 充值卡 && 可用状态 && 余额>0
-      if( card.style == this.CardStyleEnum.prepaid && card.state == this.CardStateEnum.enabled && card.amountRemaining > 0 ){
+      // 充值卡 && 可用状态 && !余额>0
+      if( card.style == this.CardStyleEnum.prepaid && card.state == this.CardStateEnum.enabled ){
         return card
       }else{
         return null
@@ -346,6 +365,7 @@ export default {
   },
   methods: {
     handleDialogOpened(){
+      // by default selectedOrderItems is  this.orderItemList,
       // user could dicard some lineitem before checkout on post pay situation
       this.selectedOrderItems = Array.from( this.orderItemList )
       console.log( "handleDialogOpened-orderItemList = ", this.orderItemList, this.selectedOrderItem, "existedOrderId=", this.existedOrderId)
@@ -403,7 +423,7 @@ export default {
     },
 
     //创建订单
-    CreateOrder( params ) {
+    createOrder( params ) {
       console.log( " CreateOrder params=", params )
         checkout( params ).then((res)=>{
           if( res.id> 0){
@@ -438,7 +458,7 @@ export default {
         })
     },
     //创建支付，客户领取物品时付款
-    CreatePayment( orderId, params ) {
+    createPayment( orderId, params ) {
       // params = { payments, line_item_ids}
         addPayments( orderId, params ).then((res)=>{
           if( res.id){
@@ -459,18 +479,42 @@ export default {
             });
           }
         })
+    },
+    //创建支付，客户领取物品时付款
+    recreatePayment( orderId, params ) {
+      // params = { payments, line_item_ids}
+        repay( orderId, params ).then((res)=>{
+          if( res.id){
+            //发送支付创建时间
+            let order = this.buildOrder( res )
 
+            this.$emit('payment-created-event',  order )
+            this.$emit('update:dialogVisible', false)
+            this.$message({
+              type: 'success',
+              message: "恭喜你，订单支付成功"
+            });
+
+          }else{
+            this.$message({
+              title: "订单支付失败",
+              message: res.error
+            });
+          }
+        })
     },
     handleCreateOrderAndPayment(){
       //250毫秒以后才可以调用，以防鼠标多次点击
       if( this.isPasswordRequired){
         this.promptPassword()
       }else{
+        console.log( "formData.validate0")
         this.$refs.formData.validate((valid) => {
+          console.log( "formData.validate1")
           if (valid) {
             this.handleCreateOrderAndPaymentAsync(this)
           } else {
-            console.log('error submit!!');
+            console.log('error submit!!', valid);
             return false;
           }
         });
@@ -486,7 +530,7 @@ export default {
       }
       let params = this.checkoutParams
       params.order.payments = null
-      this.CreateOrder( params )
+      this.createOrder( params )
     },
     handleCreateOrderAndPaymentAsync:_.debounce(( vm) => {
       //防抖，防止多次提交
@@ -497,9 +541,14 @@ export default {
       if( that.existedOrderId != null){
         let payments = params.order.payments
         let line_item_ids = that.selectedOrderItems.map((item)=>{ return item.id })
-        that.CreatePayment( that.existedOrderId, { payments, line_item_ids } )
+        if( that.isRepay ){
+          that.recreatePayment( that.existedOrderId, { payments, line_item_ids } )
+
+        }else{
+          that.createPayment( that.existedOrderId, { payments, line_item_ids } )
+        }
       }else{
-        that.CreateOrder( params )
+        that.createOrder( params )
       }
       that.checkoutLoading = false
     }, 250),

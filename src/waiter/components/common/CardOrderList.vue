@@ -124,6 +124,10 @@ export default {
         console.log( "findOrders ", queryParams, orders)
         this.totalCount = result.total_count; //得到当前共计多少页
         this.orderList = orders
+
+        if( this.currentOrder ){
+          this.currentOrder = this.orderList.find( ( order)=>{ return order.id == this.currentOrder.id } )
+        }
       });
     },
     buildParams(){

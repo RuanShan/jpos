@@ -111,7 +111,7 @@
           <table class="member-table table">
             <tr>
               <th> 会员姓名 </th>
-              <td> {{customerData.userName}} </td>
+              <td> {{customerData.userName}} <span v-show="customerData.cards.length==0"> [{{customerData.customerType}}] </span></td>
               <th> 会员电话 </th>
               <td> {{customerData.mobile}}</td>
               <th> 会员性别</th>

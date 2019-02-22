@@ -94,6 +94,9 @@
                 <el-table-column prop="storeName" label="注册门店">
                 </el-table-column>
                 <el-table-column prop="userName" label="会员姓名">
+                  <template slot-scope="scope">
+                    {{scope.row.userName}}  <span v-show="scope.row.cards.length==0"> [{{scope.row.customerType}}] </span>
+                  </template>
                 </el-table-column>
                 <el-table-column prop="mobile" label="电话" width="125">
                 </el-table-column>
@@ -111,11 +114,11 @@
                 </el-table-column>
                 <el-table-column prop="displayCreatedDate" label="注册日期" width="120" align="center">
                 </el-table-column>
-                <el-table-column label="操作" width="160">
+                <el-table-column label="操作" width="160" align="center">
                   <template slot-scope="scope">
                       <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-                      <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                    </template>
+                      <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" v-show="userAuthorize('deleteCustomer')">删除</el-button>
+                  </template>
                 </el-table-column>
               </el-table>
             </div>

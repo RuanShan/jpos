@@ -70,6 +70,7 @@ export var orderDataMixin = {
     userAuthorize( permission ){
       let userRole = this.userInfo.roleNames[0]
       if( userRole == 'admin'){
+        // delete_customer
         return true
       }else{
         if( userRole == 'waiter'){

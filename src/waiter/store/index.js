@@ -24,7 +24,8 @@ const state = {
   stores: null, // 设置为空数组,列表显示时不会
   prepaidPaymentMethodId: 1,
   printData:{}, // { orders:[] }
-  userEntries: [] //用户的打卡信息，有打卡信息，才能处理业务
+  userEntries: [], //用户的打卡信息，有打卡信息，才能处理业务
+  loading: false // fetch or ajax
 }
 
 const getters = {
