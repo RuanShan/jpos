@@ -1,7 +1,12 @@
 <style lang="scss" >
+.cel-swiper-dialog{
+  .el-icon-close{
+    font-size: 1.5em;
+  }
+}
 .cel-swiper{
   .swiper-slide {
-    height: 50vh;
+    height: 70vh;
     text-align: center;
     background-size: contain;
     background-position: center;
@@ -15,7 +20,7 @@
 }
 </style>
 <template>
-  <el-dialog :fullscreen="fullscreen" :visible="computedVisible" @opened="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog"  >
+  <el-dialog :fullscreen="fullscreen" :visible="computedVisible" @opened="handleDialogOpen" append-to-body :show-close="false" class="cel-dialog cel-swiper-dialog"  >
     <div slot="title" class="title-wrap">
       <div class="right back">
 
