@@ -75,6 +75,7 @@
     <div class="box payments">
       <div class="subtitle"> 支付信息   状态: {{currentOrder.displayPaymentState}}
         <div class="right">
+          <el-button  type="danger" size="mini"  @click="openCheckoutDialogWithTimesCard" v-show="currentCustomer.timesCard">次卡({{currentCustomer.timesCard.code}})重新支付</el-button>
           <el-button  type="danger" size="mini"  @click="openCheckoutDialog">重新支付</el-button>
         </div>
       </div>
@@ -144,7 +145,8 @@ import CheckoutDialog from "@/components/CheckoutDialog.vue"
 export default {
   data() {
     return {
-      checkoutDialogVisible: false
+      checkoutDialogVisible: false,
+      currentCard: null
     }
   },
   props: ['customerData','orderData'], // customerData is newest, card could be updated, ex. disabled
@@ -155,9 +157,6 @@ export default {
     },
     currentCustomer(){
       return this.customerData
-    },
-    currentCard(){
-      return this.customerData.card
     }
   },
   methods:{
@@ -173,7 +172,12 @@ export default {
     // 客户搜索事件处理
     openCheckoutDialog() {
       console.log("openCheckoutDialog")
+      this.currentCard = this.customerData.card
 
+      this.checkoutDialogVisible = true
+    },
+    openCheckoutDialogWithTimesCard(){
+      this.currentCard = this.customerData.timesCard
       this.checkoutDialogVisible = true
     },
     handlePaymentCreated(newOrder) {

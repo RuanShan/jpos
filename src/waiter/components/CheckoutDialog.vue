@@ -248,12 +248,12 @@ export default {
     },
     // 订单总价
     computedTotalPrice: function() {
+      let discount = 1
+      if( this.currentPrepaidCard  && this.formData.enablePrepaidCard ){
+        discount = this.currentPrepaidCard.discountPercent /100
+      }
       let t = this.selectedOrderItems.reduce((total, item)=>{
-        if( this.currentPrepaidCard  && this.formData.enablePrepaidCard ){
-          total+= ( item.saleUnitPrice * item.quantity * this.currentPrepaidCard.discountPercent /100 )
-        }else{
-          total+= ( item.saleUnitPrice * item.quantity   )
-        }
+        total+= ( item.saleUnitPrice * item.quantity *  discount )
         return total
       }, 0)
       return parseInt(t)
@@ -419,7 +419,7 @@ export default {
         this.formData.paymentAmount = 0
       }
 
-      console.log( "handleDialogOpened customer=",this.customer, this.paymentMethodList,this.activePaymentMethods )
+      console.log( "handleDialogOpened customer=",this.customer, this.paymentMethodList, this.activePaymentMethods )
     },
 
     //创建订单
@@ -554,6 +554,9 @@ export default {
     }, 250),
     handleEnablePrepaidCard(newValue){
       //重新计算各个支付方式需要支付多少
+      console.log( "handleEnablePrepaidCard=", newValue, this.computedTotalPrice)
+      this.formData.totalPrice = this.computedTotalPrice
+
       this.computePaymentAmount()
     },
     promptPassword(){
