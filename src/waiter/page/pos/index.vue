@@ -699,7 +699,7 @@ export default {
 
       // 增加商品
       let variant = goods.master
-      if( index ){// 如果商品有variants
+      if( typeof(index) === 'number' ){// 如果商品有variants
         variant = goods.variants[index]
       }
       let vid = variant.id

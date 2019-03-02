@@ -1,6 +1,6 @@
 {
   "name": "jpos",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "author": "RuanShan <david@getstore.cn>",
   "description": "汪永峰皮具养护中心订单管理系统",
   "license": null,
@@ -82,6 +82,7 @@
     "escpos": "^2.4.9",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "highcharts": "^6.0.2",
+    "iconv": "^2.3.2",
     "iconv-lite": "^0.4.23",
     "isomorphic-fetch": "^2.2.1",
     "jsbarcode": "^3.9.0",
