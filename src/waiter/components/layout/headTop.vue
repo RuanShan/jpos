@@ -85,7 +85,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <!-- <el-dropdown-item command="home">我的</el-dropdown-item> -->
-            <el-dropdown-item command="singout">退出</el-dropdown-item>
+            <el-dropdown-item command="signout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -97,7 +97,7 @@
 
 <script>
 import _ from "lodash"
-
+import { Loading } from 'element-ui';
 import {signout, findUserEntries} from '@/api/getData'
 import {baseImgPath} from '@/config/env'
 
@@ -147,7 +147,7 @@ export default {
     async handleCommand (command) {
       if (command == 'home') {
         this.$router.push('/manage')
-      } else if (command == 'singout') {
+      } else if (command == 'signout') {
         const res = await signout()
         if (res.id == null) {
           this.$message({
@@ -176,6 +176,15 @@ export default {
       console.log( "emit user-entry-created-gevent")
       this.$store.commit( 'saveUserEntries', this.localUserEntries )
       this.$bus.$emit('user-entry-created-gevent', this.localUserEntries)
+      // 如果是下班打卡， 定时6秒退出系统
+      if( newEntry.state == this.UserEntryStateEnum.clockout){
+        let loadingInstance = Loading.service({ fullscreen: true, text: '系统退出中...' })
+        setTimeout( ()=> {
+          this.handleCommand('signout').then(()=>{
+            loadingInstance.close();
+          })
+        }, 3000);
+      }
     }
   }
 }

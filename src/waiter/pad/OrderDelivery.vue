@@ -87,6 +87,33 @@
           }
       }
   }
+
+  .algolia-autocomplete {
+    width: 100%;
+  }
+  .algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+    width: 100%;
+  }
+  .algolia-autocomplete .aa-hint {
+    color: #999;
+  }
+  .algolia-autocomplete .aa-dropdown-menu {
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #999;
+    border-top: none;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+    cursor: pointer;
+    padding: 5px 4px;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+    background-color: #B2D7FF;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+    font-weight: bold;
+    font-style: normal;
+  }
 }
 </style>
 
@@ -103,18 +130,24 @@
       <div class="customer-container clear">
         <el-form ref="customerForm"    :inline="true" class="search-form">
           <el-form-item label="客户搜索">
-            <el-select v-model="customerComboId" :remote-method="searchCustomers" :default-first-option="true"
-            placeholder="请输入手机号/姓名/会员卡号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
-              <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
+
+            <el-autocomplete ref="customerSelect" v-model="customerComboId" :fetch-suggestions="searchCustomers" :default-first-option="true"
+            placeholder="请输入手机号/姓名/会员卡号"
+            filterable remote clearable @select="handleCustomerChanged" @clear="handleCustomerChanged">
+              <template slot-scope="{ item }">
+                {{ item.label }}
+              </template>
+
+            </el-autocomplete>
           </el-form-item>
 
           <el-form-item label="订单搜索">
-            <el-select v-model="orderComboId" :remote-method="searchOrders" placeholder="请输入订单/物品号" filterable remote clearable @change="handleOrderChanged" @clear="handleOrderChanged">
-              <el-option v-for="item in computedOrderOptions" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
+            <el-autocomplete  v-model="orderComboId" :fetch-suggestions="searchOrders" placeholder="请输入订单/物品号" filterable remote clearable
+            @select="handleOrderChanged" @clear="handleOrderChanged">
+              <template slot-scope="{ item }">
+                {{ item.label }}
+              </template>
+           </el-autocomplete>
           </el-form-item>
 
         </el-form>
@@ -186,6 +219,8 @@
 
 <script>
 import _ from "lodash"
+import AutoComplete  from 'autocomplete-js'
+
 import {
   findCustomers, findOrders, completeLineItemGroups
 } from "@/api/getData"
@@ -224,13 +259,22 @@ export default {
       currentRow:null,
       checkoutDialogVisible: false,
       imageDialogVisible: false,
-      carouselImages: []//图片文件列表
-
+      carouselImages: [],//图片文件列表
+      search: null
     }
   },
   created: function(){
     this.currentCustomer = this.defaultCustomer
     this.currentCard = {}
+    // initialize autocomplete
+    console.log( " before initialize autocomplete")
+    AutoComplete({
+            EmptyMessage: "No item found",
+        }, "#search-customer");
+    console.log( " after initialize autocomplete", this.search)
+  },
+  mounted(){
+    console.log( " customerSelect", this.$refs.customerSelect )
   },
   computed:{
     selectedCustomerId: function(){
@@ -321,8 +365,20 @@ export default {
   methods:{
     //根据关键字查找客户
     //从SerVer上获取模糊搜索的用户数据,异步获取
-    searchCustomers(keyword) {
-      this.searchCustomersAsync(keyword, this);
+    searchCustomers(keyword, cb) {
+      //this.searchCustomersAsync(keyword, this);
+      // 11位为电话号码
+      // 5位为会员卡号
+      // YFOxxxx 为订单号
+      // YFIxxxx 为物品号 17
+      if( keyword.length<3){
+        return cb([])
+      }
+      let q = { mobile_or_username_or_cards_code_cont: keyword }
+      findCustomers({ q }).then((customersResult) => {
+        this.customerList = this.buildCustomers(customersResult)
+        cb(this.computedCustomerOptions)
+      })
     },
     //远程搜索输入框函数-----提示功能
     searchCustomersAsync: _.debounce((keyword, vm) => {
@@ -335,8 +391,16 @@ export default {
         vm.customerList = vm.buildCustomers(customersResult)
       })
     }, 450),
-    searchOrders(keyword) {
-      this.searchOrdersAsync(keyword, this);
+    searchOrders(keyword, cb ) {
+      //this.searchOrdersAsync(keyword, this);
+      if( keyword.length<4){
+        return cb([])
+      }
+      let q = { line_item_groups_number_or_number_cont: keyword }
+      findOrders({ q }).then((ordersResult) => {
+        this.orderList = this.buildOrders(ordersResult)
+        cb(this.computedOrderOptions)
+      })
     },
     //远程搜索输入框函数-----提示功能
     searchOrdersAsync: _.debounce((keyword, vm) => {

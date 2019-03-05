@@ -489,7 +489,7 @@
       </el-col>
     </el-row>
   </div>
-  <div class="pos-cover" v-show="(!isUserEntryExist)&&(storeId>0)"> <span class="msg"> 请先打卡，再处理业务！</span> </div>
+  <div class="pos-cover" v-show="(!isCurrentUserClockIn)&&(storeId>0)"> <span class="msg"> 请先打卡，再处理业务！</span> </div>
   <CelSwiper :carousel-images="carouselImages" :dialog-visible.sync="carouselDialogVisible"> </CelSwiper>
 </div>
 </template>
@@ -653,11 +653,27 @@ export default {
     },
     isUserEntryExist(){
       //以便检验用户是否打卡，是否可以下单
+      console.log( "this.userEntries=", this.userEntries)
       let entry = this.userEntries.find((entry)=>{ return entry.state=='clockin' })
       return entry != null
     },
     isCustomerFromOtherStore(){
       return this.currentCustomer && this.currentCustomer.storeId && this.currentCustomer.storeId!=this.storeId
+    },
+    isCurrentUserClockIn(){
+      //以便检验用户是否打卡，是否可以下单
+      let userid = this.userInfo.id
+      // 升序排列
+      console.log( "this.userEntries=", this.userEntries)
+      let orderedEntries = this.userEntries.filter((entry) => {
+        return entry.userId == userid
+      }).sort((a, b) => {
+        return a.createdAt - b.createdAt
+      })
+      // 如果最后一个存在，并且是clock_in, 即说明当前用户打卡。
+      console.log( "this.userEntries=", this.userEntries, " orderedEntries=", orderedEntries)
+      let entry = orderedEntries.pop()
+      return entry != null && entry.state == this.UserEntryStateEnum.clockin
     }
   },
   created() {

@@ -102,6 +102,7 @@ export var orderDataMixin = {
     isLocationFactory(){
       return /Factory/.test(this.storeInfo.type)
     }
+
   }
 
 }
