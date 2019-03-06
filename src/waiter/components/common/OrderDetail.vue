@@ -75,7 +75,7 @@
     <div class="box payments">
       <div class="subtitle"> 支付信息   状态: {{currentOrder.displayPaymentState}}
         <div class="right">
-          <el-button  type="danger" size="mini"  @click="openCheckoutDialogWithTimesCard" v-show="currentCustomer.timesCard">次卡({{currentCustomer.timesCard.code}})重新支付</el-button>
+          <el-button  type="danger" size="mini"  @click="openCheckoutDialogWithTimesCard" v-if="currentCustomer.timesCard">次卡({{currentCustomer.timesCard.code}})重新支付</el-button>
           <el-button  type="danger" size="mini"  @click="openCheckoutDialog">重新支付</el-button>
         </div>
       </div>

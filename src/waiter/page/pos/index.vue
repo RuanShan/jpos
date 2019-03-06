@@ -568,6 +568,7 @@ export default {
     CelSwiper
   },
   computed: {
+    // 会员搜搜选择的客户ID
     customerId () {
       console.log(" this.customerComboId=", this.customerComboId)
       return (this.customerComboId ? this.customerComboId.split('_')[0] : null)
@@ -628,9 +629,6 @@ export default {
         return total += ( item.saleUnitPrice * item.quantity )
       }, 0)
       return Number(t).toFixed(2)
-    },
-    addNewCardButtonAvailable () {
-      return this.currentCustomer.id && this.currentCustomer.cards.length == 0
     },
     maxGroupPosition () {
       // 返回 0 或 >0
@@ -821,7 +819,7 @@ export default {
         return
       }
       //检查是否选择了人
-      if( this.customerId == null){
+      if( this.currentCustomer.id == null){
         this.$message({
           message: "请先选择顾客再结账！",
           type: "error"

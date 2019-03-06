@@ -180,7 +180,9 @@ export default {
         cardRequired: false,
         storeId: null
       },
-      customerData: {}
+      customerData: {
+        cards: [] // 修正memberCenterNew内部引用 customerData.cards.length 的错误
+      }
     };
   },
   created: function(){
