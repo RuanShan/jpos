@@ -219,7 +219,6 @@
 
 <script>
 import _ from "lodash"
-import AutoComplete  from 'autocomplete-js'
 
 import {
   findCustomers, findOrders, completeLineItemGroups
@@ -266,12 +265,7 @@ export default {
   created: function(){
     this.currentCustomer = this.defaultCustomer
     this.currentCard = {}
-    // initialize autocomplete
-    console.log( " before initialize autocomplete")
-    AutoComplete({
-            EmptyMessage: "No item found",
-        }, "#search-customer");
-    console.log( " after initialize autocomplete", this.search)
+    
   },
   mounted(){
     console.log( " customerSelect", this.$refs.customerSelect )
