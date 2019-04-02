@@ -257,6 +257,7 @@ export default {
       if (this.activePaymentMethods.length > 0) {
         this.cardFormData.paymentMethodId = this.activePaymentMethods[0].id
       }
+      // 按照类型排序，按照名称排序
       this.cardTypeList = await this.getCardTypes()
 
       if (this.cardTypeList.length > 0) {

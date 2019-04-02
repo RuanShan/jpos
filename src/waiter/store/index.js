@@ -101,11 +101,24 @@ const actions = {
     }
     const result = await getCardTypes()
     const list = []
+    let types = []
+    let orderdlist = []
     result.products.forEach((obj)=>{
       // master 是 variant, 购买会员卡时，需要使用variant.id
-      list.push({ id: obj.master.id, masterId: obj.master.id, productId: obj.id, name:obj.name, price: obj.price, type: obj.type  })
+      list.push({ id: obj.master.id, masterId: obj.master.id, productId: obj.id, name:obj.name, price: parseInt(obj.price), type: obj.type  })
+      if( types.indexOf( obj.type)<0 ){
+        types.push( obj.type)
+      }
     })
-    store.commit('saveMemberCardTypes', list)
+    // 基于类型排序，基于价格排序
+    types.forEach(( t)=>{
+      let ordered = list.filter((obj)=> { return obj.type == t }).sort((a,b)=>{ return a.price-b.price})
+      console.log( "ordered= ", ordered)
+      orderdlist = orderdlist.concat( ordered )
+    })
+    console.log( "getCardTypes=", orderdlist, "types=", types, "list=", list )
+    // 按照类型 和价格排序
+    store.commit('saveMemberCardTypes', orderdlist)
     return store.state.cardTypes
   },
   async getStores( store ){
