@@ -157,16 +157,23 @@ export default {
     },
     currentCustomer(){
       return this.customerData
+    },
+    isOrderEditable(){
+      // since customer could make order in every store.
+      // here user should edit order belongs to current store only,
+      return this.currentOrder !=null && this.currentOrder.storeId == this.storeId
     }
   },
   methods:{
 
     isRepayDisabled(){
-      //isReworkDisabled(scope.row.state)
-      return !( this.currentOrder.paymentState == this.OrderPaymentStateEnum.paid  )
+      console.log( "isRepayDisabled= ", this.isOrderEditable)
+      if( !this.isOrderEditable ) return true
+      return !( this.currentOrder.paymentState == this.OrderPaymentStateEnum.paid )
     },
     isReworkDisabled(state){
-      //isReworkDisabled(scope.row.state)
+      console.log( "isReworkDisabled= ", this.isOrderEditable)
+      if( !this.isOrderEditable ) return true
       return !( state == this.LineItemGroupStateEnum.ready || state == this.LineItemGroupStateEnum.shipped )
     },
     // 客户搜索事件处理
