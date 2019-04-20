@@ -7,7 +7,7 @@ export var CelUIMixin = {
     cancelOrderConfirm( cb ) {
 
       let validateReturnedMemo = (val)=>{
-        return val && val.length >=2
+        return val!=null && val.length >=2
       }
       this.$prompt('请输入取消的理由', '此操作将取消订单', {
         confirmButtonText: '确定',
@@ -17,7 +17,10 @@ export var CelUIMixin = {
       }).then(({ value }) => {
         console.log( "取消理由", value)
         cb({memo: value})
+      }).catch(() => {
+        console.log( "取消输入" )
       })
+
     },
     actionConfirm( msg, cb ) {
       this.$confirm(msg, '操作确认', {

@@ -146,6 +146,13 @@ export default {
 
       return   depositOrder.state== this.OrderStateEnum.cart && this.cardData.amountRemaining >= depositOrder.total
     }
+  },
+  watch:{
+    customerData:{
+      handler:function(val,oldval){
+          this.initData()
+      }
+    }
   }
 };
 </script>

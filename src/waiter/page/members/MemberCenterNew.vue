@@ -255,8 +255,8 @@ import {
 } from "@/api/getData";
 import CardForm from "@/components/common/CardForm.vue";
 import CardTransfer from "@/components/common/CardTransfer.vue";
-import CardOrderList from "@/components/common/CardOrderList.vue";
-import CardDepositList from "@/components/common/CardDepositList.vue";
+import CardDepositList from "./components/CardDepositList.vue";
+import CardOrderList from "./components/CardOrderList.vue";
 import MemberCardRecharge from "./MemberCardRecharge.vue";
 import MemberExpenseCalendar from "./MemberExpenseCalendar.vue";
 import MemberRechargeRecord from "./MemberRechargeRecord.vue";

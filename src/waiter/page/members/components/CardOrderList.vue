@@ -183,6 +183,13 @@ export default {
           })
         })
     }
+  },
+  watch:{
+    customerData:{
+      handler:function(val,oldval){
+          this.initData()
+      }
+    }
   }
 };
 </script>
