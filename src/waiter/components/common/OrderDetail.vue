@@ -193,7 +193,7 @@ export default {
     handleRework(groupNumber){
       console.log( "handleRework(groupNumber)=", groupNumber)
       let validateReturnedMemo = (val)=>{
-        return val && val.length >=2
+        return val!=null && val.length >=2
       }
       this.$prompt('请输入返工理由', '提示', {
         confirmButtonText: '确定',
