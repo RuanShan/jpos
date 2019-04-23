@@ -15,6 +15,9 @@
         width: 100%;
         padding: 0;
     }
+    .editable-suffix{
+
+    }
     .pos-content {
         height: 100%;
         .pos-order {
@@ -360,12 +363,21 @@
                </template>
                 </el-table-column>
                 <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
-                <el-table-column prop="displayDiscount" label="折扣" width="65">折扣</el-table-column>
+                <el-table-column label="折扣"  :render-header="renderEditableTableHeader" width="65">
+                  <template slot-scope="scope">
+                   <vue-xeditable :ref="'xeditable_discount_percent_'+scope.row.uid" :name="'editableDiscountPercent_'+scope.row.uid+'_xeditable'" v-model="scope.row.editableDiscountPercent" type="text" @value-did-change="handleXeditableChanged" empty="无"
+                   v-show="scope.row.isEditing">
+                   </vue-xeditable>
+                   <span class="editable-replacement" v-show="!scope.row.isEditing" @dblclick="handleEditDiscountPercent(scope.row.uid)" >{{getDisplayDiscount(scope.row.discountPercent)}}</span>
+
+                  </template>
+
+                </el-table-column>
                 <el-table-column prop="price" label="金额" width="80">金额</el-table-column>
                 <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
                   <template slot-scope="scope">
-                 <vue-xeditable  :name="'memo_'+scope.row.uid+'_xeditable'" v-model="scope.row.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
-                </template>
+                   <vue-xeditable  :name="'memo_'+scope.row.uid+'_xeditable'" v-model="scope.row.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
+                  </template>
                 </el-table-column>
                 <el-table-column label="操作" width="60" align="center">
                   <template slot-scope="scope">
@@ -722,6 +734,7 @@ export default {
       let newGoods = {
         // uid用来命名xeditable, 根据名称查找 orderItem, 修改对应值
         // [column]_[uid]_[suffix] 示例：groupnumber_0_xeditable
+        isEditing: false, // 是否正在编辑discountPercent
         uid: new Date().getTime(),
         productId: goods.id,
         variantId: vid,
@@ -735,7 +748,6 @@ export default {
         memo: "",
         discountPercent: this.getDiscountOfVariant(vid) //计算选择商品对应当前客户会员卡的折扣率
       }
-      newGoods.displayDiscount = this.getDisplayDiscount( newGoods.discountPercent )
       this.computePrice(newGoods)
       this.orderItemList.push(newGoods);
       console.log("orderItemList", this.orderItemList)
@@ -800,8 +812,31 @@ export default {
       if (column == 'groupPosition') {
         item.groupPosition = parseInt( item.groupPosition )
       }
-      console.log(" new=", item)
+      if( column == 'editableDiscountPercent'){
+        //
+        let discount = parseInt(newValue)
+        if( discount>=10 || discount<=0){
+          item.discountPercent = 100
+        }else{
+          item.discountPercent = parseInt(discount*10)
+        }
+        item.isEditing = false
+        this.computePrice(item) //重新计算价格
+      }
+      console.log(" new=", typeof(newValue), item)
       this.$set(this.orderItemList, index, item )
+    },
+    // 编辑折扣数据
+    handleEditDiscountPercent(uid){
+      let refid = "xeditable_discount_percent_"+uid
+      let xeditable = this.$refs[refid]
+      uid = parseInt(uid)
+      let index = this.orderItemList.findIndex((item)=>{ return item.uid == uid})
+      let item = this.orderItemList[index]
+      item.isEditing =true
+      xeditable.isEditing = item.isEditing
+      console.log( " handleEditDiscountPercent=", index, this.$refs[refid], item)
+
     },
     // select order tabs
     handleTabClick(tab, event) {
@@ -859,11 +894,8 @@ export default {
             return card.id == this.cardId
           })
         }
-
-
         this.orderItemList.forEach((item) => {
           item.discountPercent = this.getDiscountOfVariant(item.variantId)
-          item.displayDiscount =this.getDisplayDiscount( item.discountPercent )
           this.computePrice(item)
         })
       } else {
@@ -871,7 +903,6 @@ export default {
 
         this.orderItemList.forEach((item) => {
           item.discountPercent = 100
-          item.displayDiscount =this.getDisplayDiscount( item.discountPercent )
           this.computePrice(item)
         })
       }

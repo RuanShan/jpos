@@ -246,14 +246,13 @@ export default {
         return pm.posable
       })
     },
-    // 订单总价
+    // 订单总价,
     computedTotalPrice: function() {
-      let discount = 1
-      if( this.currentPrepaidCard  && this.formData.enablePrepaidCard ){
-        discount = this.currentPrepaidCard.discountPercent /100
-      }
+      // 对于后结账情况，下单时没有卡，结账时，办了一个卡，同时，可以选择支付单个物品，所以，需要重新计算总价
+      // 对于先结账情况，用户可能设置每一个服务的不同折扣
+
       let t = this.selectedOrderItems.reduce((total, item)=>{
-        total+= ( item.saleUnitPrice * item.quantity *  discount )
+        total+= ( item.saleUnitPrice * item.quantity *  item.discountPercent*0.01 )
         return total
       }, 0)
       return parseInt(t)
@@ -394,13 +393,16 @@ export default {
         this.formData.enableTimesCard = false
       }
 
-      // check all lineItemGroups by default
-      if( this.$refs.multipleTable ){
-        // this.$refs.multipleTable could be null
-        this.$refs.multipleTable.clearSelection()
-        this.$refs.multipleTable.toggleAllSelection()
-      }
+      if( this.existedOrderId ){
+        // 根据当前选择了的会员卡，并且原来的lineItem 没有折扣，修正 每个 lineItem 的 discountPercent
 
+        // check all lineItemGroups by default
+        if( this.$refs.multipleTable ){
+          // this.$refs.multipleTable could be null
+          this.$refs.multipleTable.clearSelection()
+          this.$refs.multipleTable.toggleAllSelection()
+        }
+      }
       this.formData.totalPrice = this.computedTotalPrice
       this.computePaymentAmount()
 
@@ -555,6 +557,13 @@ export default {
     handleEnablePrepaidCard(newValue){
       //重新计算各个支付方式需要支付多少
       console.log( "handleEnablePrepaidCard=", newValue, this.computedTotalPrice)
+
+      let discountPercent = ( newValue ?  this.currentPrepaidCard.discountPercent : 100  )
+
+      this.selectedOrderItems.forEach((item)=>{
+        item.discountPercent = discountPercent
+      })
+
       this.formData.totalPrice = this.computedTotalPrice
 
       this.computePaymentAmount()
