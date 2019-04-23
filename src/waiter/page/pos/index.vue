@@ -815,7 +815,7 @@ export default {
       if( column == 'editableDiscountPercent'){
         //
         let discount = parseInt(newValue)
-        if( discount>=10 || discount<=0){
+        if( isNaN(discount) || discount>=10 || discount<=0){
           item.discountPercent = 100
         }else{
           item.discountPercent = parseInt(discount*10)
@@ -835,6 +835,11 @@ export default {
       let item = this.orderItemList[index]
       item.isEditing =true
       xeditable.isEditing = item.isEditing
+      if( item.discountPercent<100){
+        xeditable.rawValue = item.discountPercent/10
+      }else{
+        xeditable.rawValue = ''
+      }
       console.log( " handleEditDiscountPercent=", index, this.$refs[refid], item)
 
     },
