@@ -7,8 +7,6 @@
         height: 40px;
         line-height: 40px;
     }
-
-
 }
 .checkout-form-wrap{
   .checkout-form{
@@ -63,10 +61,15 @@
   }
 }
 
+.checkout-dialog{
+  .el-dialog{
+    min-width: 700px;
+  }
+}
 </style>
 <template>
 <div class="checkout-container">
-  <el-dialog :visible="computedVisible" :append-to-body="true"	:show-close="false" @open="handleDialogOpened"  class="cel-dialog">
+  <el-dialog :visible="computedVisible" :append-to-body="true"	:show-close="false" @open="handleDialogOpened"  class="cel-dialog checkout-dialog">
     <div slot="title" class="dialog-title-wrap">
       <div class="right back"> <i class="el-icon-close" @click="handleCloseDialog"></i> </div>
       <div> 结账 </div>

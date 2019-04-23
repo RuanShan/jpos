@@ -126,8 +126,9 @@
                 }
             }
             table {
+              table-layout: fixed;
                 td {
-                    max-width: 20%;
+                    white-space:nowrap;overflow:hidden;text-overflow: ellipsis;
                 }
                 th{ width: 9em;}
                 td,
@@ -136,7 +137,6 @@
                     padding: 6px 10px;
                     font-size: 14px;
                     box-sizing: border-box;
-                    white-space: normal;
                     line-height: 23px;
                 }
                 th span{ font-weight: bold;}
@@ -331,7 +331,9 @@
                     <table style="width:100%">
                       <tr>
                         <th>客户</th>
-                        <td>{{currentCustomer.userName}}  <span v-show="currentCustomer.customerType"> [{{currentCustomer.customerType}}] </span> <span v-show="isCustomerFromOtherStore">[{{currentCustomer.storeName}}] </span></td>
+                        <td>
+                          <span>{{currentCustomer.userName}} </span><span v-show="currentCustomer.customerType">[{{currentCustomer.customerType}}]</span><span v-show="isCustomerFromOtherStore">[{{currentCustomer.storeName}}]</span>
+                        </td>
                         <th>移动电话</th>
                         <td>{{currentCustomer.mobile}}</td>
                         <th>消费金额</th>
@@ -684,6 +686,16 @@ export default {
       console.log( "this.userEntries=", this.userEntries, " orderedEntries=", orderedEntries)
       let entry = orderedEntries.pop()
       return entry != null && entry.state == this.UserEntryStateEnum.clockin
+    },
+    customerDescription(){
+      let desc = this.currentCustomer.userName
+      if( this.currentCustomer.customerType != null){
+        desc+='['+ this.currentCustomer.customerType + ']'
+      }
+      if( this.isCustomerFromOtherStore){
+        desc+='['+ this.currentCustomer.storeName + ']'
+      }
+      return desc
     }
   },
   created() {
