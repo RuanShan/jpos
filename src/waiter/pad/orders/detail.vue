@@ -235,6 +235,7 @@
                   :data="{id: group.id}"
                   :http-request="handleDirectUpload"
                   :before-remove="handleImageRemoveConfirm"
+                  :before-upload="beforeUpload"
                   :on-preview="handlePictureCardPreview"
                   :on-remove="handleImageRemoved"
                   :on-success="handleImageAdded">
@@ -370,6 +371,9 @@ export default {
         }
       })
       console.log(response, file, fileList)
+    },
+    beforeUpload( file ){
+      console.log( "beforeUpload", file)
     },
     handleDirectUpload(option){
       console.log( "handleDirectUpload option=", option)

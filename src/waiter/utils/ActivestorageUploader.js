@@ -14,7 +14,8 @@ class ActivestorageUploader {
     this.directupload.create((error, blob) => {
       if (error) {
         // Handle the error
-        // this.failureCallback(error)
+        console.log( "directupload", error)
+        this.failureCallback && this.failureCallback(error)
       } else {
         // Add an appropriately-named hidden input to the form
         // with a value of blob.signed_id

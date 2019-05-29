@@ -107,7 +107,7 @@ let webConfig = {
     new webpack.NoEmitOnErrorsPlugin()
   ],
   output: {
-    filename: '[name].js',
+    filename: '[name][hash].js',
     path: path.join(__dirname, '../dist/web')
   },
   resolve: {

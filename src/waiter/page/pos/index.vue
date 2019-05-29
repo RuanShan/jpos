@@ -130,7 +130,7 @@
                 td {
                     white-space:nowrap;overflow:hidden;text-overflow: ellipsis;
                 }
-                th{ width: 9em;}
+                th{ width: 7em;}
                 td,
                 th {
                     border: 1px solid #ebeef5;
