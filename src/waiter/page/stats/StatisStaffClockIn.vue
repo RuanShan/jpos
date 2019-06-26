@@ -1,6 +1,8 @@
 <style lang="scss">
 .statis-staff-clock-in {
-
+    .el-tag{
+      margin: 0 2px; 
+    }
     .select-options {
         width: 120px;
     }

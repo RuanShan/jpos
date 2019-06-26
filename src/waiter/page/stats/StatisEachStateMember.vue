@@ -85,7 +85,7 @@
         </el-table-column>
         <el-table-column prop="cardTransaction.amount" label="充值金额" width="90">
         </el-table-column>
-        <el-table-column prop="creatorName" label="操作员" width="90">
+        <el-table-column prop="creatorName" label="操作员" width="110">
         </el-table-column>
         <el-table-column prop="cardTransaction.displayIsFirst" label="是否新增" width="90">
         </el-table-column>

@@ -45,7 +45,10 @@
           </dl>
         </template>
       </el-table-column>
-      <el-table-column label="实收金额" prop="paymentTotal" width="80">
+      <el-table-column label="金额/实收" prop="paymentTotal" width="80">
+        <template slot-scope="scope">
+          {{scope.row.total}}/{{scope.row.paymentTotal}}
+        </template>
       </el-table-column>
       <el-table-column label="操作员" prop="creatorName" width="80">
       </el-table-column>
