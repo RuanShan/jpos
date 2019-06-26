@@ -341,6 +341,7 @@ export var apiResultMixin = {
       user.birth = userResult.birth
       user.customerType = userResult.customer_type
       user.createdAt = moment(userResult.created_at),
+      user.address = userResult.address
       user.memo = userResult.memo
       user.normalOrderTotal = parseInt(userResult.normal_order_total)
       user.normalOrderCount = userResult.normal_order_count

@@ -295,10 +295,10 @@
   <!-- 结账组件 Start-->
   <CheckoutDialog :order-item-list="orderItemList" :totalMoney="totalPrice" :customer="currentCustomer" :card="currentCard" :dialog-visible.sync="checkoutDialogVisible" @order-created-event="handleOrderCreated"></CheckoutDialog>
   <!-- 结账组件 End-->
-
   <!-- 添加会员组件 Start-->
   <member-add :member-mobile="memberMobile" @customer-created-event="handleCustomerCreatedEvent" :dialog-visible.sync="memberAddWindowVisible"></member-add>
   <!-- 添加会员组件 End-->
+  <member-card-add :member="currentCustomer" @customer-created-event="handleCustomerCreatedEvent" :dialog-visible.sync="memberCardAddWindowVisible"></member-card-add>
 
   <div class="pos">
     <div class="loading" v-if="false">
@@ -516,6 +516,7 @@ import CelSwiper from "@/components/dialog/CelSwiper.vue";
 
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
 import MemberAdd from "./MemberAdd.vue"
+import MemberCardAdd from "./MemberCardAdd.vue"
 import OrderDelivery from "./OrderDelivery.vue"
 import ExpenseItems from "./ExpenseItems.vue"
 import StockMovements from "./StockMovements.vue"
@@ -557,6 +558,7 @@ export default {
       selectedItems: {}, // 当前选择的物品/费用 { readyOrderTab: lineItemGropu, expenseItemTab: expenseItem}
       checkoutDialogVisible: false,
       memberAddWindowVisible: false,
+      memberCardAddWindowVisible: false,
       memberMobile: null,
       customerList: [], //按关键字搜索到的客户列表
       currentCustomer: null,
@@ -576,6 +578,7 @@ export default {
     headTop,
     CheckoutDialog,
     MemberAdd,
+    MemberCardAdd,
     OrderDelivery,
     ExpenseItems,
     StockMovements,
@@ -603,7 +606,8 @@ export default {
     },
     computedCustomerOptions () {
       let ops = this.customerList.map((customer) => {
-        if (customer.cards.length > 0) {
+        //用户只有一个可用的充值卡
+        if (customer.card) {
           return customer.cards.filter((card)=>{
             return card.state == this.CardStateEnum.enabled
           }).map((card) => {
@@ -706,7 +710,6 @@ export default {
     this.$bus.$on('order-created-gevent', (newOrder) => {
       console.log('order-created-gevent', 'this.currentCustomer', this.currentCustomer, this.currentCustomer.id)
     })
-
   },
   methods: {
     async initData() {
@@ -979,8 +982,16 @@ export default {
       return product
     },
     handleNewCustomerButtonClicked() {
-      this.memberMobile = null
-      this.memberAddWindowVisible = true
+      // 如果用户电话号码不存在，显示创建新用户，
+      // 如果存在，并且是散客，显示编辑用户窗口，添加会员卡
+
+      let type = this.currentCustomer.customerType
+      if(this.currentCustomer.id>0 && this.currentCustomer.card ==null ){
+        this.memberCardAddWindowVisible = true
+      }else{
+        this.memberMobile = null
+        this.memberAddWindowVisible = true
+      }
     },
     handleCustomerCreatedEvent(customer) {
       console.log(" handleCustomerCreatedEvent", customer)
