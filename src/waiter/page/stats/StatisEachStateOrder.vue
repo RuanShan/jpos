@@ -95,15 +95,14 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="消费日期" prop="displayCreatedAt">
-        </el-table-column>
-        <el-table-column label="消费金额" prop="total">
+        <el-table-column label="日期" prop="displayCreatedAt">
         </el-table-column>
         <el-table-column label="订单状态" prop="displayState">
           <template slot-scope="scope">
             {{scope.row.displayState}} <span v-show="scope.row.memo">({{scope.row.memo}})</span>
           </template>
-
+        </el-table-column>
+        <el-table-column label="金额" prop="total">
         </el-table-column>
         <el-table-column label="支付信息">
           <template slot-scope="scope">
@@ -113,7 +112,14 @@
           </template>
 
         </el-table-column>
-        <el-table-column label="操作员" prop="creatorName" width="90">
+        <el-table-column label="操作员" prop="creatorName" width="110">
+        </el-table-column>
+        <el-table-column label="操作" width="85">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"  type="success"
+              @click="handleShowDetail( scope.row)">详情</el-button>
+          </template>
         </el-table-column>
 
       </el-table>
@@ -134,6 +140,11 @@
       </el-pagination>
     </div>
     <!-- 分页器 END-->
+
+    <el-dialog  title="订单详情"  :visible.sync="dialogVisible"  :modal="false" class="cel-scrollable-dialog">
+      <OrderDetail :customer-data="customerData" :order-data.sync="currentOrder"> </OrderDetail>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -143,10 +154,12 @@ import {
   findOrders, getOrderCount
 } from '@/api/getData'
 import StoreSelect from '@/components/common/StoreSelect.vue'
+import OrderDetail from '@/components/common/OrderDetail.vue'
 
 export default {
   components: {
-    StoreSelect
+    StoreSelect,
+    OrderDetail
   },
   data() {
     return {
@@ -195,7 +208,9 @@ export default {
       returnServerCustomerData: {}, //调用接口,返回的数据
       customerData: {}, //整理過的顧客數據
       totalCount: 0, //统计数据之记录数
-      totalSum: 0 //统计数据之充值金额合计
+      totalSum: 0, //统计数据之充值金额合计
+      dialogVisible: false,
+      currentOrder: null
     };
   },
   mounted() {
@@ -308,7 +323,13 @@ export default {
     handleClear(){
       console.log( " Selected paymentMethodId = ", this.formData.paymentMethodId)
       this.formData.paymentMethodId = null
-    }
+    },
+    handleShowDetail( row ){
+      this.dialogVisible = true
+      console.log("显示当前订单的详细信息...", row);
+      this.customerData = row.customer
+      this.currentOrder = row
+    },
   }
 };
 </script>
