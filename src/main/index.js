@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, dialog, session, BrowserWindow, Menu } from 'electron'
 
 import { bindIpcPrinter } from '../ipc/printer'
 import { bindIpcDownload } from '../ipc/download'
@@ -32,17 +32,26 @@ function createWindow () {
 
   mainWindow.loadURL(winURL)
 
-  mainWindow.on('closed', () => {
+  mainWindow.on('close', (e) => {
+
+    let ret = dialog.showMessageBox(mainWindow, { type:"warning",title: '退出确认', message:'确定退出系统吗?', buttons:['yes', 'no']})
+    console.log('on close ret', ret)
+    if( ret == 1){
+      e.preventDefault()
+      return
+    }
+    // remove all cookies/ logout
+    session.defaultSession.clearStorageData({storages:'cookies'})
     mainWindow = null
   })
 }
 
 app.on('second-instance', (event, commandLine, workingDirectory) => {
   // Someone tried to run a second instance, we should focus our window.
-  //if (mainWindow) {
-  //  if (mainWindow.isMinimized()) mainWindow.restore()
-  //  mainWindow.focus()
-  //}
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore()
+    mainWindow.focus()
+  }
 })
 
 app.on('ready', createWindow)

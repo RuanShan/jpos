@@ -984,8 +984,7 @@ export default {
     handleNewCustomerButtonClicked() {
       // 如果用户电话号码不存在，显示创建新用户，
       // 如果存在，并且是散客，显示编辑用户窗口，添加会员卡
-
-      let type = this.currentCustomer.customerType
+      //let type = this.currentCustomer.customerType
       if(this.currentCustomer.id>0 && this.currentCustomer.card ==null ){
         this.memberCardAddWindowVisible = true
       }else{
