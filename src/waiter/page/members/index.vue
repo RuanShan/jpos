@@ -89,7 +89,7 @@
         <!-- 表格     END -->
         <div class="member-list grid-content">
               <el-table class="cel-scrollable-table" :data="customerList" style="width:100%;" border>
-                <el-table-column prop="number" label="会员编号" width="120" align="center">
+                <el-table-column prop="number" label="会员编号" width="128" align="center">
                 </el-table-column>
                 <el-table-column prop="storeName" label="注册门店">
                 </el-table-column>
