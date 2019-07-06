@@ -79,7 +79,6 @@
           <img v-lazy="image.miniUrl"   @click="handleOpenGallery('lightbox'+scope.$index, j)"  >
         </li>
         </ul>
-        <LightBox :ref="'lightbox'+scope.$index" :images="scope.row.lightboxImages" :showLightBox="false"></LightBox>
 
         </template>
       </el-table-column>
@@ -110,13 +109,11 @@ import {
   findExpenseItems
 } from '@/api/getData'
 
-import LightBox from 'vue-image-lightbox'
 import StoreSelect from '@/components/common/StoreSelect.vue'
 
 
 export default {
   components: {
-    LightBox,
     StoreSelect
   },
   data() {

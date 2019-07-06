@@ -41,6 +41,8 @@
 
 <template>
 <div class="order-detail-wrap" v-if="currentOrder">
+  <CardFormWithOrder :customerData="currentCustomer"  :orderData="currentOrder"   :dialog-visible.sync="cardDialogVisible">
+  </CardFormWithOrder>
   <CheckoutDialog :order-item-list="currentOrder.lineItems" :customer="currentCustomer"
    :card="currentCard" :is-repay="true"
    :dialog-visible.sync="checkoutDialogVisible"
@@ -76,7 +78,7 @@
       <div class="subtitle"> 支付信息   状态: {{currentOrder.displayPaymentState}}
         <div class="right">
           <el-button  type="danger" size="mini"  @click="openCheckoutDialogWithTimesCard" v-if="currentCustomer.timesCard">次卡({{currentCustomer.timesCard.code}})重新支付</el-button>
-          <el-button  type="danger" size="mini"  @click="openCheckoutDialog">重新支付</el-button>
+          <el-button  type="danger" size="mini"  @click="openCheckoutDialog">办卡支付</el-button>
         </div>
       </div>
       <div>
@@ -141,16 +143,18 @@ import {
 from '@/api/getData'
 
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
+import CardFormWithOrder from "@/components/common/CardFormWithOrder.vue"
 
 export default {
   data() {
     return {
       checkoutDialogVisible: false,
+      cardDialogVisible: false,
       currentCard: null
     }
   },
   props: ['customerData','orderData'], // customerData is newest, card could be updated, ex. disabled
-  components: { CheckoutDialog },
+  components: { CheckoutDialog, CardFormWithOrder },
   computed:{
     currentOrder(){
       return this.orderData
@@ -179,9 +183,9 @@ export default {
     // 客户搜索事件处理
     openCheckoutDialog() {
       console.log("openCheckoutDialog")
-      this.currentCard = this.customerData.card
-
-      this.checkoutDialogVisible = true
+      // this.currentCard = this.customerData.card
+      // this.checkoutDialogVisible = true
+      this.cardDialogVisible = true
     },
     openCheckoutDialogWithTimesCard(){
       this.currentCard = this.customerData.timesCard

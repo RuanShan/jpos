@@ -27,9 +27,9 @@ import AutoFocus from 'vue-auto-focus'
 Vue.use(AutoFocus)
 
 // image lozyload
-require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
-import VueLazyLoad from 'vue-lazyload'
-Vue.use(VueLazyLoad)
+//require('vue-image-lightbox/dist/vue-image-lightbox.min.css')
+//import VueLazyLoad from 'vue-lazyload'
+//Vue.use(VueLazyLoad)
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 // require styles

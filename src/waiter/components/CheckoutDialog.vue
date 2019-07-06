@@ -60,7 +60,6 @@
     }
   }
 }
-
 .checkout-dialog{
   .el-dialog{
     min-width: 700px;
