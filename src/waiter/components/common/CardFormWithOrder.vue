@@ -107,7 +107,7 @@
       <el-row type="flex" justify="center">
         <el-col :span="10">
           <div class="actions">
-            <el-button type="primary" @click="addCustomer">立即创建</el-button>
+            <el-button type="primary" @click="depositCard">立即创建</el-button>
             <el-button @click="closeDialog">关闭</el-button>
           </div>
         </el-col>
@@ -126,7 +126,7 @@
 // **********
 import moment from 'moment'
 
-import { checkout, updateCustomer, customerMobileValidate, isCodeAvailable } from "@/api/getData";
+import { repayByNewcard, updateCustomer, customerMobileValidate, isCodeAvailable } from "@/api/getData";
 
 import {
   DialogMixin
@@ -281,7 +281,8 @@ export default {
       this.resetForm('customerFormData')
       this.handleCloseDialog()
     },
-    addCustomer(formName) {
+    // 重新支付，客户领取物品时付款
+    depositCard(formName) {
       let validations = [this.$refs["customerFormData"].validate()]
       //如果创建会员卡，需要验证会员卡的表单
       if (this.isAddingCard) {
@@ -292,23 +293,23 @@ export default {
         let cid = this.customerData.id
 
         let params = this.buildCheckoutParams()
-        console.log("customer params =", params)
 
-        checkout( params ).then((result)=>{
+        repayByNewcard( this.orderData.id, params ).then((result)=>{
           if( result.id ){
             this.$message( {
               message: '恭喜你，会员卡创建成功',
               type: 'success'
             });
+            let order = this.buildOrder( result )
+
+            this.$emit("order-changed-event", order);
+
             let cparams = this.buildCustomerParams()
             updateCustomer(cid, cparams).then((cresult) => {
-              const customer = this.buildCustomer(cresult)
+              //const customer = this.buildCustomer(cresult)
               // POS选择刚创建的客户
-              this.$emit("customer-created-event", customer);
-              this.$bus.$emit("customer-created-gevent", customer);
               this.handleCloseDialog()
             })
-
 
           }else {
             //判读返回的数据中是否有错误
@@ -328,10 +329,10 @@ export default {
         return false
       })
     },
-    //重新支付，客户领取物品时付款
+    //
     recreatePayment( orderId, params ) {
       // params = { payments, line_item_ids}
-        repay( orderId, params ).then((res)=>{
+        repayByNewcard( orderId, params ).then((res)=>{
           if( res.id){
             //发送支付创建时间
             let order = this.buildOrder( res )

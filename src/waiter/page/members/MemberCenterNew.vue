@@ -30,10 +30,10 @@
             .card-tabs {
                 .card-table {
                     th {
+                        width: 100px;
                         border: 1px solid #ebeef5;
                     }
                     td {
-                        width: 12.5%;
                         border: 1px solid #ebeef5;
                     }
                 }
@@ -139,7 +139,11 @@
         <div class="cards-wrap" style="">
           <el-button type="success" size="mini" @click="addCardButtonClicked" class="right add-card-button">添加会员卡</el-button>
           <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick" class="card-tabs cel-scrollable-tabs">
-            <el-tab-pane v-for="(item) in cards" :key="item.code" :label="item.title" :name="item.code">
+            <el-tab-pane v-for="(item) in cards" :key="item.code"  :name="item.code">
+              <span slot="label">  <i class="el-icon-circle-check-outline" v-show="item.state=='enabled'"></i>
+                <i class="el-icon-circle-close-outline" v-show="item.state=='disabled'"></i>
+               {{item.title}}</span>
+
               <div class="clear ">
                 <div class="left clear" v-if="item.style==CardStyleEnum.prepaid">
                   <div class="left money-wrap">
@@ -203,7 +207,7 @@
               <div class="card-records-wrap">
                 <el-tabs type="border-card" v-model="cardRecordTabName" class="card-records  cel-scrollable-tabs">
                   <el-tab-pane label="消费记录" name="orders">
-                    <card-order-list :customer-data="customerData" :card-data="item"></card-order-list>
+                    <card-order-list :customer-data="customerData" :card-data="item"  @order-changed-event="handleOrderChanged"></card-order-list>
                   </el-tab-pane>
                   <el-tab-pane label="充值记录" name="deposits"  v-if="item.code.length>0">
                     <card-deposit-list :customer-data="customerData" :card-data="item" @card-changed-event="handleCardChanged"></card-deposit-list>
@@ -258,7 +262,6 @@ import CardTransfer from "@/components/common/CardTransfer.vue";
 import CardDepositList from "./components/CardDepositList.vue";
 import CardOrderList from "./components/CardOrderList.vue";
 import MemberCardRecharge from "./MemberCardRecharge.vue";
-import MemberExpenseCalendar from "./MemberExpenseCalendar.vue";
 import MemberRechargeRecord from "./MemberRechargeRecord.vue";
 import MemberEdit from "./MemberEdit.vue";
 import MemberCardEdit from "./MemberCardEdit.vue";
@@ -271,7 +274,6 @@ export default {
     CardTransfer,
     "card-form": CardForm,
     "member-card-recharge": MemberCardRecharge,
-    "member-expense-calendar": MemberExpenseCalendar,
     "member-recharge-record": MemberRechargeRecord,
     "card-order-list": CardOrderList,
     "card-deposit-list": CardDepositList,
@@ -348,7 +350,10 @@ export default {
     async initData() {
       const result = await getCustomerStatis(this.customerData.id)
       this.statis = this.buildCustomerStatis(result)
-      if( this.cards.length>0){
+      if( this.cardData.code != null){
+        this.tabsNumber = this.cardData.code
+      }
+      else if( this.cards.length>0){
         this.tabsNumber = this.cards[0].code //openWindos后选中第一个tabs,之后每次点击别的tab是tabsNumber动态变化
       }
     },
@@ -422,6 +427,17 @@ export default {
       newCustomer.timesCard = newCustomer.cards.find((card)=>{ return (card.state == this.CardStateEnum.enabled && card.style== this.CardStyleEnum.times)})
       newCustomer.card = newCustomer.prepaidCard || newCustomer.timesCard
       this.handleCustomerChanged(newCustomer)
+    },
+    handleOrderChanged(changes){
+      // 订单信息改变，需要更新对应支付使用的会员卡信息
+      let { changedCard } = changes
+
+      if( changedCard){
+        this.handleCardChanged(changedCard)
+      }
+      // 重新统计订单消费金额
+      this.initData()
+
     },
     handleDepositOrderCreated(changedCard) {
       console.log("handleDepositOrderCreated", changedCard)

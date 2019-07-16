@@ -45,7 +45,7 @@
           </dl>
         </template>
       </el-table-column>
-      <el-table-column label="金额/实收" prop="paymentTotal" width="80">
+      <el-table-column label="金额/实收" prop="paymentTotal" width="100">
         <template slot-scope="scope">
           {{scope.row.total}}/{{scope.row.paymentTotal}}
         </template>
@@ -75,7 +75,7 @@
   <!-- 分页器 END-->
 
   <el-dialog  title="订单详情"  :visible.sync="dialogVisible"  :modal="false" class="cel-scrollable-dialog">
-    <OrderDetail :customer-data="customerData" :order-data.sync="currentOrder"> </OrderDetail>
+    <OrderDetail :customer-data="customerData" :order-data.sync="currentOrder" :order-position="currentOrderPosition"> </OrderDetail>
   </el-dialog>
 </div>
 </template>
@@ -83,6 +83,7 @@
 
 <script>
 import {
+  getCard,
   findOrders,
   cancelOrder
 } from "@/api/getData"
@@ -91,7 +92,8 @@ import {
   CelUIMixin
 } from '@/components/mixin/CelUIMixin'
 
-
+/// 订单列表
+///
 export default {
   //如果cardData 为空，表示非会员卡消费列表
   props: ["customerData", "cardData"],
@@ -107,7 +109,7 @@ export default {
       perPage: 12, //主表每页显示12行
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
       dialogVisible: false,
-      currentOrder: null
+      currentOrder: null,
     };
   },
   created: function() {
@@ -115,8 +117,18 @@ export default {
 
     this.$bus.$on('order-changed-gevent', () => {
       console.log('on order-changed-gevent')
+      this.dialogVisible = false  // 用户点击办卡支付，订单改变事件， 关闭订单详情
       this.initData()
     })
+  },
+  computed:{
+    currentOrderPosition(){  // 当前order在用户order列表中的顺序，
+      if( this.currentOrder == null ){
+         return -1
+      }
+      let i = this.orderList.findIndex( (o)=> o.number == this.currentOrder.number )
+      return  i+1 + (this.currentPage-1)*this.perPage
+    }
   },
   methods: {
     //打开窗口时事件处理函数-----根据分页器,显示第一页数据
@@ -148,9 +160,8 @@ export default {
       if( this.cardData ){
         //params.q.payment_method_id =1
         params.q.payments_source_id_eq = this.cardData.id
-
       }else{
-      //非会员卡订单
+        //非会员卡订单
         params.q.payments_source_id_null = true
       }
       return params
@@ -164,8 +175,8 @@ export default {
     },
     handleShowDetail( row ){
       this.dialogVisible = true
-      console.log("显示当前订单的详细信息...", row);
       this.currentOrder = row
+      console.log("显示当前订单的详细信息...", this.currentOrder)
     },
     handleCancel( row ){
         let id = row.id
@@ -173,8 +184,16 @@ export default {
           console.log( " handleCancel=", memo)
           cancelOrder( id, { order:{ memo}} ).then((res)=>{
             if( res.id ){
-              this.$emit('order-state-changed')
               const order = this.buildOrder( res )
+              if( this.cardData != null){
+                getCard( this.cardData.id).then((res) =>{
+                  let card = this.buildCard( res )
+                  card.customer =  this.customerData
+                  this.$emit('order-changed-event', {changedCard: card, changedOrder: order})
+                })
+              }else{
+                this.$emit('order-changed-event', { changedOrder: order})
+              }
               let index = this.orderList.findIndex((o)=>{ return o.id == order.id})
               this.$set( this.orderList, index, order )
 

@@ -12,7 +12,7 @@ from '@/api/getData'
 export var apiResultMixin = {
   data: function(){
     return {
-      PaymentStateEnum: { completed: 'completed'},
+      PaymentStateEnum: { completed: 'completed', void: 'void'}, // void： 支付取消
       OrderStateEnum: { cart: 'cart', canceled: 'canceled'  },
       OrderTypeEnum: { normal: 'normal', card: 'card', deposit: 'deposit' },
       OrderPaymentStateEnum:{ paid: 'paid', unpaid:'unpaid' }, // 打卡 登入， 登出
@@ -361,6 +361,10 @@ export var apiResultMixin = {
           const card = this.buildCard( model )
           card.customer = user
           user.cards.push(card)
+        })
+        // 排序， enabled , disabled
+        user.cards.sort((a,b)=>{        
+           return  b.state.charCodeAt() -a.state.charCodeAt()
         })
         // 选择第一个可用的card作为 缺省会员卡
         user.prepaidCard = user.cards.find((card)=>{ return (card.state == this.CardStateEnum.enabled && card.style== this.CardStyleEnum.prepaid)})

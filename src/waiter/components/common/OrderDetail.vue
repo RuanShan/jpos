@@ -41,12 +41,12 @@
 
 <template>
 <div class="order-detail-wrap" v-if="currentOrder">
-  <CardFormWithOrder :customerData="currentCustomer"  :orderData="currentOrder"   :dialog-visible.sync="cardDialogVisible">
+  <CardFormWithOrder :customerData="currentCustomer"  :orderData="currentOrder"  @order-changed-event="handleOrderChanged" :dialog-visible.sync="cardDialogVisible">
   </CardFormWithOrder>
   <CheckoutDialog :order-item-list="currentOrder.lineItems" :customer="currentCustomer"
    :card="currentCard" :is-repay="true"
    :dialog-visible.sync="checkoutDialogVisible"
-   @payment-created-event="handlePaymentCreated" > </CheckoutDialog>
+   @payment-created-event="handleOrderChanged" > </CheckoutDialog>
 
 
   <div class="customer box">
@@ -73,12 +73,12 @@
     </div>
   </div>
   <div class="box">
-    <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{currentOrder.number}}</i> </span> </div>
+    <div class="head"> <span> <i class="fa fa-calendar">   订单信息 {{currentOrder.number}} </i> </span> </div>
     <div class="box payments">
       <div class="subtitle"> 支付信息   状态: {{currentOrder.displayPaymentState}}
         <div class="right">
           <el-button  type="danger" size="mini"  @click="openCheckoutDialogWithTimesCard" v-if="currentCustomer.timesCard">次卡({{currentCustomer.timesCard.code}})重新支付</el-button>
-          <el-button  type="danger" size="mini"  @click="openCheckoutDialog">办卡支付</el-button>
+          <el-button  type="danger" size="mini"  @click="openCheckoutDialog" :disabled="isCheckoutDisabled" >办卡支付</el-button>
         </div>
       </div>
       <div>
@@ -153,7 +153,11 @@ export default {
       currentCard: null
     }
   },
-  props: ['customerData','orderData'], // customerData is newest, card could be updated, ex. disabled
+  props: {
+    customerData:{ type: Object},
+    orderData:{ type: Object},
+    orderPosition:{ type: Number, default: -1},
+  }, // customerData is newest, card could be updated, ex. disabled
   components: { CheckoutDialog, CardFormWithOrder },
   computed:{
     currentOrder(){
@@ -166,7 +170,15 @@ export default {
       // since customer could make order in every store.
       // here user should edit order belongs to current store only,
       return this.currentOrder !=null && this.currentOrder.storeId == this.storeId
-    }
+    },
+    isCheckoutDisabled(){
+      // customerData 是否有会员卡，订单状态是否正常，是否取消，
+      // 无卡消费的订单，最新的订单可以购买新卡结账
+       if( this.currentCustomer.card == null && this.currentOrder.state!='canceled'&& this.orderPosition==1){
+         return false
+       }
+       return true
+    },
   },
   methods:{
 
@@ -191,7 +203,7 @@ export default {
       this.currentCard = this.customerData.timesCard
       this.checkoutDialogVisible = true
     },
-    handlePaymentCreated(newOrder) {
+    handleOrderChanged(newOrder) {
       // update card order list
       this.$bus.$emit('order-changed-gevent', newOrder)
 

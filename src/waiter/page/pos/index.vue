@@ -375,7 +375,7 @@
                   </template>
 
                 </el-table-column>
-                <el-table-column prop="price" label="金额" width="80">金额</el-table-column>
+                <el-table-column prop="price" label="金额" width="80"></el-table-column>
                 <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
                   <template slot-scope="scope">
                    <vue-xeditable  :name="'memo_'+scope.row.uid+'_xeditable'" v-model="scope.row.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>

@@ -387,12 +387,25 @@ export const findOrderByGroupNumber = groupNumber => fetch('/api/v1/pos_orders/f
 
 export const addPayments = (id, data) => fetch('/api/v1/pos_orders/' + id +'/add_payments', data, 'POST')
 
+
+/**
+ * 订单是否可以重新支付
+ * 返回 { ret: true }
+ */
+
+export const repayable = (id) => fetch('/api/v1/pos_orders/' + id +'/repayable' )
+
 /**
  * 订单后付款，重新支付
  */
 
 export const repay = (id, data) => fetch('/api/v1/pos_orders/' + id +'/repay', data, 'POST')
 
+/**
+ * 订单购买会员卡重新支付，无论先付款或后付款，
+ */
+
+export const repayByNewcard = (id, data) => fetch('/api/v1/pos_orders/' + id +'/repay_by_newcard', data, 'POST')
 
 /**
  * 获取Customer信息
@@ -608,6 +621,11 @@ export const deleteGroupImage = (groupId, groupImageId) => fetch('/api/v1/line_i
  *                   status:    状态
  */
 export const getUserCards = (userId) => fetch('/api/v1/users/' + userId + '/cards');
+
+/**
+ * get card  取得会员卡信息，包括会员卡 到期时间，备注
+ */
+export const getCard = (cardId  ) => fetch('/api/v1/cards/' + cardId );
 
 /**
  * update card  修改会员卡信息，包括会员卡 到期时间，备注
