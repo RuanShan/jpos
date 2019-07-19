@@ -26,7 +26,10 @@
           </el-table-column>
           <el-table-column label="店铺名称" prop="storeName">
           </el-table-column>
-          <el-table-column label="充值金额" prop="total">
+          <el-table-column label="充值/付款" prop="total">
+            <template slot-scope="scope">
+              {{scope.row.total}}/{{scope.row.saleTotal}}
+            </template>
           </el-table-column>
           <el-table-column label="操作员" prop="creatorName">
           </el-table-column>

@@ -13,6 +13,20 @@
     width: 65%;
     margin-top: 10vh;
   }
+  .order-wrap{
+    width: 90%;
+    margin: auto;
+  }
+  .table  {
+
+    td,th{
+      padding: 12px 10px;
+      border: 1px solid #ebeef5;
+    }
+    tr {
+      vertical-align: top;
+    }
+  }
 }
 </style>
 
@@ -26,6 +40,18 @@
           <i class="el-icon-back" @click="handleCloseDialog()"></i>
         </div>
         <div> 添加会员卡支付订单</div>
+      </div>
+      <div class="order-wrap">
+        <table class="table">
+        <tr>
+        <th>客户电话</th><th>支付状态</th><th>订单日期</th><th>金额</th>
+        </tr>
+        <tr><td> {{orderData.customer.mobile}}</td>
+          <td>{{orderData.displayPaymentState}} </td>
+          <td> {{orderData.createdAt.format("YYYY-MM-DD H:mm")}}</td>
+          <td> {{ orderData.total }}</td>
+        </tr>
+      </table>
       </div>
 
       <el-row type="flex" justify="center">
@@ -73,7 +99,7 @@
                 <el-input v-model="cardFormData.code"></el-input>
               </el-form-item>
               <el-form-item label="会员卡类型" prop="variantId" required>
-                <el-select v-model="cardFormData.variantId" placeholder="">
+                <el-select v-model="cardFormData.variantId" placeholder="" @change="handleCardChanged">
                   <el-option v-for="item in cardTypeList" :key="item.masterId" :label="item.name" :value="item.masterId">
                   </el-option>
                 </el-select>
@@ -93,9 +119,19 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="充值金额" required>
-                <el-input type="number" v-model="cardFormData.amount"></el-input>
-              </el-form-item>
+              <el-row >
+                <el-col :span="12" >
+                  <el-form-item label="充值金额" required>
+                    <el-input type="number" v-model="cardFormData.amount"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12" >
+                  <el-form-item label="付款金额" required>
+                    <el-input type="number" v-model="cardFormData.money"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
               <el-form-item label="备注" prop="address">
                 <el-input v-model="cardFormData.memo"></el-input>
               </el-form-item>
@@ -184,6 +220,7 @@ export default {
       cardFormData: {
         code: "",
         amount: null,
+        money: null,
         expireAt: "",
         paymentMethodId: null,
         paymentPassword: null,
@@ -356,6 +393,13 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    //改变选择的充值卡类型
+    handleCardChanged(val){
+      let card = this.cardTypeList.find((o)=>o.masterId == val)
+      console.log( " handle card changed .", val, card )
+      this.cardFormData.amount = card.price
+      this.cardFormData.money = card.price
+    },
     //转换成SerVer需要的数据
     buildCustomerParams() {
       let user = {
@@ -368,7 +412,6 @@ export default {
         memo: this.customerFormData.memo
       }
 
-
       return { user }
     },
     buildCheckoutParams(){
@@ -378,7 +421,7 @@ export default {
         user_id: this.customerData.id,
         order_type: 'card',
         line_items: [
-          { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1, card_code: this.cardFormData.code  }
+          { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1, sale_unit_price: this.cardFormData.money, card_code: this.cardFormData.code  }
         ],
         payments: [{
             payment_method_id:  this.cardFormData.paymentMethodId,
@@ -393,9 +436,18 @@ export default {
 
       return {order: orderParams, card: cardParams}
 
-
-    }
-
+    },
+    computeGroupPrice(group){
+      // let total = group.lineItems.reduce((sum, item)=>{
+      //   if( this.currentPrepaidCard ){
+      //     sum+= ( item.saleUnitPrice * item.quantity * this.currentPrepaidCard.discountPercent /100 )
+      //   }else{
+      //     sum+= ( item.saleUnitPrice * item.quantity   )
+      //   }
+      //   return sum
+      // }, 0)
+      return parseInt( 100 )
+    },
   }
 };
 </script>

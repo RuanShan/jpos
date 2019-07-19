@@ -205,7 +205,8 @@ export default {
           page: this.currentPage,
           per_page: this.perPage,
           q:{
-            store_id_eq: this.formData.storeId
+            store_id_eq: this.formData.storeId,
+            s:[ 'created_at desc']
           }
       }
       // storeId 永远为当前选择的，由store-select 更新

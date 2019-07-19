@@ -9,12 +9,22 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
+const TARGET_SUBPATH = 'waiter'
 
 const devWebpackConfig = merge(baseWebpackConfig, {
+  entry: {
+    app: './src/waiter/main.js'
+  },
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js',
+      '@': path.resolve(__dirname, '../src/waiter')
+    }
+  },
   module: {
     //rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -48,13 +58,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': require('../config/dev.env'),
-      'process.env.IS_WEB': 'true',
+      'process.env': require('../config/devweb.env'),
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
-    new LodashModuleReplacementPlugin,
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       filename: 'index.html',

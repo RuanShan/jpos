@@ -7,26 +7,27 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import {
-  getStore
-} from "@/config/mUtils"
-
     export default {
       data(){
-            return{
-
-            }
+          return{
+            showMsg: false
+          }
         },
         mounted(){
+          if( this.storeId  == 0 && this.$route.name != 'setting'){
+            this.showMsg = true
+          }
           //console.log( 'this.$route',this.$route)
         },
-        computed: {
-          showMsg(){
-            return this.localStoreId ==0 && this.$route.name != 'setting'
-          },
-          localStoreId() {
-            return _.toInteger(getStore('storeId'))
+        methods:{
+        },
+        watch:{
+          storeId: function( newStoreId, oldStoreId ){
+            if( newStoreId > 0 ){
+              if( this.$route.name != 'setting' ){
+                this.showMsg = false
+              }
+            }
           }
         }
     }

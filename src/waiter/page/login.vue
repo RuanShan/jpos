@@ -33,8 +33,8 @@ import {
   login
 } from '@/api/getData'
 import {
-  getStore
-} from "@/config/mUtils"
+  StorageUtil
+} from "@/utils/ipcService"
 
 export default {
   data() {
@@ -75,9 +75,7 @@ export default {
     }))
   },
   computed: {
-    localStoreId() {
-      return _.toInteger(getStore('storeId'))
-    }
+
   },
   methods: {
 
@@ -100,9 +98,7 @@ export default {
             this.$store.commit("saveUser", this.buildUser(res))
             // 取得所有店铺信息，保存在store中，
             await this.initializeApp()
-            console.log(" current localstorage=", getStore('storeId'))
             // MissingStore组件处理无法找到当前店铺，它将提示设置店铺，这里无需检查。
-            // let storeId = this.localStoreId
             // 缺省是收银界面
             this.redirectDefaultPage()
 
@@ -125,12 +121,14 @@ export default {
     async initializeApp() {
       console.log("..initializeApp..")
       //初始化 localstorage storeId
+      let sid = await this.getLocalStoreId()
       await this.getStores().then((stores) => {
         let currentStore = stores.find((item) => {
-          return item.id == this.localStoreId
+          return item.id == sid
         })
         // storeInfo 不能为null，很多地方调用 storeInfo.name
         if( currentStore ){
+          console.log( "set currentStore", currentStore)
           this.$store.commit('saveStore', currentStore)
         }
       })
@@ -151,9 +149,11 @@ export default {
         console.log('您尚未登陆或者session失效')
       }
     },
-    redirectDefaultPage(){
+    async redirectDefaultPage(){
+      let sid = await this.getLocalStoreId()
+
       if( this.userAuthorize('*')){ // 管理员
-        if( this.localStoreId>0 ){
+        if( sid>0 ){
           this.$router.push({ name: 'pos'   })
         }else{
           this.$router.push({ name: 'setting'   })
@@ -173,8 +173,12 @@ export default {
       const i = event.target.tabIndex
       const nextDOM = this.$refs['tabindex'+(i+1)]
       nextDOM.focus()
+    },
+    async getLocalStoreId() {
+      let json = await StorageUtil.getJson('storeId') || {}
+      console.log( "storeId = ", json)
+      return _.toInteger( json.storeId)
     }
-
   }
 
 }

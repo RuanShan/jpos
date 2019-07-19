@@ -60,8 +60,8 @@ export var apiResultMixin = {
         storeId: orderResult.store_id,
         oddStoreId: orderResult.odd_store_id,
         number: orderResult.number,
-        total: parseInt(orderResult.total), //实收价格
-        saleTotal: parseInt(orderResult.sale_total), //应收价格
+        total: parseInt(orderResult.total), //实收价格, 对于充值卡，是充值金额
+        saleTotal: parseInt(orderResult.sale_total), //应收价格, 对于充值卡，是付款金额
         userName: orderResult.user_name,
         storeName: orderResult.store_name,
         creatorName: orderResult.creator_name,
@@ -363,7 +363,7 @@ export var apiResultMixin = {
           user.cards.push(card)
         })
         // 排序， enabled , disabled
-        user.cards.sort((a,b)=>{        
+        user.cards.sort((a,b)=>{
            return  b.state.charCodeAt() -a.state.charCodeAt()
         })
         // 选择第一个可用的card作为 缺省会员卡
@@ -429,7 +429,8 @@ export var apiResultMixin = {
         name: model.name,
         style: model.style, // prepaid 充值卡， times 次卡
         amountRemaining: parseInt(model.amount_remaining),
-        amount: parseInt(model.amount), // 充值钱数
+        amount: parseInt(model.amount), // 充值额度
+        money: parseInt(model.money), // 充值金额
         amountUsed: parseInt(model.amount_used), // 使用钱数
         discountPercent: parseInt(model.discount_percent),
         discountAmount: parseInt(model.discount_amount),

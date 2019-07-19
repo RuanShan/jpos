@@ -1,5 +1,10 @@
+console.log( "process.env =", process.env)
+console.log( "process.env.IS_WEB =", process.env.IS_WEB )
+let isWeb = process.env.IS_WEB
+
+
 let getPrintersFunction = function(){
-  if (!process.env.IS_WEB){
+  if (!isWeb){
     const ipcRenderer = require('electron').ipcRenderer
     return function(){
       const printers = ipcRenderer.sendSync('get-printers', 'ping')
@@ -13,7 +18,7 @@ let getPrintersFunction = function(){
 
 //
 let printLabelFunction = function(  ){
-  if (!process.env.IS_WEB){
+  if (!isWeb){
     const ipcRenderer = require('electron').ipcRenderer
     return function(params){
       ipcRenderer.send('print-label', params )
@@ -27,7 +32,7 @@ let printLabelFunction = function(  ){
 
 //
 let printReceiptFunction = function(  ){
-  if (!process.env.IS_WEB){
+  if (!isWeb){
     const ipcRenderer = require('electron').ipcRenderer
     return function(params){
       ipcRenderer.send('print-receipt', params)
@@ -39,7 +44,7 @@ let printReceiptFunction = function(  ){
 }
 
 let downloadFileFunction = function(  ){
-  if (!process.env.IS_WEB){
+  if (!isWeb){
     const ipcRenderer = require('electron').ipcRenderer
     return function(params){
       ipcRenderer.send('download-file', params)
@@ -56,11 +61,90 @@ let downloadFileFunction = function(  ){
     return function(){  console.warn("please run in electron, now is web."); return {}  }
   }
 }
+
+
 export var PrintUtil = {
   getPrinters: getPrintersFunction(),
   printLabel: printLabelFunction( ),
   printReceipt: printReceiptFunction( ),
 }
 export var DownloadUtil = {
-  downloadFile: downloadFileFunction(),
+  setStore: downloadFileFunction(),
+}
+
+/**
+ * 存储localStorage
+ */
+
+let setStoreFunction = function(){
+  if (!isWeb){
+    //const storage = {}
+    const storage = require('electron-json-storage');
+
+    return async function(name, json){
+      return storage.set(name, json )
+    }
+  }else{
+
+    return async function(name, content){
+      return new Promise( (resolve, reject)=>{
+        if (typeof content !== 'string') {
+            content = JSON.stringify(content)
+        }
+        window.localStorage.setItem(name, content)
+        resolve()
+      })
+    }
+  }
+
+}
+
+/**
+ * 获取localStorage
+ */
+
+ let getStoreFunction = function(){
+   if (!isWeb){
+     //const storage = {}
+     const storage = require('electron-json-storage');
+     console.log( "storage paht =",storage.getDataPath() )
+     return async function(name){
+       return new Promise( (resolve, reject)=>{
+
+         storage.get(name, (error, data)=>{
+           console.log(  "error, data", error, data )
+           if( error ){
+             reject(error)
+           }else{
+             if( data == null ){
+               data = {}
+             }
+             resolve( data )
+           }
+         })
+       })
+     }
+   }else{
+
+     return async function(name){
+       return new Promise( (resolve, reject)=>{
+         let content = window.localStorage.getItem(name)
+
+         if (typeof content == 'string') {
+            content = JSON.parse(content)
+         }else{
+           content = {}
+         }
+         resolve(content)
+       })
+     }
+   }
+
+ }
+
+
+
+export var StorageUtil = {
+  getJson: getStoreFunction(),
+  setJson: setStoreFunction()
 }

@@ -40,7 +40,7 @@
 
 <script>
 import _ from 'lodash'
-import {setStore, getStore } from "@/config/mUtils"
+import { StorageUtil } from "@/utils/ipcService"
 import {
   updateStore
 }
@@ -65,7 +65,8 @@ export default {
     };
   },
   mounted() {
-    let storeId = _.toInteger( getStore('storeId') )
+    let json = StorageUtil.getJson('storeId')
+    let storeId = _.toInteger( json.storeId )
     if(storeId > 0){
       this.form.storeId = storeId
       this.form.checkoutPasswordRequired = this.storeInfo.checkoutPasswordRequired
@@ -97,15 +98,13 @@ export default {
     handleSave(){
       let storeId = this.form.storeId
 
-      console.log( "localStorage.storeId, this.form.storeId", getStore('storeId'), storeId )
-
       let selectedStore = this.stores.find((item)=>{
         return item.id == storeId
       })
       if( selectedStore ){
         updateStore( storeId, this.buildParams()).then((res)=>{
           if( res.id ){
-            setStore('storeId', storeId)
+            StorageUtil.setJson('storeId', { storeId })
             let store = this.buildStore( res )
             console.log( "new store=", store)
             this.$store.commit('saveStore', store)

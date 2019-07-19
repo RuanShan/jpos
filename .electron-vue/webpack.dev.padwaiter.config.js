@@ -58,7 +58,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': require('../config/dev.env')
+      'process.env': require('../config/devweb.env'),
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
@@ -73,9 +73,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         removeComments: true
       },
       nodeModules: false
-    }),
-    new webpack.DefinePlugin({
-      'process.env.IS_WEB': 'true',
     }),
     // copy custom static assets
     new CopyWebpackPlugin([
