@@ -1,6 +1,6 @@
 console.log( "process.env =", process.env)
 console.log( "process.env.IS_WEB =", process.env.IS_WEB )
-let isWeb = process.env.IS_WEB
+const isWeb = process.env.IS_WEB
 
 
 let getPrintersFunction = function(){
@@ -107,7 +107,6 @@ let setStoreFunction = function(){
    if (!isWeb){
      //const storage = {}
      const storage = require('electron-json-storage');
-     console.log( "storage paht =",storage.getDataPath() )
      return async function(name){
        return new Promise( (resolve, reject)=>{
 

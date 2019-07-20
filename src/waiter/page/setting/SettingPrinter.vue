@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { PrintUtil } from '@/components/mixin/print'
+import { PrintUtil } from '@/utils/ipcService'
 import {
   updateStore
 }
