@@ -60,8 +60,9 @@ export var apiResultMixin = {
         storeId: orderResult.store_id,
         oddStoreId: orderResult.odd_store_id,
         number: orderResult.number,
-        total: parseInt(orderResult.total), //实收价格, 对于充值卡，是充值金额
-        saleTotal: parseInt(orderResult.sale_total), //应收价格, 对于充值卡，是付款金额
+        total: parseInt(orderResult.total), //实收价格, 对于充值卡，是付款金额
+        cardAmount: 0,  //对于充值卡，是充值金额
+        saleTotal: parseInt(orderResult.sale_total), //应收价格,
         userName: orderResult.user_name,
         storeName: orderResult.store_name,
         creatorName: orderResult.creator_name,
@@ -137,6 +138,7 @@ export var apiResultMixin = {
         })
         // 通常一个订单对应一条充值记录或者一条消费记录
         order.cardTransaction = order.cardTransactions[0]
+        order.cardAmount = order.cardTransaction.amount
       }
       return order
     },
@@ -578,6 +580,7 @@ export var apiResultMixin = {
         saleUnitPrice: model.sale_unit_price,
         discountPercent: model.discount_percent,
         cardId: model.card_id,
+        cardAmount: parseInt(model.card_amount),
         createdAt: moment(model.created_at)
       }
 

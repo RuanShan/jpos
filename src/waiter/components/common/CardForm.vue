@@ -180,8 +180,8 @@
               line_items: [
                 {
                   variant_id: this.cardFormData.variantId,
-                  price: this.cardFormData.amount,
-                  sale_unit_price: this.cardFormData.money,
+                  card_amount: this.cardFormData.amount,
+                  price: this.cardFormData.money,
                   quantity: 1,
                   card_code: this.cardFormData.code
                 }
@@ -189,7 +189,7 @@
               payments: [
                 {
                   payment_method_id: this.cardFormData.paymentMethodId,
-                  amount: this.cardFormData.amount
+                  amount: this.cardFormData.money
                 }
               ]
             }

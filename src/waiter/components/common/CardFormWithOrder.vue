@@ -421,11 +421,11 @@ export default {
         user_id: this.customerData.id,
         order_type: 'card',
         line_items: [
-          { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1, sale_unit_price: this.cardFormData.money, card_code: this.cardFormData.code  }
+          { variant_id: this.cardFormData.variantId, card_amount: this.cardFormData.amount, quantity: 1, price: this.cardFormData.money, card_code: this.cardFormData.code  }
         ],
         payments: [{
             payment_method_id:  this.cardFormData.paymentMethodId,
-            amount: this.cardFormData.paymentAmount
+            amount: this.cardFormData.money
           }]
       }
       let cardParams = {code: this.cardFormData.code,

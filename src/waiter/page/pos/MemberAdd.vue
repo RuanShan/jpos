@@ -387,8 +387,8 @@
 
           order = {
             store_id: this.storeId,
-            line_items_attributes: [{ variant_id: vid, quantity: 1, price: amount, sale_unit_price: money }],
-            payments: [{ payment_method_id: this.cardFormData.paymentMethodId, amount: amount }]
+            line_items_attributes: [{ variant_id: vid, quantity: 1, card_amount: amount, price: money }],
+            payments: [{ payment_method_id: this.cardFormData.paymentMethodId, amount: money }]
           }
         }
         return { user, order }

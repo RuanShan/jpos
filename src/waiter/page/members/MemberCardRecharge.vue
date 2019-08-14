@@ -210,15 +210,15 @@
               variant_id: this.formData.variantId,
               quantity: 1,
               card_id: this.cardData.id,
-              price: this.formData.amount,
-              sale_unit_price: this.formData.money,
+              card_amount: this.formData.amount,
+              price: this.formData.money,
               cname: '会员卡充值'
             }
           ],
           payments_attributes: [
             {
               payment_method_id: this.formData.paymentMethodId,
-              amount: this.formData.amount
+              amount: this.formData.money
             }
           ]
         }
