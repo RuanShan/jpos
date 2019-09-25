@@ -1,7 +1,7 @@
 <style lang="scss">
 .statis-staff-clock-in {
     .el-tag{
-      margin: 0 2px; 
+      margin: 0 2px;
     }
     .select-options {
         width: 120px;
@@ -139,8 +139,8 @@ export default {
   },
   mounted() {
     this.stateValue = this.stateOptions[0].value;
-    let start = moment().subtract(6, "days")
-    let end = moment()
+    let start = moment().subtract(6, "days").startOf('day')
+    let end = moment().endOf('day')
     this.formData.selectedDates = [start.toDate(), end.toDate()]
     this.formData.storeId = this.storeId
     this.initData()

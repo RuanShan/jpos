@@ -64,10 +64,11 @@
                           size="mini"
                           unlink-panels
                           range-separator="~"
-                          :default-time="['00:00:00','23:59:59']"
                           start-placeholder="开始日期"
                           end-placeholder="结束日期"
                           :picker-options="pickerOptions2"
+                          format="yyyy-MM-dd"
+                          :default-time="['00:00:00','23:59:59']"
                           >
           </el-date-picker>
         </el-form-item>
@@ -127,7 +128,7 @@
         </el-table-column>
         <el-table-column label="金额" prop="total">
         </el-table-column>
-        <el-table-column label="支付信息">
+        <el-table-column label="支付信息"  width="240">
           <template slot-scope="scope">
               <el-tag v-for="item in scope.row.payments" :key="item.id" size="mini">
                 {{ item.description }}
@@ -174,7 +175,7 @@
 </template>
 
 <script>
-
+  // 订单统计
   import moment from 'moment'
   import { findOrders, getOrderCount, findCustomers, repayable } from '@/api/getData'
 
@@ -255,8 +256,8 @@
       }
     },
     mounted() {
-      let start = moment().subtract(6, 'days')
-      let end = moment()
+      let start = moment().subtract(6, "days").startOf('day')
+      let end = moment().endOf('day')
       this.formData.selectedDates = [start.toDate(), end.toDate()]
       this.formData.storeId = this.storeId
       this.initData()

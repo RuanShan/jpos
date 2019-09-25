@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+//import _ from 'lodash'
 import { StorageUtil } from "@/utils/ipcService"
 import {
   updateStore
@@ -65,10 +65,11 @@ export default {
     };
   },
   mounted() {
-    let json = StorageUtil.getJson('storeId')
-    let storeId = _.toInteger( json.storeId )
-    if(storeId > 0){
-      this.form.storeId = storeId
+    // let json = StorageUtil.getJson('storeId')
+    // let storeId = _.toInteger( json.storeId )
+console.log( "storeId=", this.storeId, this.storeInfo )
+    if( this.storeId ){
+      this.form.storeId = this.storeId
       this.form.checkoutPasswordRequired = this.storeInfo.checkoutPasswordRequired
     }
   },
@@ -82,6 +83,12 @@ export default {
       }
       return options
     }
+  },
+  watch:{
+    // storeInfo:function(newStore,oldStore){
+    //   this.form.storeId = newStore.id
+    //   this.form.checkoutPasswordRequired = newStore.checkoutPasswordRequired
+    // }
   },
   methods: {
     //門店選擇改變時的事件處理函數-----

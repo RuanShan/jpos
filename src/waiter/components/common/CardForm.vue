@@ -45,10 +45,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="充值金额" required>
-          <el-input v-model="cardFormData.amount"></el-input>
+          <el-input v-model.number="cardFormData.amount"></el-input>
         </el-form-item>
         <el-form-item label="付款金额" required>
-          <el-input v-model="cardFormData.money"></el-input>
+          <el-input v-model.number="cardFormData.money"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="address">
           <el-input v-model="cardFormData.cardMemo"></el-input>
@@ -83,8 +83,8 @@
         cardTypeList: [],
         cardFormData: {
           code: '',
-          amount: null,
-          money: null,
+          amount: '',
+          money: '',
           expireAt: null,
           paymentMethodId: null,
           variantId: null,
@@ -112,11 +112,20 @@
             }
           ],
           amount: [
-            { type: 'integer', required: true, message: '请输入充值金额', trigger: 'blur' },
+            { type: 'number', required: true, message: '请输入充值金额', trigger: 'blur' },
             {
               min: 0,
               max: 1000000,
               message: '请输入有效充值金额',
+              trigger: 'blur'
+            }
+          ],
+          money: [
+            { type: 'number', required: true, message: '请输入付款金额', trigger: 'blur' },
+            {
+              min: 0,
+              max: 1000000,
+              message: '请输入有效付款金额',
               trigger: 'blur'
             }
           ]

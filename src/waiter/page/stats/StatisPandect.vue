@@ -1,178 +1,180 @@
 <style lang="scss">
 .statistics-container {
-  .filters {
-    .el-form-item {
-      margin: 0;
+    .filters {
+        .el-form-item {
+            margin: 0;
+        }
     }
-  }
 
-  .pagination-wrap {
-    position: absolute;
-    bottom: 15px;
-    right: 4%;
-    margin-top: 10px;
-  }
-  .line-one-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 10px;
-    .order-ok {
+    .pagination-wrap {
+        position: absolute;
+        bottom: 15px;
+        right: 4%;
+        margin-top: 10px;
+    }
+    .line-one-row {
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        top: 10px;
+        .order-ok {
+            }
+    }
+    .line-two-row {
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        top: 80px;
+    }
+    .line-three-row {
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        top: 150px;
+    }
+    .tubiao-ont-row {
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        top: 90px;
+        bottom: 10px;
+        .tubiao {}
+    }
 
+    .data_section {
+        padding: 20px;
+        margin-bottom: 40px;
+        .section_title {
+            text-align: center;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        .data_list {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-radius: 6px;
+            background: #e5e9f2;
+            .data_num {
+                color: #333;
+                font-size: 26px;
+            }
+            .head {
+                border-radius: 6px;
+                font-size: 22px;
+                padding: 4px 0;
+                color: #fff;
+                display: inline-block;
+            }
+        }
+        .today_head {
+            background: #ff9800;
+        }
+        .all_head {
+            background: #20a0ff;
+        }
     }
-  }
-  .line-two-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 80px;
-  }
-  .line-three-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 150px;
-  }
-  .tubiao-ont-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 90px;
-    bottom: 10px;
-    .tubiao {
+    .tendency-wrap {
+        position: absolute;
+        top: 160px;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
-  }
-
-  .data_section {
-    padding: 20px;
-    margin-bottom: 40px;
-    .section_title {
-      text-align: center;
-      font-size: 30px;
-      margin-bottom: 10px;
-    }
-    .data_list {
-      text-align: center;
-      font-size: 14px;
-      color: #666;
-      border-radius: 6px;
-      background: #e5e9f2;
-      .data_num {
-        color: #333;
-        font-size: 26px;
-      }
-      .head {
-        border-radius: 6px;
-        font-size: 22px;
-        padding: 4px 0;
-        color: #fff;
-        display: inline-block;
-      }
-    }
-    .today_head {
-      background: #ff9800;
-    }
-    .all_head {
-      background: #20a0ff;
-    }
-  }
-  .tendency-wrap {
-    position: absolute;
-    top: 160px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
 }
 </style>
 
 <template>
-  <div class="">
-    <!-- 門店選擇 START-->
-    <fieldset class="filters">
-      <legend>查询条件</legend>
-      <el-form :inline="true" :model="formData" class="demo-form-inline">
-        <store-select  v-bind:value.sync="formData.storeId"  v-if="authorizeMultiStore()"/>
-        <el-form-item label="时间区间">
-          <el-date-picker class="date-picker" v-model="selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" class="order-ok" size="mini" @click="onSubmit">确定</el-button>
-        </el-form-item>
-      </el-form>
+<div class="">
+  <!-- 門店選擇 START-->
+  <fieldset class="filters">
+    <legend>查询条件</legend>
+    <el-form :inline="true" :model="formData" class="demo-form-inline">
+      <store-select v-bind:value.sync="formData.storeId" v-if="authorizeMultiStore()" />
+      <el-form-item label="时间区间">
+        <el-date-picker class="date-picker" v-model="selectedDates" type="daterange" align="right" size="mini"
+         range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"
+        format="yyyy-MM-dd"
+        :default-time="['00:00:00','23:59:59']"
+        >
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" class="order-ok" size="mini" @click="onSubmit">确定</el-button>
+      </el-form-item>
+    </el-form>
 
-    </fieldset>
-    <!-- 門店選擇 END-->
-    <!-- 图表   START -->
-    <div class="tubiao-ont-row">
-      <div class="fillcontain">
+  </fieldset>
+  <!-- 門店選擇 END-->
+  <!-- 图表   START -->
+  <div class="tubiao-ont-row">
+    <div class="fillcontain">
 
-        <section class="data_section">
-          <header class="section_title"></header>
-          <el-row :gutter="20" style="margin-bottom: 10px;">
-            <el-col :span="3" :offset="3">
-              <div class="data_list today_head">
-                <span class="data_num head">当日数据：</span>
-              </div>
-            </el-col>
-            <el-col :span="3">
-              <div class="data_list">
-                <span class="data_num">{{statis.serviceOrderCount}}</span>  订单数量</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="data_list">
-                <span class="data_num">{{statis.serviceTotal}}</span> 订单金额 </div>
-            </el-col>
-            <el-col :span="3">
-              <div class="data_list">
-                <span class="data_num">{{statis.userCount}}</span> 新增客户</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="data_list">
-                <span class="data_num">{{statis.cardCount}}</span> 新增会员卡</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="data_list">
-                <span class="data_num">{{statis.depositTotal}}</span> 充值金额</div>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="3" :offset="3">
-              <div class="data_list all_head">
-                <span class="data_num head">总数据：</span>
-              </div>
-            </el-col>
-            <el-col :span="3">
-              <div class="data_list">
-                <span class="data_num">{{statis.allServiceOrderCount}}</span> 订单数量</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="data_list">
-                <span class="data_num">{{statis.allServiceTotal}}</span> 订单金额</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="data_list">
-                <span class="data_num">{{statis.allUserCount}}</span> 注册客户</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="data_list">
-                <span class="data_num">{{statis.allCardCount}}</span> 会员卡</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="data_list">
-                <span class="data_num">{{statis.allDepositTotal}}</span> 充值金额</div>
-            </el-col>
-          </el-row>
-        </section>
-        <div class="tendency-wrap">
-          <tendency :sevenDate.sync='sevenDate' :sevenDay.sync='compuatedDays'></tendency>
-        </div>
-
+      <section class="data_section">
+        <header class="section_title"></header>
+        <el-row :gutter="20" style="margin-bottom: 10px;">
+          <el-col :span="3" :offset="3">
+            <div class="data_list today_head">
+              <span class="data_num head">当日数据：</span>
+            </div>
+          </el-col>
+          <el-col :span="3">
+            <div class="data_list">
+              <span class="data_num">{{statis.serviceOrderCount}}</span> 订单数量</div>
+          </el-col>
+          <el-col :span="3">
+            <div class="data_list">
+              <span class="data_num">{{statis.serviceTotal}}</span> 订单金额 </div>
+          </el-col>
+          <el-col :span="3">
+            <div class="data_list">
+              <span class="data_num">{{statis.userCount}}</span> 新增客户</div>
+          </el-col>
+          <el-col :span="3">
+            <div class="data_list">
+              <span class="data_num">{{statis.cardCount}}</span> 新增会员卡</div>
+          </el-col>
+          <el-col :span="3">
+            <div class="data_list">
+              <span class="data_num">{{statis.depositTotal}}</span> 充值金额</div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="3" :offset="3">
+            <div class="data_list all_head">
+              <span class="data_num head">总数据：</span>
+            </div>
+          </el-col>
+          <el-col :span="3">
+            <div class="data_list">
+              <span class="data_num">{{statis.allServiceOrderCount}}</span> 订单数量</div>
+          </el-col>
+          <el-col :span="3">
+            <div class="data_list">
+              <span class="data_num">{{statis.allServiceTotal}}</span> 订单金额</div>
+          </el-col>
+          <el-col :span="3">
+            <div class="data_list">
+              <span class="data_num">{{statis.allUserCount}}</span> 注册客户</div>
+          </el-col>
+          <el-col :span="3">
+            <div class="data_list">
+              <span class="data_num">{{statis.allCardCount}}</span> 会员卡</div>
+          </el-col>
+          <el-col :span="3">
+            <div class="data_list">
+              <span class="data_num">{{statis.allDepositTotal}}</span> 充值金额</div>
+          </el-col>
+        </el-row>
+      </section>
+      <div class="tendency-wrap">
+        <tendency :sevenDate.sync='sevenDate' :sevenDay.sync='compuatedDays'></tendency>
       </div>
-      <!-- 图表   END -->
+
     </div>
+    <!-- 图表   END -->
   </div>
+</div>
 </template>
 
 <script>
@@ -209,7 +211,7 @@ export default {
           onClick(picker) {
             const end = moment().endOf('day')
             const endDate = end.toDate()
-            const startDate =end.subtract( 6, 'days').startOf('day').toDate()
+            const startDate = end.subtract(6, 'days').startOf('day').toDate()
             picker.$emit('pick', [startDate, endDate])
           }
         }, {
@@ -217,7 +219,7 @@ export default {
           onClick(picker) {
             const end = moment().endOf('day')
             const endDate = end.toDate()
-            const startDate =end.subtract( 1, 'months').startOf('day').toDate()
+            const startDate = end.subtract(1, 'months').startOf('day').toDate()
             picker.$emit('pick', [startDate, endDate])
           }
         }, {
@@ -225,7 +227,7 @@ export default {
           onClick(picker) {
             const end = moment().endOf('day')
             const endDate = end.toDate()
-            const startDate =end.subtract( 3, 'months').startOf('day').toDate()
+            const startDate = end.subtract(3, 'months').startOf('day').toDate()
             picker.$emit('pick', [startDate, endDate])
           }
         }]
@@ -252,10 +254,18 @@ export default {
     };
   },
   created() {
-    let stores = this.stores.map((item) => { return { id: item.id, name: item.name } })
-    this.storeOptions = [{ id: null, name: "全部" }].concat(stores)
-    let start = moment().subtract(6, "days")
-    let end = moment()
+    let stores = this.stores.map((item) => {
+      return {
+        id: item.id,
+        name: item.name
+      }
+    })
+    this.storeOptions = [{
+      id: null,
+      name: "全部"
+    }].concat(stores)
+    let start = moment().subtract(6, "days").startOf('day')
+    let end = moment().endOf('day')
     this.selectedDates = [start.toDate(), end.toDate()]
     this.formData.storeId = this.storeId
     this.initData()
@@ -268,8 +278,12 @@ export default {
       return this.formData.selectedDates[1]
     },
     computedDayParam: function () {
-      let params = { q: { day_eq: this.computedEndAt } }
-      if( parseInt(this.formData.storeId) > 0){
+      let params = {
+        q: {
+          day_eq: this.computedEndAt
+        }
+      }
+      if (parseInt(this.formData.storeId) > 0) {
         params.q.store_id_eq = this.formData.storeId
       }
       return params
@@ -281,7 +295,7 @@ export default {
           day_lteq: this.computedEndAt
         }
       }
-      if( this.formData.storeId > 0){
+      if (this.formData.storeId > 0) {
         params.q.store_id_eq = this.formData.storeId
       }
       return params
@@ -306,11 +320,11 @@ export default {
       Promise.all([selectedDayCount(this.computedDayParam), totalCount(this.computedDaysParams)])
         .then(res => {
           console.log("StatisPandect.res = ", res)
-          this.statis.userCount = res[0].new_customers_count  //新增客户
-          this.statis.serviceOrderCount = res[0].service_order_count    //新增服务订单
-          this.statis.cardCount = res[0].new_cards_count      //新增会员卡
-          this.statis.serviceTotal = res[0].service_total      //新增服务订单金额
-          this.statis.depositTotal = res[0].deposit_total      //新增充值订单金额
+          this.statis.userCount = res[0].new_customers_count //新增客户
+          this.statis.serviceOrderCount = res[0].service_order_count //新增服务订单
+          this.statis.cardCount = res[0].new_cards_count //新增会员卡
+          this.statis.serviceTotal = res[0].service_total //新增服务订单金额
+          this.statis.depositTotal = res[0].deposit_total //新增充值订单金额
           this.statis.allUserCount = res[1].new_customers_count
           this.statis.allServiceOrderCount = res[1].service_order_count
           this.statis.allCardCount = res[1].new_cards_count
@@ -325,10 +339,16 @@ export default {
 
       selectedDaysCount(this.computedDaysParams).then(res => {
         const resArr = [
-          [], [], [], [], []
+          [],
+          [],
+          [],
+          [],
+          []
         ]
         this.compuatedDays.forEach((day, i) => {
-          let sale_day = res.sale_days.find((item) => { return item.day == day })
+          let sale_day = res.sale_days.find((item) => {
+            return item.day == day
+          })
 
           if (sale_day) {
             resArr[0].push(sale_day.new_customers_count)

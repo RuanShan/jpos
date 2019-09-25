@@ -111,31 +111,31 @@
       <div class="tab-list-wrap grid-content bg-purple-light">
         <el-tabs class="tabs-height" type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick">
 
-          <el-tab-pane label="总览">
-            <statis-pandect></statis-pandect>
+          <el-tab-pane label="总览" v-if="posPermission">
+            <statis-pandect v-if="statisPandectVisible"></statis-pandect>
           </el-tab-pane>
-          <el-tab-pane label="会员充值统计">
+          <el-tab-pane label="会员充值统计" v-if="posPermission">
             <statis-each-state-member v-if="cardTabVisible" ></statis-each-state-member>
           </el-tab-pane>
-          <el-tab-pane label="订单统计">
+          <el-tab-pane label="订单统计" v-if="posPermission">
             <statis-each-state-order  v-if="orderTabVisible" ></statis-each-state-order>
           </el-tab-pane>
-          <el-tab-pane label="异店消费订单统计">
+          <el-tab-pane label="异店消费订单统计" v-if="posPermission">
             <statis-odd-card-paid-order  v-if="oddCardPaidOrderVisible" ></statis-odd-card-paid-order>
           </el-tab-pane>
-          <el-tab-pane label="费用统计">
+          <el-tab-pane label="费用统计" v-if="posPermission">
             <StatisExpense  v-if="expenseTabVisible" ></StatisExpense>
           </el-tab-pane>
-          <el-tab-pane label="工厂统计">
+          <el-tab-pane label="工厂统计" v-if="statisWorksPermission">
             <StatisWorker  v-if="workerTabVisible" ></StatisWorker>
           </el-tab-pane>
-          <el-tab-pane label="会员情况统计">
+          <el-tab-pane label="会员情况统计" v-if="posPermission">
             <statis-member-case  v-if="memberTabVisible"  > </statis-member-case>
           </el-tab-pane>
-          <el-tab-pane label="库存统计">
+          <el-tab-pane label="库存统计" v-if="posPermission">
             <StatisStockMovement  ></StatisStockMovement>
           </el-tab-pane>
-          <el-tab-pane label="员工打卡统计">
+          <el-tab-pane label="员工打卡统计" v-if="posPermission">
             <statis-staff-clock-in  ></statis-staff-clock-in>
           </el-tab-pane>
         </el-tabs>
@@ -192,9 +192,24 @@ export default {
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
     }
   },
+  computed:{
+    statisWorksPermission(){
+      return this.userAuthorize('statistics_works')
+    },
+    posPermission(){
+      return this.userAuthorize('pos')
+    }
+  },
+  created(){
+    if( this.posPermission){
+      this.statisPandectVisible = true
+    }else
+    if( this.statisWorksPermission){
+      this.workerTabVisible = true
+    }
+  },
   mounted() {
     // this.stateValue = this.stateOptions[0].value;
-    this.statisPandectVisible = true;
   },
   methods: {
     //点击标签的事件处理函数-----

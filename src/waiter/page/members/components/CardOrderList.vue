@@ -59,7 +59,7 @@
            size="mini"  type="success"
            @click="handleShowDetail( scope.row)">详情</el-button>
          <el-button
-             size="mini" type="danger" @click="handleCancel( scope.row)" :disabled="scope.row.state!='cart'">取消</el-button>
+             size="mini" type="danger" @click="handleCancel( scope.row)" :disabled="!isCancelable(scope.row)">取消</el-button>
 
        </template>
      </el-table-column>
@@ -204,6 +204,10 @@ export default {
             }
           })
         })
+    },
+    isCancelable(order){
+      // 在店内的商品才可以取消
+      return (order.state == 'cart') && (order.groupState == 'ready' || order.groupState == 'pending' )
     }
   },
   watch:{

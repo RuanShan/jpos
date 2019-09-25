@@ -89,7 +89,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="充值金额" required>
-                <el-input type="number" v-model="cardFormData.amount"></el-input>
+                <el-input v-model.number="cardFormData.amount"></el-input>
+              </el-form-item>
+              <el-form-item label="付款金额" required>
+                <el-input v-model.number="cardFormData.money"></el-input>
               </el-form-item>
               <el-form-item label="备注" prop="address">
                 <el-input v-model="cardFormData.memo"></el-input>
@@ -178,7 +181,8 @@ export default {
       }],
       cardFormData: {
         code: "",
-        amount: null,
+        amount: '',
+        money: '',
         expireAt: "",
         paymentMethodId: null,
         paymentPassword: null,
@@ -348,11 +352,14 @@ export default {
         user_id: this.member.id,
         order_type: 'card',
         line_items: [
-          { variant_id: this.cardFormData.variantId, price: this.cardFormData.paymentAmount, quantity: 1, card_code: this.cardFormData.code  }
+          { variant_id: this.cardFormData.variantId,
+            card_amount: this.cardFormData.amount,
+            price: this.cardFormData.money,
+            quantity: 1, card_code: this.cardFormData.code  }
         ],
         payments: [{
             payment_method_id:  this.cardFormData.paymentMethodId,
-            amount: this.cardFormData.paymentAmount
+            amount: this.cardFormData.money
           }]
       }
       let cardParams = {code: this.cardFormData.code,

@@ -1,4 +1,4 @@
-const escpos = require('escpos');
+const escpos = require('escpos-without-adapter');
 const _ = require('lodash');
 
 import {

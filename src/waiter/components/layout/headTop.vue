@@ -66,7 +66,7 @@
 
     <div class="title left">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">{{storeInfo.name}}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{storeInfo.name}}</el-breadcrumb-item>
         <el-breadcrumb-item> {{$store.state.title}}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>

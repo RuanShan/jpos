@@ -199,6 +199,18 @@ export default {
       });
     };
 
+    //验证规则---充值时，充值和现金不一致时，必须添加备注。
+    var validateMemo = (rule, value, callback) => {
+       if( this.cardFormData.amount != this.cardFormData.money){
+         if( this.cardFormData.memo && this.cardFormData.memo.length>0){
+           callback()
+         }else{
+           callback(new Error("充值和付款不一致时，必须添加备注。"))
+         }
+       }else{
+         callback()
+       }
+    };
     return {
       paymentMethodList: [],
       cardTypeList: [],
@@ -219,8 +231,8 @@ export default {
       }],
       cardFormData: {
         code: "",
-        amount: null,
-        money: null,
+        amount: null,  // 充值数额
+        money: null,   // 客户支付费用
         expireAt: "",
         paymentMethodId: null,
         paymentPassword: null,
@@ -263,6 +275,7 @@ export default {
             trigger: "blur"
           }
         ],
+        memo:[{ validator: validateMemo, trigger: "blur"}]
       },
 
       pickerOptions: {

@@ -46,7 +46,9 @@
       <legend>查询条件</legend>
       <store-select  v-bind:value.sync="formData.storeId" :disableAll="true"  v-if="authorizeMultiStore()"/>
       <el-form-item class="stock-movement-form-item" label="创建日期">
-        <el-date-picker class="stock-movement-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+        <el-date-picker class="stock-movement-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"
+        :default-time="['00:00:00','23:59:59']"
+        format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="商品" prop="stockItemId">
@@ -161,8 +163,8 @@ export default {
     })
   },
   mounted() {
-    let start = moment().subtract(6, "days")
-    let end = moment()
+    let start = moment().subtract(6, "days").startOf('day')
+    let end = moment().endOf('day')
     this.formData.selectedDates = [start.toDate(), end.toDate()]
     this.formData.storeId = this.storeId
     let queryParams = {

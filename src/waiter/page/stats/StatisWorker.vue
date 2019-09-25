@@ -18,7 +18,7 @@
         bottom: 55px;
     }
 
-    .statisdatarechargemoney {
+    .statisdata {
         display: inline-block;
         position: absolute;
         bottom: 20px;
@@ -45,8 +45,17 @@
       <legend>查询条件</legend>
       <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
       <el-form-item class="expense-form-item" label="创建日期">
-        <el-date-picker class="expense-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+        <el-date-picker class="expense-time-select" v-model="formData.selectedDates" type="daterange" align="right"
+        :default-time="['00:00:00','23:59:59']"
+        size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" format="yyyy-MM-dd">
         </el-date-picker>
+      </el-form-item>
+
+      <el-form-item label="工人">
+        <el-select class="select-options" v-model="formData.workerId" size="mini" clearable placeholder="不限" @clear="handleClear">
+          <el-option v-for="item in workerList" :key="item.id" :value="item.id" :label="item.username">
+          </el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item>
@@ -82,7 +91,10 @@
   </div>
 
   <!-- 统计数据  START -->
-
+  <div class="statisdata">
+    <h4 style="display: inline-block;">合计工作数量:</h4>
+    <h4 class="recordnum">{{totalPage}}</h4>
+  </div>
   <!-- 统计数据  END -->
 
   <!-- 会员统计表   END -->
@@ -98,7 +110,7 @@
 <script>
 import moment from 'moment'
 import {
-  findLineItems
+  findUsers, findLineItems
 } from '@/api/getData'
 import StoreSelect from '@/components/common/StoreSelect.vue'
 
@@ -112,6 +124,7 @@ export default {
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
         storeId: null,
+        workerId: null,
       },
       //*********** UI需要的变量 ***************/
 
@@ -145,17 +158,17 @@ export default {
           }
         }]
       },
-      tableData: [  ],
+      workerList: [],
+      tableData: [],
       //*********** 逻辑需要的变量 ***************/
       returnServerCustomerData: {}, //调用接口,返回的数据
       customerData: {}, //整理過的顧客數據
-      recordNumber: "0", //统计数据之记录数
-      rechargeMoneySum: "0" //统计数据之充值金额合计
+      total: 0, //统计数据之记录数
     };
   },
   mounted() {
-    let start = moment().subtract(6, "days")
-    let end = moment()
+    let start = moment().subtract(6, "days").startOf('day')
+    let end = moment().endOf('day')
     this.formData.selectedDates = [start.toDate(), end.toDate()]
     this.formData.storeId = this.storeId
     this.initData()
@@ -170,6 +183,15 @@ export default {
   },
   methods: {
     async initData() {
+      let queryParams = {
+        q: {
+          spree_roles_name_eq: "worker"
+        }
+      }
+      findUsers(queryParams).then((res) => {
+        this.workerList = res.users
+      })
+
       let params = this.buildParams()
       let result = await findLineItems(params)
 
@@ -197,6 +219,9 @@ export default {
         params.q.created_at_gteq= this.computedStartAt
         params.q.created_at_lteq= this.computedEndAt
       }
+      if(this.formData.workerId ){
+        params.q.worker_id_eq = this.formData.workerId
+      }
       return params
     },
     //門店選擇改變時的事件處理函數-----
@@ -211,7 +236,10 @@ export default {
     handleSearch(){
       this.currentPage = 1;
       this.initData()
-    }
+    },
+    handleClear() {
+      this.formData.workerId = null
+    },
   }
 };
 </script>

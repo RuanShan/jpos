@@ -80,7 +80,7 @@ export var orderDataMixin = {
             return false
           }
         }else if( userRole == 'qa'){
-          if(  permission == 'fitems' ||  permission == 'statistics'){
+          if(  permission == 'fitems' ||  permission == 'statistics' ||  permission == 'statistics_works'){
             return true
           }else{
             return false

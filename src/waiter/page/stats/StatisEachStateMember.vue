@@ -57,7 +57,11 @@
         <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
 
         <el-form-item class="member-form-item" label="充值日期">
-          <el-date-picker class="member-time-select" v-model="formData.selectedDates" type="daterange" align="right" size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd">
+          <el-date-picker class="member-time-select" v-model="formData.selectedDates" type="daterange"
+          :default-time="['00:00:00','23:59:59']"
+          align="right" size="mini" unlink-panels range-separator="~"
+          start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"
+          format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
 
@@ -74,7 +78,7 @@
         <el-table-column prop="cardTransaction.card.code" label="会员卡号" width="120">
 
         </el-table-column>
-        <el-table-column prop="cardTransaction.customer.userName" label="会员姓名" width="90">
+        <el-table-column prop="cardTransaction.customer.userName" label="会员姓名" width="130">
         </el-table-column>
         <el-table-column prop="cardTransaction.card.displayStyle" label="卡类型" width="90">
         </el-table-column>
@@ -83,7 +87,12 @@
         </el-table-column>
         <el-table-column prop="cardTransaction.displayCreatedAt" label="充值日期">
         </el-table-column>
-        <el-table-column prop="cardTransaction.amount" label="充值金额" width="90">
+        <el-table-column   label="充值/付款" width="120">
+          <template slot-scope="scope">
+              <span>{{ scope.row.cardTransaction.amount}} </span>/
+              <span >{{scope.row.paymentTotal}} </span>
+            </template>
+
         </el-table-column>
         <el-table-column prop="creatorName" label="操作员" width="110">
         </el-table-column>
@@ -112,6 +121,7 @@
 </template>
 
 <script>
+// 会员充值统计
 import moment from 'moment'
 import {
   findOrders, getOrderCount
@@ -176,8 +186,8 @@ export default {
   created() {
     let stores = this.stores.map((item) => { return { id: item.id, name: item.name } })
     this.storeOptions = [{ id: null, name: "全部" }].concat(stores)
-    let start = moment().subtract(6, "days")
-    let end = moment()
+    let start = moment().subtract(6, "days").startOf('day')
+    let end = moment().endOf('day')
     this.formData.selectedDates = [start.toDate(), end.toDate()]
     this.formData.storeId = this.storeId
     this.initData()

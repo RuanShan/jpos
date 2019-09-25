@@ -119,7 +119,7 @@
               <th> 关联微信</th>
               <td class="wxfollower-cell">
                 <span v-show="customerData.wxFollowerNickname" class="nickname ellipsis"> {{customerData.wxFollowerNickname}} </span>
-                <el-button type="danger" icon="el-icon-delete" circle class="discard-wxfollower-button" v-show="customerData.wxFollowerNickname"></el-button>
+                <el-button type="danger" icon="el-icon-delete" circle class="discard-wxfollower-button" v-show="customerData.wxFollowerNickname" @click="handleDiscardWxfollower"></el-button>
                 <span v-show="!customerData.wxFollowerNickname"> 无 </span>
 
               </td>
@@ -249,10 +249,13 @@
 import {
   DialogMixin
 } from "@/components/mixin/DialogMixin";
-
+import {
+  CelUIMixin
+} from '@/components/mixin/CelUIMixin';
 import {
   getCustomerStatis,
-  findOrders
+  findOrders,
+  discardWxfollower
 } from "@/api/getData";
 import {
   getOrder
@@ -269,7 +272,7 @@ import MemberCardEdit from "./MemberCardEdit.vue";
 
 export default {
   props: ["dialogVisible", "customerData"],
-  mixins: [DialogMixin],
+  mixins: [DialogMixin, CelUIMixin],
   components: {
     CardTransfer,
     "card-form": CardForm,
@@ -444,7 +447,16 @@ export default {
       this.$bus.$emit('deposit-order-created-gevent')
       this.handleCardChanged(changedCard)
     },
-
+    handleDiscardWxfollower(){
+      //删除关联会员
+      this.deleteConfirm(()=>{
+        discardWxfollower( this.customerData.id ).then(()=>{
+          let newCustomer = Object.assign({}, this.customerData )
+          newCustomer.wxFollowerNickname = null
+          this.handleCustomerChanged(newCustomer)
+        })
+      })
+    }
     //接收到会员卡卡卡编辑窗口子组件发射来的事件处理函数-----
 
   }

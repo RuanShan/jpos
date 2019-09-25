@@ -29,25 +29,27 @@ export function printLabel ( params ){
      //PUTBMP 46,300,"elm40.BMP"
      //PUTBMP 46,250,"qq40.BMP"
      //Append linebreak (\r) to all commands
-     let template = (/310/.test(printer.name) ? data1 : data2)
-     let compiled =  _.template( template )
-     // 根据物品数量打印编码
-     let order = params.order
-     let labelPrintCount = params.labelPrintCount || 2 //默认打印2个
-     let conterted = []
-     order.lineItemGroups.forEach((group, i)=>{
-       let delay = (i == 0 ? 0 : 10000)
-       let itemMemos = group.lineItems.map((item)=>{ return (item.memo&&item.memo.length>0)? item.memo : item.cname })
-       itemMemos = _.compact(itemMemos).map((memo, i)=>{ return '('+(i+1)+')'+memo }).join(" ")
-       let lableParams = { 'label_title': '永峰皮具养护中心', 'store_name': '西安路店', 'group_number': group.number, 'item_memos': itemMemos }
-       let data = compiled(lableParams)
-       //conterted[i] = iconv2.convert( data )
-       conterted[i] = iconv.encode( data, encoding);
-       console.log( "lableParams3=",itemMemos)
-       console.log("raw data2=", delay, conterted[i], printer)
-       setTimeout(handlePrint, delay, conterted[i], printer, labelPrintCount)
+     if( printer ){
+       let template = (/310/.test(printer.name) ? data1 : data2)
+       let compiled =  _.template( template )
+       // 根据物品数量打印编码
+       let order = params.order
+       let labelPrintCount = params.labelPrintCount || 2 //默认打印2个
+       let conterted = []
+       order.lineItemGroups.forEach((group, i)=>{
+         let delay = (i == 0 ? 0 : 10000)
+         let itemMemos = group.lineItems.map((item)=>{ return (item.memo&&item.memo.length>0)? item.memo : item.cname })
+         itemMemos = _.compact(itemMemos).map((memo, i)=>{ return '('+(i+1)+')'+memo }).join(" ")
+         let lableParams = { 'label_title': '永峰皮具养护中心', 'store_name': '西安路店', 'group_number': group.number, 'item_memos': itemMemos }
+         let data = compiled(lableParams)
+         //conterted[i] = iconv2.convert( data )
+         conterted[i] = iconv.encode( data, encoding);
+         console.log( "lableParams3=",itemMemos)
+         console.log("raw data2=", delay, conterted[i], printer)
+         setTimeout(handlePrint, delay, conterted[i], printer, labelPrintCount)
 
-     })
+       })       
+     }
 
 }
 

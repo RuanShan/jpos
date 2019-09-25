@@ -37,7 +37,7 @@ export const isCodeAvailable = (code) => fetch('/api/v1/cards/code_available', {
  * 取消客户关联的微信账户
  * id: 会员id
  */
-export const discardWxfollower = (id) => fetch('/api/v1/customers/'+id+'/discard_wxfollower' );
+export const discardWxfollower = (id) => fetch('/api/v1/customers/'+id+'/discard_wxfollower', {}, 'PUT' );
 
 /**
  * 客户短信群发

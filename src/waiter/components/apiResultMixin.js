@@ -138,7 +138,9 @@ export var apiResultMixin = {
         })
         // 通常一个订单对应一条充值记录或者一条消费记录
         order.cardTransaction = order.cardTransactions[0]
-        order.cardAmount = order.cardTransaction.amount
+        if( order.cardTransaction  ){
+          order.cardAmount = order.cardTransaction.amount          
+        }
       }
       return order
     },

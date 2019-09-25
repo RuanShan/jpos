@@ -21,8 +21,12 @@ let printLabelFunction = function(  ){
   if (!isWeb){
     const ipcRenderer = require('electron').ipcRenderer
     return function(params){
-      ipcRenderer.send('print-label', params )
-      console.log("send print-label" )
+      if( params.labelPrinter && params.labelPrinter.length> 0){
+        ipcRenderer.send('print-label', params )
+        console.log("send print-label" )
+      }else{
+        alert("请设置条码打印机再打印条码！" )
+      }
 
     }
   }else{
