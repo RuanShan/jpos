@@ -40,7 +40,7 @@
 
 <script>
 //import _ from 'lodash'
-import { StorageUtil } from "@/utils/ipcService"
+import { StorageUtil } from "@/utils/electron_storage_wrapper"
 import {
   updateStore
 }

@@ -131,14 +131,20 @@
         <el-form ref="customerForm"    :inline="true" class="search-form">
           <el-form-item label="客户搜索">
 
-            <el-autocomplete ref="customerSelect" v-model="customerComboId" :fetch-suggestions="searchCustomers" :default-first-option="true"
+            <!-- <el-autocomplete ref="customerSelect" v-model="customerComboId" :fetch-suggestions="searchCustomers" :default-first-option="true"
             placeholder="请输入手机号/姓名/会员卡号"
             filterable remote clearable @select="handleCustomerChanged" @clear="handleCustomerChanged">
               <template slot-scope="{ item }">
                 {{ item.label }}
               </template>
+            </el-autocomplete> -->
 
-            </el-autocomplete>
+            <el-select v-model="customerComboId" :remote-method="searchCustomers" :default-first-option="true"
+            placeholder="请输入手机号/姓名/会员卡号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
+              <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+
           </el-form-item>
 
           <el-form-item label="订单搜索">
@@ -265,7 +271,7 @@ export default {
   created: function(){
     this.currentCustomer = this.defaultCustomer
     this.currentCard = {}
-    
+
   },
   mounted(){
     console.log( " customerSelect", this.$refs.customerSelect )

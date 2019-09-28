@@ -10,6 +10,8 @@ import '@/assets/mobile/css/reset.mobile.css' // global css
 
 import ElementUI from 'element-ui'
 import '../../element-theme-jpos/index.css'
+import '@/style/element_ui_custom.scss'
+
 Vue.use(ElementUI)
 
 import Mint from 'mint-ui';

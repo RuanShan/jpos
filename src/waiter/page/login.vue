@@ -34,7 +34,7 @@ import {
 } from '@/api/getData'
 import {
   StorageUtil
-} from "@/utils/ipcService"
+} from "@/utils/electron_storage_wrapper"
 
 export default {
   data() {
