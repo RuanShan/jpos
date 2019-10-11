@@ -1,7 +1,9 @@
 'use strict'
+process.env.BABEL_ENV = 'web'
+
 const utils = require('./utils')
 const webpack = require('webpack')
-const config = require('../config')
+const config = require('../config/devweb.env')
 const merge = require('webpack-merge')
 const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
@@ -12,7 +14,6 @@ const portfinder = require('portfinder')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
-const TARGET_SUBPATH = 'waiter'
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   entry: {
@@ -57,9 +58,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': require('../config/devweb.env'),
-    }),
+
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
@@ -73,6 +72,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         removeComments: true
       },
       nodeModules: false
+    }),
+    new webpack.DefinePlugin({
+      'process.env.IS_WEB': 'true'
     }),
     // copy custom static assets
     new CopyWebpackPlugin([

@@ -182,6 +182,11 @@
               </el-table-column>
 
               <el-table-column label="订单" prop="order.number">
+                <template slot-scope="scope">
+                  <div v-if="isCallerFactory">{{scope.row.storeName}}</div>
+                  <div>{{scope.row.number}}</div>
+                </template>
+
               </el-table-column>
               <el-table-column label="金额" prop="price"  width="70">
               </el-table-column>

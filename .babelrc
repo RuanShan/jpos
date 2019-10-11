@@ -30,7 +30,7 @@
     "web": {
       "presets": [
         ["env", {
-          "targets": { "browsers": ["Chrome>=60"]  },
+          "targets": { "browsers": ["Chrome>=60","ios>=9"]  },
           "modules": false
         }],
         "stage-0"

@@ -1,5 +1,5 @@
 console.log( "process.env =", process.env)
-console.log( "process.env.IS_WEB =", process.env.IS_WEB )
+console.log( "process.env.IS_WEB =", process.env.IS_WEB, typeof(process.env.IS_WEB) )
 const isWeb = process.env.IS_WEB
 
 

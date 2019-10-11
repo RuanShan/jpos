@@ -177,12 +177,14 @@
                 height: 50%;
                 position: absolute;
                 right: 0;
+                top:0;
             }
             &.transfer2 {
                 width: 50%;
                 height: 50%;
                 position: absolute;
                 left: 0;
+                top:0;
             }
             .ready {
                 position: absolute;

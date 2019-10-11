@@ -2,6 +2,7 @@ import { baseUrl } from './env'
 import store from '@/store'
 
 var Promise = require('es6-promise').Promise;
+const fetch = require('cross-fetch');
 
 export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
   type = type.toUpperCase()
@@ -19,7 +20,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
     }
   }
   //console.log("fetch->", url, data, type)
-  if (window.fetch && method == 'fetch') {
+  if (fetch && method == 'fetch') {
     let requestConfig = {
       credentials: 'include',
       method: type,
@@ -72,7 +73,10 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       }
 
       requestObj.open(type, url, true)
+      requestObj.setRequestHeader('Accept', 'application/json')
       requestObj.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+      requestObj.setRequestHeader('X-Jpos-Site-Id',store.state.storeId)
+      requestObj.setRequestHeader('X-Jpos-User-Token',store.state.userInfo.apiKey)
       requestObj.send(sendData)
 
       requestObj.onreadystatechange = () => {

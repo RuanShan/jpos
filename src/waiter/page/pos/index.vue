@@ -15,9 +15,8 @@
         width: 100%;
         padding: 0;
     }
-    .editable-suffix{
-
-    }
+    .editable-suffix {
+        }
     .pos-content {
         height: 100%;
         .pos-order {
@@ -57,13 +56,13 @@
         }
     }
     .pos-order {
-      /*background-color: #f9fafc;
+        /*background-color: #f9fafc;
       border-right: 1px solid #c0ccda;*/
         .vue-xeditable-empty {
             font-style: normal;
         }
-        .el-tabs__content{
-          padding: 0 10px;
+        .el-tabs__content {
+            padding: 0 10px;
         }
         .el-tabs__item {
             min-width: 80px;
@@ -81,8 +80,8 @@
                 .el-form-item {
                     margin-bottom: 5px;
                 }
-                .search-input{
-                  width: 18em;
+                .search-input {
+                    width: 18em;
                 }
             }
 
@@ -100,8 +99,8 @@
                     bottom: 0;
                     right: 0;
                 }
-                .card-type{
-                  max-width: 8em;
+                .card-type {
+                    max-width: 8em;
                 }
                 .cards {
                     position: relative;
@@ -126,11 +125,15 @@
                 }
             }
             table {
-              table-layout: fixed;
+                table-layout: fixed;
                 td {
-                    white-space:nowrap;overflow:hidden;text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
-                th{ width: 7em;}
+                th {
+                    width: 7em;
+                }
                 td,
                 th {
                     border: 1px solid #ebeef5;
@@ -139,7 +142,9 @@
                     box-sizing: border-box;
                     line-height: 23px;
                 }
-                th span{ font-weight: bold;}
+                th span {
+                    font-weight: bold;
+                }
             }
         }
         .order-item-list {
@@ -163,16 +168,16 @@
             background-color: #909399;
             border-color: #909399;
         }
-        .wrap{
-          background-color: #f4f4f4;
+        .wrap {
+            background-color: #f4f4f4;
         }
     }
     .order-sum {
-      line-height: 30px;
-      height: 30px;
-      text-align: center;
-      margin: 0 10px;
-      i {
+        line-height: 30px;
+        height: 30px;
+        text-align: center;
+        margin: 0 10px;
+        i {
             font-size: 12px;
         }
     }
@@ -189,19 +194,19 @@
             overflow-y: auto;
             width: 100%;
         }
-        .wrap{
-          background-color: #f4f4f4;
+        .wrap {
+            background-color: #f4f4f4;
         }
-        .image-list{
-          padding: 0 10px 10px;
-          &.group-image-list{
-            .el-upload.el-upload--picture-card{
-              display: none;
+        .image-list {
+            padding: 0 10px 10px;
+            &.group-image-list {
+                .el-upload.el-upload--picture-card {
+                    display: none;
+                }
+                .el-icon-delete {
+                    display: none;
+                }
             }
-            .el-icon-delete{
-              display: none;
-            }
-          }
         }
     }
     .cook-list {
@@ -225,7 +230,7 @@
                 }
                 .good-info {
                     text-align: center;
-                    padding: 6px 6px;
+                    padding: 6px;
                 }
                 .food-name {
                     color: brown;
@@ -237,14 +242,16 @@
                     font-size: 12px;
                     padding-top: 4px;
                 }
-                .variants-wrapper{
-                  display: flex;
-                  justify-content: center;
-                  .item{ margin: 4px;}
-                  height: 34px;
+                .variants-wrapper {
+                    display: flex;
+                    justify-content: center;
+                    .item {
+                        margin: 4px;
+                    }
+                    height: 34px;
                 }
-                .el-button--mini{
-                  padding: 6px;
+                .el-button--mini {
+                    padding: 6px;
                 }
             }
 
@@ -256,35 +263,35 @@
         width: calc(100% - 20px);
         position: relative;
     }
-    .empty{
-      min-height: 60px;
-      text-align: center;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .empty {
+        min-height: 60px;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }
-.pos-cover{
-  position: absolute;
-  top: 50px;
-  left: 50px;
-  right: 0;
-  bottom: 0;
-  background-color: #fff;
-  opacity: 0.8;
-  z-index: 10;
-  color: red;
- .msg{
-      @include center();
-      background-color: #E6A23C;
-       color: #fff;
-       display: inline-block;
-       padding: 15px;
-  }
+.pos-cover {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    opacity: 0.8;
+    z-index: 10;
+    color: red;
+    .msg {
+        @include center();
+        background-color: #E6A23C;
+        color: #fff;
+        display: inline-block;
+        padding: 15px;
+    }
 
-  text-align: center;
+    text-align: center;
 }
 </style>
 
@@ -309,15 +316,12 @@
       <el-col :span="13" class="pos-order">
         <div class="wrap">
           <el-tabs v-model="selectedTabName" @tab-click="handleTabClick">
-            <el-tab-pane label="订单"  name="newOrderTab" class="new-order">
+            <el-tab-pane label="订单" name="newOrderTab" class="new-order">
               <div class="customer-container clear">
                 <el-form ref="customerForm" size="mini" :inline="true" class="search-form">
                   <el-form-item label="会员搜索">
-                    <el-select class="search-input" ref="searchInput" v-model="customerComboId"
-                      :remote-method="searchCustomers" :default-first-option="true" :reserve-keyword="true"
-                      placeholder="请输入手机号/姓名/会员卡号" filterable remote clearable
-                      @change="handleCustomerChanged" @clear="handleCustomerChanged"
-                      @keydown.native.enter.prevent="handleEnterKeyDown">
+                    <el-select class="search-input" ref="searchInput" v-model="customerComboId" :remote-method="searchCustomers" :default-first-option="true" :reserve-keyword="true" placeholder="请输入手机号/姓名/会员卡号" filterable remote clearable
+                      @change="handleCustomerChanged" @clear="handleCustomerChanged" @keydown.native.enter.prevent="handleEnterKeyDown">
                       <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
                       </el-option>
                     </el-select>
@@ -353,72 +357,72 @@
               </div>
               <div class="order-item-list">
                 <el-table class="fillcontain cel-scrollable-table" :data="sortedOrderItemList" border style="width:100%;">
-                <el-table-column label="物品序号" :render-header="renderEditableTableHeader" width="100">
-                  <template slot-scope="scope">
-                  <vue-xeditable  :name="'groupPosition_'+scope.row.uid+'_xeditable'" v-model="scope.row.groupPosition" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="cname" label="服务项目" width="160"></el-table-column>
-                <el-table-column prop="saleUnitPrice" label="单价" :render-header="renderEditableTableHeader" width="80">
-                  <template slot-scope="scope">
-                 <vue-xeditable  :name="'saleUnitPrice_'+scope.row.uid+'_xeditable'" v-model="scope.row.saleUnitPrice" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
-               </template>
-                </el-table-column>
-                <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
-                <el-table-column label="折扣"  :render-header="renderEditableTableHeader" width="65">
-                  <template slot-scope="scope">
-                   <vue-xeditable :ref="'xeditable_discount_percent_'+scope.row.uid" :name="'editableDiscountPercent_'+scope.row.uid+'_xeditable'" v-model="scope.row.editableDiscountPercent" type="text" @value-did-change="handleXeditableChanged" empty="无"
-                   v-show="scope.row.isEditing">
-                   </vue-xeditable>
-                   <span class="editable-replacement" v-show="!scope.row.isEditing" @dblclick="handleEditDiscountPercent(scope.row.uid)" >{{getDisplayDiscount(scope.row.discountPercent)}}</span>
+                  <el-table-column label="物品序号" :render-header="renderEditableTableHeader" width="100">
+                    <template slot-scope="scope">
+                      <vue-xeditable :name="'groupPosition_'+scope.row.uid+'_xeditable'" v-model="scope.row.groupPosition" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="cname" label="服务项目" width="160"></el-table-column>
+                  <el-table-column prop="saleUnitPrice" label="单价" :render-header="renderEditableTableHeader" width="80">
+                    <template slot-scope="scope">
+                      <vue-xeditable :name="'saleUnitPrice_'+scope.row.uid+'_xeditable'" v-model="scope.row.saleUnitPrice" type="number" @value-did-change="handleXeditableChanged"></vue-xeditable>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="quantity" label="数量" width="50"></el-table-column>
+                  <el-table-column label="折扣" :render-header="renderEditableTableHeader" width="65">
+                    <template slot-scope="scope">
+                      <vue-xeditable :ref="'xeditable_discount_percent_'+scope.row.uid" :name="'editableDiscountPercent_'+scope.row.uid+'_xeditable'" v-model="scope.row.editableDiscountPercent" type="text" @value-did-change="handleXeditableChanged"
+                        empty="无" v-show="scope.row.isEditing">
+                      </vue-xeditable>
+                      <span class="editable-replacement" v-show="!scope.row.isEditing" @dblclick="handleEditDiscountPercent(scope.row.uid)">{{getDisplayDiscount(scope.row.discountPercent)}}</span>
 
-                  </template>
+                    </template>
 
-                </el-table-column>
-                <el-table-column prop="price" label="金额" width="80"></el-table-column>
-                <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
-                  <template slot-scope="scope">
-                   <vue-xeditable  :name="'memo_'+scope.row.uid+'_xeditable'" v-model="scope.row.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作" width="60" align="center">
-                  <template slot-scope="scope">
-                  <el-button type="danger" icon="el-icon-delete" circle @click="delOrderItem(scope.row)" size="mini"></el-button>
-               </template>
-                </el-table-column>
+                  </el-table-column>
+                  <el-table-column prop="price" label="金额" width="80"></el-table-column>
+                  <el-table-column prop="memo" label="备注" :render-header="renderEditableTableHeader">
+                    <template slot-scope="scope">
+                      <vue-xeditable :name="'memo_'+scope.row.uid+'_xeditable'" v-model="scope.row.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作" width="65" align="center">
+                    <template slot-scope="scope">
+                      <el-button type="danger" icon="el-icon-delete" circle @click="delOrderItem(scope.row)" size="mini"></el-button>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </div>
               <div class="order-final">
                 <div class="order-sum clear">
-                  <div class="count left" >
+                  <div class="count left">
                     <i>物品数量：</i> <span>{{totalGroupCount}}</span>&nbsp;&nbsp;&nbsp;
                     <i>工作数量：</i> <span>{{totalItemCount}}</span>&nbsp;&nbsp;&nbsp;
                   </div>
-                  <el-button type="danger" size="mini" @click="clearAllGoods" class="right" >清空</el-button>
+                  <el-button type="danger" size="mini" @click="clearAllGoods" class="right">清空</el-button>
                 </div>
                 <div>
                   <el-button class="check-button" @click="openCheckoutDialog">
-                    <div  v-show="currentCard.id" >
-                      <span > 应收：¥ {{totalSalePrice}} </span>&nbsp;&nbsp;&nbsp;<span> 实收：¥ {{totalPrice}}</span>
+                    <div v-show="currentCard.id">
+                      <span> 应收：¥ {{totalSalePrice}} </span>&nbsp;&nbsp;&nbsp;<span> 实收：¥ {{totalPrice}}</span>
                     </div>
-                    <div  v-show="!currentCard.id" >
+                    <div v-show="!currentCard.id">
                       <span> 收款：¥ {{totalPrice}}</span>
                     </div>
                   </el-button>
                 </div>
               </div>
             </el-tab-pane>
-            <el-tab-pane label="取单"  name="readyOrderTab" class="ready-order">
+            <el-tab-pane label="取单" name="readyOrderTab" class="ready-order">
               <!-- 取单组件 Start-->
               <OrderDelivery @current-group-changed="handleCurrentGroupChanged"></OrderDelivery>
               <!-- 取单组件 End-->
             </el-tab-pane>
-            <el-tab-pane label="支出"  name="expenseItemTab" class="ready-order">
+            <el-tab-pane label="支出" name="expenseItemTab" class="ready-order">
               <!-- 取单组件 Start-->
               <ExpenseItems @current-item-changed="handleCurrentExpenseItemChanged"></ExpenseItems>
               <!-- 取单组件 End-->
             </el-tab-pane>
-            <el-tab-pane label="库存"  name="stockMovementTab" class="ready-order">
+            <el-tab-pane label="库存" name="stockMovementTab" class="ready-order">
               <!-- 取单组件 Start-->
               <StockMovements @current-item-changed="handleCurrentGroupChanged"></StockMovements>
               <!-- 取单组件 End-->
@@ -449,11 +453,11 @@
                       </div>
 
                       <div class="variants-wrapper">
-                          <div v-for="(variant,index) in goods.variants" :key="index" class="item">
-                            <el-button size="mini" @click="addOrderItem(goods,index)">
-                              <span>{{variant.optionValueTexts.join()}}</span>
-                            </el-button>
-                          </div>
+                        <div v-for="(variant,index) in goods.variants" :key="index" class="item">
+                          <el-button size="mini" @click="addOrderItem(goods,index)">
+                            <span>{{variant.optionValueTexts.join()}}</span>
+                          </el-button>
+                        </div>
 
                       </div>
                     </div>
@@ -463,17 +467,13 @@
               </div>
             </el-tab-pane>
           </el-tabs>
-          <el-tabs v-show="selectedTabName=='readyOrderTab'" >
-            <el-tab-pane  label="物品图片">
+          <el-tabs v-show="selectedTabName=='readyOrderTab'">
+            <el-tab-pane label="物品图片">
               <div class="empty" v-show="computedGroupImages.length==0">
                 暂无数据
               </div>
               <div class="group-image-list image-list">
-                <el-upload
-                  action=""
-                  :auto-upload="false"
-                  list-type="picture-card"
-                  :file-list="computedGroupImages" :on-preview="handlePreviewImage">
+                <el-upload action="" :auto-upload="false" list-type="picture-card" :file-list="computedGroupImages" :on-preview="handlePreviewImage">
                   <i class="el-icon-plus"></i>
                 </el-upload>
 
@@ -481,19 +481,10 @@
             </el-tab-pane>
           </el-tabs>
           <el-tabs v-show="selectedTabName=='expenseItemTab'">
-            <el-tab-pane  label="费用图片" >
+            <el-tab-pane label="费用图片">
               <div class="expense-image-list image-list">
-                <el-upload
-                  :file-list="computedGroupImages"
-                  :action="computedImageUploadPath"
-                  name="image[attachment]"
-                  list-type="picture-card"
-                  :with-credentials="true"
-                  :before-upload="handleBeforeUploadExpenseItemImage"
-                  :before-remove="handleImageRemoveConfirm"
-                  :on-remove="handleRemoveImage"
-                  :on-success="handleExpenseItemImagesUploadSuccess"
-                  :on-preview="handlePreviewExpenseItemImage" v-show="computedImageUploadPath">
+                <el-upload :file-list="computedGroupImages" :action="computedImageUploadPath" name="image[attachment]" list-type="picture-card" :with-credentials="true" :before-upload="handleBeforeUploadExpenseItemImage"
+                  :before-remove="handleImageRemoveConfirm" :on-remove="handleRemoveImage" :on-success="handleExpenseItemImagesUploadSuccess" :on-preview="handlePreviewExpenseItemImage" v-show="computedImageUploadPath">
                   <i class="el-icon-plus"></i>
                 </el-upload>
               </div>
@@ -566,7 +557,7 @@ export default {
       //由于搜索列表的每一项是 会员+会员卡，即如果会员有两个卡就有两项，
       //所以select的值为customerId+cardId, 当没有会员卡时，只有customerId
       customerComboId: null,
-      carouselImages: [],//图片走马灯
+      carouselImages: [], //图片走马灯
       carouselDialogVisible: false,
       currentExpenseItemImages: [], // 允许编辑费用图片，所以在图片改变事件中设置当前费用图片列表
       currentGroupImages: []
@@ -586,29 +577,29 @@ export default {
   },
   computed: {
     // 会员搜搜选择的客户ID
-    customerId () {
+    customerId() {
       console.log(" this.customerComboId=", this.customerComboId)
       return (this.customerComboId ? this.customerComboId.split('_')[0] : null)
     },
-    cardId () {
+    cardId() {
       return (this.customerComboId ? this.customerComboId.split('_')[1] : null)
     },
-    selectedTaxonProducts () {
+    selectedTaxonProducts() {
       return this.productList.filter(function (product) {
         //return product.taxon_ids.includes( 0 )
         return false;
       });
     },
-    sortedOrderItemList () {
+    sortedOrderItemList() {
       return this.orderItemList.sort((a, b) => {
         return (a.groupPosition - b.groupPosition)
       })
     },
-    computedCustomerOptions () {
+    computedCustomerOptions() {
       let ops = this.customerList.map((customer) => {
         //用户只有一个可用的充值卡
         if (customer.card) {
-          return customer.cards.filter((card)=>{
+          return customer.cards.filter((card) => {
             return card.state == this.CardStateEnum.enabled
           }).map((card) => {
             return {
@@ -626,78 +617,80 @@ export default {
       return _.flatten(ops)
     },
 
-    totalItemCount () { // 工作数量
+    totalItemCount() { // 工作数量
       return this.orderItemList.reduce((total, item) => {
         return total += item.quantity
       }, 0)
     },
-    totalGroupCount () { //物品数量
-      return  _.uniq( this.orderItemList.map((item) => {
+    totalGroupCount() { //物品数量
+      return _.uniq(this.orderItemList.map((item) => {
         return item.groupPosition
       })).length
     },
-    totalPrice () { // 实收
+    totalPrice() { // 实收
       let t = this.orderItemList.reduce((total, item) => {
         return total += item.price
       }, 0)
       return Number(t).toFixed(2)
     },
-    totalSalePrice () { // 应收
+    totalSalePrice() { // 应收
       let t = this.orderItemList.reduce((total, item) => {
-        return total += ( item.saleUnitPrice * item.quantity )
+        return total += (item.saleUnitPrice * item.quantity)
       }, 0)
       return Number(t).toFixed(2)
     },
-    maxGroupPosition () {
+    maxGroupPosition() {
       // 返回 0 或 >0
       let max = this.orderItemList.map((item) => {
         return item.groupPosition
       }).sort().pop()
       return max ? max : 0
     },
-    nextGroupPosition () {
+    nextGroupPosition() {
       //取当前的最大数，再加 +1
       return this.maxGroupPosition + 1
     },
-    computedGroupImages(){
+    computedGroupImages() {
       let selectedItem = this.selectedItems[this.selectedTabName]
       return selectedItem ? selectedItem.images : []
     },
-    computedImageUploadPath(){
+    computedImageUploadPath() {
       let selectedItem = this.selectedItems[this.selectedTabName]
       return selectedItem ? selectedItem.imageUploadPath : ''
     },
-    isUserEntryExist(){
+    isUserEntryExist() {
       //以便检验用户是否打卡，是否可以下单
-      console.log( "this.userEntries=", this.userEntries)
-      let entry = this.userEntries.find((entry)=>{ return entry.state=='clockin' })
+      console.log("this.userEntries=", this.userEntries)
+      let entry = this.userEntries.find((entry) => {
+        return entry.state == 'clockin'
+      })
       return entry != null
     },
-    isCustomerFromOtherStore(){
-      return this.currentCustomer && this.currentCustomer.storeId && this.currentCustomer.storeId!=this.storeId
+    isCustomerFromOtherStore() {
+      return this.currentCustomer && this.currentCustomer.storeId && this.currentCustomer.storeId != this.storeId
     },
-    isCurrentUserClockIn(){
+    isCurrentUserClockIn() {
       //以便检验用户是否打卡，是否可以下单
       let userid = this.userInfo.id
       // 升序排列
-      console.log( "this.userEntries=", this.userEntries)
+      console.log("this.userEntries=", this.userEntries)
       let orderedEntries = this.userEntries.filter((entry) => {
         return entry.userId == userid
       }).sort((a, b) => {
         return a.createdAt - b.createdAt
       })
       // 如果最后一个存在，并且是clock_in, 即说明当前用户打卡。
-      console.log( "this.userEntries=", this.userEntries, " orderedEntries=", orderedEntries)
+      console.log("this.userEntries=", this.userEntries, " orderedEntries=", orderedEntries)
       let entry = orderedEntries.pop()
       return entry != null && entry.state == this.UserEntryStateEnum.clockin
     },
-    customerDescription(){
+    customerDescription() {
       let desc = this.currentCustomer.userName
-      if( this.currentCustomer.customerType != null){
-        desc+='['+ this.currentCustomer.customerType + ']'
+      if (this.currentCustomer.customerType != null) {
+        desc += '[' + this.currentCustomer.customerType + ']'
       }
-      if( this.isCustomerFromOtherStore){
-        desc+='['+ this.currentCustomer.storeName + ']'
+      if (this.isCustomerFromOtherStore) {
+        desc += '[' + this.currentCustomer.storeName + ']'
       }
       return desc
     }
@@ -722,25 +715,26 @@ export default {
       console.log(this.shopDetailData, productsResult);
       if (productsResult) {
         this.productList = this.buildProducts(productsResult)
+        this.saveCustomerServices( this.productList )
       }
     },
-    getTaxonProducts (taxonId) {
+    getTaxonProducts(taxonId) {
       return this.productList.filter(function (product) {
         return product.taxonIds.includes(taxonId);
       });
     },
-    getProductImageUrl (product) {
+    getProductImageUrl(product) {
       let image = product.master.images[0];
       return image ?
         image.large_url :
         baseImgPath + "/img/noimage/product.jpg";
     },
     addOrderItem(goods, index) {
-      console.log( "addOrderItem= ", goods, index )
+      console.log("addOrderItem= ", goods, index)
 
       // 增加商品
       let variant = goods.master
-      if( typeof(index) === 'number' ){// 如果商品有variants
+      if (typeof (index) === 'number') { // 如果商品有variants
         variant = goods.variants[index]
       }
       let vid = variant.id
@@ -818,44 +812,48 @@ export default {
       // here should be uid, index would not work.
       let [column, uid] = xeditableName.split('_')
       uid = parseInt(uid)
-      let index = this.orderItemList.findIndex((item)=>{ return item.uid == uid})
+      let index = this.orderItemList.findIndex((item) => {
+        return item.uid == uid
+      })
       let item = this.orderItemList[index]
       item[column] = newValue
       if (column == 'saleUnitPrice') {
         this.computePrice(item)
       }
       if (column == 'groupPosition') {
-        item.groupPosition = parseInt( item.groupPosition )
+        item.groupPosition = parseInt(item.groupPosition)
       }
-      if( column == 'editableDiscountPercent'){
+      if (column == 'editableDiscountPercent') {
         //
         let discount = parseInt(newValue)
-        if( isNaN(discount) || discount>=10 || discount<=0){
+        if (isNaN(discount) || discount >= 10 || discount <= 0) {
           item.discountPercent = 100
-        }else{
-          item.discountPercent = parseInt(discount*10)
+        } else {
+          item.discountPercent = parseInt(discount * 10)
         }
         item.isEditing = false
         this.computePrice(item) //重新计算价格
       }
-      console.log(" new=", typeof(newValue), item)
-      this.$set(this.orderItemList, index, item )
+      console.log(" new=", typeof (newValue), item)
+      this.$set(this.orderItemList, index, item)
     },
     // 编辑折扣数据
-    handleEditDiscountPercent(uid){
-      let refid = "xeditable_discount_percent_"+uid
+    handleEditDiscountPercent(uid) {
+      let refid = "xeditable_discount_percent_" + uid
       let xeditable = this.$refs[refid]
       uid = parseInt(uid)
-      let index = this.orderItemList.findIndex((item)=>{ return item.uid == uid})
+      let index = this.orderItemList.findIndex((item) => {
+        return item.uid == uid
+      })
       let item = this.orderItemList[index]
-      item.isEditing =true
+      item.isEditing = true
       xeditable.isEditing = item.isEditing
-      if( item.discountPercent<100){
-        xeditable.rawValue = item.discountPercent/10
-      }else{
+      if (item.discountPercent < 100) {
+        xeditable.rawValue = item.discountPercent / 10
+      } else {
         xeditable.rawValue = ''
       }
-      console.log( " handleEditDiscountPercent=", index, this.$refs[refid], item)
+      console.log(" handleEditDiscountPercent=", index, this.$refs[refid], item)
 
     },
     // select order tabs
@@ -866,7 +864,7 @@ export default {
     // 客户搜索事件处理
     openCheckoutDialog() {
       //检查是否真的有订单
-      if( this.totalItemCount == 0){
+      if (this.totalItemCount == 0) {
         this.$message({
           message: "请先选择服务再结账！",
           type: "error"
@@ -874,7 +872,7 @@ export default {
         return
       }
       //检查是否选择了人
-      if( this.currentCustomer.id == null){
+      if (this.currentCustomer.id == null) {
         this.$message({
           message: "请先选择顾客再结账！",
           type: "error"
@@ -909,8 +907,8 @@ export default {
         })
 
         //当前选择的会员卡
-        if( this.cardId ){
-          this.currentCard = this.currentCustomer.cards.find((card)=>{
+        if (this.cardId) {
+          this.currentCard = this.currentCustomer.cards.find((card) => {
             return card.id == this.cardId
           })
         }
@@ -919,7 +917,7 @@ export default {
           this.computePrice(item)
         })
       } else {
-        this.setCurrentCustomer( this.defaultCustomer )
+        this.setCurrentCustomer(this.defaultCustomer)
 
         this.orderItemList.forEach((item) => {
           item.discountPercent = 100
@@ -927,17 +925,17 @@ export default {
         })
       }
     },
-    handleEnterKeyDown( e){
-      console.log( "handleEnterKeyDown=", e)
+    handleEnterKeyDown(e) {
+      console.log("handleEnterKeyDown=", e)
 
       // if no customer found, open member-add
-      if( this.customerList.length == 0 ){
+      if (this.customerList.length == 0) {
         let mobile = this.$refs.searchInput.query
         //console.log( "mobile=", mobile, "this.$refs.searchInput=",this.$refs.searchInput)
         // it is a mobile
         let mobileRegEx = /^1\d{10}$/
-        if( mobileRegEx.test(mobile) ){
-          customerMobileValidate(mobile).then( (response)=> {
+        if (mobileRegEx.test(mobile)) {
+          customerMobileValidate(mobile).then((response) => {
             if (response.ret) {
               this.memberMobile = mobile
               this.memberAddWindowVisible = true
@@ -951,23 +949,25 @@ export default {
       this.$bus.$emit('order-created-gevent', newOrder)
       getCustomer(this.currentCustomer.id).then(result => {
         const customer = this.buildCustomer(result)
-        const card = customer.cards.find((c)=>{ return c.id== this.currentCard.id })
+        const card = customer.cards.find((c) => {
+          return c.id == this.currentCard.id
+        })
         this.setCurrentCustomer(customer, card)
       })
     },
     // in ready group tab, current group change event
-    handleCurrentGroupChanged(selected){
-      console.log( "selectedGroup=", selected)
+    handleCurrentGroupChanged(selected) {
+      console.log("selectedGroup=", selected)
       this.$set(this.selectedItems, this.selectedTabName, selected)
-      if( selected ){
-        this.currentGroupImages = Array.of( ...selected.images )
+      if (selected) {
+        this.currentGroupImages = Array.of(...selected.images)
       }
     },
-    handleCurrentExpenseItemChanged(selected){
-      console.log( "selectedExpenseItem=", selected)
+    handleCurrentExpenseItemChanged(selected) {
+      console.log("selectedExpenseItem=", selected)
       this.$set(this.selectedItems, this.selectedTabName, selected)
-      if( selected ){
-        this.currentExpenseItemImages = Array.of( ...selected.images )
+      if (selected) {
+        this.currentExpenseItemImages = Array.of(...selected.images)
       }
     },
 
@@ -976,7 +976,7 @@ export default {
         let vids = product.variants.map((v) => {
           return v.id
         })
-        vids.push( product.master.id )
+        vids.push(product.master.id)
         return vids.indexOf(variantId) >= 0
       })
       return product
@@ -985,9 +985,9 @@ export default {
       // 如果用户电话号码不存在，显示创建新用户，
       // 如果存在，并且是散客，显示编辑用户窗口，添加会员卡
       //let type = this.currentCustomer.customerType
-      if(this.currentCustomer.id>0 && this.currentCustomer.card ==null ){
+      if (this.currentCustomer.id > 0 && this.currentCustomer.card == null) {
         this.memberCardAddWindowVisible = true
-      }else{
+      } else {
         this.memberMobile = null
         this.memberAddWindowVisible = true
       }
@@ -1000,17 +1000,17 @@ export default {
         this.setCurrentCustomer(customer, customer.card)
       }
     },
-    handlePreviewImage(file){
+    handlePreviewImage(file) {
       console.log(" handlePreviewImage", file)
       this.carouselImages = this.currentGroupImages
       this.carouselDialogVisible = true
     },
-    handlePreviewExpenseItemImage(file){
+    handlePreviewExpenseItemImage(file) {
       console.log(" handlePreviewImage", this.currentExpenseItemImages)
       this.carouselImages = this.currentExpenseItemImages
       this.carouselDialogVisible = true
     },
-    handleImageRemoveConfirm(file, fileList){
+    handleImageRemoveConfirm(file, fileList) {
       return this.$confirm('此操作将永久删除该图片, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1019,30 +1019,30 @@ export default {
     },
     handleRemoveImage(file, fileList) {
       // file.id( original file) or file.uid( new uploaded file)
-      let imageIndex = this.currentExpenseItemImages.findIndex((image)=>{
-        return (file.id && file.id==image.id) || (file.uid && file.uid==image.uid)
+      let imageIndex = this.currentExpenseItemImages.findIndex((image) => {
+        return (file.id && file.id == image.id) || (file.uid && file.uid == image.uid)
       })
-      if( imageIndex >=0 ){
+      if (imageIndex >= 0) {
         let foundImage = this.currentExpenseItemImages[imageIndex]
-        deleteExpenseItemImage( foundImage.viewableId, foundImage.id ).then(()=>{
-          this.currentExpenseItemImages.splice( imageIndex, 1 )
-          console.log("file=",file,"filelist", fileList);
+        deleteExpenseItemImage(foundImage.viewableId, foundImage.id).then(() => {
+          this.currentExpenseItemImages.splice(imageIndex, 1)
+          console.log("file=", file, "filelist", fileList);
         })
 
       }
     },
-    handleExpenseItemImagesUploadSuccess(response, file, fileList){
+    handleExpenseItemImagesUploadSuccess(response, file, fileList) {
       // donot call change event, file maybe uploading, so can not get image url for list
       //费用图片改变时，重新设置当前费用图片列表
       // OrderDelivery,重新读取expenseItem数据，并发送事件current-item-changed
-      const image = this.buildGroupImage( response )
+      const image = this.buildGroupImage(response)
       image.uid = file.uid
-      this.currentExpenseItemImages.push( image )
-      console.log( "handleExpenseItemImagesUploadSuccess=", response, file)
+      this.currentExpenseItemImages.push(image)
+      console.log("handleExpenseItemImagesUploadSuccess=", response, file)
       //this.$bus.$emit('expense-item-image-changed-gevent')
     },
-    handleBeforeUploadExpenseItemImage( file ){
-      console.log( "handleBeforeUploadExpenseItemImage=", file)
+    handleBeforeUploadExpenseItemImage(file) {
+      console.log("handleBeforeUploadExpenseItemImage=", file)
     },
     getDiscountOfVariant(variantId) {
       // 找到这个订单对应的商品
@@ -1050,20 +1050,20 @@ export default {
       const product = this.findProductByVariantId(variantId)
 
       // 找到会员卡的分类ID，每个分类对应一些打折产品
-        let pid = this.currentCard.productId
-        product.relateds.forEach((related) => {
-          if (related.relatableId == pid) {
-            if (related.discountPercent < discount) {
-              discount = related.discountPercent
-            }
+      let pid = this.currentCard.productId
+      product.relateds.forEach((related) => {
+        if (related.relatableId == pid) {
+          if (related.discountPercent < discount) {
+            discount = related.discountPercent
           }
-        })
+        }
+      })
       // 找到商品对应用户会员卡的打折信息，设置折扣率
       return discount
     },
-    getDisplayDiscount( discount ){
+    getDisplayDiscount(discount) {
       // 显示几折， 60， 6折
-      return  discount==100 ? '无' : `${discount/10}折`
+      return discount == 100 ? '无' : `${discount/10}折`
     },
     computePrice(item) {
       item.price = item.discountPercent * item.saleUnitPrice * item.quantity / 100

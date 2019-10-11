@@ -272,7 +272,7 @@ import {
   createGroupImageForDirectUpload
 }
 from '@/api/getData'
-import CelSwiper from "@/components/dialog/CelSwiper.vue";
+import CelSwiper from "@/components/mobile/dialog/CelSwiper.vue";
 import { ActivestorageUploader } from '@/utils/ActivestorageUploader';
 
 export default {

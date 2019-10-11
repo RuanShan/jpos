@@ -12,7 +12,8 @@ export var orderDataMixin = {
       'stores',
       'prepaidPaymentMethodId',
       'printData',
-      'userEntries'
+      'userEntries',
+      'customerServices'
     ])
 
   },
@@ -40,7 +41,7 @@ export var orderDataMixin = {
     }
   },
   methods: {
-    ...mapActions(['getStores','getCurrentUser', 'getPaymentMethods', 'getCardTypes']),
+    ...mapActions(['getStores','getCurrentUser', 'getPaymentMethods', 'getCardTypes','saveCustomerServices']),
 
     getOrderStateText(state) {
       if (state == "pending") {

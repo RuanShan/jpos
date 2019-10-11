@@ -174,7 +174,7 @@ import _ from "lodash"
 import { checkout, addPayments, repay, validateCardPassword } from "@/api/getData"
 import {
   PrintUtil
-} from '@/utils/ipcService'
+} from '@/utils/ipcServiceWeb'
 
 import {
   DialogMixin
@@ -560,11 +560,10 @@ export default {
       //重新计算各个支付方式需要支付多少
       console.log( "handleEnablePrepaidCard=", newValue, this.computedTotalPrice)
 
-      //let discountPercent = ( newValue ?  this.currentPrepaidCard.discountPercent : 100  )
-      this.selectedOrderItems.forEach((item)=>{
-        item.discountPercent = this.getDiscountOfVariant( item.variantId)
-        item.price = item.discountPercent * item.saleUnitPrice * item.quantity / 100
+      let discountPercent = ( newValue ?  this.currentPrepaidCard.discountPercent : 100  )
 
+      this.selectedOrderItems.forEach((item)=>{
+        item.discountPercent = discountPercent
       })
 
       this.formData.totalPrice = this.computedTotalPrice
@@ -626,34 +625,6 @@ export default {
       this.selectedOrderItems = this.orderItemList.filter((item)=>{ return ids.includes(item.groupId) })
       this.formData.totalPrice = this.computedTotalPrice
 
-    },
-    getDiscountOfVariant(variantId) {
-      // 找到这个订单对应的商品
-      let discount = 100
-
-
-      if( this.currentPrepaidCard &&  this.formData.enablePrepaidCard ){
-        let product = this.customerServices.find((product) => {
-          let vids = product.variants.map((v) => {
-            return v.id
-          })
-          vids.push(product.master.id)
-          return vids.indexOf(variantId) >= 0
-        })
-
-        // 找到会员卡的分类ID，每个分类对应一些打折产品
-        let pid = this.currentPrepaidCard.productId
-        product.relateds.forEach((related) => {
-          if (related.relatableId == pid) {
-            if (related.discountPercent < discount) {
-              discount = related.discountPercent
-            }
-          }
-        })
-      }
-
-      // 找到商品对应用户会员卡的打折信息，设置折扣率
-      return discount
     },
     testPrint(){
       PrintUtil.printLabel()

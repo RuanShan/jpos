@@ -130,20 +130,14 @@
       <div class="customer-container clear">
         <el-form ref="customerForm"    :inline="true" class="search-form">
           <el-form-item label="客户搜索">
-
-            <!-- <el-autocomplete ref="customerSelect" v-model="customerComboId" :fetch-suggestions="searchCustomers" :default-first-option="true"
+<!-- el-select 在ipad上面没有输入框，必须用 autocomplete -->
+            <el-autocomplete ref="customerSelect" v-model="customerComboId" :fetch-suggestions="searchCustomers" :default-first-option="true"
             placeholder="请输入手机号/姓名/会员卡号"
             filterable remote clearable @select="handleCustomerChanged" @clear="handleCustomerChanged">
               <template slot-scope="{ item }">
                 {{ item.label }}
               </template>
-            </el-autocomplete> -->
-
-            <el-select v-model="customerComboId" :remote-method="searchCustomers" :default-first-option="true"
-            placeholder="请输入手机号/姓名/会员卡号" filterable remote clearable @change="handleCustomerChanged" @clear="handleCustomerChanged">
-              <el-option v-for="item in computedCustomerOptions" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
+            </el-autocomplete>
 
           </el-form-item>
 
@@ -234,9 +228,9 @@ import {
 } from '@/components/mixin/DialogMixin'
 import FooterBar from '@/components/mobile/layout/FooterBar'
 import HeadTop from '@/components/mobile/layout/HeadTop'
-import CelSwiper from "@/components/dialog/CelSwiper.vue";
+import CelSwiper from "@/components/mobile/dialog/CelSwiper.vue";
 
-import CheckoutDialog from "@/components/CheckoutDialog.vue"
+import CheckoutDialog from "@/components/mobile/CheckoutDialog.vue"
 
 export default {
   mixins: [DialogMixin],
@@ -431,6 +425,7 @@ export default {
         this.currentCard = {}
         this.currentOrders = []
       }
+      this.customerComboId = this.currentCustomer.mobile
     },
     handleOrderChanged(selectedId){
       console.log( " handleOrderChanged ->", selectedId)
@@ -442,6 +437,9 @@ export default {
         this.currentCustomer = this.defaultCustomer
         this.currentCard = {}
         this.currentOrders = []
+      }
+      if( this.computedLineItemGroups.length > 0){
+        this.orderComboId = this.computedLineItemGroups[0].number
       }
     },
     handleCurrentGroupChange(val){

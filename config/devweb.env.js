@@ -1,8 +1,12 @@
 'use strict'
 const merge = require('webpack-merge')
-const prodEnv = require('./prod.env')
+const env = require('./index')
 
-module.exports = merge(prodEnv, {
+module.exports = merge(env, {
+  dev: {
+    //host: '192.168.1.107'
+  },
   NODE_ENV: '"development"',
   IS_WEB: 'true'
+
 })

@@ -25,6 +25,7 @@ const state = {
   prepaidPaymentMethodId: 1,
   printData:{}, // { orders:[] }
   userEntries: [], //用户的打卡信息，有打卡信息，才能处理业务
+  customerServices:null, // 所有的客户服务，用来计算服务折扣
   loading: false // fetch or ajax
 }
 
@@ -77,6 +78,9 @@ const mutations = {
   },
   saveUserEntries( state, entries){
     state.userEntries = entries
+  },
+  saveCustomerServices( state, arr){
+    state.customerServices = arr
   }
 }
 
@@ -137,6 +141,9 @@ const actions = {
     })
     store.commit('saveStores', list)
     return store.state.stores
+  },
+  async saveCustomerServices( store, arr){
+    store.commit('saveCustomerServices', arr)
   }
 }
 
