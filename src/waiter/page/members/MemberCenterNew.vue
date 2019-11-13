@@ -137,7 +137,7 @@
         </div>
         <!-- 会员基本信息 END-->
         <div class="cards-wrap" style="">
-          <el-button type="success" size="mini" @click="addCardButtonClicked" class="right add-card-button">添加会员卡</el-button>
+          <el-button type="success" size="mini" @click="addCardButtonClicked" class="right add-card-button" :disabled="cards.length!=0">添加会员卡</el-button>
           <el-tabs type="border-card" v-model="tabsNumber" @tab-click="tabHandleClick" class="card-tabs cel-scrollable-tabs">
             <el-tab-pane v-for="(item) in cards" :key="item.code"  :name="item.code">
               <span slot="label">  <i class="el-icon-circle-check-outline" v-show="item.state=='enabled'"></i>
@@ -352,6 +352,7 @@ export default {
     },
     async initData() {
       const result = await getCustomerStatis(this.customerData.id)
+
       this.statis = this.buildCustomerStatis(result)
       if( this.cardData.code != null){
         this.tabsNumber = this.cardData.code

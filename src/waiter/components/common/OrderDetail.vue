@@ -1,7 +1,7 @@
 <style lang="scss">
   .order-detail-wrap{
     .images{
-      img{ width: 100%; }
+      img{ width: 100%; cursor: pointer;}
     }
     .customer table, .payments table  {
       width: 100%;
@@ -116,7 +116,8 @@
               <div >{{scope.row.cname}}<span v-show="scope.row.memo">[{{scope.row.memo}}] </span></div>
             </template>
           </el-table-column>
-
+          <el-table-column label="金额" width="80" prop="price" >
+          </el-table-column>
           <el-table-column prop="displayState" label="状态" width="120" align="center"></el-table-column>
 
         </el-table>
@@ -127,11 +128,14 @@
         <div v-show="group.images.length==0">  </div>
         <el-row :gutter="20" class="images">
           <el-col :span="8" v-for="image in group.images" :key="image.id" >
-            <img :src="image.largeUrl" class="image"></el-col>
+            <img :src="image.largeUrl" class="image" @click="handlePictureCardPreview(image)"></el-col>
         </el-row>
       </div>
     </div>
   </div>
+
+  <CelSwiper :carousel-images="carouselImages" :dialog-visible.sync="imageDialogVisible"> </CelSwiper>
+
 </div>
 </template>
 
@@ -144,12 +148,15 @@ from '@/api/getData'
 
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
 import CardFormWithOrder from "@/components/common/CardFormWithOrder.vue"
+import CelSwiper from "@/components/dialog/CelSwiper.vue";
 
 export default {
   data() {
     return {
+      carouselImages:[],
       checkoutDialogVisible: false,
       cardDialogVisible: false,
+      imageDialogVisible: false,
       currentCard: null
     }
   },
@@ -158,7 +165,7 @@ export default {
     orderData:{ type: Object},
     orderPosition:{ type: Number, default: -1},
   }, // customerData is newest, card could be updated, ex. disabled
-  components: { CheckoutDialog, CardFormWithOrder },
+  components: { CheckoutDialog, CardFormWithOrder, CelSwiper },
   computed:{
     currentOrder(){
       return this.orderData
@@ -246,8 +253,16 @@ export default {
         });
       });
 
-
+    },
+    handlePictureCardPreview(file) {
+      console.log("file:", file );
+      let image =  file
+      let images = image.group.images
+      this.carouselImages = images
+      //this.dialogImageUrl = file.originalUrl;
+      this.imageDialogVisible = true;
     }
+
   }
 
 }

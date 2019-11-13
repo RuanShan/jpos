@@ -120,20 +120,20 @@
           <el-tab-pane label="订单统计" v-if="posPermission">
             <statis-each-state-order  v-if="orderTabVisible" ></statis-each-state-order>
           </el-tab-pane>
+          <el-tab-pane label="其它商品统计" v-if="posPermission">
+            <StatisCounterOrder  ></StatisCounterOrder>
+          </el-tab-pane>
           <el-tab-pane label="异店消费订单统计" v-if="posPermission">
             <statis-odd-card-paid-order  v-if="oddCardPaidOrderVisible" ></statis-odd-card-paid-order>
           </el-tab-pane>
-          <el-tab-pane label="费用统计" v-if="posPermission">
-            <StatisExpense  v-if="expenseTabVisible" ></StatisExpense>
+          <el-tab-pane label="支出统计" v-if="posPermission">
+            <StatisExpense   ></StatisExpense>
           </el-tab-pane>
           <el-tab-pane label="工厂统计" v-if="statisWorksPermission">
             <StatisWorker  v-if="workerTabVisible" ></StatisWorker>
           </el-tab-pane>
           <el-tab-pane label="会员情况统计" v-if="posPermission">
-            <statis-member-case  v-if="memberTabVisible"  > </statis-member-case>
-          </el-tab-pane>
-          <el-tab-pane label="库存统计" v-if="posPermission">
-            <StatisStockMovement  ></StatisStockMovement>
+            <statis-member-case     > </statis-member-case>
           </el-tab-pane>
           <el-tab-pane label="员工打卡统计" v-if="posPermission">
             <statis-staff-clock-in  ></statis-staff-clock-in>
@@ -156,7 +156,7 @@ import StatisMemberCase from './StatisMemberCase.vue';
 import StatisStaffClockIn from './StatisStaffClockIn.vue';
 import StatisExpense from './StatisExpense.vue';
 import StatisWorker from './StatisWorker.vue';
-import StatisStockMovement from './StatisStockMovement.vue';
+import StatisCounterOrder from './StatisCounterOrder.vue';
 import StatisOddCardPaidOrder from './StatisOddCardPaidOrder.vue';
 
 export default {
@@ -171,7 +171,7 @@ export default {
     "statis-staff-clock-in": StatisStaffClockIn,
     StatisExpense,
     StatisWorker,
-    StatisStockMovement,
+    StatisCounterOrder,
     StatisOddCardPaidOrder
   },
   data() {

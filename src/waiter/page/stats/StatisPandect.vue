@@ -124,7 +124,7 @@
           </el-col>
           <el-col :span="3">
             <div class="data_list">
-              <span class="data_num">{{statis.serviceTotal}}</span> 订单金额 </div>
+              <span class="data_num">{{statis.servicePosableTotal}}</span> 订单金额 </div>
           </el-col>
           <el-col :span="3">
             <div class="data_list">
@@ -151,7 +151,7 @@
           </el-col>
           <el-col :span="3">
             <div class="data_list">
-              <span class="data_num">{{statis.allServiceTotal}}</span> 订单金额</div>
+              <span class="data_num">{{statis.allServicePosableTotal}}</span> 订单金额</div>
           </el-col>
           <el-col :span="3">
             <div class="data_list">
@@ -237,11 +237,13 @@ export default {
         serviceOrderCount: null,
         cardCount: null,
         serviceTotal: null,
+        servicePosableTotal: 0,
         depositTotal: null,
         allUserCount: null,
         allServiceOrderCount: null,
         allCardCount: null,
         allServiceTotal: null,
+        allServicePosableTotal: 0,
         allDepositTotal: null
       },
       sevenDate: [
@@ -324,11 +326,13 @@ export default {
           this.statis.serviceOrderCount = res[0].service_order_count //新增服务订单
           this.statis.cardCount = res[0].new_cards_count //新增会员卡
           this.statis.serviceTotal = res[0].service_total //新增服务订单金额
+          this.statis.servicePosableTotal = res[0].service_posable_total //新增服务订单金额
           this.statis.depositTotal = res[0].deposit_total //新增充值订单金额
           this.statis.allUserCount = res[1].new_customers_count
           this.statis.allServiceOrderCount = res[1].service_order_count
           this.statis.allCardCount = res[1].new_cards_count
           this.statis.allServiceTotal = res[1].service_total
+          this.statis.allServicePosableTotal = res[1].service_posable_total
           this.statis.allDepositTotal = res[1].deposit_total
         }).catch(err => {
           console.log(err)

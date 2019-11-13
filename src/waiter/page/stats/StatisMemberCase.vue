@@ -53,6 +53,13 @@
         </el-date-picker>
       </el-form-item>
 
+      <el-form-item label="会员" prop="hasCard" >
+        <el-select v-model="formData.hasCard" placeholder="" size="mini" clearable placeholder="不限" @clear="handleClear">
+          <el-option v-for="item in cardOptions" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item>
         <el-button class="order-ok" type="primary" size="mini" @click="handleSearch">确定</el-button>
       </el-form-item>
@@ -114,14 +121,16 @@ export default {
   data() {
     return {
       //*********** 过滤条件 ***************/
+      cardOptions: [{label:'是',value: 1},{label:'否',value: 0}],
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
+        hasCard: null,
         storeId: null,
       },
       //*********** UI需要的变量 ***************/
 
       totalPage: 0, //分页器显示的总页数
-      perPage: 12, //主表每页显示12行
+      perPage: 18, //主表每页显示12行
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
       pickerOptions2: {
         shortcuts: [{
@@ -195,6 +204,15 @@ export default {
         params.q.created_at_gteq= this.computedStartAt
         params.q.created_at_lteq= this.computedEndAt
       }
+      // 是否必须会员卡
+      if( this.formData.hasCard != null ){
+        if( this.formData.hasCard == 1 ){
+          params.q.cards_status_eq = 1
+        }
+        if( this.formData.hasCard == 0 ){
+          params.q.cards_status_null = true
+        }
+      }
       return params
     },
 
@@ -206,7 +224,10 @@ export default {
     handleSearch(){
       this.currentPage = 1;
       this.initData()
-    }
+    },
+    handleClear() {
+      this.formData.hasCard = null
+    },
   }
 };
 </script>

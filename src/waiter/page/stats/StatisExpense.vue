@@ -19,22 +19,22 @@
         bottom: 55px;
     }
 
-    .statisdatarechargemoney {
-        display: inline-block;
-        position: absolute;
-        bottom: 20px;
-        left: 20px;
-        line-height: 28px;
-        font-size: 14px;
-        .recordnum {
-            color: red;
-            display: inline-block;
-        }
-    }
     .pagiantion-wrap{
       position: absolute;
       bottom:20px;
       right:20px;
+    }
+    .stati-sdata-ordermoney {
+      display: inline-block;
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      line-height: 28px;
+      font-size: 14px;
+      .recordnum {
+        color: red;
+        display: inline-block;
+      }
     }
 }
 </style>
@@ -94,7 +94,10 @@
   <!-- 统计数据  START -->
 
   <!-- 统计数据  END -->
-
+  <div class="stati-sdata-ordermoney">
+    <h4 style="display: inline-block;">合计支出金额:</h4>
+    <h4 class="recordnum">¥{{totalSum}}</h4>
+  </div>
   <!-- 会员统计表   END -->
   <!-- 分页器 START-->
   <div class="pagiantion-wrap" style="">
@@ -128,7 +131,7 @@ export default {
       //*********** UI需要的变量 ***************/
 
       totalPage: 0, //分页器显示的总页数
-      perPage: 12, //主表每页显示12行
+      perPage: 18, //主表每页显示12行
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
       pickerOptions2: {
         shortcuts: [{
@@ -162,7 +165,7 @@ export default {
       returnServerCustomerData: {}, //调用接口,返回的数据
       customerData: {}, //整理過的顧客數據
       recordNumber: "0", //统计数据之记录数
-      rechargeMoneySum: "0" //统计数据之充值金额合计
+      totalSum: 0 //统计数据之充值金额合计
     };
   },
   created() {
@@ -192,6 +195,7 @@ export default {
       let result = await findExpenseItems(params)
 
       this.totalPage = result.total_count
+      this.totalSum = result.total_sum
       this.tableData = this.buildExpenseItems(result)
       this.buildLightboxImages( this.tableData  )
       console.log("result=", result, "this.tableData = ", this.tableData)
@@ -200,7 +204,9 @@ export default {
       let params = { //查询条件
         page: this.currentPage, //分页器选择的当前页数
         per_page: this.perPage, //每页显示12行数据
-        q: { }
+        q: {
+          s:[ 'created_at desc']
+        }
       }
       if( parseInt(this.formData.storeId) > 0){
         params.q.store_id_eq = this.formData.storeId

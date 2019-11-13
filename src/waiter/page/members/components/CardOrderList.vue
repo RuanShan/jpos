@@ -45,9 +45,9 @@
           </dl>
         </template>
       </el-table-column>
-      <el-table-column label="金额/实收" prop="paymentTotal" width="100">
+      <el-table-column label="实收" prop="paymentTotal" width="100">
         <template slot-scope="scope">
-          {{scope.row.total}}/{{scope.row.paymentTotal}}
+          {{ getPaymentAmountByPayment(scope.row)}}
         </template>
       </el-table-column>
       <el-table-column label="操作员" prop="creatorName" width="80">
@@ -208,6 +208,27 @@ export default {
     isCancelable(order){
       // 在店内的商品才可以取消
       return (order.state == 'cart') && (order.groupState == 'ready' || order.groupState == 'pending' )
+    },
+    getPaymentAmountByPayment( order ){
+      let mounts = 0
+      // 根据支付方式取得订单付款金额
+      if( this.cardData != null ){
+        mounts = order.payments.reduce( (prev,cur,index,arr) => {
+          if( cur.sourceId == this.cardData.id ){
+            prev += cur.amount
+          }
+          return prev
+        }, 0)
+      }else{
+        mounts = order.payments.reduce( (prev,cur,index,arr) => {
+          if( cur.sourceId == null ){
+            prev += cur.amount
+          }
+          return prev
+        }, 0)
+
+      }
+      return mounts
     }
   },
   watch:{

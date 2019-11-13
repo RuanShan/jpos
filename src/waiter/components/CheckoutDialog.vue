@@ -222,7 +222,7 @@ export default {
         selectPaymentMethodId: null,
         checkList:[],
         isPrintLabel: true,
-        isPrintReceipt: false,
+        isPrintReceipt: true,
         enableSms: false,
         enableMpMsg: true,
         totalPrice: 0
@@ -281,7 +281,13 @@ export default {
         return null
       }
     },
-
+    isAllItemProduct(){
+      return this.orderItemList.findIndex(function(item){
+        // 后付款情况下， item.sku是空
+        item.sku = item.sku  || ''
+        return (item.sku.search(/^product/) == -1)
+      }) == -1
+    },
     isShowTimesCard: function(){
       return this.currentCard.style == this.CardStyleEnum.times
     },
@@ -342,9 +348,15 @@ export default {
       if( this.formData.paymentAmount > 0 ){
         paymentsAttributes.push( { payment_method_id: this.formData.selectPaymentMethodId, amount: this.formData.paymentAmount } )
       }
+      // 如果订单为0，需要添加一个支付方式
+      if( this.formData.paymentAmount == 0 && paymentsAttributes.length == 0){
+        paymentsAttributes.push( { payment_method_id: this.formData.selectPaymentMethodId, amount: 0 } )
+      }
+
       //  index  cname  discountPercent  groupPosition memo name  price productId quantity
       //  saleUnitPrice  variantId  variantName
-      let order =  { store_id: this.storeId, user_id: this.customer.id,  payments: paymentsAttributes, enable_sms: this.formData.enableSms, enable_mp_msg: this.formData.enableMpMsg }
+      let order_type = this.isAllItemProduct ? this.OrderTypeEnum.counter : this.OrderTypeEnum.normal
+      let order =  { order_type, store_id: this.storeId, user_id: this.customer.id,  payments: paymentsAttributes, enable_sms: this.formData.enableSms, enable_mp_msg: this.formData.enableMpMsg }
       order.line_items_attributes = this.selectedOrderItems.map((item)=>{
         return { quantity: item.quantity, variant_id: item.variantId, cname: item.cname,
           group_position: item.groupPosition, memo: item.memo,
@@ -435,7 +447,6 @@ export default {
             console.log("checkout dialog res->",params, res, order)
             this.$emit('order-created-event', res )
             this.$emit('update:dialogVisible', false)
-            //if( this.formData.isPrintReceipt ){
             order.displayCreatedDateTime = order.createdAt.format('YYYY年MM月DD日 HH时 mm分 ss秒') //'2018年07月11日 20时 35分 05秒'
             let printParams = { labelPrinter: this.storeInfo.labelPrinter,
               labelPrintCount: this.storeInfo.labelPrintCount, // 打印多少个条码

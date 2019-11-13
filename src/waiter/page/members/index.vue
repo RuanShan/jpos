@@ -71,8 +71,12 @@
                 <el-form-item label="关键字">
                   <el-input class="search-input" placeholder="请输入手机号/姓名/会员卡号" prefix-icon="el-icon-search" size="mini" v-model="formData.keyword" clearable @clear="handleResetForm"></el-input>
                 </el-form-item>
-                <el-form-item label="">
-                  <el-checkbox  size="mini" v-model="formData.cardRequired" > 拥有会员卡</el-checkbox>
+
+                <el-form-item label="会员" prop="hasCard" >
+                  <el-select v-model="formData.hasCard" placeholder="" size="mini" clearable placeholder="不限" @clear="handleClear">
+                    <el-option v-for="item in cardOptions" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
 
                 <el-form-item>
@@ -166,6 +170,7 @@ export default {
   },
   data() {
     return {
+      cardOptions: [{label:'是',value: 1},{label:'否',value: 0}],
       memberCenterNewWindowVisible: false,
       smsCenterWindowVisible: false,
       customerList: [],
@@ -178,6 +183,7 @@ export default {
       formData: {
         keyword: '',
         cardRequired: false,
+        hasCard: null,
         storeId: null
       },
       customerData: {
@@ -211,8 +217,13 @@ export default {
       }
       // storeId 永远为当前选择的，由store-select 更新
       // 是否必须会员卡
-      if( this.formData.cardRequired){
-        params.q.cards_status_eq = 1
+      if( this.formData.hasCard != null ){
+        if( this.formData.hasCard == 1 ){
+          params.q.cards_status_eq = 1
+        }
+        if( this.formData.hasCard == 0 ){
+          params.q.cards_status_null = true
+        }
       }
       // 会员 电话号码或卡号 关键字
       if( this.formData.keyword.length>0){
@@ -288,7 +299,10 @@ export default {
     },
     handleSmsCenter(){
       this.smsCenterWindowVisible = true;  //打開Sms中心窗口
-    }
+    },
+    handleClear() {
+      this.formData.hasCard = null
+    },
   }
 };
 </script>

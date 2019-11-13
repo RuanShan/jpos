@@ -35,8 +35,9 @@
           </el-table-column>
           <el-table-column label="充值状态" prop="displayState" width="120">
               <template slot-scope="scope">
-                <p type="danger" v-if="scope.row.state=='canceled'">{{scope.row.displayState}}({{scope.row.memo}}) </p>
-                <p v-else>{{scope.row.displayState}} </p>
+                <span type="danger" v-if="scope.row.state=='canceled'">{{scope.row.displayState}} </span>
+                <span v-else>{{scope.row.displayState}} </span>
+                <span v-if='scope.row.memo'>({{scope.row.memo}}) </span>
               </template>
           </el-table-column>
           <el-table-column label="操作" width="80" align="center">

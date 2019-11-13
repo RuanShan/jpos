@@ -65,6 +65,13 @@
           </el-date-picker>
         </el-form-item>
 
+        <el-form-item label="会员卡类型" prop="variantId" >
+          <el-select v-model="formData.variantId" placeholder="" size="mini" clearable placeholder="不限" @clear="handleClear">
+            <el-option v-for="item in cardTypeList" :key="item.masterId" :label="item.name" :value="item.masterId">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
       <el-form-item>
         <el-button class="order-ok" type="primary" size="mini" @click="handleSearch">查询</el-button>
       </el-form-item>
@@ -96,17 +103,20 @@
         </el-table-column>
         <el-table-column prop="creatorName" label="操作员" width="110">
         </el-table-column>
-        <el-table-column prop="cardTransaction.displayIsFirst" label="是否新增" width="90">
+        <el-table-column prop="displayOrderType" label="类型" width="90">
         </el-table-column>
-        <el-table-column prop="cardTransaction.card.memo" label="备注" width="90">
+        <el-table-column label="充值状态" prop="displayState">
+          <template slot-scope="scope">
+              {{scope.row.displayState}} <span v-show="scope.row.memo">({{scope.row.memo}})</span>
+            </template>
         </el-table-column>
       </el-table>
     </div>
 
     <!-- 统计数据  START -->
     <div class="statisdatarechargemoney">
-      <h4 style="display: inline-block;">合计充值金额:</h4>
-      <h4 class="recordnum">¥{{totalSum}}</h4>
+      <h4 style="display: inline-block;">合计付款金额:</h4>
+      <h4 class="recordnum">¥{{paymentTotalSum}}</h4>
     </div>
     <!-- 统计数据  END -->
 
@@ -137,15 +147,18 @@ export default {
       //*********** 过滤条件 ***************/
       formData: {
         selectedDates: [], // [ "2018-06-04", "2018-06-14" ]
+        variantId: null,
         storeId: 0
       },
+      cardTypeList: [],
+
       selectedDates: "", //选择的日期时间
 
       stateOptions: [{ //门店方式选项
         value: '全部',
       }],
       totalPage: 0, //分页器显示的总页数
-      perPage: 12, //主表每页显示12行
+      perPage: 18, //主表每页显示12行
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
       pickerOptions2: {
         shortcuts: [{
@@ -179,8 +192,8 @@ export default {
       returnServerCustomerData: {}, //调用接口,返回的数据
       customerData: {}, //整理過的顧客數據
       totalCount: 0,  //统计数据之记录数
-      totalSum: 0 //统计数据之充值金额合计
-
+      totalSum: 0, //统计数据之充值金额合计
+      paymentTotalSum: 0
     };
   },
   created() {
@@ -206,10 +219,14 @@ export default {
   },
   methods: {
     async initData() {
+      this.cardTypeList = await this.getCardTypes()
+
       let params = this.buildParams()
+
       getOrderCount(params).then((res) => {
         this.totalCount = res.total_count
         this.totalSum = parseInt(res.total_sum)
+        this.paymentTotalSum = parseInt(res.payment_total_sum)
       })
       let result = await findOrders(params)
 
@@ -224,11 +241,16 @@ export default {
         q: {
           created_at_gteq: this.computedStartAt,
           created_at_lteq: this.computedEndAt,
-          order_type_in: [1,2]
+          order_type_in: [1,2],
+          s:[ 'created_at desc']
         }
       }
       if( parseInt(this.formData.storeId) > 0){
         params.q.store_id_eq = this.formData.storeId
+      }
+      if (this.formData.variantId != null) {
+          //选择了一个支付方式
+          params.q.line_items_variant_id_eq = this.formData.variantId
       }
       return params
     },
@@ -244,7 +266,11 @@ export default {
     handleSearch() {
       this.currentPage = 1
       this.initData()
-    }
+    },
+    handleClear() {
+      console.log(' Selected paymentMethodId = ', this.formData.variantId)
+      this.formData.variantId = null
+    },
   }
 };
 </script>

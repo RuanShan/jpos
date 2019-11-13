@@ -33,6 +33,9 @@
                     height: 100%;
                 }
             }
+            .deposit{
+              margin-right: 10px;
+            }
         }
         .order-final {
             position: absolute;
@@ -306,6 +309,7 @@
   <member-add :member-mobile="memberMobile" @customer-created-event="handleCustomerCreatedEvent" :dialog-visible.sync="memberAddWindowVisible"></member-add>
   <!-- 添加会员组件 End-->
   <member-card-add :member="currentCustomer" @customer-created-event="handleCustomerCreatedEvent" :dialog-visible.sync="memberCardAddWindowVisible"></member-card-add>
+  <member-card-deposit :member="currentCustomer" :card="currentCard" @customer-created-event="handleCustomerCreatedEvent" :dialog-visible.sync="memberCardDepositWindowVisible"></member-card-deposit>
 
   <div class="pos">
     <div class="loading" v-if="false">
@@ -328,6 +332,7 @@
                   </el-form-item>
 
                   <el-button type="" size="mini" @click="handleNewCustomerButtonClicked" class="right">添加会员</el-button>
+                  <el-button type="" size="mini" @click="depositButtonClicked" class="right deposit" v-show="isDipositButtonVisible">会员充值</el-button>
 
                 </el-form>
                 <div class="search-result clear">
@@ -422,11 +427,6 @@
               <ExpenseItems @current-item-changed="handleCurrentExpenseItemChanged"></ExpenseItems>
               <!-- 取单组件 End-->
             </el-tab-pane>
-            <el-tab-pane label="库存" name="stockMovementTab" class="ready-order">
-              <!-- 取单组件 Start-->
-              <StockMovements @current-item-changed="handleCurrentGroupChanged"></StockMovements>
-              <!-- 取单组件 End-->
-            </el-tab-pane>
           </el-tabs>
         </div>
       </el-col>
@@ -508,6 +508,7 @@ import CelSwiper from "@/components/dialog/CelSwiper.vue";
 import CheckoutDialog from "@/components/CheckoutDialog.vue"
 import MemberAdd from "./MemberAdd.vue"
 import MemberCardAdd from "./MemberCardAdd.vue"
+import MemberCardDeposit from "./MemberCardDeposit.vue"
 import OrderDelivery from "./OrderDelivery.vue"
 import ExpenseItems from "./ExpenseItems.vue"
 import StockMovements from "./StockMovements.vue"
@@ -550,6 +551,7 @@ export default {
       checkoutDialogVisible: false,
       memberAddWindowVisible: false,
       memberCardAddWindowVisible: false,
+      memberCardDepositWindowVisible: false,
       memberMobile: null,
       customerList: [], //按关键字搜索到的客户列表
       currentCustomer: null,
@@ -570,6 +572,7 @@ export default {
     CheckoutDialog,
     MemberAdd,
     MemberCardAdd,
+    MemberCardDeposit,
     OrderDelivery,
     ExpenseItems,
     StockMovements,
@@ -693,6 +696,19 @@ export default {
         desc += '[' + this.currentCustomer.storeName + ']'
       }
       return desc
+    },
+    isDipositButtonVisible(){
+      return this.currentCard.id != null
+    },
+    isAllItemService(){
+      return this.orderItemList.findIndex(function(item){
+        return (item.sku.search(/^service/) == -1)
+      }) == -1
+    },
+    isAllItemProduct(){
+      return this.orderItemList.findIndex(function(item){
+        return (item.sku.search(/^product/) == -1)
+      }) == -1
     }
   },
   created() {
@@ -734,32 +750,44 @@ export default {
 
       // 增加商品
       let variant = goods.master
+      let sku = variant.sku  // sku 使用master的，variant的sku判断类型不准
       if (typeof (index) === 'number') { // 如果商品有variants
         variant = goods.variants[index]
       }
       let vid = variant.id
+      let isService = (sku.search(/^service/) >= 0)
+      let isProduct = (sku.search(/^product/) >= 0)
+      // 检查当前商品的sku和购物车里的sku是否兼容，即不可以同时买服务和商品，以便生成不同类型订单，方便查询。
+      if( this.isAllItemService && isService || this.isAllItemProduct && isProduct){
+        // 根据判断的值编写业务逻辑
+        let newGoods = {
+          // uid用来命名xeditable, 根据名称查找 orderItem, 修改对应值
+          // [column]_[uid]_[suffix] 示例：groupnumber_0_xeditable
+          sku: sku, // 判断商品是否为一般商品, sku：product-xxx，如鞋油等
+          isEditing: false, // 是否正在编辑discountPercent
+          uid: new Date().getTime(),
+          productId: goods.id,
+          variantId: vid,
+          name: goods.name,
+          variantName: variant.optionsText,
+          cname: goods.name + variant.optionValueTexts.join(),
+          saleUnitPrice: Number(variant.price), // 单价
+          price: Number(variant.price), // 金额
+          groupPosition: this.nextGroupPosition,
+          quantity: 1,
+          memo: "",
+          discountPercent: this.getDiscountOfVariant(vid) //计算选择商品对应当前客户会员卡的折扣率
+        }
+        this.computePrice(newGoods)
+        this.orderItemList.push(newGoods);
+        console.log("orderItemList", this.orderItemList)
 
-      // 根据判断的值编写业务逻辑
-      let newGoods = {
-        // uid用来命名xeditable, 根据名称查找 orderItem, 修改对应值
-        // [column]_[uid]_[suffix] 示例：groupnumber_0_xeditable
-        isEditing: false, // 是否正在编辑discountPercent
-        uid: new Date().getTime(),
-        productId: goods.id,
-        variantId: vid,
-        name: goods.name,
-        variantName: variant.optionsText,
-        cname: goods.name + variant.optionValueTexts.join(),
-        saleUnitPrice: Number(variant.price), // 单价
-        price: Number(variant.price), // 金额
-        groupPosition: this.nextGroupPosition,
-        quantity: 1,
-        memo: "",
-        discountPercent: this.getDiscountOfVariant(vid) //计算选择商品对应当前客户会员卡的折扣率
+      }else{
+        this.$message({
+          message: "服务和其它商品不能一起结算",
+          type: "error"
+        });
       }
-      this.computePrice(newGoods)
-      this.orderItemList.push(newGoods);
-      console.log("orderItemList", this.orderItemList)
     },
 
     delOrderItem(selectedOrderItem) {
@@ -885,6 +913,9 @@ export default {
     //根据关键字查找客户
     //从SerVer上获取模糊搜索的用户数据,异步获取
     searchCustomers(keyword) {
+      if( keyword.length<4){
+        return
+      }
       this.searchCustomersAsync(keyword, this);
     },
     //远程搜索输入框函数-----提示功能
@@ -991,6 +1022,10 @@ export default {
         this.memberMobile = null
         this.memberAddWindowVisible = true
       }
+    },
+    depositButtonClicked(){
+      this.memberCardDepositWindowVisible = true
+      console.debug(' depositButtonClicked')
     },
     handleCustomerCreatedEvent(customer) {
       console.log(" handleCustomerCreatedEvent", customer)

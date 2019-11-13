@@ -86,12 +86,29 @@ export default {
     }
   },
   mixins: [DialogMixin, apiResultMixin],
-  props: ['dialogVisible', 'stateFilter'], //lineItemGroupStateFilter:只有符合条件的才可扫码
+  props: {
+    dialogVisible:{
+      type: Boolean,
+    },
+    filterVariantIds: { // variantIds,
+      type: Array
+    },
+    stateFilter: {
+      type:Array
+    }
+  }, //只有符合条件的才可扫码
   computed: {
     computedLineItems() {
-      return _.flatten(this.lineItemGroups.map((group) => {
-        return group.lineItems
-      }))
+      return  _.flatten(this.lineItemGroups.map((group) => {
+        console.debug("computedLineItems=", this.filterVariantIds);
+          if( this.filterVariantIds.length == 0 ){
+            return group.lineItems
+          }else{
+            return group.lineItems.filter( item=> this.filterVariantIds.indexOf(item.variantId)>=0 )
+          }
+        }))
+
+
     }
   },
   methods: {
@@ -133,6 +150,11 @@ export default {
           return
         }
       }
+      if( this.filterVariantIds.length > 0  && lineItemGroup ){
+        let items = lineItemGroup.lineItems.filter( item=> this.filterVariantIds.indexOf(item.variantId)>=0 )
+        lineItemGroup.lineItems = items
+      }
+
       // 如果重复录入，把以前的替换掉
       let index = this.lineItemGroups.findIndex((group)=>{
         return group.id == lineItemGroup.id
@@ -153,9 +175,9 @@ export default {
       group.lineItems.splice(index,1)
     },
     sumit() {
-
+      let  lineItems =  this.computedLineItems
       this.$emit('update:dialogVisible', false)
-      this.$emit('lineItemGroupsSelected', this.lineItemGroups)
+      this.$emit('lineItemGroupsSelected', this.lineItemGroups, lineItems)
     }
 
   }

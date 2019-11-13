@@ -128,7 +128,7 @@
         </el-table-column>
         <el-table-column label="支付金额" prop="paymentTotalByMethod">
         </el-table-column>
-        <el-table-column label="支付信息"  width="240">
+        <el-table-column label="支付信息">
           <template slot-scope="scope">
               <el-tag v-for="item in scope.row.payments" :key="item.id" size="mini">
                 {{ item.description }}
@@ -136,14 +136,14 @@
           </template>
 
         </el-table-column>
-        <el-table-column label="操作员" prop="creatorName" width="110">
-        </el-table-column>
-        <el-table-column label="操作" width="85">
+        <el-table-column label="商品信息"  width="240">
           <template slot-scope="scope">
-              <el-button
-                size="mini"  type="success"
-                @click="handleShowDetail( scope.row)">详情</el-button>
-            </template>
+              <el-tag v-for="item in scope.row.lineItems" :key="item.id" size="mini">
+                {{ item.cname }} <template v-if="item.memo.length>0"> -{{ item.memo }} </template>
+              </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作员" prop="creatorName" width="110">
         </el-table-column>
 
       </el-table>
@@ -225,18 +225,6 @@
                 const endDate = end.toDate()
                 const startDate = end
                   .subtract(1, 'months')
-                  .startOf('day')
-                  .toDate()
-                picker.$emit('pick', [startDate, endDate])
-              }
-            },
-            {
-              text: '最近三个月',
-              onClick(picker) {
-                const end = moment().endOf('day')
-                const endDate = end.toDate()
-                const startDate = end
-                  .subtract(3, 'months')
                   .startOf('day')
                   .toDate()
                 picker.$emit('pick', [startDate, endDate])
@@ -337,7 +325,7 @@
           q: {
             created_at_gteq: this.computedStartAt,
             created_at_lteq: this.computedEndAt,
-            order_type_eq: 0,
+            order_type_eq: 3,
             s:[ 'created_at desc']
           }
         }

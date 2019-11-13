@@ -104,7 +104,7 @@ export default {
         value: '全部',
       }],
       total: 0, //总记录数
-      perPage: 12, //主表每页显示12行
+      perPage: 18, //主表每页显示12行
       currentPage: 1, //根据分页器的选择,提交SerVer数据,表示当前是第几页
       pickerOptions2: {
         shortcuts: [{

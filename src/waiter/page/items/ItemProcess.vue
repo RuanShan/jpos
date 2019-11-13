@@ -263,6 +263,7 @@
                     <tr>
                       <th style="width:3em">序号</th>
                       <th>服务项目</th>
+                      <th style="width:4em">金额</th>
                       <th>项目备注<i class="el-icon-edit"></i></th>
                       <th style="width:6em">状态</th>
                     </tr>
@@ -270,6 +271,7 @@
                       <tr>
                         <td>{{ index+1 }}</td>
                         <td>{{ lineItem.cname }}</td>
+                        <td>{{ lineItem.price }}</td>
                         <td>
                           <vue-xeditable  :name="'memo_'+lineItem.id+'_xeditable'" v-model="lineItem.memo" type="text" @value-did-change="handleXeditableChanged" empty="无"></vue-xeditable>
                         </td>
@@ -307,6 +309,7 @@
           </div>
           <div class="actions" v-show="orderDetail">
             <el-button size="mini" @click="cancelOrder" class="hide">取消订单</el-button>
+            <el-button size="mini" @click="handlePrintReceipt" type="primary">打印小票</el-button>
             <el-button size="mini" @click="handlePrintLabel" type="primary">打印所有条码</el-button>
             <!-- <el-button @click="ChangeCurrentItemState(false)">上一步</el-button>
             <el-button @click="ChangeCurrentItemState(true)" type="primary">下一步</el-button> -->
@@ -603,6 +606,15 @@ console.log( "handleImageAdded=", response, file, fileList)
       let printParams = { order: this.orderDetail, labelPrinter: this.storeInfo.labelPrinter, labelPrintCount: this.storeInfo.labelPrintCount }
       PrintUtil.printLabel( printParams )
     },
+    handlePrintReceipt(){
+      this.orderDetail. displayCreatedDateTime = this.orderDetail.createdAt.format('YYYY年MM月DD日 HH时 mm分 ss秒') //'2018年07月11日 20时 35分 05秒'
+      let printParams = {
+        storeName: this.storeInfo.name,
+          receiptTitle: this.storeInfo.receiptTitle, receiptFooter: this.storeInfo.receiptFooter,
+         order: this.orderDetail, labelPrinter: this.storeInfo.labelPrinter, labelPrintCount: this.storeInfo.labelPrintCount }
+      PrintUtil.printReceipt( printParams )
+    },
+
     handlePrintGroupLabel( i, lineItemGroup){
       // 打印当前group的条码
       let order = Object.assign( {}, lineItemGroup.order )

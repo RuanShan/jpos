@@ -64,8 +64,8 @@
               <div slot="header" class="clearfix">
                 <span>会员卡信息</span>
               </div>
-              <el-form-item label="会员卡号" prop="code" required>
-                <el-input v-model="cardFormData.code"></el-input>
+              <el-form-item label="会员卡号" prop="code" >
+                <el-input v-model="cardFormData.code" :readonly="true"></el-input>
               </el-form-item>
               <el-form-item label="会员卡类型" prop="variantId" required>
                 <el-select v-model="cardFormData.variantId" placeholder="">
@@ -77,9 +77,7 @@
                   <el-date-picker type="date" placeholder="选择日期" v-model="cardFormData.expireAt"
                     format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="width: 100%;" :pickerOptions="pickerOptions"></el-date-picker>
               </el-form-item>
-              <el-form-item label="会员密码" prop="paymentPassword" required>
-                <el-input type="password" v-model="cardFormData.paymentPassword" ></el-input>
-              </el-form-item>
+
               <el-form-item label="付款方式" prop="paymentMethodId" required>
                 <el-select v-model="cardFormData.paymentMethodId" placeholder="请选择支付方式">
                   <el-option v-for="item in activePaymentMethods" :key="item.id" :label="item.name" :value="item.id">
@@ -103,7 +101,7 @@
       <el-row type="flex" justify="center">
         <el-col :span="10">
           <div class="actions">
-            <el-button type="primary" @click="addCustomer">立即创建</el-button>
+            <el-button type="primary" @click="depositCardConfirm">立即充值</el-button>
             <el-button @click="closeDialog">关闭</el-button>
           </div>
         </el-col>
@@ -122,28 +120,19 @@
 // **********
 import moment from 'moment'
 
-import { checkout, updateCustomer, customerMobileValidate, isCodeAvailable } from "@/api/getData";
+import { checkout, updateCustomer, customerMobileValidate } from "@/api/getData";
 
 import {
   DialogMixin
 } from '@/components/mixin/DialogMixin'
+import {
+  CelUIMixin
+} from '@/components/mixin/CelUIMixin';
 
 export default {
-  props: ["member",  'dialogVisible'],
-  mixins: [DialogMixin],
+  props: ["member", "card",  'dialogVisible'],
+  mixins: [DialogMixin, CelUIMixin],
   data() {
-    //验证卡号--1.不能空;2.必须是数字;3.四至十一个字符
-    var validateCardCode = (rule, value, callback) => {
-      isCodeAvailable(value).then(function (response) {
-        if (response.ret) {
-          callback();
-        } else {
-          callback(new Error("会员卡号码已经存在。"))
-        }
-      }, function (error) {
-        callback(new Error(error))
-      });
-    };
 
     //验证规则---电话号码
     var validPhone = (rule, value, callback) => {
@@ -202,16 +191,6 @@ export default {
             max: 11,
             message: "卡号为长度在 4 到 11 个数字和字母",
             trigger: "blur"
-          },
-          { validator: validateCardCode, trigger: "blur" }
-        ],
-        paymentPassword: [
-          { type: "string", required: true, message: "请输入支付密码"},
-          {
-            min: 6,
-            max: 12,
-            message: "长度在 6 到 12 个字符",
-            trigger: "blur"
           }
         ]
       },
@@ -262,6 +241,8 @@ export default {
         this.$refs.cardFormData.resetFields();
       //})
       this.memberFormData = Object.assign({}, this.member)
+      this.cardFormData.code = this.card.code
+      this.cardFormData.variantId = this.card.variantId
 
       console.log("MemberAdd handleOpenDialog end")
     },
@@ -269,7 +250,17 @@ export default {
       this.resetForm('memberFormData')
       this.handleCloseDialog()
     },
-    addCustomer(formName) {
+    depositCardConfirm(){
+      let msg = `确定给会员卡${this.cardFormData.code} 充值${this.cardFormData.amount}元吗？`
+      if( this.member.storeId !=  this.storeId){
+
+        msg = `会员来自店铺${this.member.storeName}，确定给会员卡${this.cardFormData.code} 充值${this.cardFormData.amount}元并转入当前店铺吗？`
+      }
+      this.actionConfirm(msg, this.addCustomer)
+    },
+    addCustomer() {
+      // 如果用户是其它店铺的请店员确认
+
       let validations = [this.$refs["memberFormData"].validate()]
       //如果创建会员卡，需要验证会员卡的表单
       if (this.isAddingCard) {
@@ -285,7 +276,7 @@ export default {
         checkout( params ).then((result)=>{
           if( result.id ){
             this.$message( {
-              message: '恭喜你，会员卡创建成功',
+              message: '恭喜你，会员卡充值成功',
               type: 'success'
             });
             let cparams = this.buildCustomerParams()
@@ -339,20 +330,24 @@ export default {
         //enable_mp_msg: true,
         store_id: this.storeId,
         user_id: this.member.id,
-        order_type: 'card',
+        order_type: this.OrderTypeEnum.deposit,
         line_items: [
-          { variant_id: this.cardFormData.variantId,
+          {
+            variant_id: this.cardFormData.variantId,
+            card_id: this.card.id,
             card_amount: this.cardFormData.amount,
             price: this.cardFormData.money,
-            quantity: 1, card_code: this.cardFormData.code  }
+            quantity: 1,
+            cname: '会员卡充值'
+          }
         ],
         payments: [{
             payment_method_id:  this.cardFormData.paymentMethodId,
             amount: this.cardFormData.money
           }]
       }
-      let cardParams = {code: this.cardFormData.code,
-        payment_password: this.cardFormData.paymentPassword,
+      let cardParams = {
+        code: this.cardFormData.code,
         expire_at: this.cardFormData.expireAt,
         memo: this.cardFormData.memo
       }

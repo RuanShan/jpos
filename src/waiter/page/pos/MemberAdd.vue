@@ -81,8 +81,7 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="到期时间">
-                <el-form-item prop="expireAt">
+              <el-form-item label="到期时间" prop="expireAt">
                   <el-date-picker type="date"
                                   placeholder="选择日期"
                                   v-model="cardFormData.expireAt"
@@ -90,7 +89,6 @@
                                   value-format="yyyy-MM-dd"
                                   style="width: 100%;"
                                   :pickerOptions="pickerOptions"></el-date-picker>
-                </el-form-item>
               </el-form-item>
               <el-form-item label="会员密码" prop="paymentPassword" required>
                 <el-input type="password" v-model="cardFormData.paymentPassword"></el-input>
@@ -101,10 +99,10 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="充值金额" required>
+              <el-form-item label="充值金额" prop="amount" required>
                 <el-input type="number" v-model="cardFormData.amount"></el-input>
               </el-form-item>
-              <el-form-item label="付款金额" required>
+              <el-form-item label="付款金额" prop="money"  required>
                 <el-input type="number" v-model="cardFormData.money"></el-input>
               </el-form-item>
               <el-form-item label="备注" prop="address">
@@ -240,15 +238,6 @@
               min: 6,
               max: 12,
               message: '长度在 6 到 12 个字符',
-              trigger: 'blur'
-            }
-          ],
-          amount: [
-            { type: 'integer', required: true, message: '请输入充值金额', trigger: 'blur' },
-            {
-              min: 0,
-              max: 1000000,
-              message: '请输入有效充值金额',
               trigger: 'blur'
             }
           ]

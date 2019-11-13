@@ -97,8 +97,8 @@
                 </el-col>
               </el-row>
               <!-- 备注     START -->
-              <el-form-item label="备注" prop="inputMemo">
-                <el-input v-model="formData.inputMemo" type="textarea" :rows="2" placeholder="请输入内容"></el-input>
+              <el-form-item label="备注" prop="memo">
+                <el-input v-model="formData.memo" type="textarea" :rows="2" placeholder="请输入内容"></el-input>
               </el-form-item>
 
               <!-- 备注     END -->
@@ -143,7 +143,7 @@
           paymentMethodId: null, //支付方式单选按钮默认选择,会根据用户选择动态变化
           amount: null, //输入充值金额
           money: null, //付款金额
-          inputMemo: '', //备注输入框
+          memo: '', //备注输入框
           enableMpMsg: true //
         },
         rules: {},
@@ -169,6 +169,7 @@
       //打开窗口时事件处理函数-----
       async openWindow() {
         this.formData.variantId = this.cardData.variantId
+        this.formData.memo=''
         this.getPaymentMethods().then(() => {
           this.paymentMethodList = this.paymentMethods
           if (this.activePaymentMethods.length > 0) {
@@ -205,6 +206,7 @@
           user_id: this.customerData.id,
           order_type: this.OrderTypeEnum.deposit,
           enable_mp_msg: this.formData.enableMpMsg,
+          memo: this.formData.memo,
           line_items: [
             {
               variant_id: this.formData.variantId,

@@ -65,7 +65,7 @@
 
 <template>
 <div class="worker-performance-container cel-window">
-  <item-scanner-dialog :dialog-visible.sync="scannerDialogVisible" @lineItemGroupsSelected="handleLineItemGroupsSelected" :state-filter="lineItemGroupStateFilter"></item-scanner-dialog>
+  <item-scanner-dialog :dialog-visible.sync="scannerDialogVisible"  @lineItemGroupsSelected="handleLineItemGroupsSelected" :filter-variant-ids="computedFilterVariantIds" :state-filter="lineItemGroupStateFilter"></item-scanner-dialog>
 
   <el-dialog  :visible="computedVisible" @open="handleDialogOpen" :show-close="false" :top="top" :modal="false">
     <div slot="title" class="title-wrap">
@@ -141,7 +141,7 @@ import {
   getSellingServices,
   findUsers,
   fulfillLineItems,
-  findOrderByGroupNumber
+  //findOrderByGroupNumber
 }
 from '@/api/getData'
 
@@ -194,6 +194,18 @@ export default {
       let worker = this.workerList.find((w)=>{ return w.id == this.currentWorkerId })
       console.log( " computedCurrentWorkName=", worker)
       return worker ? worker.username : ''
+    },
+    computedFilterVariantIds(){
+      // 工作过滤
+      let products = this.productList.filter((p)=> this.currentProductIds.indexOf(p.id)>=0 )
+      console.debug("computedFilterVariantIds this.productList", this.productList);
+      let allids = products.reduce((ids, p)=> {
+        console.debug("products=", products, ids, p);
+        ids.push(p.master.id)
+        p.variants.forEach((v)=> { ids.push(v.id) })
+        return ids
+      },[])
+      return allids
     }
   },
   methods: {
@@ -211,7 +223,8 @@ export default {
         }
       })
       getSellingServices().then((res) => {
-        this.productList = res.products
+        this.productList = this.buildProducts(res)
+        console.debug("this.productList=", this.productList)
       })
 
       //let groupQueryParams = {
@@ -280,12 +293,12 @@ export default {
       this.initData()
       console.log('handleDialogOpen yeah')
     },
-    handleKeywordChange(value) {
-      const pattern = /[\d]{14}/
-      if (pattern.test(value)) {
-        this.findOrderByGroupNumber(value)
-      }
-    },
+    // handleKeywordChange(value) {
+    //   const pattern = /[\d]{14}/
+    //   if (pattern.test(value)) {
+    //     this.findOrderByGroupNumber(value)
+    //   }
+    // },
     handleSelectionChange(val) {
       this.multipleSelection = val
       console.log("handleSelectionChange=", this.multipleSelection)
@@ -310,47 +323,50 @@ export default {
         this.currentOrder = null
       }
     },
-    async findOrderByGroupNumber(number) {
-      // find in orderDetailList
-      this.currentOrder = this.orderDetailList.find((order) => {
-        let found = order.lineItemGroups.find((group) => {
-          return group.number == number
-        })
-        return found != null
-      })
-
-      if (this.currentOrder) {
-        this.currentGroup = this.currentOrder.lineItemGroups.find((group) => {
-          return group.number == number
-        })
-        // not find in this.lineItemGroups, add it
-        if (!this.lineItemGroups.includes(this.currentGroup)) {
-          this.lineItemGroups.push(this.currentGroup)
-        }
-
-      } else {
-        // find by network
-        const orderResult = await findOrderByGroupNumber(number)
-        const orderDetail = this.buildOrder(orderResult)
-        this.currentOrder = orderDetail
-        this.currentGroup = this.currentOrder.lineItemGroups.find(function(group, index) {
-          return group.number == number
-        })
-        //this.orderDetail.find
-        this.$nextTick(() => {
-          this.orderDetailList.push(this.currentOrder)
-          this.lineItemGroups.push(this.currentGroup)
-        })
-      }
-    },
+    // async findOrderByGroupNumber(number) {
+    //   // find in orderDetailList
+    //   this.currentOrder = this.orderDetailList.find((order) => {
+    //     let found = order.lineItemGroups.find((group) => {
+    //       return group.number == number
+    //     })
+    //     return found != null
+    //   })
+    //
+    //   if (this.currentOrder) {
+    //     this.currentGroup = this.currentOrder.lineItemGroups.find((group) => {
+    //       return group.number == number
+    //     })
+    //     // not find in this.lineItemGroups, add it
+    //     if (!this.lineItemGroups.includes(this.currentGroup)) {
+    //       this.lineItemGroups.push(this.currentGroup)
+    //     }
+    //
+    //   } else {
+    //     // find by network
+    //     const orderResult = await findOrderByGroupNumber(number)
+    //     const orderDetail = this.buildOrder(orderResult)
+    //     this.currentOrder = orderDetail
+    //     this.currentGroup = this.currentOrder.lineItemGroups.find(function(group, index) {
+    //       return group.number == number
+    //     })
+    //     //this.orderDetail.find
+    //     this.$nextTick(() => {
+    //       this.orderDetailList.push(this.currentOrder)
+    //       this.lineItemGroups.push(this.currentGroup)
+    //     })
+    //   }
+    // },
     handleOpenScannerDialog(){
       this.scannerDialogVisible = true
     },
-    handleLineItemGroupsSelected( lineItemGroups ){
-      this.lineItemGroups = lineItemGroups
-      this.lineItems = _.flatten(this.lineItemGroups.map((group) => {
-          return group.lineItems
-      }))
+    // 用户选择的group， items
+    handleLineItemGroupsSelected( lineItemGroups, lineItems ){
+      // this.lineItemGroups = lineItemGroups
+      // let lineItems = _.flatten(this.lineItemGroups.map((group) => {
+      //     return group.lineItems
+      // }))
+
+      this.lineItems =lineItems
     }
   }
 }

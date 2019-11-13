@@ -235,6 +235,11 @@ export default {
       let states = this.computedLineItemGroups.map((group)=>{ return group.state })
       console.log( "isDeliverable=", states)
       return _.uniq(states).length ==1 && states[0] == this.LineItemGroupStateEnum.ready
+    },
+    isSingleOrder(){
+      // 选择的物品是同一个订单
+      let ids = this.computedLineItemGroups.map((group)=>{ return group.orderId })
+      return _.uniq(ids).length ==1
     }
   },
   methods:{
@@ -350,6 +355,16 @@ export default {
       }
       console.log( "checkoutRequiredLineItems=", this.checkoutRequiredLineItems)
       if( this.isDeliverable){
+
+        // 如果订单中包含未付订单，且物品来自不同订单，禁止结账
+        if( this.checkoutRequiredTotal > 0 && !this.isSingleOrder){
+          this.$message({
+            message: '物品中有未付款订单，请将未付款物品单独取单！',
+            type: 'error'
+          });
+          return
+        }
+
         //检查每件物品对应的Order用户是否付款， 如果没有，弹出结账对话框,
         if( this.checkoutRequiredTotal > 0){
           this.checkoutDialogVisible = true

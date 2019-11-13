@@ -96,7 +96,6 @@ if (window.navigator.platform == 'iPhone' ) {
       }
 		})
 		window.navigator.splashscreen.hide();
-		//StatusBar.styleDefault();
 		window.addEventListener('native.keyboardshow', keyboardShowHandler);
 
 		function keyboardShowHandler(e) {

@@ -14,7 +14,7 @@ export var apiResultMixin = {
     return {
       PaymentStateEnum: { completed: 'completed', void: 'void'}, // void： 支付取消
       OrderStateEnum: { cart: 'cart', canceled: 'canceled'  },
-      OrderTypeEnum: { normal: 'normal', card: 'card', deposit: 'deposit' },
+      OrderTypeEnum: { normal: 'normal', card: 'card', deposit: 'deposit', counter: 'counter' },
       OrderPaymentStateEnum:{ paid: 'paid', unpaid:'unpaid' }, // 打卡 登入， 登出
       LineItemGroupPaymentStateEnum: { paid: 'paid', unpaid: 'unpaid'},
       CardStateEnum:{ enabled: 'enabled', disabled:'disabled', replaced: 'replaced' }, // enabled 可用, disabled 不可用
@@ -81,6 +81,7 @@ export var apiResultMixin = {
       order.displayCreatedAt = this.getDisplayDateTime(order.createdAt)
       order.displayState = this.getOrderDisplayState( order.state )
       order.displayPaymentState = this.getOrderDisplayPaymentState( order.paymentState )
+      order.displayOrderType = this.getOrderDisplayType(order.orderType)
       orderResult.line_item_groups.forEach((groupResult, i) => {
         let group = this.buildLineItemGroup( groupResult )
         group.order = order
@@ -139,7 +140,7 @@ export var apiResultMixin = {
         // 通常一个订单对应一条充值记录或者一条消费记录
         order.cardTransaction = order.cardTransactions[0]
         if( order.cardTransaction  ){
-          order.cardAmount = order.cardTransaction.amount          
+          order.cardAmount = order.cardTransaction.amount
         }
       }
       return order
@@ -273,6 +274,7 @@ export var apiResultMixin = {
         id: productResult.id,
         price: productResult,
         name: productResult.name,
+        hasVariants: productResult.has_variants,
         variants: [],
         taxonIds: productResult.taxon_ids,
         relateds: []
@@ -315,6 +317,7 @@ export var apiResultMixin = {
         name: variantResult.name,
         images: variantResult.images,
         optionsText: variantResult.options_text,
+        sku: variantResult.sku,
         optionValueTexts: []
       }
       variantResult.option_values.forEach(function(ov) {
@@ -703,6 +706,13 @@ export var apiResultMixin = {
       //支付状态 unpaid:欠款， paid:已经支付
       return state == "paid" ?  "已付" : "未付"
     },
+    getOrderDisplayType(orderType){
+      if( orderType == 'card') return "新增会员";
+      if( orderType == 'deposit') return "会员充值";
+      if( orderType == 'counter') return "其它订单";
+      return "服务订单"
+    },
+
     getGroupDisplayPaymentState(state){
       // order.payment_state
       //支付状态 unpaid:欠款， paid:已经支付
