@@ -44,7 +44,7 @@
     <fieldset class="expense-field-set filters">
       <legend>查询条件</legend>
       <store-select  v-bind:value.sync="formData.storeId"   v-if="authorizeMultiStore()"/>
-      <el-form-item class="expense-form-item" label="创建日期">
+      <el-form-item class="expense-form-item" label="验收时间">
         <el-date-picker class="expense-time-select" v-model="formData.selectedDates" type="daterange" align="right"
         :default-time="['00:00:00','23:59:59']"
         size="mini" unlink-panels range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" format="yyyy-MM-dd">
@@ -100,7 +100,7 @@
   <!-- 会员统计表   END -->
   <!-- 分页器 START-->
   <div class="pagiantion-wrap" style="">
-    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="totalPage">
+    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="perPage" layout="total, prev, pager, next" :total="totalPage">
     </el-pagination>
   </div>
   <!-- 分页器 END-->
@@ -216,8 +216,8 @@ export default {
       }
 
       if ( this.computedStartAt && this.computedEndAt){
-        params.q.created_at_gteq= this.computedStartAt
-        params.q.created_at_lteq= this.computedEndAt
+        params.q.work_at_gteq= this.computedStartAt
+        params.q.work_at_lteq= this.computedEndAt
       }
       if(this.formData.workerId ){
         params.q.worker_id_eq = this.formData.workerId

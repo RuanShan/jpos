@@ -213,8 +213,7 @@
               quantity: 1,
               card_id: this.cardData.id,
               card_amount: this.formData.amount,
-              price: this.formData.money,
-              cname: '会员卡充值'
+              price: this.formData.money
             }
           ],
           payments_attributes: [

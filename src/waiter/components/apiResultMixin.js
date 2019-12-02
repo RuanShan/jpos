@@ -572,6 +572,7 @@ export var apiResultMixin = {
         id: model.id,
         orderId: model.order_id,
         groupId: model.group_id,
+        variantId: model.variant_id,
         groupNumber: model.group_number,
         workerId: model.worker_id,
         workAt: model.work_at,
@@ -592,7 +593,7 @@ export var apiResultMixin = {
       item.displayCreatedAt = this.getDisplayDateTime( item.createdAt )
       item.displayState = this.getLineItemDisplayState(item.state )
       if( item.workAt){
-        item.workAt = moment(model.workAt)
+        item.workAt = moment(item.workAt)
         item.displayWorkAt = this.getDisplayDateTime( item.workAt )
       }
       return item
@@ -734,6 +735,9 @@ export var apiResultMixin = {
     },
     getDisplayDateTime( datetime){ // datetime is instance moment
       return datetime.format('MM-DD HH:mm')
+    },
+    getDisplayFullDateTime( datetime){ // datetime is instance moment
+      return datetime.format('YYYY-MM-DD HH:mm')
     },
     getDisplayDate( datetime){ // datetime is instance moment
       return datetime.format('YYYY-MM-DD')

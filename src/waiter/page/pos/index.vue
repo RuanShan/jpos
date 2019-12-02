@@ -913,7 +913,8 @@ export default {
     //根据关键字查找客户
     //从SerVer上获取模糊搜索的用户数据,异步获取
     searchCustomers(keyword) {
-      if( keyword.length<4){
+      let length = keyword.replace(/[^\u0000-\u00ff]/g,"aa").length
+      if( length<4){
         return
       }
       this.searchCustomersAsync(keyword, this);

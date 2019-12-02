@@ -100,7 +100,7 @@
   <!-- 会员统计表   END -->
   <!-- 分页器 START-->
   <div class="pagiantion-wrap" style="">
-    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="total, prev, pager, next" :total="totalPage">
+    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="perPage" layout="total, prev, pager, next" :total="totalPage">
     </el-pagination>
   </div>
   <!-- 分页器 END-->

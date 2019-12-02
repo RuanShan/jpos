@@ -130,7 +130,7 @@
             <StatisExpense   ></StatisExpense>
           </el-tab-pane>
           <el-tab-pane label="工厂统计" v-if="statisWorksPermission">
-            <StatisWorker  v-if="workerTabVisible" ></StatisWorker>
+            <StatisWorker  ></StatisWorker>
           </el-tab-pane>
           <el-tab-pane label="会员情况统计" v-if="posPermission">
             <statis-member-case     > </statis-member-case>

@@ -23,6 +23,9 @@
           <el-table-column label="订单编号" prop="number">
           </el-table-column>
           <el-table-column label="充值日期" prop="displayCreatedAt">
+            <template slot-scope="scope">
+            {{ getDisplayFullDateTime(scope.row.createdAt) }}
+            </template>
           </el-table-column>
           <el-table-column label="店铺名称" prop="storeName">
           </el-table-column>
@@ -43,7 +46,7 @@
           <el-table-column label="操作" width="80" align="center">
            <template slot-scope="scope">
              <el-button
-                 size="mini" type="danger" @click="handleCancel( scope.row)" :disabled="!isDepositCancelable(scope.row)">取消</el-button>
+                 size="mini" type="danger" @click="handleCancel( scope.row)" :disabled="!isDepositCancelable(scope.row, scope.$index)">取消</el-button>
 
            </template>
          </el-table-column>
@@ -146,9 +149,9 @@ export default {
           })
         })
     },
-    isDepositCancelable( depositOrder ){
-
-      return   depositOrder.state== this.OrderStateEnum.cart && this.cardData.amountRemaining >= depositOrder.total
+    isDepositCancelable( depositOrder, index ){
+      console.log( "isDepositCancelable index=",index)
+      return   index==0 && depositOrder.state== this.OrderStateEnum.cart && this.cardData.amountRemaining >= depositOrder.total
     }
   },
   watch:{
