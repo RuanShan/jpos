@@ -76,7 +76,7 @@
 
     <div class="checkout-form-wrap">
       <el-form :model="formData" :rules="rules" ref="formData" label-width="120px" class="checkout-form">
-        <el-form-item label="订单信息" v-if="existedOrderId">
+        <el-form-item label="订单信息" v-if="existedOrder">
           <el-table ref="multipleTable" :data="existedLineItemGroups" border max-height="240" @selection-change="groupSelectionChange">
             <el-table-column  type="selection" width="40" label="" :selectable="isGroupUnpaid"> </el-table-column>
             <el-table-column prop="displayPaymentState" label="支付状态" width="80">  </el-table-column>
@@ -155,7 +155,7 @@
             <el-checkbox label="短信息" v-model="formData.enableSms"></el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button type="warning" @click="handleCreateOrderWithoutPayment" v-show="!existedOrderId">取单时结账</el-button>
+          <el-button type="warning" @click="handleCreateOrderWithoutPayment" :loading="checkoutLoading" v-show="!existedOrder">取单时结账</el-button>
           <div class="right">
             <el-button type="success" @click="handleCreateOrderAndPayment" :disabled="selectedOrderItems.length==0" :loading="checkoutLoading">结账</el-button>
             <el-button @click="handleCloseDialog">取消</el-button>
@@ -282,7 +282,7 @@ export default {
       }
     },
     isAllItemProduct(){
-      return this.orderItemList.findIndex(function(item){
+      return this.selectedOrderItems.findIndex(function(item){
         // 后付款情况下， item.sku是空
         item.sku = item.sku  || ''
         return (item.sku.search(/^product/) == -1)
@@ -311,9 +311,15 @@ export default {
     //检查订单ID是否存在，如果存在结账时，只需要付款，无需创建订单
     existedOrderId(){
       let item = this.orderItemList.find( (item)=>{
-        return item.orderId != null
+        return !!item.orderId
       })
       return ( item != null ? item.orderId : null )
+    },
+    existedOrder(){
+      let item = this.orderItemList.find( (item)=>{
+        return !!item.order
+      })
+      return ( item != null ? item.order : null )
     },
     existedLineItemGroups(){
 
@@ -407,7 +413,7 @@ export default {
         this.formData.enableTimesCard = false
       }
 
-      if( this.existedOrderId ){
+      if( this.existedOrder ){
         // 根据当前选择了的会员卡，并且原来的lineItem 没有折扣，修正 每个 lineItem 的 discountPercent
 
         // check all lineItemGroups by default
@@ -416,6 +422,7 @@ export default {
           this.$refs.multipleTable.clearSelection()
           this.$refs.multipleTable.toggleAllSelection()
         }
+        this.formData.memo = this.existedOrder.memo
       }
       this.formData.totalPrice = this.computedTotalPrice
       this.computePaymentAmount()
@@ -425,7 +432,7 @@ export default {
       console.log( "this.formData.enablePrepaidCard=", this.formData.enablePrepaidCard )
       if( this.formData.enablePrepaidCard ){
         let card = this.currentPrepaidCard
-        this.formData.prepaidCardAmount = ( card.amountRemaining >= this.formData.totalPrice ? this.formData.totalPrice : (this.formData.totalPrice - card.amountRemaining) )
+        this.formData.prepaidCardAmount = ( card.amountRemaining >= this.formData.totalPrice ? this.formData.totalPrice :  card.amountRemaining )
       }else{
         this.formData.prepaidCardAmount = 0
       }
@@ -439,9 +446,9 @@ export default {
     },
 
     //创建订单
-    createOrder( params ) {
+    async createOrder( params ) {
       console.log( " CreateOrder params=", params )
-        checkout( params ).then((res)=>{
+      await  checkout( params ).then((res)=>{
           if( res.id> 0){
             let order = this.buildOrder( res )
             console.log("checkout dialog res->",params, res, order)
@@ -473,9 +480,9 @@ export default {
         })
     },
     //创建支付，客户领取物品时付款
-    createPayment( orderId, params ) {
+    async createPayment( orderId, params ) {
       // params = { payments, line_item_ids}
-        addPayments( orderId, params ).then((res)=>{
+        await addPayments( orderId, params ).then((res)=>{
           if( res.id){
             //发送支付创建时间
             let order = this.buildOrder( res )
@@ -496,9 +503,9 @@ export default {
         })
     },
     //创建支付，客户领取物品时付款
-    recreatePayment( orderId, params ) {
+    async recreatePayment( orderId, params ) {
       // params = { payments, line_item_ids}
-        repay( orderId, params ).then((res)=>{
+        await repay( orderId, params ).then((res)=>{
           if( res.id){
             //发送支付创建时间
             let order = this.buildOrder( res )
@@ -519,6 +526,7 @@ export default {
         })
     },
     handleCreateOrderAndPayment(){
+
       //250毫秒以后才可以调用，以防鼠标多次点击
       if( this.isPasswordRequired){
         this.promptPassword()
@@ -547,23 +555,23 @@ export default {
       params.order.payments = null
       this.createOrder( params )
     },
-    handleCreateOrderAndPaymentAsync:_.debounce(( vm) => {
+    handleCreateOrderAndPaymentAsync:_.debounce( async ( vm) => {
       //防抖，防止多次提交
       let that = vm
       that.checkoutLoading = true
       let params = that.checkoutParams
       console.log( "handleCreateOrderAndPayment", that.existedOrderId )
-      if( that.existedOrderId != null){
+      if( that.existedOrder != null){
         let payments = params.order.payments
         let line_item_ids = that.selectedOrderItems.map((item)=>{ return item.id })
         if( that.isRepay ){
-          that.recreatePayment( that.existedOrderId, { payments, line_item_ids } )
+          await that.recreatePayment( that.existedOrderId, { payments, line_item_ids } )
 
         }else{
-          that.createPayment( that.existedOrderId, { payments, line_item_ids } )
+          await that.createPayment( that.existedOrderId, { payments, line_item_ids } )
         }
       }else{
-        that.createOrder( params )
+        await that.createOrder( params )
       }
       that.checkoutLoading = false
     }, 250),

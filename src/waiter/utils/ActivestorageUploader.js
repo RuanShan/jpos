@@ -1,4 +1,4 @@
-import { DirectUpload } from "activestorage"
+import { DirectUpload } from "./activestorage/direct_upload"
 
 class ActivestorageUploader {
   constructor(file, url, uploaderOption, successCallback, failureCallback) {
@@ -10,7 +10,7 @@ class ActivestorageUploader {
   }
 
   upload() {
-    console.log( " yes it is uploading ")
+    console.log( "uploading... ")
     this.directupload.create((error, blob) => {
       if (error) {
         // Handle the error
@@ -19,6 +19,7 @@ class ActivestorageUploader {
       } else {
         // Add an appropriately-named hidden input to the form
         // with a value of blob.signed_id
+        console.log( "directupload", blob)
         this.successCallback(blob)
       }
     })
@@ -32,7 +33,7 @@ class ActivestorageUploader {
   directUploadDidProgress(e) {
     // Use event.loaded and event.total to update the progress bar
     e.percent = e.loaded/e.total*100
-    console.log( "directUploadDidProgress= ", e)
+    //console.log( "directUploadDidProgress= ", e)
     this.uploaderOption.onProgress( e, this.file )
   }
 }

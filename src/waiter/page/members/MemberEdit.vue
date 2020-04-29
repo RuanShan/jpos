@@ -150,7 +150,7 @@ export default {
             type: "string",
             required: true,
             message: "请输入正确的电话号码",
-            pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
+            pattern: /^1[0-9]\d{9}$/,
             trigger: "blur"
           },
           {

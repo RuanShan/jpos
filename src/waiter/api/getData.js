@@ -557,7 +557,7 @@ export const evolveLineItemGroups = (data) => fetch('/api/v1/line_item_groups/al
 export const getLineItemGroup = number => fetch('/api/v1/line_item_groups/' + number)
 
 /**
- * 获取 LineItemGroup Detail
+ * 获取 LineItemGroup Detail, 只是在扫码时使用，添加状态，以免重复
  */
 export const getLineItemGroupByNumber = number => fetch('/api/v1/line_item_groups/' + number)
 

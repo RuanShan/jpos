@@ -143,6 +143,9 @@ export var apiResultMixin = {
           order.cardAmount = order.cardTransaction.amount
         }
       }
+      if( orderResult.payment_at ){
+        order.paymentAt = moment(orderResult.payment_at)
+      }
       return order
     },
 
@@ -737,7 +740,11 @@ export var apiResultMixin = {
       return datetime.format('MM-DD HH:mm')
     },
     getDisplayFullDateTime( datetime){ // datetime is instance moment
-      return datetime.format('YYYY-MM-DD HH:mm')
+      if( datetime ){
+        return datetime.format('YYYY-MM-DD HH:mm')
+      }else{
+        return ''
+      }
     },
     getDisplayDate( datetime){ // datetime is instance moment
       return datetime.format('YYYY-MM-DD')

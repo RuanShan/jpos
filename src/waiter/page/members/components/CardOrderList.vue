@@ -23,9 +23,10 @@
 
       <el-table-column label="订单编号" prop="number" width="120">
       </el-table-column>
-      <el-table-column label="消费日期" prop="displayCreatedAt" width="160">
+      <el-table-column label="订单时间/支付时间"   width="160">
         <template slot-scope="scope">
-        {{ getDisplayFullDateTime(scope.row.createdAt) }}
+          <p>{{ getDisplayFullDateTime(scope.row.createdAt) }}</p>
+          <p>{{ getDisplayFullDateTime(scope.row.paymentAt) }}</p>
         </template>
       </el-table-column>
       <el-table-column label="店铺名称" prop="storeName" width="150">

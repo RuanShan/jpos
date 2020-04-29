@@ -501,6 +501,7 @@
 
 <script>
 import _ from "lodash"
+import moment from 'moment'
 import leftNav from "@/components/layout/LeftNav.vue"
 import headTop from "@/components/layout/headTop.vue";
 import CelSwiper from "@/components/dialog/CelSwiper.vue";
@@ -685,7 +686,7 @@ export default {
       // 如果最后一个存在，并且是clock_in, 即说明当前用户打卡。
       console.log("this.userEntries=", this.userEntries, " orderedEntries=", orderedEntries)
       let entry = orderedEntries.pop()
-      return entry != null && entry.state == this.UserEntryStateEnum.clockin
+      return entry != null && entry.state == this.UserEntryStateEnum.clockin && moment(entry.createdAt).isSame( moment(), 'day')
     },
     customerDescription() {
       let desc = this.currentCustomer.userName
@@ -913,11 +914,17 @@ export default {
     //根据关键字查找客户
     //从SerVer上获取模糊搜索的用户数据,异步获取
     searchCustomers(keyword) {
-      let length = keyword.replace(/[^\u0000-\u00ff]/g,"aa").length
-      if( length<4){
-        return
+      // 如果输入中文，1个字即可，以便支持姓氏查询，如果输入字母数字，应4字以上
+      let valid = false
+      let hanzhiReg= /[^\u0000-\u00ff]+/
+      if (hanzhiReg.test( keyword)){
+        valid  = true
+      }else if( keyword.length >=4 ){
+        valid = true
       }
-      this.searchCustomersAsync(keyword, this);
+      if( valid ){
+        this.searchCustomersAsync(keyword, this);        
+      }
     },
     //远程搜索输入框函数-----提示功能
     searchCustomersAsync: _.debounce((keyword, vm) => {
@@ -963,9 +970,9 @@ export default {
       // if no customer found, open member-add
       if (this.customerList.length == 0) {
         let mobile = this.$refs.searchInput.query
-        //console.log( "mobile=", mobile, "this.$refs.searchInput=",this.$refs.searchInput)
         // it is a mobile
         let mobileRegEx = /^1\d{10}$/
+        console.log( "mobile=", mobile, mobileRegEx.test(mobile))
         if (mobileRegEx.test(mobile)) {
           customerMobileValidate(mobile).then((response) => {
             if (response.ret) {

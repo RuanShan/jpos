@@ -335,8 +335,8 @@
           page: this.currentPage, //分页器选择的当前页数
           per_page: this.perPage, //每页显示12行数据
           q: {
-            created_at_gteq: this.computedStartAt,
-            created_at_lteq: this.computedEndAt,
+            payment_at_or_created_at_gteq: this.computedStartAt,
+            payment_at_or_created_at_lteq: this.computedEndAt,
             order_type_eq: 0,
             s:[ 'created_at desc']
           }

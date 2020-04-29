@@ -168,7 +168,7 @@ export default {
             return card.state == this.CardStateEnum.enabled
           }).map((card)=>{
             return { value: [customer.id,card.id].join('_'),
-              label: customer.mobile + '(#'+card.code+')'
+              label: `${customer.userName} ${customer.mobile} (${card.displayStyle} ${card.code})`
             }
           })
         }else{
@@ -246,11 +246,16 @@ export default {
     //根据关键字查找客户
     //从SerVer上获取模糊搜索的用户数据,异步获取
     searchCustomers(keyword) {
-      let length = keyword.replace(/[^\u0000-\u00ff]/g,"aa").length
-      if( length<4){
-        return
+      let valid = false
+      let hanzhiReg= /[^\u0000-\u00ff]+/
+      if (hanzhiReg.test( keyword)){
+        valid  = true
+      }else if( keyword.length >=4 ){
+        valid = true
       }
-      this.searchCustomersAsync(keyword, this);
+      if( valid ){
+        this.searchCustomersAsync(keyword, this);
+      }
     },
     //远程搜索输入框函数-----提示功能
     searchCustomersAsync: _.debounce((keyword, vm) => {
