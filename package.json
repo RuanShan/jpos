@@ -82,7 +82,7 @@
     "es6-promise": "^4.2.4",
     "escpos-without-adapter": "^2.5.1",
     "friendly-errors-webpack-plugin": "^1.6.1",
-    "highcharts": "^6.0.2",
+    "highcharts": "^7.2.2",
     "iconv-lite": "^0.4.23",
     "isomorphic-fetch": "^2.2.1",
     "jsbarcode": "^3.9.0",
