@@ -163,7 +163,7 @@ export default {
     },
     computedCustomerOptions: function() {
       let ops = this.customerList.map((customer) => {
-        if( customer.cards.length > 0 ){
+        if( customer.cards.length > 0 && customer.card ){
           return customer.cards.filter((card)=>{
             return card.state == this.CardStateEnum.enabled
           }).map((card)=>{
@@ -286,7 +286,7 @@ export default {
         this.currentCustomer = this.customerList.find((customer, index, arr) => {
           return customer.id ==   this.selectedCustomerId
         })
-        if( this.currentCustomer.cards.length > 0 ){
+        if( this.currentCustomer.cards.length > 0 && this.currentCustomer.card ){
           this.currentCard = this.currentCustomer.cards.find((card, index, arr) => {
             return card.id ==   this.cardId
           })
