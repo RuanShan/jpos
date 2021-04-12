@@ -378,8 +378,11 @@ export default {
       if( this.currentTimesCard ){
         return (this.formData.timesCardAmount == 0 ? (remainder - this.formData.paymentAmount) : 0)
       }else {
-        return remainder - this.formData.prepaidCardAmount - this.formData.paymentAmount
+        return remainder - this.formData.prepaidCardAmount
       }
+    },
+    isPaymentTotalCorrect(){
+      return this.formData.totalPrice == (this.formData.paymentAmount + this.formData.prepaidCardAmount )
     }
   },
   methods: {
@@ -415,13 +418,17 @@ export default {
 
       if( this.existedOrder ){
         // 根据当前选择了的会员卡，并且原来的lineItem 没有折扣，修正 每个 lineItem 的 discountPercent
+        this.handleEnablePrepaidCard( this.formData.enablePrepaidCard )
 
         // check all lineItemGroups by default
-        if( this.$refs.multipleTable ){
-          // this.$refs.multipleTable could be null
-          this.$refs.multipleTable.clearSelection()
-          this.$refs.multipleTable.toggleAllSelection()
-        }
+        this.$nextTick(()=>{
+          if( this.$refs.multipleTable ){
+            // this.$refs.multipleTable could be null
+            this.$refs.multipleTable.clearSelection()
+            this.$refs.multipleTable.toggleAllSelection()
+          }
+        })
+
         this.formData.memo = this.existedOrder.memo
       }
       this.formData.totalPrice = this.computedTotalPrice
@@ -483,6 +490,7 @@ export default {
     async createPayment( orderId, params ) {
       // params = { payments, line_item_ids}
         await addPayments( orderId, params ).then((res)=>{
+          console.debug("addPayments=",orderId, params, res);
           if( res.id){
             //发送支付创建时间
             let order = this.buildOrder( res )
@@ -544,7 +552,7 @@ export default {
       }
     },
     handleCreateOrderWithoutPayment(){
-      if( this.orderRemainder > 0){
+      if(!this.isPaymentTotalCorrect){
         this.$message({
           type: "error",
           message: '请输入正确金额！'
@@ -560,7 +568,7 @@ export default {
       let that = vm
       that.checkoutLoading = true
       let params = that.checkoutParams
-      console.log( "handleCreateOrderAndPayment", that.existedOrderId )
+      console.log( "handleCreateOrderAndPayment", that.existedOrderId,"that.isRepay", that.isRepay )
       if( that.existedOrder != null){
         let payments = params.order.payments
         let line_item_ids = that.selectedOrderItems.map((item)=>{ return item.id })
@@ -577,14 +585,13 @@ export default {
     }, 250),
     handleEnablePrepaidCard(newValue){
       //重新计算各个支付方式需要支付多少
-      console.log( "handleEnablePrepaidCard=", newValue, this.computedTotalPrice)
 
       //let discountPercent = ( newValue ?  this.currentPrepaidCard.discountPercent : 100  )
       this.selectedOrderItems.forEach((item)=>{
         item.discountPercent = this.getDiscountOfVariant( item.variantId)
         item.price = item.discountPercent * item.saleUnitPrice * item.quantity / 100
-
       })
+      console.log( "handleEnablePrepaidCard=", newValue, this.computedTotalPrice)
 
       this.formData.totalPrice = this.computedTotalPrice
 
@@ -627,7 +634,7 @@ export default {
     },
     computeGroupPrice(group){
       let total = group.lineItems.reduce((sum, item)=>{
-        if( this.currentPrepaidCard ){
+        if( this.formData.enablePrepaidCard ){
           sum+= ( item.saleUnitPrice * item.quantity * this.currentPrepaidCard.discountPercent /100 )
         }else{
           sum+= ( item.saleUnitPrice * item.quantity   )
@@ -643,8 +650,7 @@ export default {
       let ids = selection.map((item)=>{ return item.id })
       console.log( "groupSelectionChange selection=",selection, "ids=",ids, this.orderItemList)
       this.selectedOrderItems = this.orderItemList.filter((item)=>{ return ids.includes(item.groupId) })
-      this.formData.totalPrice = this.computedTotalPrice
-
+      this.handleEnablePrepaidCard()
     },
     getDiscountOfVariant(variantId) {
       // 找到这个订单对应的商品

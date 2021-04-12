@@ -204,7 +204,8 @@ export default {
         //  <router-link :to="{ name: 'orderDetail', params: {id: order.id} }">
         let params = {
           q: {
-            line_item_groups_number_eq: code
+            line_item_groups_number_eq: code,
+            group_state_eq: "pending",
           }
         }
         findOrders(params).then((result) => {

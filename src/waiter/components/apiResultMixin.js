@@ -73,6 +73,7 @@ export var apiResultMixin = {
         createdAt: moment(orderResult.created_at),
         orderType: orderResult.order_type,
         memo: orderResult.memo,
+        cardId: orderResult.card_id,
         lineItemGroups: [],
         extraLineItems: [],
         cardTransactions: []
