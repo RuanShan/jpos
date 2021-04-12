@@ -71,7 +71,7 @@
     "@websanova/vue-auth": "^2.21.3-beta",
     "activestorage": "^5.2.2",
     "aws-sdk": "^2.234.1",
-    "axios": "^0.16.1",
+    "axios": "^0.21.1",
     "cross-fetch": "^3.0.4",
     "echarts": "^3.8.0",
     "electron-dl": "^1.12.0",
