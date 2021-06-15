@@ -162,7 +162,7 @@
     "node-loader": "^0.6.0",
     "node-sass": "^4.7.2",
     "normalize.css": "^8.0.0",
-    "postcss": "^7.0.2",
+    "postcss": "^7.0.36",
     "postcss-each": "^0.10.0",
     "postcss-easy-import": "^3.0.0",
     "postcss-import": "^12.0.0",
