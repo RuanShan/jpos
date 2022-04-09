@@ -89,7 +89,7 @@
     "localforage": "^1.6.0",
     "lodash": "^4.17.5",
     "mint-ui": "^2.2.13",
-    "moment": "^2.22.1",
+    "moment": "^2.29.2",
     "node-notifier": "^5.2.1",
     "printer": "^0.2.2",
     "quagga": "^0.12.1",
